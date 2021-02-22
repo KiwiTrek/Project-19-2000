@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- L02: TODO 4: Create a simulation xml file to read -->
+<game_state>
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<scene />
+	<renderer>
+		<camera x="0" y="0" />
+	</renderer>
+</game_state>
