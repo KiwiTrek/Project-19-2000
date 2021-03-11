@@ -4,17 +4,6 @@
 
 RPG game created for the "Project II" subject in the Bachelor's degree in Video Game Design and Development at the CITM-UPC center, Barcelona, under the supervision of Ramon Santamaría ([@raysan5](https://github.com/raysan5))
 
-## Key Features
-
- - {Feature01}
- - {Feature02}
- - {Feature03}
- - {Feature04}
- 
-## Controls
-
- - {ControlsScheme}
-
 ## Developers
 
  - Guillem Álava Burgueño ([@WillyTrek19](https://github.com/WillyTrek19/)) - Lead
