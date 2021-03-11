@@ -28,4 +28,4 @@ RPG game created for the "Project II" subject in the Bachelor's degree in Video 
 
 This project is licensed under an unmodified MIT license, which is an OSI-certified license that allows static linking with closed source software. Check [LICENSE](LICENSE) for further details.
 
-{AdditionalLicenses}
+Additional licenses will be included next to their respective assets inside the game documents.
