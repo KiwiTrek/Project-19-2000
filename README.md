@@ -10,7 +10,7 @@ RPG game created for the "Project II" subject in the Bachelor's degree in Video 
  - Sergi Colomer Ferrer ([@Lladruc37](https://github.com/Lladruc37)) - Programmer/Support
  - Abraham David Díaz García ([@Theran1](https://github.com/Theran1))  - Designer/Support
  - Aram Galarza Roca ([@WittIsHere](https://github.com/WittIsHere)) - Designer/Programmer
- - David Montufo Montero ([@Montuuh](https://github.com/Montuuh)) - Programmer
+ - David Montufo Montero ([@Montuuh](https://github.com/Montuuh)) - QA/Programmer
  - Arnau Lucena Cobo ([@TitoLuce](https://github.com/TitoLuce)) - Programmer/Designer
 
 ## License
