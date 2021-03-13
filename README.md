@@ -7,11 +7,11 @@ RPG game created for the "Project II" subject in the Bachelor's degree in Video 
 ## Developers
 
  - Guillem Álava Burgueño ([@WillyTrek19](https://github.com/WillyTrek19/)) - Lead
- - Sergi Colomer Ferrer ([@Lladruc37](https://github.com/Lladruc37)) - {Role(s)}
- - Abraham David Díaz García ([@Theran1](https://github.com/Theran1))  - {Role(s)}
- - Aram Galarza Roca ([@WittIsHere](https://github.com/WittIsHere)) - {Role(s)}
- - David Montufo Montero ([@Montuuh](https://github.com/Montuuh)) - {Role(s)}
- - Arnau Lucena Cobo ([@TitoLuce](https://github.com/TitoLuce)) - {Role(s)}
+ - Sergi Colomer Ferrer ([@Lladruc37](https://github.com/Lladruc37)) - Programmer/Support
+ - Abraham David Díaz García ([@Theran1](https://github.com/Theran1))  - Designer/Support
+ - Aram Galarza Roca ([@WittIsHere](https://github.com/WittIsHere)) - Designer/Programmer
+ - David Montufo Montero ([@Montuuh](https://github.com/Montuuh)) - Programmer
+ - Arnau Lucena Cobo ([@TitoLuce](https://github.com/TitoLuce)) - Programmer/Designer
 
 ## License
 
