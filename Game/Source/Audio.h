@@ -11,7 +11,7 @@ struct Mix_Chunk;
 class Audio : public Module
 {
 public:
-
+	// Constructor
 	Audio();
 
 	// Destructor
@@ -23,19 +23,34 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// Play a music file
+	// Plays a music file
 	bool PlayMusic(const char* path, float fadeTime = DEFAULT_MUSIC_FADE_TIME);
 
-	// Load a WAV in memory
-	unsigned int LoadFx(const char* path);
+	// Load/Unload a WAV in memory
+	uint LoadFx(const char* path);
+	bool UnloadFx(uint index);
+	bool SetFxVolume(uint index);
+
+	// Get/Set music volume
+	int GetMusicVolume();
+	void SetMusicVolume(int volume);
+
+	// Get/Set fx volume
+	int GetFxVolume();
+	void SetFxVolumeValue(int fxVolume);
 
 	// Play a previously loaded WAV
-	bool PlayFx(unsigned int fx, int repeat = 0);
+	bool PlayFx(uint fx, int repeat = 0);
+
+	// Save/Load
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&);
 
 private:
-
 	_Mix_Music* music;
-	List<Mix_Chunk *>	fx;
+	List<Mix_Chunk*> fx;
+
+	int volumeFx;
 };
 
 #endif // __AUDIO_H__

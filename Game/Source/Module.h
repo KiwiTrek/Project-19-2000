@@ -3,24 +3,26 @@
 
 #include "SString.h"
 
-#include "PugiXml/src/pugixml.hpp"
+#include "pugixml.hpp"
 
 class App;
+class Collider;
+class GuiControl;
 
 class Module
 {
 public:
-
+	// Constructor
 	Module() : active(false)
 	{}
 
-	void Init()
+	// Called when program is executed
+	virtual void Init()
 	{
 		active = true;
 	}
 
 	// Called before render is available
-	// L01: DONE 5: Sending config file to all modules
 	virtual bool Awake(pugi::xml_node&)
 	{
 		return true;
@@ -32,7 +34,7 @@ public:
 		return true;
 	}
 
-	// Called each loop iteration
+	// Called before all Updates
 	virtual bool PreUpdate()
 	{
 		return true;
@@ -44,7 +46,7 @@ public:
 		return true;
 	}
 
-	// Called each loop iteration
+	// Called after all Updates
 	virtual bool PostUpdate()
 	{
 		return true;
@@ -56,11 +58,50 @@ public:
 		return true;
 	}
 
-public:
+	// Load
+	virtual bool Load(pugi::xml_node&)
+	{
+		return true;
+	}
 
+	// Save
+	virtual bool Save(pugi::xml_node&)
+	{
+		return true;
+	}
+
+	// Enable module
+	virtual void Enable()
+	{
+		if (!active)
+		{
+			active = true;
+			Start();
+		}
+	}
+
+	// Disable module
+	virtual void Disable()
+	{
+		if (active)
+		{
+			active = false;
+			CleanUp();
+		}
+	}
+
+	// Collision response
+	virtual void OnCollision(Collider* c1, Collider* c2) {}
+
+	// On mouse click response
+	virtual bool OnGuiMouseClickEvent(GuiControl* control)
+	{
+		return true;
+	}
+
+public:
 	SString name;
 	bool active;
-
 };
 
 #endif // __MODULE_H__

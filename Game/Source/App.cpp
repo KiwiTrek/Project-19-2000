@@ -4,6 +4,11 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "EntityManager.h"
+#include "Map.h"
+#include "Fonts.h"
+//#include "GuiManager.h"
+
 #include "Scene.h"
 
 #include "Defs.h"
@@ -15,13 +20,18 @@
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
 {
-	frames = 0;
+	PERF_START(pTimer);
 
 	win = new Window();
 	input = new Input();
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
+	map = new Map();
+	fonts = new Fonts();
+	entities = new EntityManager();
+	//gui = new GuiManager();
+
 	scene = new Scene();
 
 	// Ordered for awake / Start / Update
@@ -30,6 +40,11 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(input);
 	AddModule(tex);
 	AddModule(audio);
+	AddModule(map);
+	AddModule(fonts);
+	//AddModule(gui);
+	AddModule(entities);
+
 	AddModule(scene);
 
 	// Render last to swap buffer
@@ -60,28 +75,46 @@ void App::AddModule(Module* module)
 // Called before render is available
 bool App::Awake()
 {
-	// TODO 3: Load config from XML
-	bool ret = LoadConfig();
+	PERF_START(pTimer);
 
-	if(ret == true)
+	pugi::xml_document configFile;
+	pugi::xml_node config;
+	pugi::xml_node configApp;
+
+	bool ret = false;
+
+	config = LoadConfig(configFile);
+
+	if (config.empty() == false)
 	{
-		// TODO 4: Read the title from the config file
-		title.Create(configApp.child("title").child_value());
-		win->SetTitle(title.GetString());
+		ret = true;
+		configApp = config.child("app");
 
+		title.Create(configApp.child("title").child_value());
+		organization.Create(configApp.child("organization").child_value());
+
+		// Read from config file your framerate cap
+		cap = configApp.attribute("framerateCap").as_int(-1);
+
+		if (cap > 0)
+		{
+			cappedMs = 1000 / cap;
+		}
+	}
+
+	if (ret == true)
+	{
 		ListItem<Module*>* item;
 		item = modules.start;
 
-		while(item != NULL && ret == true)
+		while (item != NULL && ret == true)
 		{
-			// TODO 5: Add a new argument to the Awake method to receive a pointer to an xml node.
-			// If the section with the module name exists in config.xml, fill the pointer with the valid xml_node
-			// that can be used to read all variables for that module.
-			// Send nullptr if the node does not exist in config.xml
 			ret = item->data->Awake(config.child(item->data->name.GetString()));
 			item = item->next;
 		}
 	}
+
+	PERF_PEEK(pTimer);
 
 	return ret;
 }
@@ -125,23 +158,18 @@ bool App::Update()
 }
 
 // Load config from XML file
-bool App::LoadConfig()
+pugi::xml_node App::LoadConfig(pugi::xml_document& configFile) const
 {
-	bool ret = true;
+	pugi::xml_node ret;
+	pugi::xml_parse_result result = configFile.load_file(CONFIG_FILENAME);
 
-	// TODO 3: Load config.xml file using load_file() method from the xml_document class
-	pugi::xml_parse_result result = configFile.load_file("config.xml");
-
-	// TODO 3: Check result for loading errors
-	if(result == NULL)
+	if (result == NULL)
 	{
-		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
-		ret = false;
+		LOG("Could not load xml file: %s. pugi error: %s", CONFIG_FILENAME, result.description());
 	}
 	else
 	{
-		config = configFile.child("config");
-		configApp = config.child("app");
+		ret = configFile.child("config");
 	}
 
 	return ret;
@@ -150,12 +178,83 @@ bool App::LoadConfig()
 // ---------------------------------------------
 void App::PrepareUpdate()
 {
+	frameCount++;
+	lastSecFrameCount++;
+
+	// Calculate the dt: differential time since last frame
+	dt = frameTime.ReadSec();
+
+	// Start the timer after read because we want to know how much time it took from the last frame to the new one
+	PERF_START(frameTime);
 }
 
 // ---------------------------------------------
 void App::FinishUpdate()
 {
-	// This is a good place to call Load / Save functions
+	if (loadRequest)
+	{
+		loadRequest = !loadRequest;
+		LoadGame();
+	}
+	else if (saveRequest)
+	{
+		saveRequest = !saveRequest;
+		SaveGame();
+	}
+	else if (capRequest)
+	{
+		capRequest = !capRequest;
+		ChangeCap();
+	}
+
+	// Framerate calculations------------------------------------------
+	// To know how many frames have passed in the last second
+	if (lastSecFrameTime.Read() > 1000)
+	{
+		lastSecFrameTime.Start();
+		prevLastSecFrameCount = lastSecFrameCount;
+		lastSecFrameCount = 0;
+	}
+
+	// Amount of seconds since startup
+	float secondsSinceStartup = 0.0f;
+	secondsSinceStartup = startupTime.ReadSec();
+
+	// Amount of time since game start (use a low resolution timer)
+	uint32 lastFrameMs = 0;
+	lastFrameMs = frameTime.Read(); // Time from the prepare update until now (whole update method)
+
+	// Average FPS for the whole game life (since start)
+	float averageFps = 0.0f;
+	averageFps = float(frameCount) / startupTime.ReadSec();
+
+	// Amount of frames during the last update
+	uint32 framesOnLastUpdate = 0;
+	framesOnLastUpdate = prevLastSecFrameCount;
+
+	static char title[256];
+	static char vsyncStr[4];
+
+	if (vsync)
+	{
+		sprintf_s(vsyncStr, "on");
+	}
+	else
+	{
+		sprintf_s(vsyncStr, "off");
+	}
+	sprintf_s(title, 256, "FPS: %i Av.FPS: %.2f Last Frame Ms: %02u Vsync: %s", framesOnLastUpdate, averageFps, lastFrameMs, vsyncStr);
+	app->win->SetTitle(title);
+
+	// Use SDL_Delay to make sure you get your capped framerate
+	PERF_START(pTimer);
+	if (cappedMs > lastFrameMs)
+	{
+		SDL_Delay(cappedMs - lastFrameMs);
+	}
+
+	// Measure accurately the amount of time SDL_Delay() actually waits compared to what was expected
+	PERF_PEEK(pTimer);
 }
 
 // Call modules before each loop iteration
@@ -264,6 +363,101 @@ const char* App::GetTitle() const
 const char* App::GetOrganization() const
 {
 	return organization.GetString();
+}
+
+void App::LoadRequest()
+{
+	loadRequest = true;
+}
+
+void App::SaveRequest()
+{
+	saveRequest = true;
+}
+
+void App::CapRequest()
+{
+	capRequest = true;
+}
+
+bool App::CheckSaveFile()
+{
+	pugi::xml_parse_result result = saveFile.load_file(SAVE_STATE_FILENAME);
+	if (result == NULL)
+	{
+		LOG("Could not load map xml file savegame.xml. pugi error: %s", result.description());
+		return false;
+	}
+	return true;
+}
+
+bool App::LoadGame()
+{
+	bool ret = true;
+	pugi::xml_parse_result result = saveFile.load_file(SAVE_STATE_FILENAME);
+
+	if (result == NULL)
+	{
+		LOG("Could not load map xml file savegame.xml. pugi error: %s", result.description());
+		ret = false;
+	}
+	else
+	{
+		save = saveFile.child("save_state");
+
+		ListItem<Module*>* item;
+		item = modules.start;
+
+		while (item != NULL && ret == true)
+		{
+			ret = item->data->Load(save.child(item->data->name.GetString()));
+			item = item->next;
+		}
+	}
+
+	return ret;
+}
+
+bool App::SaveGame()
+{
+	bool ret = true;
+
+	pugi::xml_document newSaveFile;
+	pugi::xml_node saveState = newSaveFile.append_child("save_state");
+
+	ListItem<Module*>* item;
+	item = modules.start;
+	while (item != NULL && ret == true)
+	{
+		ret = item->data->Save(saveState.append_child(item->data->name.GetString()));
+		item = item->next;
+	}
+
+	newSaveFile.save_file("save_game.xml");
+
+	return ret;
+}
+
+bool App::ChangeCap()
+{
+	switch (cap)
+	{
+	case 60:
+		cap = 30;
+		break;
+	case 30:
+		cap = 60;
+		break;
+	default:
+		break;
+	}
+
+	if (cap > 0)
+	{
+		cappedMs = 1000 / cap;
+	}
+
+	return true;
 }
 
 

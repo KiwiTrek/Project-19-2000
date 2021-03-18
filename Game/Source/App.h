@@ -3,8 +3,12 @@
 
 #include "Module.h"
 #include "List.h"
+#include "PerfTimer.h"
+#include "Timer.h"
+#include "pugixml.hpp"
 
-#include "PugiXml/src/pugixml.hpp"
+#define CONFIG_FILENAME "config.xml"
+#define SAVE_STATE_FILENAME "save_game.xml"
 
 // Modules
 class Window;
@@ -12,6 +16,11 @@ class Input;
 class Render;
 class Textures;
 class Audio;
+class Map;
+class Fonts;
+class EntityManager;
+//class GuiManager;
+
 class Scene;
 
 class App
@@ -45,10 +54,20 @@ public:
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
 
+	// Requests Savefile
+	bool CheckSaveFile();
+
+	// Requests Load/Save
+	void LoadRequest();
+	void SaveRequest();
+
+	// Requests Cap
+	void CapRequest();
+
 private:
 
 	// Load config file
-	bool LoadConfig();
+	pugi::xml_node LoadConfig(pugi::xml_document&) const;
 
 	// Call modules before each loop iteration
 	void PrepareUpdate();
@@ -65,6 +84,13 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
+	// Save/Load inside an XML file
+	bool LoadGame();
+	bool SaveGame();
+
+	// Changes framerate cap
+	bool ChangeCap();
+
 public:
 
 	// Modules
@@ -73,7 +99,14 @@ public:
 	Render* render;
 	Textures* tex;
 	Audio* audio;
+	Map* map;
+	EntityManager* entities;
+	//GuiManager* gui;
+	Fonts* fonts;
+
 	Scene* scene;
+
+	bool vsync = false;
 
 private:
 
@@ -84,15 +117,28 @@ private:
 
 	List<Module *> modules;
 
-	// TODO 2: Create new variables from pugui namespace:
-	// a xml_document to store the config file and
-	// two xml_node to read specific branches of the xml
+	bool saveRequest;
+	bool loadRequest;
+	bool capRequest;
+	pugi::xml_document saveFile;
+	pugi::xml_node save;
+
 	pugi::xml_document configFile;
 	pugi::xml_node config;
 	pugi::xml_node configApp;
 
-	uint frames;
-	float dt;
+	// Frame variables
+	PerfTimer pTimer;
+	uint64 frameCount = 0;
+
+	Timer startupTime;
+	Timer frameTime;
+	Timer lastSecFrameTime;
+	uint32 lastSecFrameCount = 0;
+	uint32 prevLastSecFrameCount = 0;
+	float dt = 0.0f;
+	float cappedMs = -1;
+	int cap = 0;
 };
 
 extern App* app;
