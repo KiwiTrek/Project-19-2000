@@ -46,6 +46,7 @@ bool Render::Awake(pugi::xml_node& config)
 		camera.h = app->win->screenSurface->h;
 		camera.x = 0;
 		camera.y = 0;
+		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	}
 
 	return true;

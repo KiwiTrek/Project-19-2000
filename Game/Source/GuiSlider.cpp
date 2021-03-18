@@ -1,118 +1,184 @@
-#ifndef __GUICONTROL_H__
-#define __GUICONTROL_H__
+#include "GuiSlider.h"
 
-#include "Module.h"
-#include "Point.h"
-#include "SString.h"
-#include "SDL.h"
+#include "App.h"
+#include "Input.h"
+#include "Audio.h"
+#include "Render.h"
+#include "Fonts.h"
 
-enum class GuiControlType
+#include "Log.h"
+
+GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, int widthInUnits, const char* text) : GuiControl(GuiControlType::SLIDER, id)
 {
-	BUTTON,
-	CHECKBOX,
-	SLIDER,
-};
+	this->bounds = bounds;
+	this->widthInUnits = widthInUnits;
+	int width = widthInUnits * 54;
+	this->limits = { bounds.x, bounds.y + (bounds.h / 2), width, 5 };
+	this->bounds.y = bounds.y + (bounds.h / 4);
+	this->text = text;
+	this->state = GuiControlState::NORMAL;
+	this->offsetText = this->text.Length() * 24 + (24 * 3);
 
-enum class GuiControlState
+	normal = { 271,0,54,54 };
+	focused = { 271,109,54,54 };
+	pressed = { 271,218,54,54 };
+	disabled = { 271,327,54,54 };
+
+	normalLimitsBegin = { 271,54,54,54 };
+	normalLimitsMiddle = { 325,54,54,54 };
+	normalLimitsEnd = { 379,54,54,54 };
+
+	disabledLimitsBegin = { 271,381,54,54 };
+	disabledLimitsMiddle = { 325,381,54,54 };
+	disabledLimitsEnd = { 379,381,54,54 };
+}
+
+GuiSlider::~GuiSlider()
+{}
+
+bool GuiSlider::Update(float dt)
 {
-	DISABLED,
-	NORMAL,
-	FOCUSED,
-	PRESSED,
-};
+	float tmpValue = (float)maxValue / (float)(limits.w - bounds.w);
+	value = (bounds.x - limits.x) * tmpValue;
+	if (state != GuiControlState::DISABLED)
+	{
+		int mouseX, mouseY;
+		app->input->GetMousePosition(mouseX, mouseY);
 
-class GuiControl
+		int motionX = 0, motionY = 0;
+		app->input->GetMouseMotion(motionX, motionY);
+
+		// Check collision between mouse and button bounds
+		if ((mouseX > bounds.x) && (mouseX < (bounds.x + bounds.w)) && (mouseY > bounds.y) && (mouseY < (bounds.y + bounds.h)))
+		{
+			if (state == GuiControlState::NORMAL)
+			{
+				app->audio->PlayFx(hover);
+			}
+
+			if (state != GuiControlState::PRESSED)
+			{
+				state = GuiControlState::FOCUSED;
+			}
+
+			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT)
+			{
+				if (state == GuiControlState::FOCUSED)
+				{
+					app->audio->PlayFx(click);
+				}
+				state = GuiControlState::PRESSED;
+			}
+		}
+		else if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) != KeyState::KEY_REPEAT)
+		{
+			state = GuiControlState::NORMAL;
+		}
+
+		if (motionX != 0 && state == GuiControlState::PRESSED)
+		{
+			bounds.x = mouseX - (bounds.w / 2);
+			NotifyObserver();
+		}
+
+		if (bounds.x < limits.x)
+		{
+			bounds.x = limits.x;
+		}
+		if ((bounds.x + bounds.w) >= (limits.x + limits.w))
+		{
+			bounds.x = limits.x + limits.w - bounds.w;
+		}
+
+		if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+		{
+			state = GuiControlState::NORMAL;
+		}
+	}
+
+	return false;
+}
+
+bool GuiSlider::Draw(int cPosX, int cPosY)
 {
-public:
-	// Constructors
-	GuiControl(GuiControlType type, uint32 id) : type(type), id(id), state(GuiControlState::NORMAL)
-	{}
+	app->fonts->DrawText(cPosX + limits.x - offsetText, cPosY + limits.y, titleFont, text.GetString());
 
-	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text)
+	for (int i = 1; i != widthInUnits - 1; ++i)
 	{
-		texture = NULL;
-		defaultFont = -1;
-		titleFont = -1;
-		hoverFont = -1;
-		pressedFont = -1;
-		disabledFont = -1;
-
-		hover = -1;
-		click = -1;
+		app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
+		if (app->render->drawAllGui)
+		{
+			app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+		}
+	}
+	app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &normalLimitsBegin);
+	app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
+	if (app->render->drawAllGui)
+	{
+		app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+		app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
 	}
 
-	// Called each loop iteration
-	virtual bool Update(float dt)
+	// Draw the appropiate button depending on state
+	switch (state)
 	{
-		return true;
+	case GuiControlState::DISABLED:
+	{
+		for (int i = 1; i != widthInUnits - 1; ++i)
+		{
+			app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &disabledLimitsMiddle);
+			if (app->render->drawAllGui)
+			{
+				app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
+			}
+		}
+		app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &disabledLimitsBegin);
+		app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &disabledLimitsEnd);
+		if (app->render->drawAllGui)
+		{
+			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
+			app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
+		}
+
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &disabled);
+		if (app->render->drawAllGui)
+		{
+			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 100, 100, 100, 100);
+		}
+		break;
+	}
+	case GuiControlState::NORMAL:
+	{
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &normal);
+		if (app->render->drawAllGui)
+		{
+			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 255, 255, 100);
+		}
+		break;
+	}
+	case GuiControlState::FOCUSED:
+	{
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &focused);
+		if (app->render->drawAllGui)
+		{
+			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 0, 255, 100);
+		}
+		break;
+	}
+	case GuiControlState::PRESSED:
+	{
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &pressed);
+		if (app->render->drawAllGui)
+		{
+			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 255, 0, 0, 100);
+		}
+		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 
-	// Blit
-	virtual bool Draw() const
-	{
-		return true;
-	}
-
-	// Sets texture
-	void SetTexture(SDL_Texture* tex)
-	{
-		texture = tex;
-	}
-
-	// Sets all fonts used in gui
-	void SetFonts(int defaultId, int titleId, int hoverId, int pressedId, int disabledId)
-	{
-		defaultFont = defaultId;
-		titleFont = titleId;
-		hoverFont = hoverId;
-		pressedFont = pressedId;
-		disabledFont = disabledId;
-	}
-
-	void SetSounds(int hoverSoundId, int clickSoundId)
-	{
-		hover = hoverSoundId;
-		click = clickSoundId;
-	}
-
-	// Sets the gui control observer
-	void SetObserver(Module* module)
-	{
-		observer = module;
-	}
-
-	// Notifies the gui control observer
-	void NotifyObserver()
-	{
-		observer->OnGuiMouseClickEvent(this);
-	}
-
-public:
-	uint32 id;
-	GuiControlType type;
-	GuiControlState state;
-	SString text;
-	int offsetText;
-
-	// Position and size
-	SDL_Rect bounds;
-
-	// Texture atlas reference
-	SDL_Texture* texture;
-
-	// Fonts
-	int defaultFont;
-	int titleFont;
-	int hoverFont;
-	int pressedFont;
-	int disabledFont;
-
-	// Sounds
-	int click;
-	int hover;
-
-	// Observer module
-	Module* observer;
-};
-
-#endif // __GUICONTROL_H__
+	return false;
+}

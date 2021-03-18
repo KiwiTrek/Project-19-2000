@@ -19,7 +19,7 @@ class Audio;
 class Map;
 class Fonts;
 class EntityManager;
-//class GuiManager;
+class GuiManager;
 
 class Scene;
 
@@ -101,7 +101,7 @@ public:
 	Audio* audio;
 	Map* map;
 	EntityManager* entities;
-	//GuiManager* gui;
+	GuiManager* gui;
 	Fonts* fonts;
 
 	Scene* scene;
