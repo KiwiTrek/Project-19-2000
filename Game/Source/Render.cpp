@@ -57,8 +57,7 @@ bool Render::Start()
 	LOG("Render start");
 
 	SDL_RenderGetViewport(renderer, &viewport);
-	drawAll = false;
-	drawAllGui = false;
+	debug = false;
 
 	camera.x = 0;
 	camera.y = 0;
@@ -74,20 +73,16 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
-	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 	{
-		drawAll = !drawAll;
-	}
-	if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
-	{
-		drawAllGui = !drawAllGui;
+		debug = !debug;
 	}
 	return true;
 }
 
 bool Render::PostUpdate()
 {
-	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
+	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.a);
 	SDL_RenderPresent(renderer);
 	return true;
 }

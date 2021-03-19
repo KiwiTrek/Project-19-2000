@@ -41,7 +41,7 @@ void Map::Draw()
 	// Iterate for all layers
 	while (L != NULL)
 	{
-		if (L->data->properties.GetProperty("NoDraw") == 0 || app->render->drawAll)
+		if (L->data->properties.GetProperty("NoDraw") == 0 || app->render->debug)
 		{
 			for (int y = 0; y < data.height; ++y)
 			{

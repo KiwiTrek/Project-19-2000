@@ -8,6 +8,13 @@ struct SDL_Texture;
 class Scene : public Module
 {
 public:
+	enum ScenesList
+	{
+		NONE = 0,
+		LOGO,
+		TITLE_SCREEN,
+		GAMEPLAY
+	};
 
 	Scene();
 
@@ -32,8 +39,33 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool Load(pugi::xml_node& save);
+	bool Save(pugi::xml_node& save);
+
+	bool TransitionUpdate(float dt);
+	bool TransitionPostUpdate();
+	bool FadeEffect(bool fadeInOnly, float frames);
+
 private:
-	SDL_Texture* img;
+	// ALL SCENE ASSETS
+	SDL_Texture* logo;
+	SDL_Texture* nooseBG;
+	SDL_Texture* titleCard;
+
+	// TRANSITIONS
+	enum TransitionScene
+	{
+		NO_TRANSITION = 0,
+		TO_BLACK,
+		FROM_BLACK
+	}
+
+	currentStep = TransitionScene::NO_TRANSITION;
+	uint32 frameCount = 0;
+	uint32 maxFrames = 0;
+	float fadeRatio = 0.0f;
+	ScenesList currentGameScene = ScenesList::NONE;
+	ScenesList nextGameScene = ScenesList::NONE;
 };
 
 #endif // __SCENE_H__

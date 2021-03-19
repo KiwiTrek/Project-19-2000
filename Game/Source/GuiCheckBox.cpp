@@ -88,7 +88,7 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledChecked);
 		}
-		if (app->render->drawAllGui)
+		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		}
@@ -104,7 +104,7 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalChecked);
 		}
-		if (app->render->drawAllGui)
+		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		}
@@ -120,7 +120,7 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedChecked);
 		}
-		if (app->render->drawAllGui)
+		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		}
@@ -136,7 +136,7 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedChecked);
 		}
-		if (app->render->drawAllGui)
+		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
 		}
