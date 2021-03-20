@@ -12,9 +12,6 @@ class Collider;
 enum class EntityType
 {
 	PLAYER,
-	ENEMY,
-	COIN,
-	FRUIT,
 	UNKNOWN
 };
 

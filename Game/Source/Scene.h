@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+class Entity;
 struct SDL_Texture;
 
 class Scene : public Module
@@ -45,6 +46,9 @@ public:
 	bool TransitionUpdate(float dt);
 	bool TransitionPostUpdate();
 	bool FadeEffect(bool fadeInOnly, float frames);
+	
+	// Public variables
+		Entity* player = nullptr;
 
 private:
 	// ALL SCENE ASSETS

@@ -54,6 +54,9 @@
     <ClCompile Include="Source\EntityManager.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -142,6 +145,9 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Source\EntityManager.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player.h">
       <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>

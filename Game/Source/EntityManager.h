@@ -67,6 +67,8 @@ public:
 	SString folderAudioFx;
 	SString folderMap;
 
+	SDL_Texture* playerTex;
+
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__

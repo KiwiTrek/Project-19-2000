@@ -5,6 +5,9 @@
 #include "Render.h"
 #include "Window.h"
 #include "Scene.h"
+#include "EntityManager.h"
+#include "GuiManager.h"
+#include "Map.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -93,10 +96,10 @@ bool Scene::PostUpdate()
 		nextGameScene = ScenesList::TITLE_SCREEN;
 		FadeEffect(false, 60.0f);
 
-
 		app->render->background = { 255,255,255,255 };
 		app->render->DrawTexture(logo, app->win->screenSurface->w - 250, app->win->screenSurface->h - 250);
-		LOG("AAAAAAAAAAAA");
+		// Output says: Cannot blit to screen. SDL_RenderCopy error: Invalid texture
+		//LOG("AAAAAAAAAAAA");
 		break;
 	case Scene::TITLE_SCREEN:
 		if (app->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
@@ -161,6 +164,7 @@ bool Scene::TransitionUpdate(float dt)
 				break;
 			case Scene::GAMEPLAY:
 				//DeleteGameplayScene();
+				app->entities->Disable();
 				break;
 			default:
 				break;
@@ -182,6 +186,13 @@ bool Scene::TransitionUpdate(float dt)
 				break;
 			case Scene::GAMEPLAY:
 				//CreateGameplayScene();
+				app->entities->Enable();
+
+	            if (player != nullptr)
+	            {
+		        player = nullptr;
+	            }
+				player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER);
 				break;
 			default:
 				break;
@@ -249,10 +260,10 @@ bool Scene::FadeEffect(bool fadeInOnly, float frames)
 
 bool Scene::Load(pugi::xml_node& save)
 {
-
+	return true;
 }
 
 bool Scene::Save(pugi::xml_node& save)
 {
-
+	return true;
 }

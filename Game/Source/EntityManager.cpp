@@ -10,6 +10,7 @@
 #include "Fonts.h"
 #include "GuiManager.h"
 #include "Scene.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -42,7 +43,11 @@ bool EntityManager::Awake(pugi::xml_node& config)
 
 bool EntityManager::Start()
 {
-	
+	// Loading entities textures
+	playerTex = app->tex->Load("Assets/Textures/playerTest.png");
+
+	doLogic = true;
+
 	ListItem<Entity*>* e = entities.start;
 	while (e != nullptr)
 	{
@@ -67,7 +72,8 @@ bool EntityManager::CleanUp()
 	}
 	entities.Clear();
 
-	
+	// Unloading entities textures
+	app->tex->UnLoad(playerTex);
 
 	return true;
 }
@@ -76,19 +82,43 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, Entity* playe
 {
 	Entity* ret = nullptr;
 
+	switch (type)
+	{
+		// Create corresponding type entity
+	case EntityType::PLAYER:
+	{
+		ret = new Player(x, y);
+		break;
+	}
+
+	}
+
+	// Adds the created entity to the list
+	if (ret != nullptr)
+	{
+		entities.Add(ret);
+	}
 	
 	return ret;
 }
 
 bool EntityManager::Update(float dt)
 {
-	
+	UpdateAll(dt, doLogic);
 	return true;
 }
 
 bool EntityManager::UpdateAll(float dt, bool doLogic)
 {
-	
+	if (doLogic)
+	{
+		ListItem<Entity*>* e = entities.start;
+		while (e != nullptr)
+		{
+			e->data->Update(dt);
+			e = e->next;
+		}
+	}
 
 	return true;
 }
@@ -109,13 +139,18 @@ bool EntityManager::PostUpdate()
 		e = e->next;
 	}
 
-
 	return true;
 }
 
 void EntityManager::DestroyEntity(Entity* entity)
 {
-	
+	//if (entity->collider != nullptr)
+	//{
+	//	entity->collider->pendingToDelete = true;
+	//}
+	int i = entities.Find(entity);
+	delete entities[i];
+	entities.Del(entities.At(i));
 }
 
 void EntityManager::OnCollision(Collider* c1, Collider* c2)

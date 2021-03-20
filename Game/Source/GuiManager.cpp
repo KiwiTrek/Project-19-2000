@@ -35,67 +35,67 @@ bool GuiManager::Awake(pugi::xml_node& config)
 
 bool GuiManager::Start()
 {
-	// Atlas
-	SString tmp("%s%s", folderTexture.GetString(), "gui_atlas.png");
-	atlas = app->tex->Load(tmp.GetString());
+	//// Atlas
+	//SString tmp("%s%s", folderTexture.GetString(), "gui_atlas.png");
+	//atlas = app->tex->Load(tmp.GetString());
 
-	// Sounds
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudio.GetString(), "mouse_click.wav");
-	clickSoundId = app->audio->LoadFx(tmp.GetString());
+	//// Sounds
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderAudio.GetString(), "mouse_click.wav");
+	//clickSoundId = app->audio->LoadFx(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudio.GetString(), "mouse_hover.wav");
-	hoverSoundId = app->audio->LoadFx(tmp.GetString());
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderAudio.GetString(), "mouse_hover.wav");
+	//hoverSoundId = app->audio->LoadFx(tmp.GetString());
 
-	// Default
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "default_label.png");
-	defaultFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//// Default
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "default_label.png");
+	//defaultFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "default_label_small.png");
-	defaultFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "default_label_small.png");
+	//defaultFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	// Disabled
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "disabled_label.png");
-	disabledFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//// Disabled
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "disabled_label.png");
+	//disabledFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "disabled_label_small.png");
-	disabledFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "disabled_label_small.png");
+	//disabledFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	// Hover
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "hover_label.png");
-	hoverFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//// Hover
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "hover_label.png");
+	//hoverFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "hover_label_small.png");
-	hoverFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "hover_label_small.png");
+	//hoverFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	// Pressed
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "pressed_label.png");
-	pressedFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//// Pressed
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "pressed_label.png");
+	//pressedFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "pressed_label_small.png");
-	pressedFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "pressed_label_small.png");
+	//pressedFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	// Title
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "title_label.png");
-	titleFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//// Title
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "title_label.png");
+	//titleFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "title_label_medium.png");
-	titleFontMedium = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "title_label_medium.png");
+	//titleFontMedium = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "title_label_small.png");
-	titleFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	//tmp.Clear();
+	//tmp.Create("%s%s", folderTexture.GetString(), "title_label_small.png");
+	//titleFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
 
 	return true;
 }
