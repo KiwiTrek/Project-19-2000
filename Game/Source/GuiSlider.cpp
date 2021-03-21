@@ -101,7 +101,7 @@ bool GuiSlider::Update(float dt)
 
 bool GuiSlider::Draw(int cPosX, int cPosY)
 {
-	app->fonts->DrawText(cPosX + limits.x - offsetText, cPosY + limits.y, titleFont, text.GetString());
+	//app->fonts->DrawText(cPosX + limits.x - offsetText, cPosY + limits.y, titleFont, text.GetString());
 
 	for (int i = 1; i != widthInUnits - 1; ++i)
 	{

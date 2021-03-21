@@ -24,6 +24,9 @@ private:
 
     SDL_Texture* logo;
 
+    bool onceFx;
+    int logoFx;
+    
     int state;
     float timeCounter;
     float logoAlpha;

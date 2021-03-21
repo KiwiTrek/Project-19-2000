@@ -5,8 +5,6 @@
 
 #include "GuiButton.h"
 
-//class Font;
-
 class SceneTitleScreen : public Scene
 {
 public:
@@ -30,10 +28,13 @@ private:
     SDL_Texture* nooseBG;
     SDL_Texture* titleCard;
 
+    Animation noose;
+
     //GuiButton* btnStart;
     //GuiButton* btnExit;
 
-    //Font* font;
+    Font* testFont = nullptr;
+    int titleFx;
 };
 
 #endif // __SCENETITLE_H__

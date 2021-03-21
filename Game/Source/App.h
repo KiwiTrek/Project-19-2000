@@ -17,7 +17,6 @@ class Render;
 class Textures;
 class Audio;
 class Map;
-class Fonts;
 class EntityManager;
 class GuiManager;
 
@@ -102,7 +101,6 @@ public:
 	Map* map;
 	EntityManager* entities;
 	GuiManager* gui;
-	Fonts* fonts;
 
 	SceneManager* scene;
 

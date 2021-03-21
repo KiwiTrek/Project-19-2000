@@ -6,7 +6,6 @@
 #include "Audio.h"
 #include "EntityManager.h"
 #include "Map.h"
-#include "Fonts.h"
 #include "GuiManager.h"
 
 #include "SceneManager.h"
@@ -28,7 +27,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	tex = new Textures();
 	audio = new Audio();
 	map = new Map();
-	fonts = new Fonts();
 	entities = new EntityManager();
 	gui = new GuiManager();
 
@@ -41,7 +39,6 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(tex);
 	AddModule(audio);
 	AddModule(map);
-	AddModule(fonts);
 	AddModule(gui);
 	AddModule(entities);
 

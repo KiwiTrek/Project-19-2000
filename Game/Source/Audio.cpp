@@ -157,6 +157,11 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	return true;
 }
 
+bool Audio::StopMusic()
+{
+	if (Mix_HaltMusic() == 0) return true;
+}
+
 uint Audio::LoadFx(const char* path)
 {
 	uint ret = 0;

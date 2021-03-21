@@ -1,5 +1,6 @@
 #include "SceneLogo.h"
 
+#include "Audio.h"
 #include "Input.h"
 #include "Render.h"
 #include "Textures.h"
@@ -14,6 +15,7 @@ SceneLogo::SceneLogo()
     state = 0;
     timeCounter = 0.0f;
     logoAlpha = 0.0f;
+    onceFx = true;
 }
 
 SceneLogo::~SceneLogo()
@@ -23,7 +25,7 @@ SceneLogo::~SceneLogo()
 bool SceneLogo::Load()
 {
     logo = app->tex->Load("Assets/Textures/Logo.png");
-
+    logoFx = app->audio->LoadFx("Assets/Audio/Fx/LogoFX.wav");
     return false;
 }
 
@@ -47,6 +49,11 @@ bool SceneLogo::Update(float dt)
     {
         // Waiting for 3 seconds
         timeCounter += dt;
+        if (timeCounter >= 1.0f && onceFx)
+        {
+            onceFx = false;
+            app->audio->PlayFx(logoFx, 0);
+        }
         if (timeCounter >= 3.0f) state = 3;
     }
     else if (state == 3)
@@ -75,6 +82,7 @@ bool SceneLogo::Draw()
 bool SceneLogo::Unload()
 {
     app->tex->UnLoad(logo);
+    app->audio->UnloadFx(logoFx);
 
     return false;
 }

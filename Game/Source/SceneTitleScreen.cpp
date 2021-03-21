@@ -1,9 +1,9 @@
 #include "SceneTitleScreen.h"
 
+#include "Audio.h"
 #include "Input.h"
 #include "Render.h"
 #include "Textures.h"
-//#include "Font.h"
 
 #include "EntityManager.h"
 
@@ -18,6 +18,8 @@ SceneTitleScreen::SceneTitleScreen()
 
     //btnExit = new GuiButton(2, { 1280 / 2 - 300 / 2, 400, 300, 80 }, "EXIT");
     //btnExit->SetObserver(this);
+
+    for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
 }
 
 SceneTitleScreen::~SceneTitleScreen()
@@ -28,7 +30,10 @@ bool SceneTitleScreen::Load()
 {
     nooseBG = app->tex->Load("Assets/Textures/NooseBG.png");
     titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
-    //font = new Font("Assets/Fonts/londrina.xml", tex);
+    testFont = new Font("Assets/Fonts/Test.xml");
+
+    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
+    noose.Reset();
 
     return false;
 }
@@ -36,6 +41,7 @@ bool SceneTitleScreen::Load()
 bool SceneTitleScreen::Update(float dt)
 {
     if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) TransitionToScene(SceneType::GAMEPLAY);
+    noose.Update(dt);
 
     //btnStart->Update(dt);
     //btnExit->Update(dt);
@@ -46,7 +52,7 @@ bool SceneTitleScreen::Update(float dt)
 bool SceneTitleScreen::Draw()
 {
     app->render->background = { 0, 0, 0, 255 };
-    app->render->DrawTexture(nooseBG, 810, 0);
+    app->render->DrawTexture(nooseBG, 810, 0,false,&noose.GetCurrentFrame());
     app->render->DrawTexture(titleCard, 90, 64);
 
     //btnStart->Draw();
@@ -54,8 +60,10 @@ bool SceneTitleScreen::Draw()
 
     //char score[64] = { 0 };
     //sprintf_s(score, 64, "SCORE: %03i", 56);
-
-    //app->render->DrawText(font, score, 10, 10, 200, 0, { 255, 0, 255, 255 });
+    char test[64] = { 0 };
+    sprintf_s(test, 64, "Press Enter to Play...");
+    
+    app->render->DrawText(testFont, test, 90, 640, 64, 0, { 0, 255, 255, 255 });
 
     return false;
 }

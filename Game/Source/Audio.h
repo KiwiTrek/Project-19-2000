@@ -2,6 +2,7 @@
 #define __AUDIO_H__
 
 #include "Module.h"
+#include "List.h"
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 
@@ -25,6 +26,7 @@ public:
 
 	// Plays a music file
 	bool PlayMusic(const char* path, float fadeTime = DEFAULT_MUSIC_FADE_TIME);
+	bool StopMusic();
 
 	// Load/Unload a WAV in memory
 	uint LoadFx(const char* path);
@@ -47,7 +49,7 @@ public:
 	bool Save(pugi::xml_node&);
 
 private:
-	_Mix_Music* music;
+	_Mix_Music* music = nullptr;
 	List<Mix_Chunk*> fx;
 
 	int volumeFx;

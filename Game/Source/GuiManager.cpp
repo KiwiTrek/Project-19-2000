@@ -35,67 +35,7 @@ bool GuiManager::Awake(pugi::xml_node& config)
 
 bool GuiManager::Start()
 {
-	//// Atlas
-	//SString tmp("%s%s", folderTexture.GetString(), "gui_atlas.png");
-	//atlas = app->tex->Load(tmp.GetString());
-
-	//// Sounds
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderAudio.GetString(), "mouse_click.wav");
-	//clickSoundId = app->audio->LoadFx(tmp.GetString());
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderAudio.GetString(), "mouse_hover.wav");
-	//hoverSoundId = app->audio->LoadFx(tmp.GetString());
-
-	//// Default
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "default_label.png");
-	//defaultFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "default_label_small.png");
-	//defaultFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//// Disabled
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "disabled_label.png");
-	//disabledFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "disabled_label_small.png");
-	//disabledFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//// Hover
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "hover_label.png");
-	//hoverFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "hover_label_small.png");
-	//hoverFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//// Pressed
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "pressed_label.png");
-	//pressedFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "pressed_label_small.png");
-	//pressedFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//// Title
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "title_label.png");
-	//titleFont = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "title_label_medium.png");
-	//titleFontMedium = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
-
-	//tmp.Clear();
-	//tmp.Create("%s%s", folderTexture.GetString(), "title_label_small.png");
-	//titleFontSmall = app->fonts->Load(tmp.GetString(), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,_-@#*^()[]<>: ", 3);
+	// Load FONTS
 
 	return true;
 }
@@ -136,11 +76,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 	control->SetTexture(atlas);
 	if (secondText)
 	{
-		control->SetFonts(defaultFontSmall, titleFontMedium, hoverFontSmall, pressedFontSmall, disabledFontSmall);
+		//control->SetFonts(defaultFontSmall, titleFontMedium, hoverFontSmall, pressedFontSmall, disabledFontSmall);
 	}
 	else
 	{
-		control->SetFonts(defaultFont, titleFontMedium, hoverFont, pressedFont, disabledFont);
+		//control->SetFonts(defaultFont, titleFontMedium, hoverFont, pressedFont, disabledFont);
 	}
 
 	// Adds the created entity to the list
@@ -170,19 +110,7 @@ bool GuiManager::CleanUp()
 	}
 	controls.Clear();
 
-	app->tex->UnLoad(atlas);
-
-	app->fonts->Unload(defaultFont);
-	app->fonts->Unload(disabledFont);
-	app->fonts->Unload(hoverFont);
-	app->fonts->Unload(pressedFont);
-	app->fonts->Unload(titleFont);
-	app->fonts->Unload(defaultFontSmall);
-	app->fonts->Unload(disabledFontSmall);
-	app->fonts->Unload(hoverFontSmall);
-	app->fonts->Unload(pressedFontSmall);
-	app->fonts->Unload(titleFontMedium);
-	app->fonts->Unload(titleFontSmall);
+	// Unload FONTS
 
 	app->audio->UnloadFx(hoverSoundId);
 	app->audio->UnloadFx(clickSoundId);

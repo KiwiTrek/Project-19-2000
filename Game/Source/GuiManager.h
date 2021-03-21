@@ -36,17 +36,7 @@ public:
 
 	SDL_Texture* atlas;
 
-	int defaultFont = -1;
-	int defaultFontSmall = -1;
-	int titleFont = -1;
-	int titleFontMedium = -1;
-	int titleFontSmall = -1;
-	int hoverFont = -1;
-	int hoverFontSmall = -1;
-	int pressedFont = -1;
-	int pressedFontSmall = -1;
-	int disabledFont = -1;
-	int disabledFontSmall = -1;
+	// Fonts
 
 	int clickSoundId = -1;
 	int hoverSoundId = -1;

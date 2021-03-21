@@ -1,5 +1,6 @@
 #include "SceneGameplay.h"
 
+#include "Audio.h"
 #include "EntityManager.h"
 #include "Input.h"
 #include "Render.h"
@@ -17,6 +18,8 @@ bool SceneGameplay::Load() /*EntityManager entityManager)*/
 
 	// Initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER);
+
+	app->audio->StopMusic();
 
 	return false;
 }

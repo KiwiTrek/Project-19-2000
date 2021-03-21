@@ -2,6 +2,10 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Animation.h"
+#include "Font.h"
+
+class Font;
 
 enum SceneType
 {

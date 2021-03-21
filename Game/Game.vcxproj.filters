@@ -45,9 +45,6 @@
     <ClCompile Include="Source\GuiManager.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Fonts.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EntityManager.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Source\SceneGameplay.cpp">
       <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,9 +147,6 @@
     <ClInclude Include="Source\GuiManager.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Fonts.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entity.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -170,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="Source\SceneGameplay.h">
       <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -93,12 +93,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
 		if (secondaryText)
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 11, disabledFont, text.GetString());
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 11, disabledFont, secondText.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 11, disabledFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 11, disabledFont, secondText.GetString());
 		}
 		else
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), disabledFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), disabledFont, text.GetString());
 		}
 		if (app->render->debug)
 		{
@@ -111,12 +111,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
 		if (secondaryText)
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, defaultFont, text.GetString());
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, defaultFont, secondText.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, defaultFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, defaultFont, secondText.GetString());
 		}
 		else
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), defaultFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), defaultFont, text.GetString());
 		}
 		if (app->render->debug)
 		{
@@ -129,12 +129,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
 		if (secondaryText)
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, hoverFont, text.GetString());
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, hoverFont, secondText.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, hoverFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, hoverFont, secondText.GetString());
 		}
 		else
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), hoverFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), hoverFont, text.GetString());
 		}
 		if (app->render->debug)
 		{
@@ -147,12 +147,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
 		if (secondaryText)
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, pressedFont, text.GetString());
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, pressedFont, secondText.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, pressedFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, pressedFont, secondText.GetString());
 		}
 		else
 		{
-			app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), pressedFont, text.GetString());
+			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), pressedFont, text.GetString());
 		}
 		if (app->render->debug)
 		{
