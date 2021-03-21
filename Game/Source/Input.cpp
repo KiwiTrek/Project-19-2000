@@ -14,15 +14,18 @@ Input::Input() : Module()
 	name.Create("input");
 
 	keyboard = new KeyState[MAX_KEYS];
+	gamePad = new KeyState[NUM_PAD_BUTTONS];
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
 	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
-	memset(&pad, 0, sizeof(GamePad));
+	memset(gamePad, 0, sizeof(KeyState) * NUM_PAD_BUTTONS);
 }
 
 // Destructor
 Input::~Input()
 {
 	delete[] keyboard;
+	delete[] mouseButtons;
+	delete[] gamePad;
 }
 
 // Called before render is available
@@ -48,6 +51,15 @@ bool Input::Awake(pugi::xml_node& config)
 		return false;
 	}
 
+	//CONTROLS CONFIG
+	for (pugi::xml_node a = config.child("select"); a; a = a.next_sibling())
+	{
+		InputButton* c = new InputButton;
+		c->keyId = a.attribute("keyId").as_int(-1);
+		c->gamePadId = a.attribute("padId").as_int(-1);
+		c->name.Create(a.child_value());
+		controlConfig.Add(c);
+	}
 
 	return ret;
 }
@@ -64,6 +76,7 @@ bool Input::PreUpdate()
 {
 	static SDL_Event event;
 
+	// KEYBOARD
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
 	for(int i = 0; i < MAX_KEYS; ++i)
@@ -84,6 +97,7 @@ bool Input::PreUpdate()
 		}
 	}
 
+	// MOUSE
 	for(int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
 		if(mouseButtons[i] == KEY_DOWN)
@@ -93,56 +107,92 @@ bool Input::PreUpdate()
 			mouseButtons[i] = KEY_IDLE;
 	}
 
-	while(SDL_PollEvent(&event) != 0)
+	// WINDOW
+	while (SDL_PollEvent(&event) != 0)
 	{
-		switch(event.type)
+		switch (event.type)
 		{
-			case SDL_QUIT:
-				windowEvents[WE_QUIT] = true;
+		case SDL_QUIT:
+		{
+			windowEvents[WE_QUIT] = true;
 			break;
+		}
+		case SDL_WINDOWEVENT:
+		{
+			switch (event.window.event)
+			{
+				//case SDL_WINDOWEVENT_LEAVE:
+			case SDL_WINDOWEVENT_HIDDEN:
+			case SDL_WINDOWEVENT_MINIMIZED:
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+				windowEvents[WE_HIDE] = true;
+				break;
 
-			case SDL_WINDOWEVENT:
-				switch(event.window.event)
-				{
-					//case SDL_WINDOWEVENT_LEAVE:
-					case SDL_WINDOWEVENT_HIDDEN:
-					case SDL_WINDOWEVENT_MINIMIZED:
-					case SDL_WINDOWEVENT_FOCUS_LOST:
-					windowEvents[WE_HIDE] = true;
-					break;
-
-					//case SDL_WINDOWEVENT_ENTER:
-					case SDL_WINDOWEVENT_SHOWN:
-					case SDL_WINDOWEVENT_FOCUS_GAINED:
-					case SDL_WINDOWEVENT_MAXIMIZED:
-					case SDL_WINDOWEVENT_RESTORED:
-					windowEvents[WE_SHOW] = true;
-					break;
-				}
+				//case SDL_WINDOWEVENT_ENTER:
+			case SDL_WINDOWEVENT_SHOWN:
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+			case SDL_WINDOWEVENT_MAXIMIZED:
+			case SDL_WINDOWEVENT_RESTORED:
+				windowEvents[WE_SHOW] = true;
+				break;
+			}
 			break;
-
-			case SDL_MOUSEBUTTONDOWN:
-				mouseButtons[event.button.button - 1] = KEY_DOWN;
-				//LOG("Mouse button %d down", event.button.button-1);
+		}
+		case SDL_MOUSEBUTTONDOWN:
+		{
+			mouseButtons[event.button.button - 1] = KEY_DOWN;
+			//LOG("Mouse button %d down", event.button.button-1);
 			break;
-
-			case SDL_MOUSEBUTTONUP:
-				mouseButtons[event.button.button - 1] = KEY_UP;
-				//LOG("Mouse button %d up", event.button.button-1);
+		}
+		case SDL_MOUSEBUTTONUP:
+		{
+			mouseButtons[event.button.button - 1] = KEY_UP;
+			//LOG("Mouse button %d up", event.button.button-1);
 			break;
-
-			case SDL_MOUSEMOTION:
-				int scale = app->win->GetScale();
-				mouseMotionX = event.motion.xrel / scale;
-				mouseMotionY = event.motion.yrel / scale;
-				mouseX = event.motion.x / scale;
-				mouseY = event.motion.y / scale;
-				//LOG("Mouse motion x %d y %d", mouse_motion_x, mouse_motion_y);
+		}
+		case SDL_MOUSEMOTION:
+		{
+			int scale = app->win->GetScale();
+			mouseMotionX = event.motion.xrel / scale;
+			mouseMotionY = event.motion.yrel / scale;
+			mouseX = event.motion.x / scale;
+			mouseY = event.motion.y / scale;
+			//LOG("Mouse motion x %d y %d", mouse_motion_x, mouse_motion_y);
 			break;
+		}
+		case(SDL_CONTROLLERDEVICEADDED):
+		{
+			HandleDeviceConnection(event.cdevice.which);
+			break;
+		}
+		case(SDL_CONTROLLERDEVICEREMOVED):
+		{
+			HandleDeviceRemoval(event.cdevice.which);
+			break;
+		}
 		}
 	}
 
-	UpdateGamepadsInput();
+	// GAMEPAD
+	const bool* padKeys = UpdateGamepadsInput();
+
+	for (int i = 0; i < NUM_PAD_BUTTONS; ++i)
+	{
+		if (padKeys[i] == 1)
+		{
+			if (gamePad[i] == KEY_IDLE)
+				gamePad[i] = KEY_DOWN;
+			else
+				gamePad[i] = KEY_REPEAT;
+		}
+		else
+		{
+			if (gamePad[i] == KEY_REPEAT || gamePad[i] == KEY_DOWN)
+				gamePad[i] = KEY_UP;
+			else
+				gamePad[i] = KEY_IDLE;
+		}
+	}
 
 	return true;
 }
@@ -191,7 +241,7 @@ void Input::HandleDeviceConnection(int index)
 			{
 				LOG("Found a gamepad named %s", SDL_GameControllerName(pad.controller));
 				pad.enabled = true;
-				pad.l_dz = pad.r_dz = 0.1f;
+				pad.l_dz = pad.r_dz = pad.l2_dz = pad.r2_dz = 0.1f;
 				pad.haptic = SDL_HapticOpen(index);
 				if (pad.haptic != nullptr) LOG("... gamepad has force feedback capabilities");
 				pad.index = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad.controller));
@@ -211,43 +261,47 @@ void Input::HandleDeviceRemoval(int index)
 	}
 }
 
-void Input::UpdateGamepadsInput()
+bool* Input::UpdateGamepadsInput()
 {
+	bool gamePadTemp[NUM_PAD_BUTTONS] = {};
+	float l2, r2, l_x, l_y, r_x, r_y;
 	if (pad.enabled == true)
 	{
-		pad.a = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_A) == 1;
-		pad.b = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_B) == 1;
-		pad.x = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_X) == 1;
-		pad.y = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_Y) == 1;
-		pad.l1 = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == 1;
-		pad.r1 = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) == 1;
-		pad.l3 = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_LEFTSTICK) == 1;
-		pad.r3 = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK) == 1;
-		pad.up = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_UP) == 1;
-		pad.down = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) == 1;
-		pad.left = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) == 1;
-		pad.right = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) == 1;
+		gamePadTemp[0] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_A) == 1;
+		gamePadTemp[1] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_B) == 1;
+		gamePadTemp[2] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_X) == 1;
+		gamePadTemp[3] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_Y) == 1;
+		gamePadTemp[4] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_BACK) == 1;
+		gamePadTemp[5] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_GUIDE) == 1;
+		gamePadTemp[6] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_START) == 1;
+		gamePadTemp[7] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_LEFTSTICK) == 1;
+		gamePadTemp[8] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_RIGHTSTICK) == 1;
+		gamePadTemp[9] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == 1;
+		gamePadTemp[10] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) == 1;
+		gamePadTemp[11] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_UP) == 1;
+		gamePadTemp[12] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN) == 1;
+		gamePadTemp[13] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT) == 1;
+		gamePadTemp[14] = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT) == 1;
 
-		pad.start = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_START) == 1;
-		pad.guide = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_GUIDE) == 1;
-		pad.back = SDL_GameControllerGetButton(pad.controller, SDL_CONTROLLER_BUTTON_BACK) == 1;
-
-		pad.l2 = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT)) / 32767.0f;
-		pad.r2 = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT)) / 32767.0f;
-
-		pad.l_x = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_LEFTX)) / 32767.0f;
-		pad.l_y = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_LEFTY)) / 32767.0f;
-		pad.r_x = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_RIGHTX)) / 32767.0f;
-		pad.r_y = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_RIGHTY)) / 32767.0f;
+		l2 = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT)) / 32767.0f;
+		r2 = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT)) / 32767.0f;
+		l_x = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_LEFTX)) / 32767.0f;
+		l_y = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_LEFTY)) / 32767.0f;
+		r_x = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_RIGHTX)) / 32767.0f;
+		r_y = float(SDL_GameControllerGetAxis(pad.controller, SDL_CONTROLLER_AXIS_RIGHTY)) / 32767.0f;
 
 		// Apply deadzone. All values below the deadzone will be discarded
-		pad.l_x = (fabsf(pad.l_x) > pad.l_dz) ? pad.l_x : 0.0f;
-		pad.l_y = (fabsf(pad.l_y) > pad.l_dz) ? pad.l_y : 0.0f;
-		pad.r_x = (fabsf(pad.r_x) > pad.r_dz) ? pad.r_x : 0.0f;
-		pad.r_y = (fabsf(pad.r_y) > pad.r_dz) ? pad.r_y : 0.0f;
+		gamePadTemp[15] = (fabsf(l2) > pad.l2_dz) ? true : false;
+		gamePadTemp[16] = (fabsf(r2) > pad.r2_dz) ? true : false;
+		gamePadTemp[17] = (fabsf(l_x) > pad.l_dz) ? true : false;
+		gamePadTemp[18] = (fabsf(l_y) > pad.l_dz) ? true : false;
+		gamePadTemp[19] = (fabsf(r_x) > pad.r_dz) ? true : false;
+		gamePadTemp[20] = (fabsf(r_y) > pad.r_dz) ? true : false;
 
 		if (pad.rumble_countdown > 0) pad.rumble_countdown--;
 	}
+
+	return gamePadTemp;
 }
 
 bool Input::ShakeController(int id, float dt, int duration, float strength)

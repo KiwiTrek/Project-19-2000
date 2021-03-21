@@ -44,22 +44,22 @@ bool Player::Update(float dt)
 		godMode = !godMode;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if (app->input->CheckButton("right",KEY_REPEAT))
 	{
 		playerPos.x += 3;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if (app->input->CheckButton("left", KEY_REPEAT))
 	{
 		playerPos.x -= 3;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if (app->input->CheckButton("down", KEY_REPEAT))
 	{
 		playerPos.y += 3;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if (app->input->CheckButton("up", KEY_REPEAT))
 	{
 		playerPos.y -= 3;
 	}
