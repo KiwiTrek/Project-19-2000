@@ -3,73 +3,62 @@
 
 #include "Module.h"
 
-class Entity;
-struct SDL_Texture;
+enum SceneType
+{
+	LOGO,
+	TITLE_SCREEN,
+	GAMEPLAY
+};
 
-class Scene : public Module
+class Scene
 {
 public:
-	enum ScenesList
-	{
-		NONE = 0,
-		LOGO,
-		TITLE_SCREEN,
-		GAMEPLAY
-	};
 
-	Scene();
+	Scene() : active(true), loaded(false), transitionRequired(false) {}
 
-	// Destructor
-	virtual ~Scene();
+    virtual bool Load()
+    {
+        return true;
+    }
 
-	// Called before render is available
-	bool Awake();
+    virtual bool Update(float dt)
+    {
+        return true;
+    }
 
-	// Called before the first frame
-	bool Start();
+    virtual bool Draw()
+    {
+        return true;
+    }
 
-	// Called before all Updates
-	bool PreUpdate();
+    virtual bool Unload()
+    {
+        return true;
+    }
 
-	// Called each loop iteration
-	bool Update(float dt);
+    void TransitionToScene(SceneType scene)
+    {
+        transitionRequired = true;
+        nextScene = scene;
+    }
 
-	// Called before all Updates
-	bool PostUpdate();
+    // Define multiple Gui Event methods
+    virtual bool OnGuiMouseClickEvent(GuiControl* control)
+    {
+        return true;
+    }
 
-	// Called before quitting
-	bool CleanUp();
+public:
 
-	bool Load(pugi::xml_node& save);
-	bool Save(pugi::xml_node& save);
+    bool active = true;
+    SString name;         // Scene name identifier?
 
-	bool TransitionUpdate(float dt);
-	bool TransitionPostUpdate();
-	bool FadeEffect(bool fadeInOnly, float frames);
-	
-	// Public variables
-		Entity* player = nullptr;
+    // Possible properties
+    bool loaded = false;
+    // TODO: Transition animation properties
 
-private:
-	// ALL SCENE ASSETS
-	SDL_Texture* logo;
-	SDL_Texture* nooseBG;
-	SDL_Texture* titleCard;
-
-	// TRANSITIONS
-	enum TransitionScene
-	{
-		NO_TRANSITION = 0,
-		TO_BLACK,
-		FROM_BLACK
-	}
-
-	currentStep = TransitionScene::NO_TRANSITION;
-	uint32 frameCount = 0;
-	uint32 maxFrames = 0;
-	float fadeRatio = 0.0f;
-	ScenesList currentGameScene = ScenesList::NONE;
-	ScenesList nextGameScene = ScenesList::NONE;
+    bool transitionRequired;
+    SceneType nextScene;
 };
 
 #endif // __SCENE_H__

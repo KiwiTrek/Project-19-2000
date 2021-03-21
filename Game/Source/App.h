@@ -21,7 +21,7 @@ class Fonts;
 class EntityManager;
 class GuiManager;
 
-class Scene;
+class SceneManager;
 
 class App
 {
@@ -104,7 +104,7 @@ public:
 	GuiManager* gui;
 	Fonts* fonts;
 
-	Scene* scene;
+	SceneManager* scene;
 
 	bool vsync = false;
 

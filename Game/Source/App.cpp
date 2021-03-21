@@ -9,7 +9,7 @@
 #include "Fonts.h"
 #include "GuiManager.h"
 
-#include "Scene.h"
+#include "SceneManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -32,7 +32,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	entities = new EntityManager();
 	gui = new GuiManager();
 
-	scene = new Scene();
+	scene = new SceneManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
