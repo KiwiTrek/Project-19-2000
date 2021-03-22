@@ -293,10 +293,14 @@ bool* Input::UpdateGamepadsInput()
 		// Apply deadzone. All values below the deadzone will be discarded
 		gamePadTemp[15] = (fabsf(l2) > pad.l2_dz) ? true : false;
 		gamePadTemp[16] = (fabsf(r2) > pad.r2_dz) ? true : false;
-		gamePadTemp[17] = (fabsf(l_x) > pad.l_dz) ? true : false;
-		gamePadTemp[18] = (fabsf(l_y) > pad.l_dz) ? true : false;
-		gamePadTemp[19] = (fabsf(r_x) > pad.r_dz) ? true : false;
-		gamePadTemp[20] = (fabsf(r_y) > pad.r_dz) ? true : false;
+		gamePadTemp[17] = (l_x > pad.l_dz) ? true : false;
+		gamePadTemp[18] = (l_x < -pad.l_dz) ? true : false;
+		gamePadTemp[19] = (l_y > pad.l_dz) ? true : false;
+		gamePadTemp[20] = (l_y < -pad.l_dz) ? true : false;
+		gamePadTemp[21] = (r_x > pad.r_dz) ? true : false;
+		gamePadTemp[22] = (r_x < -pad.r_dz) ? true : false;
+		gamePadTemp[23] = (r_y > pad.r_dz) ? true : false;
+		gamePadTemp[24] = (r_y < -pad.r_dz) ? true : false;
 
 		if (pad.rumble_countdown > 0) pad.rumble_countdown--;
 	}
