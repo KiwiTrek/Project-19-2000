@@ -202,7 +202,8 @@ bool Input::CleanUp()
 {
 	LOG("Quitting SDL event subsystem");
 
-	if (pad.haptic != nullptr) {
+	if (pad.haptic != nullptr)
+	{
 		SDL_HapticStopAll(pad.haptic);
 		SDL_HapticClose(pad.haptic);
 	}

@@ -105,6 +105,7 @@ public:
 	SceneManager* scene;
 
 	bool vsync = false;
+	bool exitRequest = false;
 
 private:
 

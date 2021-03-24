@@ -93,10 +93,7 @@ bool App::Awake()
 		// Read from config file your framerate cap
 		cap = configApp.attribute("framerateCap").as_int(-1);
 
-		if (cap > 0)
-		{
-			cappedMs = 1000 / cap;
-		}
+		if (cap > 0) cappedMs = 1000 / cap;
 	}
 
 	if (ret == true)
@@ -125,9 +122,15 @@ bool App::Start()
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->Start();
+		if (item->data->active == true) ret = item->data->Start();
+
 		item = item->next;
 	}
+
+	capRequest = false;
+	saveRequest = false;
+	loadRequest = false;
+	exitRequest = false;
 
 	return ret;
 }
@@ -138,19 +141,18 @@ bool App::Update()
 	bool ret = true;
 	PrepareUpdate();
 
-	if(input->GetWindowEvent(WE_QUIT) == true)
-		ret = false;
+	if(input->GetWindowEvent(WE_QUIT) == true) ret = false;
 
-	if(ret == true)
-		ret = PreUpdate();
+	if(ret == true) ret = PreUpdate();
 
-	if(ret == true)
-		ret = DoUpdate();
+	if(ret == true) ret = DoUpdate();
 
-	if(ret == true)
-		ret = PostUpdate();
+	if(ret == true) ret = PostUpdate();
 
 	FinishUpdate();
+
+	if (exitRequest) return false;
+
 	return ret;
 }
 
@@ -161,13 +163,9 @@ pugi::xml_node App::LoadConfig(pugi::xml_document& configFile) const
 	pugi::xml_parse_result result = configFile.load_file(CONFIG_FILENAME);
 
 	if (result == NULL)
-	{
 		LOG("Could not load xml file: %s. pugi error: %s", CONFIG_FILENAME, result.description());
-	}
 	else
-	{
 		ret = configFile.child("config");
-	}
 
 	return ret;
 }
@@ -233,22 +231,16 @@ void App::FinishUpdate()
 	static char vsyncStr[4];
 
 	if (vsync)
-	{
 		sprintf_s(vsyncStr, "on");
-	}
 	else
-	{
 		sprintf_s(vsyncStr, "off");
-	}
+
 	sprintf_s(title, 256, "FPS: %i Av.FPS: %.2f Last Frame Ms: %02u Vsync: %s", framesOnLastUpdate, averageFps, lastFrameMs, vsyncStr);
 	app->win->SetTitle(title);
 
 	// Use SDL_Delay to make sure you get your capped framerate
 	PERF_START(pTimer);
-	if (cappedMs > lastFrameMs)
-	{
-		SDL_Delay(cappedMs - lastFrameMs);
-	}
+	if (cappedMs > lastFrameMs) SDL_Delay(cappedMs - lastFrameMs);
 
 	// Measure accurately the amount of time SDL_Delay() actually waits compared to what was expected
 	PERF_PEEK(pTimer);
@@ -266,9 +258,7 @@ bool App::PreUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
-			continue;
-		}
+		if(pModule->active == false) continue;
 
 		ret = item->data->PreUpdate();
 	}
@@ -288,9 +278,7 @@ bool App::DoUpdate()
 	{
 		pModule = item->data;
 
-		/*if(pModule->active == false) {
-			continue;
-		}*/
+		if(pModule->active == false) continue;
 
 		ret = item->data->Update(dt);
 	}
@@ -309,9 +297,7 @@ bool App::PostUpdate()
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
-			continue;
-		}
+		if(pModule->active == false) continue;
 
 		ret = item->data->PostUpdate();
 	}
@@ -449,12 +435,7 @@ bool App::ChangeCap()
 		break;
 	}
 
-	if (cap > 0)
-	{
-		cappedMs = 1000 / cap;
-	}
+	if (cap > 0) cappedMs = 1000 / cap;
 
 	return true;
 }
-
-

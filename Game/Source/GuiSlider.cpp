@@ -103,29 +103,29 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 {
 	//app->fonts->DrawText(cPosX + limits.x - offsetText, cPosY + limits.y, titleFont, text.GetString());
 
-	for (int i = 1; i != widthInUnits - 1; ++i)
+	//SLIDER BAR
+	if (state != GuiControlState::DISABLED)
 	{
-		app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-		//app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
-		if (app->render->debug)
+		for (int i = 1; i != widthInUnits - 1; ++i)
 		{
 			app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+			//app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
+			if (app->render->debug)
+			{
+				app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+			}
 		}
-	}
-	app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-	app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-	//app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &normalLimitsBegin);
-	//app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
-	if (app->render->debug)
-	{
 		app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
 		app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+		//app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &normalLimitsBegin);
+		//app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
+		if (app->render->debug)
+		{
+			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+			app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+		}
 	}
-
-	// Draw the appropiate button depending on state
-	switch (state)
-	{
-	case GuiControlState::DISABLED:
+	else
 	{
 		for (int i = 1; i != widthInUnits - 1; ++i)
 		{
@@ -146,7 +146,14 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
 			app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
 		}
+	}
 
+	//SLIDER MARKER
+	// Draw the appropiate button depending on state
+	switch (state)
+	{
+	case GuiControlState::DISABLED:
+	{
 		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 100, 100, 100, 100);
 		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &disabled);
 		if (app->render->debug)

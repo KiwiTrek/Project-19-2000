@@ -4,6 +4,8 @@
 #include "Scene.h"
 
 #include "GuiButton.h"
+#include "GuiSlider.h"
+#include "GuiCheckBox.h"
 
 class SceneTitleScreen : public Scene
 {
@@ -21,7 +23,7 @@ public:
     bool Unload();
 
     // Declare on mouse click event
-    //bool OnGuiMouseClickEvent(GuiControl* control);
+    bool OnGuiMouseClickEvent(GuiControl* control);
 
 private:
 
@@ -30,13 +32,45 @@ private:
 
     Animation noose;
 
+    //MAIN MENU
     GuiButton* btnStart;
     GuiButton* btnContinue;
     GuiButton* btnOptions;
     GuiButton* btnExit;
 
-    Font* testFont = nullptr;
+    //OPTIONS
+    GuiSlider* sldrVolume;
+    GuiSlider* sldrFx;
+    GuiCheckBox* boxFullScreen;
+    GuiCheckBox* boxVSync;
+    GuiButton* btnControls;
+    GuiButton* btnBack;
+
+    //CONTROLS
+    GuiButton* btnKeySelect;
+    GuiButton* btnKeyCancel;
+    GuiButton* btnKeyMenu;
+    GuiButton* btnKeyUp;
+    GuiButton* btnKeyDown;
+    GuiButton* btnKeyLeft;
+    GuiButton* btnKeyRight;
+    GuiButton* btnBack2;
+    GuiButton* btnPadSelect;
+    GuiButton* btnPadCancel;
+    GuiButton* btnPadMenu;
+    GuiButton* btnPadUp;
+    GuiButton* btnPadDown;
+    GuiButton* btnPadLeft;
+    GuiButton* btnPadRight;
+
+    //FONTS
+    Font* dialogueFont = nullptr;
     int titleFx;
+
+    //BOOLS
+    bool loadRequest = false;
+    bool options = false;
+    bool controls = false;
 };
 
 #endif // __SCENETITLE_H__
