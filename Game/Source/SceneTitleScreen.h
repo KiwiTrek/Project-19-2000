@@ -30,8 +30,10 @@ private:
 
     Animation noose;
 
-    //GuiButton* btnStart;
-    //GuiButton* btnExit;
+    GuiButton* btnStart;
+    GuiButton* btnContinue;
+    GuiButton* btnOptions;
+    GuiButton* btnExit;
 
     Font* testFont = nullptr;
     int titleFx;

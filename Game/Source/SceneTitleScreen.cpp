@@ -13,11 +13,17 @@
 SceneTitleScreen::SceneTitleScreen()
 {
     // GUI: Initialize required controls for the screen
-    //btnStart = new GuiButton(1, { 1280 / 2 - 300 / 2, 300, 300, 80 }, "START");
-    //btnStart->SetObserver(this);
+    btnStart = new GuiButton(1, { 1280 / 2 - 300 / 2, 300, 300, 80 }, "START");
+    btnStart->SetObserver(this);
 
-    //btnExit = new GuiButton(2, { 1280 / 2 - 300 / 2, 400, 300, 80 }, "EXIT");
-    //btnExit->SetObserver(this);
+    btnContinue = new GuiButton(1, { 1280 / 2 - 300 / 2, 300, 300, 80 }, "CONTINUE");
+    btnContinue->SetObserver(this);
+
+    btnOptions = new GuiButton(1, { 1280 / 2 - 300 / 2, 300, 300, 80 }, "OPTIONS");
+    btnOptions->SetObserver(this);
+
+    btnExit = new GuiButton(2, { 1280 / 2 - 300 / 2, 400, 300, 80 }, "EXIT");
+    btnExit->SetObserver(this);
 
     for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
 }
@@ -41,10 +47,13 @@ bool SceneTitleScreen::Load()
 bool SceneTitleScreen::Update(float dt)
 {
     if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) TransitionToScene(SceneType::GAMEPLAY);
+
     noose.Update(dt);
 
-    //btnStart->Update(dt);
-    //btnExit->Update(dt);
+    btnStart->Update(dt);
+    btnContinue->Update(dt);
+    btnOptions->Update(dt);
+    btnExit->Update(dt);
 
     return false;
 }
@@ -55,8 +64,10 @@ bool SceneTitleScreen::Draw()
     app->render->DrawTexture(nooseBG, 810, 0,false,&noose.GetCurrentFrame());
     app->render->DrawTexture(titleCard, 90, 64);
 
-    //btnStart->Draw();
-    //btnExit->Draw();
+    btnStart->Draw();
+    btnContinue->Draw();
+    btnOptions->Draw();
+    btnExit->Draw();
 
     //char score[64] = { 0 };
     //sprintf_s(score, 64, "SCORE: %03i", 56);

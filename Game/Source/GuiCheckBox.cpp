@@ -80,13 +80,14 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 	{
 	case GuiControlState::DISABLED:
 	{
+		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		if (!checked)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
 		}
 		else
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledChecked);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledChecked);
 		}
 		if (app->render->debug)
 		{
@@ -96,13 +97,14 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::NORMAL:
 	{
+		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		if (!checked)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
 		}
 		else
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalChecked);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalChecked);
 		}
 		if (app->render->debug)
 		{
@@ -112,13 +114,14 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::FOCUSED:
 	{
+		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		if (!checked)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
 		}
 		else
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedChecked);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedChecked);
 		}
 		if (app->render->debug)
 		{
@@ -128,13 +131,14 @@ bool GuiCheckBox::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::PRESSED:
 	{
+		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
 		if (!checked)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
 		}
 		else
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedChecked);
+			//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedChecked);
 		}
 		if (app->render->debug)
 		{

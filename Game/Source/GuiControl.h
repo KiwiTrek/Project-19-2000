@@ -1,7 +1,7 @@
 #ifndef __GUICONTROL_H__
 #define __GUICONTROL_H__
 
-#include "Module.h"
+#include "Scene.h"
 #include "Point.h"
 #include "SString.h"
 #include "SDL.h"
@@ -76,9 +76,9 @@ public:
 	}
 
 	// Sets the gui control observer
-	void SetObserver(Module* module)
+	void SetObserver(Scene* scene)
 	{
-		observer = module;
+		observer = scene;
 	}
 
 	// Notifies the gui control observer
@@ -111,8 +111,8 @@ public:
 	int click;
 	int hover;
 
-	// Observer module
-	Module* observer;
+	// Observer scene
+	Scene* observer;
 };
 
 #endif // __GUICONTROL_H__

@@ -40,7 +40,7 @@ bool GuiManager::Start()
 	return true;
 }
 
-GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, Module* observer, int widthInUnits, bool secondText, const char* text2)
+GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, Scene* observer, int widthInUnits, bool secondText, const char* text2)
 {
 	GuiControl* control = nullptr;
 
