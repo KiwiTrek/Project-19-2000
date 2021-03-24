@@ -10,6 +10,11 @@
 class SceneTitleScreen : public Scene
 {
 public:
+    enum Flags
+    {
+        OPTIONS,
+        CONTROLS
+    };
 
     SceneTitleScreen();
     virtual ~SceneTitleScreen();
@@ -67,10 +72,7 @@ private:
     Font* dialogueFont = nullptr;
     int titleFx;
 
-    //BOOLS
-    bool loadRequest = false;
-    bool options = false;
-    bool controls = false;
+    unsigned char flags;
 };
 
 #endif // __SCENETITLE_H__

@@ -48,6 +48,29 @@ template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
 	b = tmp;
 }
 
+// Bits
+// Sets the indexed bit to 1
+inline unsigned char SetBit(unsigned char bitfield, uint index)
+{
+	bitfield = bitfield | (1 << index);
+	return bitfield;
+}
+
+// Clears the indexed bit to 0
+inline unsigned char ClearBit(unsigned char bitfield, uint index)
+{
+	bitfield = bitfield & ~(1 << index);
+	return bitfield;
+}
+
+// Switches the indexed bit to the other state
+inline unsigned char ToggleBit(unsigned char bitfield, uint index)
+{
+	bitfield = bitfield ^ 1 << index;
+	return bitfield;
+
+}
+
 // Standard string size
 #define SHORT_STR	 32
 #define MID_STR	    255

@@ -93,9 +93,7 @@ SceneTitleScreen::SceneTitleScreen()
 
     for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
 
-    loadRequest = false;
-    options = false;
-    controls = false;
+    flags = 0;
 }
 
 SceneTitleScreen::~SceneTitleScreen()
@@ -116,24 +114,17 @@ bool SceneTitleScreen::Load()
 
 bool SceneTitleScreen::Update(float dt)
 {
-    if (loadRequest)
-    {
-        loadRequest = false;
-        app->LoadRequest();
-    }
-
-    //if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) TransitionToScene(SceneType::GAMEPLAY);
     if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
     noose.Update(dt);
 
-    if (!options && !controls)
+    if ((flags & 1<<Flags::OPTIONS) == 0 && (flags & 1<<Flags::CONTROLS) == 0)
     {
         btnStart->Update(dt);
         btnContinue->Update(dt);
         btnOptions->Update(dt);
         btnExit->Update(dt);
     }
-    else if (!controls)
+    else if ((flags & 1 << Flags::CONTROLS) == 0)
     {
         sldrVolume->Update(dt);
         sldrFx->Update(dt);
@@ -161,6 +152,7 @@ bool SceneTitleScreen::Update(float dt)
         btnPadRight->Update(dt);
     }
 
+    LOG("%d", flags);
     return true;
 }
 
@@ -170,14 +162,14 @@ bool SceneTitleScreen::Draw()
     app->render->DrawTexture(nooseBG, 810, 0,false,&noose.GetCurrentFrame());
     app->render->DrawTexture(titleCard, 90, 64);
 
-    if (!options && !controls)
+    if ((flags & 1<<Flags::OPTIONS) == 0 && (flags & 1<<Flags::CONTROLS) == 0)
     {
         btnStart->Draw();
         btnContinue->Draw();
         btnOptions->Draw();
         btnExit->Draw();
     }
-    else if (!controls)
+    else if ((flags & 1 << Flags::CONTROLS) == 0)
     {
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
         sldrVolume->Draw();
@@ -234,11 +226,11 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         TransitionToScene(SceneType::GAMEPLAY);
         break;
     case 2: //CONTINUE
-        loadRequest = true;
+        app->LoadRequest();
         TransitionToScene(SceneType::GAMEPLAY);
         break;
     case 3: //OPTIONS
-        options = true;
+        flags = SetBit(flags,Flags::OPTIONS);
         break;
     case 4: //EXIT
         app->exitRequest = true;
@@ -252,10 +244,10 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 8: //VSYNC
         break;
     case 9: //CONTROLS
-        controls = true;
+        flags = SetBit(flags,Flags::CONTROLS);
         break;
     case 10: //BACK
-        options = false;
+        flags = ClearBit(flags,Flags::OPTIONS);
         break;
     case 11: //KEY SELECT
         break;
@@ -272,7 +264,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 17: //KEY RIGHT
         break;
     case 18: //BACK 2
-        controls = false;
+        flags = ClearBit(flags,Flags::CONTROLS);
         break;
     case 19: //PAD SELECT
         break;

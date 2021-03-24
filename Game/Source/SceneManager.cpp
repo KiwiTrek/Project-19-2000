@@ -127,15 +127,19 @@ bool SceneManager::Update(float dt)
 		{
 		case SceneType::LOGO:
 			next = new SceneLogo();
+			next->name = SceneType::LOGO;
 			break;
 		case SceneType::TITLE_SCREEN:
 			next = new SceneTitleScreen();
+			next->name = SceneType::TITLE_SCREEN;
 			break;
 		case SceneType::GAMEPLAY:
 			next = new SceneGameplay();
+			next->name = SceneType::GAMEPLAY;
 			break;
 		case SceneType::DEV_ROOM:
 			next = new SceneDevRoom();
+			next->name = SceneType::DEV_ROOM;
 			break;
 		default:
 			break;
@@ -144,7 +148,7 @@ bool SceneManager::Update(float dt)
 		current->transitionRequired = false;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) return false;
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && current->name != SceneType::GAMEPLAY) return false;
 
 	return true;
 }
