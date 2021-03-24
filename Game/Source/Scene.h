@@ -11,7 +11,8 @@ enum SceneType
 {
 	LOGO,
 	TITLE_SCREEN,
-	GAMEPLAY
+	GAMEPLAY,
+    DEV_ROOM
 };
 
 class Scene

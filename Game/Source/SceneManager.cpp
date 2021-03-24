@@ -11,6 +11,7 @@
 #include "SceneLogo.h"
 #include "SceneTitleScreen.h"
 #include "SceneGameplay.h"
+#include "SceneDevRoom.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -132,6 +133,9 @@ bool SceneManager::Update(float dt)
 			break;
 		case SceneType::GAMEPLAY:
 			next = new SceneGameplay();
+			break;
+		case SceneType::DEV_ROOM:
+			next = new SceneDevRoom();
 			break;
 		default:
 			break;

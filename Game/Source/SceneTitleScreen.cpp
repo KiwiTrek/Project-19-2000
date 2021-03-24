@@ -47,7 +47,7 @@ bool SceneTitleScreen::Load()
 bool SceneTitleScreen::Update(float dt)
 {
     if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) TransitionToScene(SceneType::GAMEPLAY);
-
+    if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
     noose.Update(dt);
 
     btnStart->Update(dt);
