@@ -69,6 +69,9 @@
     <ClCompile Include="Source\SceneDevRoom.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -129,9 +132,6 @@
     <ClInclude Include="Source\PerfTimer.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Map.h">
       <Filter>Modules</Filter>
     </ClInclude>
@@ -176,6 +176,12 @@
     </ClInclude>
     <ClInclude Include="Source\SceneDevRoom.h">
       <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

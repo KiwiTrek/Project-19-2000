@@ -16,7 +16,7 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 	this->entityRect = { 0,0,64,64 };
 
 	LOG("Init Player");
-	spawnPos = { 100,100 };
+	spawnPos = { 150,150 };
 	playerPos = spawnPos;
 
 	pendingToDelete = false;
@@ -62,6 +62,16 @@ bool Player::Update(float dt)
 	if (app->input->CheckButton("up", KEY_REPEAT))
 	{
 		playerPos.y -= 3;
+	}
+
+	if (app->input->CheckButton("select", KEY_DOWN))
+	{
+		LOG("Pressing Select");
+	}
+
+	if (app->input->CheckButton("cancel", KEY_DOWN))
+	{
+		LOG("Pressing Cancel");
 	}
 
 	return true;

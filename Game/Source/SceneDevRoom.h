@@ -20,6 +20,8 @@ public:
 
     bool Unload();
 
+public:
+    SDL_Texture* tileSetTex;
 private:
 
     Entity* player = nullptr;

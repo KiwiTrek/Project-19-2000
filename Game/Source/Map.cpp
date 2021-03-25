@@ -532,7 +532,7 @@ void Map::SetTileProperty(int x, int y, const char* property, int value, bool no
 	SString tileSetName;
 	if (notMovCollision)
 	{
-		tileSetName = "level_1_tileset";
+		tileSetName = "dev_room_tiles";
 	}
 	else
 	{
@@ -585,7 +585,7 @@ int Map::GetTileProperty(int x, int y, const char* property, bool notMovCollisio
 	SString tileSetName;
 	if (notMovCollision)
 	{
-		tileSetName = "level_1_tileset";
+		tileSetName = "dev_room_tiles";
 	}
 	else
 	{

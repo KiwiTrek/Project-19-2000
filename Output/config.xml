@@ -17,7 +17,9 @@
     <resizable value="false"/>
     <fullscreen_window value="false"/>
   </window>
-
+  <map>
+    <folder>Assets/Maps/</folder>
+  </map>
   <input>
     <select keyId="29" padId="0">select</select>
     <cancel keyId="27" padId="1">cancel</cancel>
