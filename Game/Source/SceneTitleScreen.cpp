@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Textures.h"
+#include "GuiManager.h"
 
 #include "EntityManager.h"
 
@@ -14,8 +15,8 @@ SceneTitleScreen::SceneTitleScreen()
 {
     // GUI: Initialize required controls for the screen
     //MAIN MENU
-    btnStart = new GuiButton(1, { 90, 300, 300, 60 }, "START");
-    btnStart->SetObserver(this);
+    app->gui->Enable();
+    btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 300, 300, 60 }, "START", this);
 
     btnContinue = new GuiButton(2, { 90, 400, 300, 60 }, "CONTINUE");
     btnContinue->SetObserver(this);

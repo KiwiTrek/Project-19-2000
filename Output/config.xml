@@ -29,4 +29,8 @@
     <left keyId="80" padId="13">left</left>
     <right keyId="79" padId="14">right</right>
   </input>
+  <guiManager>
+    <folderTexture>Assets/Textures/GUI/</folderTexture>
+    <folderAudio>Assets/Audio/Fx/</folderAudio>
+  </guiManager>
 </config>

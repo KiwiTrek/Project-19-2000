@@ -80,6 +80,7 @@ bool Player::Update(float dt)
 bool Player::Draw()
 {
 	app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
+	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
 
 	return true;
 }

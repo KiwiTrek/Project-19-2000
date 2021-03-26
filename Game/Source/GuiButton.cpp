@@ -15,7 +15,7 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(
 	this->offsetText = this->text.Length() * 24;
 	this->offsetTextSecond = 0;
 
-	normal = { 0,0,216, 109 };
+	normal = { 0,190,190, 45 };
 	focused = { 0,109,216, 109 };
 	pressed = { 0,218,216, 109 };
 	disabled = { 0,327,216, 109 };
@@ -30,7 +30,7 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text, const char* s
 	this->offsetText = this->text.Length() * 20;
 	this->offsetTextSecond = this->secondText.Length() * 20;
 
-	normal = { 0,0,216, 109 };
+	normal = { 0,190,190, 45 };
 	focused = { 0,109,216, 109 };
 	pressed = { 0,218,216, 109 };
 	disabled = { 0,327,216, 109 };
@@ -109,8 +109,8 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::NORMAL:
 	{
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		if (secondaryText)
 		{
 			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, defaultFont, text.GetString());

@@ -35,7 +35,9 @@ bool GuiManager::Awake(pugi::xml_node& config)
 
 bool GuiManager::Start()
 {
-	// Load FONTS
+	// Load texture fonts & fx
+	SString tmp("%s%s", folderTexture.GetString(), "gui.png");
+	atlas = app->tex->Load(tmp.GetString());
 
 	return true;
 }
