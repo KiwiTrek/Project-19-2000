@@ -17,80 +17,34 @@ SceneTitleScreen::SceneTitleScreen()
     //MAIN MENU
     app->gui->Enable();
     btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 300, 300, 60 }, "START", this);
-
-    btnContinue = new GuiButton(2, { 90, 400, 300, 60 }, "CONTINUE");
-    btnContinue->SetObserver(this);
-
-    btnOptions = new GuiButton(3, { 90, 500, 300, 60 }, "OPTIONS");
-    btnOptions->SetObserver(this);
-
-    btnExit = new GuiButton(4, { 90, 600, 300, 60 }, "EXIT");
-    btnExit->SetObserver(this);
+    btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 400, 300, 60 }, "CONTINUE", this);
+    btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 500, 300, 60 }, "OPTIONS", this);
+    btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 600, 300, 60 }, "EXIT", this);
 
     //OPTIONS
-    sldrVolume = new GuiSlider(5, { 180, 200, 60, 60 }, 6, "VOLUME");
-    sldrVolume->SetObserver(this);
-
-    sldrFx = new GuiSlider(6, { 800, 200, 60, 60 }, 6, "FX");
-    sldrFx->SetObserver(this);
-
-    boxFullScreen = new GuiCheckBox(7, { 180, 400, 60, 60 }, "FULLSCREEN");
-    boxFullScreen->SetObserver(this);
-
-    boxVSync = new GuiCheckBox(8, { 800, 400, 60, 60 }, "VSync");
-    boxVSync->SetObserver(this);
-
-    btnControls = new GuiButton(9, { 180, 600, 200, 60 }, "CONTROLS");
-    btnControls->SetObserver(this);
-
-    btnBack = new GuiButton(10, { 800, 600, 200, 60 }, "BACK");
-    btnBack->SetObserver(this);
+    sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 60, 60 }, "VOLUME", this, 6);
+    sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 60, 60 }, "FX", this, 6);
+    boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { 180, 400, 60, 60 }, "FULLSCREEN", this);
+    boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", this);
+    btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 180, 600, 200, 60 }, "CONTROLS", this);
+    btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 10, { 800, 600, 200, 60 }, "BACK", this);
 
     //CONTROLS
-    btnKeySelect = new GuiButton(11, { 180, 120, 300, 60 }, "SELECT");
-    btnKeySelect->SetObserver(this);
-
-    btnKeyCancel = new GuiButton(12, { 180, 200, 300, 60 }, "CANCEL");
-    btnKeyCancel->SetObserver(this);
-
-    btnKeyMenu = new GuiButton(13, { 180, 280, 300, 60 }, "MENU");
-    btnKeyMenu->SetObserver(this);
-
-    btnKeyUp = new GuiButton(14, { 180, 360, 300, 60 }, "UP");
-    btnKeyUp->SetObserver(this);
-
-    btnKeyDown = new GuiButton(15, { 180, 440, 300, 60 }, "DOWN");
-    btnKeyDown->SetObserver(this);
-
-    btnKeyLeft = new GuiButton(16, { 180, 520, 300, 60 }, "LEFT");
-    btnKeyLeft->SetObserver(this);
-
-    btnKeyRight = new GuiButton(17, { 180, 600, 300, 60 }, "RIGHT");
-    btnKeyRight->SetObserver(this);
-
-    btnBack2 = new GuiButton(18, { 1280/2 - 200/2, 600, 200, 60 }, "BACK");
-    btnBack2->SetObserver(this);
-
-    btnPadSelect = new GuiButton(19, { 800, 120, 300, 60 }, "SELECT");
-    btnPadSelect->SetObserver(this);
-
-    btnPadCancel = new GuiButton(20, { 800, 200, 300, 60 }, "CANCEL");
-    btnPadCancel->SetObserver(this);
-
-    btnPadMenu = new GuiButton(21, { 800, 280, 300, 60 }, "MENU");
-    btnPadMenu->SetObserver(this);
-
-    btnPadUp = new GuiButton(22, { 800, 360, 300, 60 }, "UP");
-    btnPadUp->SetObserver(this);
-
-    btnPadDown = new GuiButton(23, { 800, 440, 300, 60 }, "DOWN");
-    btnPadDown->SetObserver(this);
-
-    btnPadLeft = new GuiButton(24, { 800, 520, 300, 60 }, "LEFT");
-    btnPadLeft->SetObserver(this);
-
-    btnPadRight = new GuiButton(25, { 800, 600, 300, 60 }, "RIGHT");
-    btnPadRight->SetObserver(this);
+    btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 180, 120, 300, 60 }, "SELECT", this);
+    btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 200, 300, 60 }, "CANCEL", this);
+    btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 180, 280, 300, 60 }, "MENU", this);
+    btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 360, 300, 60 }, "UP", this);
+    btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 440, 300, 60 }, "DOWN", this);
+    btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 520, 300, 60 }, "LEFT", this);
+    btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 600, 300, 60 }, "RIGHT", this);
+    btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 1280/2 - 200/2, 600, 200, 60 }, "BACK", this);
+    btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 800, 120, 300, 60 }, "SELECT", this);
+    btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 800, 200, 300, 60 }, "CANCEL", this);
+    btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 280, 300, 60 }, "MENU", this);
+    btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 360, 300, 60 }, "UP", this);
+    btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 440, 300, 60 }, "DOWN", this);
+    btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 520, 300, 60 }, "LEFT", this);
+    btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 600, 300, 60 }, "RIGHT", this);
 
     for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
 

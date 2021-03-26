@@ -108,17 +108,17 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 	{
 		for (int i = 1; i != widthInUnits - 1; ++i)
 		{
-			app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-			//app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
+			//app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+			app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
 			if (app->render->debug)
 			{
 				app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
 			}
 		}
-		app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-		app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-		//app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &normalLimitsBegin);
-		//app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
+		//app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+		//app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
+		app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &normalLimitsBegin);
+		app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
@@ -129,18 +129,18 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 	{
 		for (int i = 1; i != widthInUnits - 1; ++i)
 		{
-			app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
-			//app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &disabledLimitsMiddle);
+			//app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
+			app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &disabledLimitsMiddle);
 			if (app->render->debug)
 			{
 				app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
 			}
 		}
 
-		app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
-		app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
-		//app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &disabledLimitsBegin);
-		//app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &disabledLimitsEnd);
+		//app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
+		//app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
+		app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &disabledLimitsBegin);
+		app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &disabledLimitsEnd);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
@@ -154,8 +154,8 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 	{
 	case GuiControlState::DISABLED:
 	{
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 100, 100, 100, 100);
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &disabled);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 100, 100, 100, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &disabled);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 100, 100, 100, 100);
@@ -164,8 +164,8 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::NORMAL:
 	{
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 255, 255, 100);
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &normal);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 255, 255, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &normal);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 255, 255, 100);
@@ -174,8 +174,8 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::FOCUSED:
 	{
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 0, 255, 100);
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &focused);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 0, 255, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &focused);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 0, 0, 255, 100);
@@ -184,8 +184,8 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::PRESSED:
 	{
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 255, 0, 0, 100);
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &pressed);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 255, 0, 0, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 4), false, &pressed);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y + (bounds.h / 4),bounds.w,bounds.h }, 255, 0, 0, 100);

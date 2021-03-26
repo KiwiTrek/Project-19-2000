@@ -90,8 +90,8 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	{
 	case GuiControlState::DISABLED:
 	{
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		if (secondaryText)
 		{
 			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 11, disabledFont, text.GetString());
@@ -128,8 +128,8 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::FOCUSED:
 	{
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		if (secondaryText)
 		{
 			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, hoverFont, text.GetString());
@@ -147,8 +147,8 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::PRESSED:
 	{
-		//app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
-		app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
+		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
 		if (secondaryText)
 		{
 			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, pressedFont, text.GetString());

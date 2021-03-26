@@ -27,11 +27,7 @@ private:
 	SDL_Rect normal;
 	SDL_Rect focused;
 	SDL_Rect pressed;
-
-	SDL_Rect disabledChecked;
-	SDL_Rect normalChecked;
-	SDL_Rect focusedChecked;
-	SDL_Rect pressedChecked;
+	SDL_Rect check;
 };
 
 #endif // __GUICHECKBOX_H__

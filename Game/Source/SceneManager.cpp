@@ -108,6 +108,16 @@ bool SceneManager::Update(float dt)
 		}
 	}
 
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && current->name != SceneType::GAMEPLAY) return false;
+
+	return true;
+}
+
+// Called each loop iteration
+bool SceneManager::PostUpdate()
+{
+	bool ret = true;
+
 	// Draw current scene
 	current->Draw();
 
@@ -147,16 +157,6 @@ bool SceneManager::Update(float dt)
 
 		current->transitionRequired = false;
 	}
-
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && current->name != SceneType::GAMEPLAY) return false;
-
-	return true;
-}
-
-// Called each loop iteration
-bool SceneManager::PostUpdate()
-{
-	bool ret = true;
 
 	return ret;
 }

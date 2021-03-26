@@ -2,32 +2,21 @@
 
 #include "Audio.h"
 #include "EntityManager.h"
+#include "GuiManager.h"
 #include "Input.h"
 #include "Render.h"
 
 SceneGameplay::SceneGameplay()
 {
 	//MENU
-	btnInventory = new GuiButton(1, { 90, 120, 200, 60 }, "INVENTORY");
-	btnInventory->SetObserver(this);
 
-	btnSkills = new GuiButton(2, { 90, 200, 200, 60 }, "SKILLS");
-	btnSkills->SetObserver(this);
-
-	btnSkillTree = new GuiButton(3, { 90, 280, 200, 60 }, "SKILL TREE");
-	btnSkillTree->SetObserver(this);
-
-	btnEquipment = new GuiButton(4, { 90, 360, 200, 60 }, "EQUIPMENT");
-	btnEquipment->SetObserver(this);
-
-	btnStats = new GuiButton(5, { 90, 440, 200, 60 }, "STATS");
-	btnStats->SetObserver(this);
-
-	btnOptions = new GuiButton(6, { 90, 520, 200, 60 }, "OPTIONS");
-	btnOptions->SetObserver(this);
-
-	btnTitleScreen = new GuiButton(7, { 90, 600, 200, 60 }, "TITLE SCREEN");
-	btnTitleScreen->SetObserver(this);
+	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 120, 200, 60 }, "INVENTORY", this);
+	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 200, 200, 60 }, "SKILLS", this);
+	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 280, 200, 60 }, "SKILL TREE", this);
+	btnEquipment = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 360, 200, 60 }, "EQUIPMENT", this);
+	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 440, 200, 60 }, "STATS", this);
+	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 90, 520, 200, 60 }, "OPTIONS", this);
+	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 600, 200, 60 }, "TITLE SCREEN", this);
 
 	//OPTIONS
 
@@ -41,7 +30,7 @@ SceneGameplay::SceneGameplay()
 SceneGameplay::~SceneGameplay()
 {}
 
-bool SceneGameplay::Load() /*EntityManager entityManager)*/
+bool SceneGameplay::Load()
 {
 	app->entities->Enable();
 
@@ -65,8 +54,6 @@ bool SceneGameplay::Update(float dt)
 
 	if ((flags & 1<<Flags::MENU) != 0)
 	{
-		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
-
 		btnInventory->Update(dt);
 		btnSkills->Update(dt);
 		btnSkillTree->Update(dt);
@@ -118,10 +105,9 @@ bool SceneGameplay::Draw()
 {
 	app->render->background = { 0,0,150,255 };
 
-	player->Draw();
-
 	if ((flags & 1<<Flags::MENU) != 0)
 	{
+		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
 		btnInventory->Draw();
 		btnSkills->Draw();
 		btnSkillTree->Draw();
