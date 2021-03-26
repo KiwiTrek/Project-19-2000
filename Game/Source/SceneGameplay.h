@@ -3,6 +3,8 @@
 
 #include "Scene.h"
 #include "GuiButton.h"
+#include "GuiSlider.h"
+#include "GuiCheckBox.h"
 
 class Entity;
 
@@ -51,15 +53,35 @@ private:
     GuiButton* btnTitleScreen;
 
     //OPTIONS
-
+    GuiSlider* sldrVolume;
+    GuiSlider* sldrFx;
+    GuiCheckBox* boxFullScreen;
+    GuiCheckBox* boxVSync;
+    GuiButton* btnControls;
+    GuiButton* btnBack;
 
     //CONTROLS
+    GuiButton* btnKeySelect;
+    GuiButton* btnKeyCancel;
+    GuiButton* btnKeyMenu;
+    GuiButton* btnKeyUp;
+    GuiButton* btnKeyDown;
+    GuiButton* btnKeyLeft;
+    GuiButton* btnKeyRight;
+    GuiButton* btnBack2;
+    GuiButton* btnPadSelect;
+    GuiButton* btnPadCancel;
+    GuiButton* btnPadMenu;
+    GuiButton* btnPadUp;
+    GuiButton* btnPadDown;
+    GuiButton* btnPadLeft;
+    GuiButton* btnPadRight;
 
 
     //FONTS
     Font* dialogueFont = nullptr;
 
-    uint flags;
+    int flags;
 };
 
 #endif // __SCENEGAMEPLAY_H__

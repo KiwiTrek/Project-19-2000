@@ -19,9 +19,29 @@ SceneGameplay::SceneGameplay()
 	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 600, 200, 60 }, "TITLE SCREEN", this);
 
 	//OPTIONS
-
+	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 8, { 180, 200, 60, 60 }, "VOLUME", this, 6);
+	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 9, { 800, 200, 60, 60 }, "FX", this, 6);
+	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 10, { 180, 400, 60, 60 }, "FULLSCREEN", this);
+	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 11, { 800, 400, 60, 60 }, "VSync", this);
+	btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 600, 200, 60 }, "CONTROLS", this);
+	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 800, 600, 200, 60 }, "BACK", this);
 
 	//CONTROLS
+	btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 120, 300, 60 }, "SELECT", this);
+	btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 200, 300, 60 }, "CANCEL", this);
+	btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 280, 300, 60 }, "MENU", this);
+	btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 360, 300, 60 }, "UP", this);
+	btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 180, 440, 300, 60 }, "DOWN", this);
+	btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 180, 520, 300, 60 }, "LEFT", this);
+	btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 180, 600, 300, 60 }, "RIGHT", this);
+	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", this);
+	btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 120, 300, 60 }, "SELECT", this);
+	btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 200, 300, 60 }, "CANCEL", this);
+	btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 280, 300, 60 }, "MENU", this);
+	btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 360, 300, 60 }, "UP", this);
+	btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 440, 300, 60 }, "DOWN", this);
+	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 520, 300, 60 }, "LEFT", this);
+	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 800, 600, 300, 60 }, "RIGHT", this);
 
 
 	flags = 0;
@@ -52,7 +72,7 @@ bool SceneGameplay::Update(float dt)
 
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
 
-	if ((flags & 1<<Flags::MENU) != 0)
+	if ((flags & 1<<Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{
 		btnInventory->Update(dt);
 		btnSkills->Update(dt);
@@ -64,39 +84,63 @@ bool SceneGameplay::Update(float dt)
 
 		if ((flags & 1<<Flags::INVENTORY) != 0)
 		{
-
+			// arrow buttons maybe?
+			// buttons for each item i supose?
 		}
 		else if((flags & 1 << Flags::SKILLS) != 0)
 		{
-
+			// arrow buttons maybe?
+			// buttons for each skill i supose?
 		}
 		else if ((flags & 1 << Flags::SKILL_TREE) != 0)
 		{
-
+			// arrow buttons maybe?
+			// buttons for each skill in the skill tree?
+			// the skill tree lines change when you get the node?
 		}
 		else if ((flags & 1 << Flags::EQUIPMENT) != 0)
 		{
-
+			// buttons for every equipment??? ps: oh lord
 		}
 		else if ((flags & 1 << Flags::STATS) != 0)
 		{
-
-		}
-		else if ((flags & 1 << Flags::OPTIONS) != 0)
-		{
-
+			// no buttons here? since its only the stats
 		}
 	}
-
-
-
-
+	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	{
+		sldrVolume->Update(dt);
+		sldrFx->Update(dt);
+		boxFullScreen->Update(dt);
+		boxVSync->Update(dt);
+		btnControls->Update(dt);
+		btnBack->Update(dt);
+	}
+	else if ((flags & 1 << Flags::CONTROLS) != 0)
+	{
+		btnKeySelect->Update(dt);
+		btnKeyCancel->Update(dt);
+		btnKeyMenu->Update(dt);
+		btnKeyUp->Update(dt);
+		btnKeyDown->Update(dt);
+		btnKeyLeft->Update(dt);
+		btnKeyRight->Update(dt);
+		btnBack2->Update(dt);
+		btnPadSelect->Update(dt);
+		btnPadCancel->Update(dt);
+		btnPadMenu->Update(dt);
+		btnPadUp->Update(dt);
+		btnPadDown->Update(dt);
+		btnPadLeft->Update(dt);
+		btnPadRight->Update(dt);
+	}
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
 		ResetButtons();
 		flags = ToggleBit(flags, Flags::MENU);
 	}
+	LOG("%d", flags);
 
 	return true;
 }
@@ -105,7 +149,7 @@ bool SceneGameplay::Draw()
 {
 	app->render->background = { 0,0,150,255 };
 
-	if ((flags & 1<<Flags::MENU) != 0)
+	if ((flags & 1<<Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{
 		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
 		btnInventory->Draw();
@@ -136,10 +180,35 @@ bool SceneGameplay::Draw()
 		{
 
 		}
-		else if ((flags & 1 << Flags::OPTIONS) != 0)
-		{
-
-		}
+	}
+	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	{
+		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
+		sldrVolume->Draw();
+		sldrFx->Draw();
+		boxFullScreen->Draw();
+		boxVSync->Draw();
+		btnControls->Draw();
+		btnBack->Draw();
+	}
+	else if ((flags & 1 << Flags::CONTROLS) != 0)
+	{
+		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
+		btnKeySelect->Draw();
+		btnKeyCancel->Draw();
+		btnKeyMenu->Draw();
+		btnKeyUp->Draw();
+		btnKeyDown->Draw();
+		btnKeyLeft->Draw();
+		btnKeyRight->Draw();
+		btnBack2->Draw();
+		btnPadSelect->Draw();
+		btnPadCancel->Draw();
+		btnPadMenu->Draw();
+		btnPadUp->Draw();
+		btnPadDown->Draw();
+		btnPadLeft->Draw();
+		btnPadRight->Draw();
 	}
 
 	return false;
@@ -175,50 +244,84 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		ResetButtons();
 		btnInventory->state = GuiControlState::DISABLED;
 		flags = 1<<Flags::MENU;
-		flags = SetBit(flags, 1<<Flags::INVENTORY);
+		flags = SetBit(flags, Flags::INVENTORY);
 		break;
 	case 2: //SKILLS
 		ResetButtons();
 		btnSkills->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
-		flags = SetBit(flags, 1 << Flags::SKILLS);
+		flags = SetBit(flags, Flags::SKILLS);
 		break;
 	case 3: //SKILL TREE
 		ResetButtons();
 		btnSkillTree->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
-		flags = SetBit(flags, 1 << Flags::SKILL_TREE);
+		flags = SetBit(flags, Flags::SKILL_TREE);
 		break;
 	case 4: //EQUIPMENT
 		ResetButtons();
 		btnEquipment->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
-		flags = SetBit(flags, 1 << Flags::EQUIPMENT);
+		flags = SetBit(flags, Flags::EQUIPMENT);
 		break;
 	case 5: //STATS
 		ResetButtons();
 		btnStats->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
-		flags = SetBit(flags, 1 << Flags::STATS);
+		flags = SetBit(flags, Flags::STATS);
 		break;
 	case 6: //OPTIONS
 		ResetButtons();
-		btnOptions->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
-		flags = SetBit(flags, 1 << Flags::OPTIONS);
+		flags = SetBit(flags, Flags::OPTIONS);
 		break;
-	case 7: // TITLE SCREEN
+	case 7: //TITLE SCREEN
 		TransitionToScene(SceneType::TITLE_SCREEN);
 		break;
-	case 8:
+	case 8: //VOLUME
 		break;
-	case 9:
+	case 9: //FX
 		break;
-	case 10:
+	case 10: //FULLSCREEN
 		break;
-	case 11:
+	case 11: //VSYNC
 		break;
-	case 12:
+	case 12: //CONTROLS
+		flags = SetBit(flags, Flags::CONTROLS);
+		break;
+	case 13: //BACK
+		flags = ClearBit(flags, Flags::OPTIONS);
+		break;
+	case 14: //KEY SELECT
+		break;
+	case 15: //KEY CANCEL
+		break;
+	case 16: //KEY MENU
+		break;
+	case 17: //KEY UP
+		break;
+	case 18: //KEY DOWN
+		break;
+	case 19: //KEY LEFT
+		break;
+	case 20: //KEY RIGHT
+		break;
+	case 21: //BACK 2
+		flags = ClearBit(flags, Flags::CONTROLS);
+		break;
+	case 22: //PAD SELECT
+		break;
+	case 23: //PAD CANCEL
+		break;
+	case 24: //PAD MENU
+		break;
+	case 25: //PAD UP
+		break;
+	case 26: //PAD DOWN
+		break;
+	case 27: //PAD LEFT
+		break;
+	case 28: //PAD RIGHT
 		break;
 	default:
 		break;

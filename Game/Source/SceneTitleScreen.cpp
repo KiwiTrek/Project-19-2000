@@ -185,7 +185,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         TransitionToScene(SceneType::GAMEPLAY);
         break;
     case 3: //OPTIONS
-        flags = SetBit(flags,Flags::OPTIONS);
+        flags = SetBit(flags, Flags::OPTIONS);
         break;
     case 4: //EXIT
         app->exitRequest = true;
@@ -199,10 +199,10 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 8: //VSYNC
         break;
     case 9: //CONTROLS
-        flags = SetBit(flags,Flags::CONTROLS);
+        flags = SetBit(flags, Flags::CONTROLS);
         break;
     case 10: //BACK
-        flags = ClearBit(flags,Flags::OPTIONS);
+        flags = ClearBit(flags, Flags::OPTIONS);
         break;
     case 11: //KEY SELECT
         break;
@@ -219,7 +219,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 17: //KEY RIGHT
         break;
     case 18: //BACK 2
-        flags = ClearBit(flags,Flags::CONTROLS);
+        flags = ClearBit(flags, Flags::CONTROLS);
         break;
     case 19: //PAD SELECT
         break;
