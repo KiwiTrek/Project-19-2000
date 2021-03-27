@@ -6,6 +6,9 @@
 #include "SString.h"
 #include "SDL.h"
 
+#include "App.h"
+#include "Audio.h"
+
 enum class GuiControlType
 {
 	BUTTON,
@@ -108,8 +111,8 @@ public:
 	int disabledFont;
 
 	// Sounds
-	int click;
-	int hover;
+	int click = app->audio->LoadFx("Assets/Audio/Fx/Click.wav");
+	int hover = app->audio->LoadFx("Assets/Audio/Fx/Hover.wav");
 
 	// Observer scene
 	Scene* observer;

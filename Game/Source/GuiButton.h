@@ -30,6 +30,14 @@ private:
 	SDL_Rect normal;
 	SDL_Rect focused;
 	SDL_Rect pressed;
+
+	SDL_Rect disabledSmall;
+	SDL_Rect normalSmall;
+	SDL_Rect focusedSmall;
+	SDL_Rect pressedSmall;
+
+	bool hoverPlay = true;
+	bool clickPlay = true;
 };
 
 #endif // __GUIBUTTON_H__

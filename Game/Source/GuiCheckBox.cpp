@@ -12,11 +12,11 @@ GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiCont
 	this->text = text;
 	this->offsetText = this->text.Length() * 24 + (24 * 3);
 
-	normal = { 217,0,54, 54 };
-	focused = { 217,109,54, 54 };
-	pressed = { 217,218,54, 54 };
-	disabled = { 217,327,54, 54 };
-	check = { 217,54,54, 54 };
+	normal = { 0,144,60, 60 };
+	focused = { 61,144,60, 60 };
+	pressed = { 123,144,60, 60 };
+	disabled = { 185,144,60, 60 };
+	check = { 245,144,60, 60 };
 }
 
 GuiCheckBox::~GuiCheckBox()

@@ -19,18 +19,18 @@ GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, int widthInUnits, const char* t
 	this->state = GuiControlState::NORMAL;
 	this->offsetText = this->text.Length() * 24 + (24 * 3);
 
-	normal = { 271,0,54,54 };
-	focused = { 271,109,54,54 };
-	pressed = { 271,218,54,54 };
-	disabled = { 271,327,54,54 };
+	normal = { 0,95,69,42 };
+	focused = { 72,95,69,42 };
+	pressed = { 143,95,69,42 };
+	disabled = { 215,95,69,42 };
 
-	normalLimitsBegin = { 271,54,54,54 };
-	normalLimitsMiddle = { 325,54,54,54 };
-	normalLimitsEnd = { 379,54,54,54 };
+	normalLimitsBegin = { 0,0,324,42 };
+	//normalLimitsMiddle = { 0,0,374,42 };
+	//normalLimitsEnd = { 0,0,374,42 };
 
-	disabledLimitsBegin = { 271,381,54,54 };
-	disabledLimitsMiddle = { 325,381,54,54 };
-	disabledLimitsEnd = { 379,381,54,54 };
+	disabledLimitsBegin = { 0,47,324,42 };
+	//disabledLimitsMiddle = { 325,381,54,54 };
+	//disabledLimitsEnd = { 379,381,54,54 };
 }
 
 GuiSlider::~GuiSlider()
@@ -109,7 +109,7 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 		for (int i = 1; i != widthInUnits - 1; ++i)
 		{
 			//app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
-			app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
+			//app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &normalLimitsMiddle);
 			if (app->render->debug)
 			{
 				app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
@@ -118,7 +118,7 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 		//app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
 		//app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
 		app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &normalLimitsBegin);
-		app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
+		//app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &normalLimitsEnd);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 255, 255, 0, 100);
@@ -130,7 +130,7 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 		for (int i = 1; i != widthInUnits - 1; ++i)
 		{
 			//app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
-			app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &disabledLimitsMiddle);
+			//app->render->DrawTexture(texture, cPosX + limits.x + (i * 54), cPosY + limits.y, false, &disabledLimitsMiddle);
 			if (app->render->debug)
 			{
 				app->render->DrawRectangle({ cPosX + limits.x + (i * 54), cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
@@ -140,7 +140,7 @@ bool GuiSlider::Draw(int cPosX, int cPosY)
 		//app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
 		//app->render->DrawRectangle({ cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);
 		app->render->DrawTexture(texture, cPosX + limits.x, cPosY + limits.y, false, &disabledLimitsBegin);
-		app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &disabledLimitsEnd);
+		//app->render->DrawTexture(texture, cPosX + limits.x + limits.w - bounds.w, cPosY + limits.y, false, &disabledLimitsEnd);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + limits.x, cPosY + limits.y, 54, 54 }, 75, 75, 75, 100);

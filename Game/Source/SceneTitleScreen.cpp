@@ -22,8 +22,8 @@ SceneTitleScreen::SceneTitleScreen()
     btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 600, 300, 60 }, "EXIT", this);
 
     //OPTIONS
-    sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 60, 60 }, "VOLUME", this, 6);
-    sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 60, 60 }, "FX", this, 6);
+    sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", this, 6);
+    sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 69, 42 }, "FX", this, 6);
     boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { 180, 400, 60, 60 }, "FULLSCREEN", this);
     boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", this);
     btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 180, 600, 200, 60 }, "CONTROLS", this);
@@ -107,7 +107,7 @@ bool SceneTitleScreen::Update(float dt)
         btnPadRight->Update(dt);
     }
 
-    LOG("%d", flags);
+    //LOG("%d", flags);
     return true;
 }
 

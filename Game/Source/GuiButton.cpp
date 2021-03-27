@@ -15,10 +15,17 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(
 	this->offsetText = this->text.Length() * 24;
 	this->offsetTextSecond = 0;
 
-	normal = { 0,190,190, 45 };
-	focused = { 0,109,216, 109 };
-	pressed = { 0,218,216, 109 };
-	disabled = { 0,327,216, 109 };
+	normal = { 0,215,300, 60 };
+	focused = { 0,281,300, 60 };
+	pressed = { 0,345,300, 60 };
+	disabled = { 0,410,300, 60 };
+
+
+	normalSmall = { 0,477,200,60 };
+	focusedSmall = { 0,543,200,60 };
+	pressedSmall = { 0,607,200,60 };
+	disabledSmall = { 0,672,200,60 };
+
 }
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text, const char* secondText) : GuiControl(GuiControlType::BUTTON, id)
@@ -30,10 +37,16 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text, const char* s
 	this->offsetText = this->text.Length() * 20;
 	this->offsetTextSecond = this->secondText.Length() * 20;
 
-	normal = { 0,190,190, 45 };
-	focused = { 0,109,216, 109 };
-	pressed = { 0,218,216, 109 };
-	disabled = { 0,327,216, 109 };
+	normal = { 0,190,300, 60 };
+	focused = { 0,281,300, 60 };
+	pressed = { 0,345,300, 60 };
+	disabled = { 0,410,300, 60 };
+
+	normalSmall = { 0,477,200,60 };
+	focusedSmall = { 0,543,200,60 };
+	pressedSmall = { 0,607,200,60 };
+	disabledSmall = { 0,672,200,60 };
+
 }
 
 GuiButton::~GuiButton()
@@ -63,7 +76,7 @@ bool GuiButton::Update(float dt)
 			{
 				if (state == GuiControlState::FOCUSED)
 				{
-					app->audio->PlayFx(click);
+					//app->audio->PlayFx(click);
 				}
 				state = GuiControlState::PRESSED;
 			}
@@ -90,7 +103,14 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	{
 	case GuiControlState::DISABLED:
 	{
-		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+		if ((id > 4 && id < 11) || id == 18)
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
+		}
+		else
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		if (secondaryText)
 		{
@@ -109,7 +129,17 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::NORMAL:
 	{
-		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+		clickPlay = true;
+		hoverPlay = true;
+
+		if ((id > 4 && id < 11) || id == 18)
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
+		}
+		else
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		if (secondaryText)
 		{
@@ -128,7 +158,21 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::FOCUSED:
 	{
-		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+		clickPlay = true;
+		if (hoverPlay)
+		{
+			app->audio->PlayFx(hover, 0);
+			hoverPlay = false;
+		}
+
+		if ((id > 4 && id < 11) || id == 18)
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
+		}
+		else
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		if (secondaryText)
 		{
@@ -147,7 +191,21 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::PRESSED:
 	{
-		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+		if (clickPlay)
+		{
+			app->audio->PlayFx(click, 0);
+			clickPlay = false;
+		}
+
+		if ((id > 4 && id < 11) || id == 18)
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
+		}
+		else
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+		}
+		
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
 		if (secondaryText)
 		{
