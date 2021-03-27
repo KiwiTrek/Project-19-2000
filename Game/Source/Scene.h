@@ -64,6 +64,7 @@ public:
 
     bool transitionRequired;
     SceneType nextScene;
+    SceneType currentScene;
 };
 
 #endif // __SCENE_H__

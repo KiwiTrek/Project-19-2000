@@ -138,18 +138,22 @@ bool SceneManager::PostUpdate()
 		case SceneType::LOGO:
 			next = new SceneLogo();
 			next->name = SceneType::LOGO;
+			next->currentScene = SceneType::LOGO;
 			break;
 		case SceneType::TITLE_SCREEN:
 			next = new SceneTitleScreen();
 			next->name = SceneType::TITLE_SCREEN;
+			next->currentScene = SceneType::TITLE_SCREEN;
 			break;
 		case SceneType::GAMEPLAY:
 			next = new SceneGameplay();
 			next->name = SceneType::GAMEPLAY;
+			next->currentScene = SceneType::GAMEPLAY;
 			break;
 		case SceneType::DEV_ROOM:
 			next = new SceneDevRoom();
 			next->name = SceneType::DEV_ROOM;
+			next->currentScene = SceneType::DEV_ROOM;
 			break;
 		default:
 			break;

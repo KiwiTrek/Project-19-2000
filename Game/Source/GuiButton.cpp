@@ -103,13 +103,28 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	{
 	case GuiControlState::DISABLED:
 	{
-		if ((id > 4 && id < 11) || id == 18)
+		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
+			if ((id > 4 && id < 11) || id == 18)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+			}
 		}
-		else
+		if (observer->currentScene == SceneType::GAMEPLAY)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+
+			if ((id < 14) || id == 21)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
+			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		if (secondaryText)
@@ -132,13 +147,29 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		clickPlay = true;
 		hoverPlay = true;
 
-		if ((id > 4 && id < 11) || id == 18)
+
+		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
+			if ((id > 4 && id < 11) || id == 18)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+			}
 		}
-		else
+		if (observer->currentScene == SceneType::GAMEPLAY)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+
+			if ((id < 14) || id == 21)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
+			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		if (secondaryText)
@@ -165,13 +196,28 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			hoverPlay = false;
 		}
 
-		if ((id > 4 && id < 11) || id == 18)
+		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
+			if ((id > 4 && id < 11) || id == 18)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+			}
 		}
-		else
+		if (observer->currentScene == SceneType::GAMEPLAY)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+
+			if ((id < 14) || id == 21)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
+			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		if (secondaryText)
@@ -197,13 +243,28 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			clickPlay = false;
 		}
 
-		if ((id > 4 && id < 11) || id == 18)
+		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
+			if ((id > 4 && id < 11) || id == 18)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+			}
 		}
-		else
+		if (observer->currentScene == SceneType::GAMEPLAY)
 		{
-			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+
+			if ((id < 14) || id == 21)
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
+			}
+			else
+			{
+				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
+			}
 		}
 		
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
