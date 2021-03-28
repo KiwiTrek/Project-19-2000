@@ -39,9 +39,11 @@ bool GuiManager::Start()
 	// Load texture fonts & fx
 	SString tmp("%s%s", folderTexture.GetString(), "gui.png");
 	atlas = app->tex->Load(tmp.GetString());
+
 	tmp.Clear();
 	tmp.Create("%s%s", folderAudio.GetString(), "Click.wav");
 	clickSoundId = app->audio->LoadFx(tmp.GetString());
+
 	tmp.Clear();
 	tmp.Create("%s%s", folderAudio.GetString(), "Hover.wav");
 	hoverSoundId = app->audio->LoadFx(tmp.GetString());
@@ -53,7 +55,7 @@ bool GuiManager::Start()
 	return true;
 }
 
-GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, Scene* observer, int widthInUnits, bool secondText, const char* text2)
+GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, Scene* observer, int widthInUnits)
 {
 	GuiControl* control = nullptr;
 
@@ -61,14 +63,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 	{
 	case GuiControlType::BUTTON:
 	{
-		if (secondText)
-		{
-			control = new GuiButton(id, bounds, text, text2);
-		}
-		else
-		{
-			control = new GuiButton(id, bounds, text);
-		}
+		control = new GuiButton(id, bounds, text);
 		break;
 	}
 	case GuiControlType::CHECKBOX:
@@ -87,14 +82,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 	control->SetSounds(hoverSoundId, clickSoundId);
 	control->SetObserver(observer);
 	control->SetTexture(atlas);
-	if (secondText)
-	{
-		control->SetFonts(guiFontId);
-	}
-	else
-	{
-		control->SetFonts(guiFontId);
-	}
+	control->SetFonts(guiFontId);
 
 	// Adds the created entity to the list
 	if (control != nullptr)

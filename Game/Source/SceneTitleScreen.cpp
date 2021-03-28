@@ -13,10 +13,27 @@
 
 
 SceneTitleScreen::SceneTitleScreen()
+{    
+    for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
+    flags = 0;
+}
+
+SceneTitleScreen::~SceneTitleScreen()
 {
+}
+
+bool SceneTitleScreen::Load()
+{
+    nooseBG = app->tex->Load("Assets/Textures/NooseBG.png");
+    titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
+    dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
+
+    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
+    noose.Reset();
+
     // GUI: Initialize required controls for the screen
     float tmpValue = 0;
-    
+
     //MAIN MENU
     app->gui->Enable();
     btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 300, 300, 60 }, "START", this);
@@ -50,7 +67,7 @@ SceneTitleScreen::SceneTitleScreen()
     btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 440, 300, 60 }, "DOWN", this);
     btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 520, 300, 60 }, "LEFT", this);
     btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 600, 300, 60 }, "RIGHT", this);
-    btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 1280/2 - 200/2, 600, 200, 60 }, "BACK", this);
+    btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", this);
     btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 800, 120, 300, 60 }, "SELECT", this);
     btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 800, 200, 300, 60 }, "CANCEL", this);
     btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 280, 300, 60 }, "MENU", this);
@@ -58,24 +75,6 @@ SceneTitleScreen::SceneTitleScreen()
     btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 440, 300, 60 }, "DOWN", this);
     btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 520, 300, 60 }, "LEFT", this);
     btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 600, 300, 60 }, "RIGHT", this);
-
-    for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
-
-    flags = 0;
-}
-
-SceneTitleScreen::~SceneTitleScreen()
-{
-}
-
-bool SceneTitleScreen::Load()
-{
-    nooseBG = app->tex->Load("Assets/Textures/NooseBG.png");
-    titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
-    dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
-
-    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
-    noose.Reset();
 
     return true;
 }

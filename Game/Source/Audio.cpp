@@ -188,11 +188,12 @@ uint Audio::LoadFx(const char* path)
 
 bool Audio::UnloadFx(uint index)
 {
-	ListItem<Mix_Chunk*>* s = fx.At(index - 1);
+	ListItem<Mix_Chunk*>* s = fx.At(index);
 	if (s != nullptr)
 	{
+		fx.Del(s);
 		Mix_FreeChunk(s->data);
-		return fx.Del(s);
+		return true;
 	}
 
 	return false;

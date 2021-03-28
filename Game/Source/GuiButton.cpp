@@ -10,37 +10,13 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(
 {
 	this->bounds = bounds;
 	this->text = text;
-	this->secondaryText = false;
-	this->secondText = nullptr;
 	this->offsetText = this->text.Length() * 24;
-	this->offsetTextSecond = 0;
 
 	normal = { 0,215,300, 60 };
 	focused = { 0,281,300, 60 };
 	pressed = { 0,345,300, 60 };
 	disabled = { 0,410,300, 60 };
 
-
-	normalSmall = { 0,477,200,60 };
-	focusedSmall = { 0,543,200,60 };
-	pressedSmall = { 0,607,200,60 };
-	disabledSmall = { 0,672,200,60 };
-
-}
-
-GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text, const char* secondText) : GuiControl(GuiControlType::BUTTON, id)
-{
-	this->bounds = bounds;
-	this->text = text;
-	this->secondaryText = true;
-	this->secondText = secondText;
-	this->offsetText = this->text.Length() * 20;
-	this->offsetTextSecond = this->secondText.Length() * 20;
-
-	normal = { 0,190,300, 60 };
-	focused = { 0,281,300, 60 };
-	pressed = { 0,345,300, 60 };
-	disabled = { 0,410,300, 60 };
 
 	normalSmall = { 0,477,200,60 };
 	focusedSmall = { 0,543,200,60 };
@@ -114,9 +90,8 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
 			}
 		}
-		if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
-
 			if ((id < 14) || id == 21)
 			{
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
@@ -127,15 +102,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
-		if (secondaryText)
-		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 11, disabledFont, text.GetString());
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 11, disabledFont, secondText.GetString());
-		}
-		else
-		{
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), 64, 2, { 0,255,255,255 });
-		}
+		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 3, cPosY + bounds.y + (bounds.h / 6), 64, 2, { 200,200,200,255 });
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
@@ -156,7 +123,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
 			}
 		}
-		if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
 
 			if ((id < 14) || id == 21)
@@ -169,15 +136,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
-		if (secondaryText)
-		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, defaultFont, text.GetString());
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, defaultFont, secondText.GetString());
-		}
-		else
-		{
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), 64, 2, { 0,255,255,255 });
-		}
+		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 3, cPosY + bounds.y + (bounds.h / 6), 64, 2, { 255,255,255,255 });
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
@@ -198,7 +157,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
 			}
 		}
-		if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
 
 			if ((id < 14) || id == 21)
@@ -211,15 +170,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
-		if (secondaryText)
-		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, hoverFont, text.GetString());
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, hoverFont, secondText.GetString());
-		}
-		else
-		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), hoverFont, text.GetString());
-		}
+		//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 4), hoverFont, text.GetString());
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
@@ -240,7 +191,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
 			}
 		}
-		if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
 
 			if ((id < 14) || id == 21)
@@ -254,15 +205,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		}
 		
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
-		if (secondaryText)
-		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2) - 12, pressedFont, text.GetString());
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetTextSecond) / 2, cPosY + bounds.y + (bounds.h / 2) + 12, pressedFont, secondText.GetString());
-		}
-		else
-		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), pressedFont, text.GetString());
-		}
+		//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 4), pressedFont, text.GetString());
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);

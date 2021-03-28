@@ -108,7 +108,7 @@ bool SceneManager::Update(float dt)
 		}
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && current->name != SceneType::GAMEPLAY) return false;
+	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && current->currentScene != SceneType::GAMEPLAY) return false;
 
 	return true;
 }
@@ -137,22 +137,18 @@ bool SceneManager::PostUpdate()
 		{
 		case SceneType::LOGO:
 			next = new SceneLogo();
-			next->name = SceneType::LOGO;
 			next->currentScene = SceneType::LOGO;
 			break;
 		case SceneType::TITLE_SCREEN:
 			next = new SceneTitleScreen();
-			next->name = SceneType::TITLE_SCREEN;
 			next->currentScene = SceneType::TITLE_SCREEN;
 			break;
 		case SceneType::GAMEPLAY:
 			next = new SceneGameplay();
-			next->name = SceneType::GAMEPLAY;
 			next->currentScene = SceneType::GAMEPLAY;
 			break;
 		case SceneType::DEV_ROOM:
 			next = new SceneDevRoom();
-			next->name = SceneType::DEV_ROOM;
 			next->currentScene = SceneType::DEV_ROOM;
 			break;
 		default:
