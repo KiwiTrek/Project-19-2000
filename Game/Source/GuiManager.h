@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "GuiControl.h"
 #include "List.h"
+#include "Font.h"
 
 class GuiManager : public Module
 {
@@ -33,10 +34,13 @@ public:
 public:
 	SString folderTexture;
 	SString folderAudio;
+	SString folderFonts;
 
 	SDL_Texture* atlas;
 
-	// Fonts
+	// Fonts & sounds
+
+	Font* guiFontId = nullptr;
 
 	int clickSoundId = -1;
 	int hoverSoundId = -1;

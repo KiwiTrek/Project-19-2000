@@ -32,5 +32,6 @@
   <guiManager>
     <folderTexture>Assets/Textures/GUI/</folderTexture>
     <folderAudio>Assets/Audio/Fx/</folderAudio>
+    <folderFonts>Assets/Fonts/</folderFonts>
   </guiManager>
 </config>

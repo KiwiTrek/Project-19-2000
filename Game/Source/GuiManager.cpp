@@ -29,6 +29,7 @@ bool GuiManager::Awake(pugi::xml_node& config)
 
 	folderTexture.Create(config.child("folderTexture").child_value());
 	folderAudio.Create(config.child("folderAudio").child_value());
+	folderFonts.Create(config.child("folderFonts").child_value());
 
 	return true;
 }
@@ -38,6 +39,16 @@ bool GuiManager::Start()
 	// Load texture fonts & fx
 	SString tmp("%s%s", folderTexture.GetString(), "gui.png");
 	atlas = app->tex->Load(tmp.GetString());
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudio.GetString(), "Click.wav");
+	clickSoundId = app->audio->LoadFx(tmp.GetString());
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudio.GetString(), "Hover.wav");
+	hoverSoundId = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderFonts.GetString(), "ButtonFont.xml");
+	guiFontId = new Font(tmp.GetString());
 
 	return true;
 }
@@ -78,11 +89,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 	control->SetTexture(atlas);
 	if (secondText)
 	{
-		//control->SetFonts(defaultFontSmall, titleFontMedium, hoverFontSmall, pressedFontSmall, disabledFontSmall);
+		control->SetFonts(guiFontId);
 	}
 	else
 	{
-		//control->SetFonts(defaultFont, titleFontMedium, hoverFont, pressedFont, disabledFont);
+		control->SetFonts(guiFontId);
 	}
 
 	// Adds the created entity to the list

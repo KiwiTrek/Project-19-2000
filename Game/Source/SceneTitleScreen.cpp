@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "Textures.h"
 #include "GuiManager.h"
+#include "Window.h"
 
 #include "EntityManager.h"
 
@@ -14,6 +15,8 @@
 SceneTitleScreen::SceneTitleScreen()
 {
     // GUI: Initialize required controls for the screen
+    float tmpValue = 0;
+    
     //MAIN MENU
     app->gui->Enable();
     btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 300, 300, 60 }, "START", this);
@@ -23,7 +26,17 @@ SceneTitleScreen::SceneTitleScreen()
 
     //OPTIONS
     sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", this, 6);
+    sldrVolume->value = app->audio->GetMusicVolume();
+    sldrVolume->maxValue = 128;
+    tmpValue = (float)(sldrVolume->limits.w - sldrVolume->bounds.w) / (float)sldrVolume->maxValue;
+    sldrVolume->bounds.x = sldrVolume->limits.x + (tmpValue * sldrVolume->value);
+
     sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 69, 42 }, "FX", this, 6);
+    sldrFx->value = app->audio->GetFxVolume();
+    sldrFx->maxValue = 128;
+    tmpValue = (float)(sldrFx->limits.w - sldrFx->bounds.w) / (float)sldrFx->maxValue;
+    sldrFx->bounds.x = sldrFx->limits.x + (tmpValue * sldrFx->value);
+
     boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { 180, 400, 60, 60 }, "FULLSCREEN", this);
     boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", this);
     btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 180, 600, 200, 60 }, "CONTROLS", this);
@@ -191,12 +204,17 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         app->exitRequest = true;
         break;
     case 5: //VOLUME
+        app->audio->SetMusicVolume(sldrVolume->value);
         break;
     case 6: //FX
+        app->audio->SetFxVolumeValue(sldrFx->value);
         break;
     case 7: //FULLSCREEN
+        app->win->ToggleFullscreen(boxFullScreen->checked);
         break;
     case 8: //VSYNC
+        //app->win->ToggleFullscreen(false);
+        //app->render->ToggleVsync(boxVSync->checked, (Module*)this);
         break;
     case 9: //CONTROLS
         flags = SetBit(flags, Flags::CONTROLS);

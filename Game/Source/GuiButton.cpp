@@ -76,7 +76,7 @@ bool GuiButton::Update(float dt)
 			{
 				if (state == GuiControlState::FOCUSED)
 				{
-					//app->audio->PlayFx(click);
+					app->audio->PlayFx(click);
 				}
 				state = GuiControlState::PRESSED;
 			}
@@ -134,7 +134,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		}
 		else
 		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), disabledFont, text.GetString());
+			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), 64, 2, { 0,255,255,255 });
 		}
 		if (app->render->debug)
 		{
@@ -144,9 +144,6 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::NORMAL:
 	{
-		clickPlay = true;
-		hoverPlay = true;
-
 
 		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{
@@ -179,7 +176,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		}
 		else
 		{
-			//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), defaultFont, text.GetString());
+			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 2), 64, 2, { 0,255,255,255 });
 		}
 		if (app->render->debug)
 		{
@@ -189,12 +186,6 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::FOCUSED:
 	{
-		clickPlay = true;
-		if (hoverPlay)
-		{
-			app->audio->PlayFx(hover, 0);
-			hoverPlay = false;
-		}
 
 		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{
@@ -237,11 +228,6 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::PRESSED:
 	{
-		if (clickPlay)
-		{
-			app->audio->PlayFx(click, 0);
-			clickPlay = false;
-		}
 
 		if (observer->currentScene == SceneType::TITLE_SCREEN)
 		{

@@ -5,11 +5,13 @@
 #include "GuiManager.h"
 #include "Input.h"
 #include "Render.h"
+#include "Window.h"
 
 SceneGameplay::SceneGameplay()
 {
-	//MENU
+	float tmpValue = 0;
 
+	//MENU
 	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 120, 200, 60 }, "INVENTORY", this);
 	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 200, 200, 60 }, "SKILLS", this);
 	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 280, 200, 60 }, "SKILL TREE", this);
@@ -20,7 +22,17 @@ SceneGameplay::SceneGameplay()
 
 	//OPTIONS
 	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 8, { 180, 200, 69, 42 }, "VOLUME", this, 6);
+	sldrVolume->value = app->audio->GetMusicVolume();
+	sldrVolume->maxValue = 128;
+	tmpValue = (float)(sldrVolume->limits.w - sldrVolume->bounds.w) / (float)sldrVolume->maxValue;
+	sldrVolume->bounds.x = sldrVolume->limits.x + (tmpValue * sldrVolume->value);
+
 	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 9, { 800, 200, 69, 42 }, "FX", this, 6);
+	sldrFx->value = app->audio->GetFxVolume();
+	sldrFx->maxValue = 128;
+	tmpValue = (float)(sldrFx->limits.w - sldrFx->bounds.w) / (float)sldrFx->maxValue;
+	sldrFx->bounds.x = sldrFx->limits.x + (tmpValue * sldrFx->value);
+
 	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 10, { 180, 400, 60, 60 }, "FULLSCREEN", this);
 	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 11, { 800, 400, 60, 60 }, "VSync", this);
 	btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 600, 200, 60 }, "CONTROLS", this);
@@ -279,12 +291,17 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		TransitionToScene(SceneType::TITLE_SCREEN);
 		break;
 	case 8: //VOLUME
+		app->audio->SetMusicVolume(sldrVolume->value);
 		break;
 	case 9: //FX
+		app->audio->SetFxVolumeValue(sldrFx->value);
 		break;
 	case 10: //FULLSCREEN
+		app->win->ToggleFullscreen(boxFullScreen->checked);
 		break;
 	case 11: //VSYNC
+		//app->win->ToggleFullscreen(false);
+		//app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
 	case 12: //CONTROLS
 		flags = SetBit(flags, Flags::CONTROLS);

@@ -34,11 +34,11 @@ public:
 	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text)
 	{
 		texture = NULL;
-		defaultFont = -1;
-		titleFont = -1;
+		guiFont = nullptr;
+	/*	titleFont = -1;
 		hoverFont = -1;
 		pressedFont = -1;
-		disabledFont = -1;
+		disabledFont = -1;*/
 
 		hover = -1;
 		click = -1;
@@ -63,13 +63,13 @@ public:
 	}
 
 	// Sets all fonts used in gui
-	void SetFonts(int defaultId, int titleId, int hoverId, int pressedId, int disabledId)
+	void SetFonts(Font* defaultId/*, int titleId, int hoverId, int pressedId, int disabledId*/)
 	{
-		defaultFont = defaultId;
-		titleFont = titleId;
-		hoverFont = hoverId;
-		pressedFont = pressedId;
-		disabledFont = disabledId;
+		guiFont = defaultId;
+		//titleFont = titleId;
+		//hoverFont = hoverId;
+		//pressedFont = pressedId;
+		//disabledFont = disabledId;
 	}
 
 	void SetSounds(int hoverSoundId, int clickSoundId)
@@ -104,15 +104,15 @@ public:
 	SDL_Texture* texture;
 
 	// Fonts
-	int defaultFont;
-	int titleFont;
-	int hoverFont;
-	int pressedFont;
-	int disabledFont;
+	Font* guiFont;
+	//int titleFont;
+	//int hoverFont;
+	//int pressedFont;
+	//int disabledFont;
 
 	// Sounds
-	int click = app->audio->LoadFx("Assets/Audio/Fx/Click.wav");
-	int hover = app->audio->LoadFx("Assets/Audio/Fx/Hover.wav");
+	int click;
+	int hover;
 
 	// Observer scene
 	Scene* observer;
