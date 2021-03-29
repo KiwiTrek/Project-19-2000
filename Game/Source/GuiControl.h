@@ -95,6 +95,7 @@ public:
 	GuiControlType type;
 	GuiControlState state;
 	SString text;
+	int textSize;
 	int offsetText;
 
 	// Position and size

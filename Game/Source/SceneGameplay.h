@@ -80,6 +80,7 @@ private:
 
     //FONTS
     Font* dialogueFont = nullptr;
+    Font* buttonFont = nullptr;
 
     int flags;
 };

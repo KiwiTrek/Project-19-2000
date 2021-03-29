@@ -55,7 +55,7 @@ bool GuiManager::Start()
 	return true;
 }
 
-GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, Scene* observer, int widthInUnits)
+GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits)
 {
 	GuiControl* control = nullptr;
 
@@ -81,6 +81,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 
 	control->SetSounds(hoverSoundId, clickSoundId);
 	control->SetObserver(observer);
+	control->textSize = textSize;
 	control->SetTexture(atlas);
 	control->SetFonts(guiFontId);
 

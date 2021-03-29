@@ -69,7 +69,7 @@ private:
     GuiButton* btnPadRight;
 
     //FONTS
-    Font* dialogueFont = nullptr;
+    Font* buttonFont = nullptr;
     int titleFx;
 
     unsigned char flags;

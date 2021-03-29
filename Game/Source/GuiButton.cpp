@@ -10,7 +10,7 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(
 {
 	this->bounds = bounds;
 	this->text = text;
-	this->offsetText = this->text.Length() * 24;
+	this->offsetText = this->text.Length() * 20;
 
 	normal = { 0,215,300, 60 };
 	focused = { 0,281,300, 60 };
@@ -102,7 +102,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
-		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 3, cPosY + bounds.y + (bounds.h / 6), 64, 2, { 200,200,200,255 });
+		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 0,0,0,255 });
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
@@ -136,7 +136,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
-		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 3, cPosY + bounds.y + (bounds.h / 6), 64, 2, { 255,255,255,255 });
+		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
@@ -170,7 +170,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 			}
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
-		//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 4), hoverFont, text.GetString());
+		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
@@ -205,7 +205,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		}
 		
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
-		//app->fonts->DrawText(cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 4), pressedFont, text.GetString());
+		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);

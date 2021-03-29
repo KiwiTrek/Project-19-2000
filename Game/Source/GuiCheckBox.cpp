@@ -70,7 +70,7 @@ bool GuiCheckBox::Update(float dt)
 bool GuiCheckBox::Draw(int cPosX, int cPosY)
 {
 	// Draw the right button depending on state
-	//app->fonts->DrawText(cPosX + bounds.x - offsetText, cPosY + bounds.y, titleFont, text.GetString());
+	app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x, cPosY + bounds.y + (bounds.h / 8) - bounds.h, textSize, 2, { 255,255,255,255 });
 
 	switch (state)
 	{
