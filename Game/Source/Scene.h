@@ -36,6 +36,11 @@ public:
         return true;
     }
 
+    virtual bool DrawPauseMenu()
+    {
+        return true;
+    }
+
     virtual bool Unload()
     {
         return true;

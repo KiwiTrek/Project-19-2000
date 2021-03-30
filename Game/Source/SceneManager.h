@@ -34,12 +34,11 @@ public:
 public:
 	Scene* current;
 
+	bool onTransition;
+	float transitionAlpha;
 private:
 	Scene* next;
-
-	bool onTransition;
 	bool fadeOutCompleted;
-	float transitionAlpha;
 };
 
 #endif // __SCENEMANAGER_H__

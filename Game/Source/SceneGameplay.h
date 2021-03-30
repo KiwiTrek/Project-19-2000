@@ -31,6 +31,7 @@ public:
     bool Update(float dt);
 
     bool Draw();
+    bool DrawPauseMenu();
 
     bool Unload();
 

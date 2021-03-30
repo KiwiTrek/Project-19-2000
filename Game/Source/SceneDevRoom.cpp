@@ -42,7 +42,7 @@ bool SceneDevRoom::Draw()
 {
 	app->render->background = { 100,100,100,255 };
 	app->map->Draw();
-	player->Draw();
+	//player->Draw();
 
 	return false;
 }

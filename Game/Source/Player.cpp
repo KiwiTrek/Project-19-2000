@@ -8,11 +8,11 @@
 #include "Map.h"
 #include "EntityManager.h"
 #include "Animation.h"
-#include "Physics.h"
+#include "Collisions.h"
 
 Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 {
-	this->entityRect = { 0,0,64,64 };
+	this->entityRect = { 0,0,38,24 };
 	spawnPos = { 150,150 };
 
 	LOG("Init Player");
@@ -72,7 +72,7 @@ bool Player::Update(float dt)
 	}
 
 													// IMPORTANT: Before this point use nextPos for referencing the player position
-	//physics.ResolveCollisions(entityRect, nextPos, invert);
+	app->collisions->ResolveCollisions(entityRect, nextPos);
 													// IMPORTANT: After this point use entityRect for referencing the player position
 	entityRect.x = nextPos.x;
 	entityRect.y = nextPos.y;
@@ -81,10 +81,10 @@ bool Player::Update(float dt)
 
 bool Player::Draw()
 {
-	app->render->DrawTexture(app->entities->playerTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame(), invert);
+	app->render->DrawTexture(app->entities->playerTex, entityRect.x, entityRect.y - entityRect.h, false, &currentAnim->GetCurrentFrame(), invert);
 	if (app->render->debug)
 	{
-		app->render->DrawRectangle({ entityRect.x - 13, entityRect.y - 8,entityRect.w,entityRect.h }, 0, 0, 150, 100);
+		app->render->DrawRectangle({ entityRect.x, entityRect.y, entityRect.w, entityRect.h }, 0, 0, 150, 100);
 	}
 	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
 

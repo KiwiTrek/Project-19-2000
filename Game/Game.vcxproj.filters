@@ -69,11 +69,11 @@
     <ClCompile Include="Source\SceneDevRoom.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Physics.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\CombatEntity.cpp">
       <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collisions.cpp">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,9 +180,6 @@
     <ClInclude Include="Source\SceneDevRoom.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Physics.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Object.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -191,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="Source\Collider.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collisions.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -160,8 +160,13 @@ bool SceneGameplay::Update(float dt)
 bool SceneGameplay::Draw()
 {
 	app->render->background = { 0,0,150,255 };
+	//DrawPauseMenu();
+	return false;
+}
 
-	if ((flags & 1<<Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+bool SceneGameplay::DrawPauseMenu()
+{
+	if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{
 		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
 		btnInventory->Draw();
@@ -227,7 +232,7 @@ bool SceneGameplay::Draw()
 		btnPadRight->Draw();
 	}
 
-	return false;
+	return true;
 }
 
 bool SceneGameplay::Unload()

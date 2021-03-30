@@ -195,7 +195,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     switch (control->id)
     {
     case 1: //START
-        TransitionToScene(SceneType::GAMEPLAY);
+        TransitionToScene(SceneType::DEV_ROOM);
         break;
     case 2: //CONTINUE
         app->LoadRequest();

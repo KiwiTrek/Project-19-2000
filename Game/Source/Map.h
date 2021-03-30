@@ -141,8 +141,8 @@ public:
 	// Translates map position to world position
 	iPoint MapToWorld(int x, int y) const;
 
-	// Creates the data required to check the walkability of the whole map for pathfinding
-	bool CreateWalkabilityMap(int* width, int* height, uchar** buffer) const;
+	//// Creates the data required to check the walkability of the whole map for pathfinding
+	//bool CreateWalkabilityMap(int* width, int* height, uchar** buffer) const;
 
 	// Changes property to value assigned
 	void SetTileProperty(int x, int y, const char* property, int value, bool notMovCollision = false, bool isObject = false);

@@ -9,6 +9,7 @@
 #include "Input.h"
 #include "Fonts.h"
 #include "GuiManager.h"
+#include "SceneManager.h"
 #include "Scene.h"
 #include "Player.h"
 #include "CombatEntity.h"

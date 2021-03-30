@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Map.h"
+#include "SceneManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -82,6 +83,17 @@ bool Render::Update(float dt)
 
 bool Render::PostUpdate()
 {
+	if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+	{
+		app->scene->current->DrawPauseMenu();
+	}
+
+	// Draw full screen rectangle in front of everything
+	if (app->scene->onTransition)
+	{
+		app->render->DrawRectangle(app->render->camera, 0, 0, 0, (uchar)(255.0f * app->scene->transitionAlpha));
+	}
+
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.a);
 	SDL_RenderPresent(renderer);
 	return true;

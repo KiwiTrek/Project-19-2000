@@ -4,8 +4,10 @@
 #include "Point.h"
 #include "SString.h"
 #include "Animation.h"
-#include "Physics.h"
+#include "Collisions.h"
 #include "DynArray.h"
+#include "List.h"
+#include "Log.h"
 
 class Collider;
 
@@ -106,7 +108,6 @@ public:
 	// basic entity values
 	SDL_Rect entityRect;
 	Collider* collider;
-	Physics physics;
 	iPoint nextPos;
 	uint destroyedFx;
 

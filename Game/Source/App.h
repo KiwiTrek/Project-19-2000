@@ -18,6 +18,7 @@ class Textures;
 class Audio;
 class Map;
 class EntityManager;
+class Collisions;
 class GuiManager;
 
 class SceneManager;
@@ -100,6 +101,7 @@ public:
 	Audio* audio;
 	Map* map;
 	EntityManager* entities;
+	Collisions* collisions;
 	GuiManager* gui;
 
 	SceneManager* scene;
