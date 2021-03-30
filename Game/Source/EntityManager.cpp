@@ -11,6 +11,7 @@
 #include "GuiManager.h"
 #include "Scene.h"
 #include "Player.h"
+#include "CombatEntity.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -78,7 +79,7 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-Entity* EntityManager::CreateEntity(int x, int y, EntityType type, Entity* playerPointer, EnemyType eType)
+Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats/*, Entity* playerPointer, EnemyType eType*/)
 {
 	Entity* ret = nullptr;
 
@@ -90,8 +91,13 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, Entity* playe
 		ret = new Player(x, y);
 		break;
 	}
-
+	case EntityType::COMBAT_ENTITY:
+	{
+		ret = new CombatEntity(x, y, id, stats);
+		break;
 	}
+	}
+
 
 	// Adds the created entity to the list
 	if (ret != nullptr)

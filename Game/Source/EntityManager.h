@@ -42,7 +42,7 @@ public:
 	bool CleanUp();
 
 	// Create/Destroy entity
-	Entity* CreateEntity(int x, int y, EntityType type, Entity* playerPointer = nullptr, EnemyType eType = EnemyType::NO_TYPE);
+	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats/*, Entity* playerPointer = nullptr, EnemyType eType = EnemyType::NO_TYPE*/);
 	void DestroyEntity(Entity* entity);
 
 	// Calls Update for every entity
@@ -67,6 +67,7 @@ public:
 	SString folderAudioFx;
 	SString folderMap;
 
+	// textures
 	SDL_Texture* playerTex;
 
 };

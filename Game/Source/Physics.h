@@ -51,82 +51,140 @@ public:
 	// Collisions
 	//void ResolveCollisions(SDL_Rect& currentFrame, iPoint nextFrame, bool goingLeft)
 	//{
-	//	iPoint tiledPos(currentFrame.x / app->generalTileSize, currentFrame.y / app->generalTileSize);
+	//	iPoint tiledPos(currentFrame.x / 64, currentFrame.y / 64);
 	//	iPoint correctedPos;
 	//	iPoint checkedPos;
 
 	//	// X axis
-	//	if (!goingLeft) // Right
-	//	{
-	//		tiledPos.x = (currentFrame.x + currentFrame.w) / app->generalTileSize;
-	//		int i = 0;
-	//		while (app->map->GetTileProperty(tiledPos.x + i, tiledPos.y, "CollisionId") == Collider::Type::AIR && i < 5)
-	//		{
-	//			i++;
-	//		}
-	//		i--;
-	//		correctedPos.x = MIN(nextFrame.x - currentFrame.x, (tiledPos.x + i) * app->generalTileSize - currentFrame.x);
-	//	}
-	//	else // Left
-	//	{
-	//		int i = 0;
-	//		while (app->map->GetTileProperty(tiledPos.x - i, tiledPos.y, "CollisionId") == Collider::Type::AIR && i < 5)
-	//		{
-	//			i++;
-	//		}
-	//		i--;
-	//		correctedPos.x = -MIN(currentFrame.x - nextFrame.x, currentFrame.x - (tiledPos.x - i) * app->generalTileSize);
-	//	}
+
+	//		//iPoint frameDifB = B->pos - B->pastPos;
+	//		//iPoint tmpB = B->pos;
+	//		//iPoint frameDifA = A->pos - A->pastPos;
+	//		//iPoint tmpA = A->pos;
+
+	//		//while (Intersects(A, B))
+	//		//{
+	//		//    if (frameDifB.x > 0)
+	//		//    {
+	//		//        tmpB.x--;
+	//		//        frameDifB.x--;
+	//		//    }
+	//		//    else if (frameDifB.x < 0)
+	//		//    {
+	//		//        tmpB.x++;
+	//		//        frameDifB.x++;
+	//		//    }
+	//		//    if (frameDifB.y > 0)
+	//		//    {
+	//		//        tmpB.y--;
+	//		//        frameDifB.y--;
+	//		//    }
+	//		//    else if (frameDifB.y < 0)
+	//		//    {
+	//		//        tmpB.y++;
+	//		//        frameDifB.y++;
+	//		//    }
+
+	//		//    if (frameDifA.x > 0)
+	//		//    {
+	//		//        tmpA.x--;
+	//		//        frameDifA.x--;
+	//		//    }
+	//		//    else if (frameDifA.x < 0)
+	//		//    {
+	//		//        tmpA.x++;
+	//		//        frameDifA.x++;
+	//		//    }
+	//		//    if (frameDifA.y > 0)
+	//		//    {
+	//		//        tmpA.y--;
+	//		//        frameDifA.y--;
+	//		//    }
+	//		//    else if (frameDifA.y < 0)
+	//		//    {
+	//		//        tmpA.y++;
+	//		//        frameDifA.y++;
+	//		//    }
+
+	//		//    A->collider->rect.x = tmpA.x;
+	//		//    A->collider->rect.y = tmpA.y;
+	//		//    B->collider->rect.x = tmpB.x;
+	//		//    B->collider->rect.y = tmpB.y;
+	//		//}
+	//		//B->pos = tmpB;
+	//		//A->pos = tmpA;
+
+	//	//if (!goingLeft) // Right
+	//	//{
+	//	//	tiledPos.x = (currentFrame.x + currentFrame.w) / 64;
+	//	//	int i = 0;
+	//	//	while (app->map->GetTileProperty(tiledPos.x + i, tiledPos.y, "CollisionId") == ColliderType::GROUND && i < 5)
+	//	//	{
+	//	//		i++;
+	//	//	}
+	//	//	i--;
+	//	//	correctedPos.x = MIN(nextFrame.x - currentFrame.x, (tiledPos.x + i) * 64 - currentFrame.x);
+	//	//}
+	//	//else // Left
+	//	//{
+	//	//	int i = 0;
+	//	//	while (app->map->GetTileProperty(tiledPos.x - i, tiledPos.y, "CollisionId") == ColliderType::GROUND && i < 5)
+	//	//	{
+	//	//		i++;
+	//	//	}
+	//	//	i--;
+	//	//	correctedPos.x = -MIN(currentFrame.x - nextFrame.x, currentFrame.x - (tiledPos.x - i) * 64);
+	//	//}
 
 	//	// Y axis
 	//	if (positiveSpeedY) // Bottom
 	//	{
-	//		tiledPos.y = (currentFrame.y + currentFrame.h) / app->generalTileSize;
+	//		tiledPos.y = (currentFrame.y + currentFrame.h) / 64;
 	//		int i = 0;
-	//		while (app->map->GetTileProperty(tiledPos.x, tiledPos.y + i, "CollisionId") == Collider::Type::AIR && i < 5)
+	//		while (app->map->GetTileProperty(tiledPos.x, tiledPos.y + i, "CollisionId") == ColliderType::GROUND && i < 5)
 	//		{
 	//			i++;
 	//		}
 	//		i--;
-	//		correctedPos.y = MIN(nextFrame.y - currentFrame.y, (tiledPos.y + i) * app->generalTileSize - currentFrame.y);
+	//		correctedPos.y = MIN(nextFrame.y - currentFrame.y, (tiledPos.y + i) * 64 - currentFrame.y);
 	//	}
 	//	else // Top
 	//	{
 	//		int i = 0;
-	//		while (app->map->GetTileProperty(tiledPos.x, tiledPos.y - i, "CollisionId") == Collider::Type::AIR && i < 5)
+	//		while (app->map->GetTileProperty(tiledPos.x, tiledPos.y - i, "CollisionId") == ColliderType::GROUND && i < 5)
 	//		{
 	//			i++;
 	//		}
 	//		i--;
-	//		correctedPos.y = -MIN(currentFrame.y - nextFrame.y, currentFrame.y - (tiledPos.y - i) * app->generalTileSize);
+	//		correctedPos.y = -MIN(currentFrame.y - nextFrame.y, currentFrame.y - (tiledPos.y - i) * 64);
 	//	}
 	//	currentFrame.x += correctedPos.x;
 	//	currentFrame.y += correctedPos.y;
 
-	//	iPoint currentFrameTile = { currentFrame.x / app->generalTileSize, currentFrame.y / app->generalTileSize };
+	//	iPoint currentFrameTile = { currentFrame.x / 64, currentFrame.y / 64 };
 
-	//	if (app->map->GetTileProperty(currentFrameTile.x + 1, currentFrameTile.y, "CollisionId") == Collider::Type::SOLID
-	//		&& app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y + 1, "CollisionId") != Collider::Type::SOLID
+	//	if (app->map->GetTileProperty(currentFrameTile.x + 1, currentFrameTile.y, "CollisionId") == ColliderType::WALL
+	//		&& app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y + 1, "CollisionId") != ColliderType::WALL
 	//		&& !goingLeft)
 	//	{
 	//		currentFrame.y -= correctedPos.y;
 	//		speed.x = 0.0f;
 	//		speed.y = 0.0f;
 	//	}
-	//	else if (app->map->GetTileProperty((currentFrame.x - 1) / app->generalTileSize, currentFrameTile.y, "CollisionId") == Collider::Type::SOLID
-	//		&& app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y, "CollisionId") != Collider::Type::SOLID
+	//	else if (app->map->GetTileProperty((currentFrame.x - 1) / 64, currentFrameTile.y, "CollisionId") == ColliderType::WALL
+	//		&& app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y, "CollisionId") != ColliderType::WALL
 	//		&& goingLeft)
 	//	{
 	//		currentFrame.y -= correctedPos.y;
 	//		speed.x = 0.0f;
 	//		speed.y = 0.0f;
 	//	}
-	//	else if (app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y + 1, "CollisionId") == Collider::Type::SOLID
-	//		|| app->map->GetTileProperty(currentFrameTile.x + 1, currentFrameTile.y + 1, "CollisionId") == Collider::Type::SOLID)
+	//	else if (app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y + 1, "CollisionId") == ColliderType::WALL
+	//		|| app->map->GetTileProperty(currentFrameTile.x + 1, currentFrameTile.y + 1, "CollisionId") == ColliderType::WALL)
 	//	{
 	//		speed.y = 0.0f;
 	//	}
-	//	else if (app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y, "CollisionId") == Collider::Type::SOLID)
+	//	else if (app->map->GetTileProperty(currentFrameTile.x, currentFrameTile.y, "CollisionId") == ColliderType::WALL)
 	//	{
 	//		speed.y = 0.0f;
 	//	}

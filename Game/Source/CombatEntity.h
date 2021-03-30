@@ -1,15 +1,14 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef __COMBAT_ENTITY_H__
+#define __COMBAT_ENTITY_H__
 
 #include "Entity.h"
 
-
-class Player : public Entity
+class CombatEntity : public Entity
 {
 public:
 
 	// Constructor
-	Player(int x, int y);
+	CombatEntity(int x, int y, EntityId id, Stats stats);
 
 	// Called each loop iteration
 	bool Update(float dt);
@@ -18,12 +17,11 @@ public:
 	bool Draw();
 
 private:
-	bool godMode = false;
-	bool inMenu = false;
-	iPoint playerPos;
 
 	// Animation
 	Animation idle;
+
+	List<Attack*> AttackPool;
 };
 
 #endif // !__PLAYER_H__

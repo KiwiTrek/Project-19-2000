@@ -69,7 +69,7 @@ bool SceneGameplay::Load()
 	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
 
 	// Initialize player
-	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER);
+	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	app->audio->StopMusic();
 

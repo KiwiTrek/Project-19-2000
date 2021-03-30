@@ -25,6 +25,7 @@ public:
 private:
 
     Entity* player = nullptr;
+    Entity* enemyTest = nullptr;
 };
 
 #endif // __SCENEDEVROOM_H__

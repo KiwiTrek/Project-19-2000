@@ -15,10 +15,18 @@
   <terraintypes>
    <terrain name="Nuevo Terreno" tile="0"/>
   </terraintypes>
-  <tile id="0" terrain="0,0,0,0"/>
-  <tile id="1" terrain="0,0,0,0"/>
+  <tile id="0" terrain="0,0,0,0">
+   <properties>
+    <property name="CollisionId" type="int" value="1"/>
+   </properties>
+  </tile>
+  <tile id="1" terrain="0,0,0,0">
+   <properties>
+    <property name="CollisionId" type="int" value="2"/>
+   </properties>
+  </tile>
  </tileset>
- <layer id="1" name="Capa de patrones 1" width="12" height="12">
+ <layer id="1" name="Ground" width="12" height="12">
   <properties>
    <property name="NoDraw" type="int" value="0"/>
   </properties>

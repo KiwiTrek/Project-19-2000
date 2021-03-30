@@ -31,8 +31,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-private:
+public:
 	Scene* current;
+
+private:
 	Scene* next;
 
 	bool onTransition;

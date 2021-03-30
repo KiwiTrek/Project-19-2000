@@ -72,6 +72,9 @@
     <ClCompile Include="Source\Physics.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CombatEntity.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -181,6 +184,12 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\Object.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CombatEntity.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
