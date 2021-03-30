@@ -70,7 +70,6 @@ private:
 
     //FONTS
     Font* buttonFont = nullptr;
-    int titleFx;
 
     unsigned char flags;
 };
