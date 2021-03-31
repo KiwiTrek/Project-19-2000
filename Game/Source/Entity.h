@@ -42,15 +42,15 @@ enum class EntityId
 class Stats
 {
 public:
-	Stats(int pAtk, int mAtk = 0, int pArm = 0, int mDef = 0, int hp = 0, int mr = 0, float sp = 0.0f, float stress = 0.0f) : pAtk(pAtk), mAtk(mAtk), pArm(pArm), mDef(mDef), hp(hp), mr(mr), sp(sp), stress(stress)
+	Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 0, int mPoints = 0, float speed = 0.0f, float stress = 0.0f) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), mPoints(mPoints), speed(speed), stress(stress)
 	{}
 
 	Stats()
 	{}
 
 public:
-	int pAtk, mAtk, pArm, mDef, hp, mr;
-	float sp;
+	int pAtk, mAtk, pDef, mDef, hPoints, mPoints;
+	float speed;
 
 	// for MC only
 	float stress;
