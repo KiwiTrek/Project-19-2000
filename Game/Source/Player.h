@@ -22,8 +22,22 @@ private:
 	bool inMenu = false;
 	iPoint playerPos;
 
+	// Animations stuff
+	bool lookingLeft;
+	bool lookingRight;
+	bool lookingDown;
+	bool lookingUp;
+	bool walking;
+
 	// Animation
 	Animation idle;
+	Animation idleLeft;
+	Animation idleRight;
+	Animation idleUp;
+	Animation walkingDown;
+	Animation walkingLeft;
+	Animation walkingRight;
+	Animation walkingUp;
 };
 
 #endif // !__PLAYER_H__

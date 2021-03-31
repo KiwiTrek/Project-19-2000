@@ -10,9 +10,10 @@
 #include "Animation.h"
 #include "Collisions.h"
 
+
 Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 {
-	this->entityRect = { 0,0,38,24 };
+	this->entityRect = { 0,0,50,50 };
 	spawnPos = { 150,150 };
 
 	LOG("Init Player");
@@ -26,7 +27,48 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 	
 	// Animation
 	
-	idle.PushBack({ 0,0,38,48 });
+	lookingLeft = false;
+	lookingRight = false;
+	lookingUp = false;
+	lookingDown = true;
+	walking = false;
+
+	idle.PushBack({ 2,2,50,50 });
+
+	idleLeft.PushBack({ 2,54,50,50 });
+
+	idleRight.PushBack({ 2,106,50,50 });
+
+	idleUp.PushBack({ 2,158,50,50 });
+
+
+	for (int i = 0; i < 4; i++)
+	{
+		walkingDown.PushBack({ (entityRect.w * i) + (2*(i+1)),2,50,50 });
+	}
+	walkingDown.speed = 10.f;
+	walkingDown.loop = true;
+
+	for (int i = 0; i < 4; i++)
+	{
+		walkingLeft.PushBack({ (entityRect.w * i) + (2 * (i+1)),54,50,50 });
+	}
+	walkingLeft.speed = 10.f;
+	walkingLeft.loop = true;
+
+	for (int i = 0; i < 4; i++)
+	{
+		walkingRight.PushBack({ (entityRect.w * i) + (2 * (i+1)),106,50,50 });
+	}
+	walkingRight.speed = 10.f;
+	walkingRight.loop = true;
+
+	for (int i = 0; i < 4; i++)
+	{
+		walkingUp.PushBack({ (entityRect.w * i) + (2 * (i+1)),158,50,50 });
+	}
+	walkingUp.speed = 10.f;
+	walkingUp.loop = true;
 
 	currentAnim = &idle;
 
@@ -56,19 +98,50 @@ bool Player::Update(float dt)
 		LOG("Pressing Menu");
 	}
 
+	currentAnim->Update(dt);
+
 	if (!inMenu)
 	{
 		if (app->input->CheckButton("right", KEY_REPEAT))
+		{
+			walking = true;
+			lookingRight = true;
+			lookingLeft = false;
+			lookingUp = false;
+			lookingDown = false;
+			currentAnim = &walkingRight;
 			nextPos.x += 3;
-
+		}
 		if (app->input->CheckButton("left", KEY_REPEAT))
+		{
+			walking = true;
+			lookingRight = false;
+			lookingLeft = true;
+			lookingUp = false;
+			lookingDown = false;
+			currentAnim = &walkingLeft;
 			nextPos.x -= 3;
-
+		}
 		if (app->input->CheckButton("down", KEY_REPEAT))
+		{
+			walking = true;
+			lookingRight = false;
+			lookingLeft = false;
+			lookingUp = false;
+			lookingDown = true;
+			currentAnim = &walkingDown;
 			nextPos.y += 3;
-
+		}
 		if (app->input->CheckButton("up", KEY_REPEAT))
+		{
+			walking = true;
+			lookingRight = false;
+			lookingLeft = false;
+			lookingUp = true;
+			lookingDown = false;
+			currentAnim = &walkingUp;
 			nextPos.y -= 3;
+		}
 	}
 
 													// IMPORTANT: Before this point use nextPos for referencing the player position
@@ -76,17 +149,38 @@ bool Player::Update(float dt)
 													// IMPORTANT: After this point use entityRect for referencing the player position
 	entityRect.x = nextPos.x;
 	entityRect.y = nextPos.y;
+
+	if (walking == false)
+	{
+		if (lookingRight == true)
+		{
+			currentAnim = &idleRight;
+		}
+		else if (lookingLeft == true)
+		{
+			currentAnim = &idleLeft;
+		}
+		else if (lookingUp == true)
+		{
+			currentAnim = &idleUp;
+		}
+		else if (lookingDown == true)
+		{
+			currentAnim = &idle;
+		}
+	}
+
 	return true;
 }
 
 bool Player::Draw()
 {
-	app->render->DrawTexture(app->entities->playerTex, entityRect.x, entityRect.y - entityRect.h, false, &currentAnim->GetCurrentFrame(), invert);
+	app->render->DrawTexture(app->entities->playerTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame(), invert);
 	if (app->render->debug)
 	{
 		app->render->DrawRectangle({ entityRect.x, entityRect.y, entityRect.w, entityRect.h }, 0, 0, 150, 100);
 	}
 	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
-
+	walking = false;
 	return true;
 }

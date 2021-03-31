@@ -46,7 +46,8 @@ bool EntityManager::Awake(pugi::xml_node& config)
 bool EntityManager::Start()
 {
 	// Loading entities textures
-	playerTex = app->tex->Load("Assets/Textures/playerTest.png");
+	//playerTex = app->tex->Load("Assets/Textures/playerTest.png");
+	playerTex = app->tex->Load("Assets/Textures/Characters/MCSpriteSheet.png");
 
 	doLogic = true;
 
