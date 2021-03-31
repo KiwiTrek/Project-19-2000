@@ -117,9 +117,9 @@
    <tile/>
    <tile/>
    <tile gid="1"/>
+   <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="2"/>
-   <tile gid="2"/>
+   <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
@@ -130,7 +130,7 @@
    <tile/>
    <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="2"/>
+   <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
@@ -141,9 +141,9 @@
    <tile/>
    <tile/>
    <tile gid="1"/>
+   <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="2"/>
-   <tile gid="2"/>
+   <tile gid="1"/>
    <tile gid="2"/>
    <tile gid="2"/>
    <tile gid="2"/>
@@ -177,7 +177,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="2" name="Collisions" width="12" height="12">
+ <layer id="2" name="Collisions" width="12" height="12" visible="0">
   <properties>
    <property name="Navigation" type="int" value="1"/>
    <property name="NoDraw" type="int" value="1"/>
