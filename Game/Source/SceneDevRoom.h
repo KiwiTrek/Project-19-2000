@@ -2,6 +2,8 @@
 #define __SCENEDEVROOM_H__
 
 #include "Scene.h"
+#include "Entity.h"
+#include "List.h"
 
 class Entity;
 
@@ -20,12 +22,22 @@ public:
 
     bool Unload();
 
+    bool SortSpeed(bool isSorted);
+
+    bool IsCharacter(Entity* e);
+
 public:
     SDL_Texture* tileSetTex;
 private:
 
     Entity* player = nullptr;
     Entity* enemyTest = nullptr;
+    Entity* enemyTest2 = nullptr;
+    Entity* playerTest = nullptr;
+
+    //COMBAT VARS
+    bool combat = false;
+    List<Entity*> turnOrder;
 };
 
 #endif // __SCENEDEVROOM_H__
