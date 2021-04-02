@@ -7,6 +7,14 @@
 class Player : public Entity
 {
 public:
+	enum FlagsAnimation
+	{
+		DOWN,
+		LEFT,
+		RIGHT,
+		UP,
+		WALKING
+	};
 
 	// Constructor
 	Player(int x, int y);
@@ -23,11 +31,7 @@ private:
 	iPoint playerPos;
 
 	// Animations stuff
-	bool lookingLeft;
-	bool lookingRight;
-	bool lookingDown;
-	bool lookingUp;
-	bool walking;
+	int animFlags;
 
 	// Animation
 	Animation idle;

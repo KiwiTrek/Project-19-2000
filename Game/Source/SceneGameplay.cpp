@@ -2,6 +2,7 @@
 
 #include "Audio.h"
 #include "EntityManager.h"
+#include "Textures.h"
 #include "GuiManager.h"
 #include "Input.h"
 #include "Render.h"
@@ -55,7 +56,34 @@ SceneGameplay::SceneGameplay()
 	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 520, 300, 60 }, "LEFT", 40, this);
 	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 800, 600, 300, 60 }, "RIGHT", 40, this);
 
+	//COMBAT
+	combatTextBox = { 0,0,1280,248 };
+	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 29, { 34,505,200,60 }, "ATTACK", 40, this);
+	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 30, { 234,505,200,60 }, "SKILLS", 40, this);
+	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 31, { 434,505,200,60 }, "ITEMS", 40, this);
+	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 32, { 634,505,200,60 }, "SPECIAL", 40, this);
+	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 33, { 834,505,200,60 }, "FLEE", 40, this);
+
 	flags = 0;
+	combatMenuFlags = 0;
+
+	int tmp1 = 100;
+	int tmp2 = 100;
+	characterFlags = 0;
+	characterFlags = SetBit(characterFlags, CharacterFlags::MC);
+	currentChar = &mainChar;
+	mainChar.box = { 1280,0,204,190 };
+	mainChar.characterTex = { 0,252,72,92 };
+	mainChar.hp.Create("HP: %d/%d", tmp1, tmp2);
+	mainChar.mp.Create("ST: %d/%d", tmp1, tmp2);
+
+	characterFlags = SetBit(characterFlags, CharacterFlags::GRANDPA);
+	grandpa.box = { 1280,0,204,190 };
+	grandpa.characterTex = { 73,252,68,100 };
+	grandpa.hp.Create("HP: %d/%d", tmp1, tmp2);
+	grandpa.mp.Create("MP: %d/%d", tmp1, tmp2);
+
+	LOG("%d", characterFlags);
 }
 
 SceneGameplay::~SceneGameplay()
@@ -67,6 +95,9 @@ bool SceneGameplay::Load()
 
 	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
 	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
+
+	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
+	combatGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
 
 	// Initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
@@ -83,8 +114,22 @@ bool SceneGameplay::Update(float dt)
 	//if (input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) app->SaveGameRequest();
 
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) combat = !combat;
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) characterSelected = !characterSelected;
 
-	if ((flags & 1<<Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	if (combat) UpdateCombat(dt);
+	else
+	{
+		UpdatePauseMenu(dt);
+		//Update normal scene
+	}
+
+	return true;
+}
+
+bool SceneGameplay::UpdatePauseMenu(float dt)
+{
+	if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{
 		btnInventory->Update(dt);
 		btnSkills->Update(dt);
@@ -94,12 +139,12 @@ bool SceneGameplay::Update(float dt)
 		btnOptions->Update(dt);
 		btnTitleScreen->Update(dt);
 
-		if ((flags & 1<<Flags::INVENTORY) != 0)
+		if ((flags & 1 << Flags::INVENTORY) != 0)
 		{
 			// arrow buttons maybe?
 			// buttons for each item i supose?
 		}
-		else if((flags & 1 << Flags::SKILLS) != 0)
+		else if ((flags & 1 << Flags::SKILLS) != 0)
 		{
 			// arrow buttons maybe?
 			// buttons for each skill i supose?
@@ -152,15 +197,31 @@ bool SceneGameplay::Update(float dt)
 		ResetButtons();
 		flags = ToggleBit(flags, Flags::MENU);
 	}
-	LOG("%d", flags);
+	return true;
+}
 
+bool SceneGameplay::UpdateCombat(float dt)
+{
+	//What you're doing in the Dev Room should go here
+	if (characterSelected)
+	{
+		btnCombatAttack->Update(dt);
+		btnCombatSkills->Update(dt);
+		btnCombatItems->Update(dt);
+		btnCombatSpecial->Update(dt);
+		btnCombatFlee->Update(dt);
+	}
 	return true;
 }
 
 bool SceneGameplay::Draw()
 {
-	app->render->background = { 0,0,150,255 };
-	//DrawPauseMenu();
+	if (combat) DrawCombat();
+	else
+	{
+		app->render->background = { 0,0,150,255 };
+	}
+
 	return false;
 }
 
@@ -169,13 +230,13 @@ bool SceneGameplay::DrawPauseMenu()
 	if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{
 		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
-		btnInventory->Draw();
-		btnSkills->Draw();
-		btnSkillTree->Draw();
-		btnEquipment->Draw();
-		btnStats->Draw();
-		btnOptions->Draw();
-		btnTitleScreen->Draw();
+		btnInventory->Draw(app->render->camera.x, app->render->camera.y);
+		btnSkills->Draw(app->render->camera.x, app->render->camera.y);
+		btnSkillTree->Draw(app->render->camera.x, app->render->camera.y);
+		btnEquipment->Draw(app->render->camera.x, app->render->camera.y);
+		btnStats->Draw(app->render->camera.x, app->render->camera.y);
+		btnOptions->Draw(app->render->camera.x, app->render->camera.y);
+		btnTitleScreen->Draw(app->render->camera.x, app->render->camera.y);
 
 		if ((flags & 1 << Flags::INVENTORY) != 0)
 		{
@@ -203,35 +264,98 @@ bool SceneGameplay::DrawPauseMenu()
 		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
 		SString titleOptions = "Options";
 		app->render->DrawText(buttonFont, titleOptions.GetString(), app->render->camera.x + ((app->render->camera.w - (titleOptions.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
-		sldrVolume->Draw();
-		sldrFx->Draw();
-		boxFullScreen->Draw();
-		boxVSync->Draw();
-		btnControls->Draw();
-		btnBack->Draw();
+		sldrVolume->Draw(app->render->camera.x, app->render->camera.y);
+		sldrFx->Draw(app->render->camera.x, app->render->camera.y);
+		boxFullScreen->Draw(app->render->camera.x, app->render->camera.y);
+		boxVSync->Draw(app->render->camera.x, app->render->camera.y);
+		btnControls->Draw(app->render->camera.x, app->render->camera.y);
+		btnBack->Draw(app->render->camera.x, app->render->camera.y);
 	}
 	else if ((flags & 1 << Flags::CONTROLS) != 0)
 	{
 		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
 		SString titleControls = "Controls";
 		app->render->DrawText(buttonFont, titleControls.GetString(), app->render->camera.x + ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
-		btnKeySelect->Draw();
-		btnKeyCancel->Draw();
-		btnKeyMenu->Draw();
-		btnKeyUp->Draw();
-		btnKeyDown->Draw();
-		btnKeyLeft->Draw();
-		btnKeyRight->Draw();
-		btnBack2->Draw();
-		btnPadSelect->Draw();
-		btnPadCancel->Draw();
-		btnPadMenu->Draw();
-		btnPadUp->Draw();
-		btnPadDown->Draw();
-		btnPadLeft->Draw();
-		btnPadRight->Draw();
+		btnKeySelect->Draw(app->render->camera.x, app->render->camera.y);
+		btnKeyCancel->Draw(app->render->camera.x, app->render->camera.y);
+		btnKeyMenu->Draw(app->render->camera.x, app->render->camera.y);
+		btnKeyUp->Draw(app->render->camera.x, app->render->camera.y);
+		btnKeyDown->Draw(app->render->camera.x, app->render->camera.y);
+		btnKeyLeft->Draw(app->render->camera.x, app->render->camera.y);
+		btnKeyRight->Draw(app->render->camera.x, app->render->camera.y);
+		btnBack2->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadSelect->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadCancel->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadMenu->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadUp->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadDown->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadLeft->Draw(app->render->camera.x, app->render->camera.y);
+		btnPadRight->Draw(app->render->camera.x, app->render->camera.y);
 	}
 
+	return true;
+}
+
+bool SceneGameplay::DrawCombat()
+{
+	//switch (ZONE)
+	app->render->background = { 125,33,129,255 };
+	app->render->DrawTexture(combatGui, app->render->camera.x, app->render->camera.y, false, &combatTextBox);
+	app->render->DrawTexture(combatGui, app->render->camera.x, app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
+	app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
+	if (!characterSelected)
+	{
+		if (characterFlags >= 1)
+		{
+			app->render->DrawTexture(combatGui, app->render->camera.x + 36, app->render->camera.y + app->render->camera.h - mainChar.box.h - 25, false, &mainChar.box);
+			app->render->DrawTexture(combatGui, app->render->camera.x + 36 + (mainChar.box.w/2 - mainChar.characterTex.w/2), app->render->camera.y + app->render->camera.h - mainChar.box.h, false, &mainChar.characterTex);
+			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), app->render->camera.x + 36 + 40, app->render->camera.y + app->render->camera.h - currentChar->box.h + mainChar.characterTex.h + 1, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), app->render->camera.x + 36 + 40, app->render->camera.y + app->render->camera.h - currentChar->box.h + mainChar.characterTex.h + 29, 28, 1, { 255,255,255,255 });
+		}
+		if (characterFlags >= 3)
+		{
+			app->render->DrawTexture(combatGui, app->render->camera.x + mainChar.box.w + 36, app->render->camera.y + app->render->camera.h - grandpa.box.h - 25, false, &grandpa.box);
+			app->render->DrawTexture(combatGui, app->render->camera.x + mainChar.box.w + 36 + (grandpa.box.w / 2 - grandpa.characterTex.w / 2), app->render->camera.y + app->render->camera.h - grandpa.box.h, false, &grandpa.characterTex);
+			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), app->render->camera.x + 36 + 40 + mainChar.box.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + grandpa.characterTex.h - 8, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), app->render->camera.x + 36 + 40 + mainChar.box.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + grandpa.characterTex.h + 20, 28, 1, { 255,255,255,255 });
+		}
+		/*
+		if (characterFlags >= 7)
+		{
+			//3rd
+		}
+		if (characterFlags >= 15)
+		{
+			//4th
+		}
+		*/
+	}
+	else
+	{
+		app->render->DrawTexture(combatGui, app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
+		app->render->DrawTexture(combatGui, app->render->camera.x + app->render->camera.w - currentChar->box.w + (currentChar->box.w / 2 - currentChar->characterTex.w / 2), app->render->camera.y + app->render->camera.h - currentChar->box.h, false, &currentChar->characterTex);
+		//app->render->DrawText(dialogueFont, currentChar->hp.GetString(), app->render->camera.x + 36 + 40 + mainChar.box.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + grandpa.characterTex.h - 8, 28, 1, { 255,255,255,255 });
+		//app->render->DrawText(dialogueFont, grandpa.mp.GetString(), app->render->camera.x + 36 + 40 + mainChar.box.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + grandpa.characterTex.h + 20, 28, 1, { 255,255,255,255 });
+		
+		btnCombatAttack->Draw(app->render->camera.x, app->render->camera.y);
+		btnCombatSkills->Draw(app->render->camera.x, app->render->camera.y);
+		btnCombatItems->Draw(app->render->camera.x, app->render->camera.y);
+		btnCombatSpecial->Draw(app->render->camera.x, app->render->camera.y);
+		btnCombatFlee->Draw(app->render->camera.x, app->render->camera.y);
+
+		if ((combatMenuFlags & 1 << CombatFlags::SKILL) != 0)
+		{
+
+		}
+		else if ((combatMenuFlags & 1 << CombatFlags::ITEMS) != 0)
+		{
+
+		}
+		else if ((combatMenuFlags & 1 << CombatFlags::SPECIAL) != 0)
+		{
+
+		}
+	}
 	return true;
 }
 
@@ -245,13 +369,24 @@ bool SceneGameplay::Unload()
 
 void SceneGameplay::ResetButtons()
 {
-	btnInventory->state = GuiControlState::NORMAL;
-	btnEquipment->state = GuiControlState::NORMAL;
-	btnSkills->state = GuiControlState::NORMAL;
-	btnSkillTree->state = GuiControlState::NORMAL;
-	btnEquipment->state = GuiControlState::NORMAL;
-	btnStats->state = GuiControlState::NORMAL;
-	btnOptions->state = GuiControlState::NORMAL;
+	if (combat)
+	{
+		btnCombatAttack->state = GuiControlState::NORMAL;
+		btnCombatSkills->state = GuiControlState::NORMAL;
+		btnCombatItems->state = GuiControlState::NORMAL;
+		btnCombatSpecial->state = GuiControlState::NORMAL;
+		btnCombatFlee->state = GuiControlState::NORMAL;
+	}
+	else
+	{
+		btnInventory->state = GuiControlState::NORMAL;
+		btnEquipment->state = GuiControlState::NORMAL;
+		btnSkills->state = GuiControlState::NORMAL;
+		btnSkillTree->state = GuiControlState::NORMAL;
+		btnEquipment->state = GuiControlState::NORMAL;
+		btnStats->state = GuiControlState::NORMAL;
+		btnOptions->state = GuiControlState::NORMAL;
+	}
 }
 
 //----------------------------------------------------------
@@ -261,10 +396,11 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 {
 	switch (control->id)
 	{
+	//MENU
 	case 1: //INVENTORY
 		ResetButtons();
 		btnInventory->state = GuiControlState::DISABLED;
-		flags = 1<<Flags::MENU;
+		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::INVENTORY);
 		break;
 	case 2: //SKILLS
@@ -312,6 +448,8 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		//app->win->ToggleFullscreen(false);
 		//app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
+
+	//CONTROLS
 	case 12: //CONTROLS
 		flags = SetBit(flags, Flags::CONTROLS);
 		break;
@@ -348,6 +486,29 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 27: //PAD LEFT
 		break;
 	case 28: //PAD RIGHT
+		break;
+
+	//COMBAT
+	case 29: //ATTACK
+		ResetButtons();
+		break;
+	case 30: //SKILLS
+		ResetButtons();
+		btnCombatSkills->state = GuiControlState::DISABLED;
+		combatMenuFlags = SetBit(combatMenuFlags, CombatFlags::SKILL);
+		break;
+	case 31: //ITEMS
+		ResetButtons();
+		btnCombatItems->state = GuiControlState::DISABLED;
+		combatMenuFlags = SetBit(combatMenuFlags, CombatFlags::ITEMS);
+		break;
+	case 32: //SPECIAL
+		ResetButtons();
+		btnCombatSpecial->state = GuiControlState::DISABLED;
+		combatMenuFlags = SetBit(combatMenuFlags, CombatFlags::SPECIAL);
+		break;
+	case 33: //FLEE
+		ResetButtons();
 		break;
 	default:
 		break;

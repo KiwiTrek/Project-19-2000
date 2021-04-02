@@ -92,7 +92,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		}
 		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
-			if ((id < 14) || id == 21)
+			if ((id < 14) || id == 21 || (id > 28))
 			{
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
 			}
@@ -126,7 +126,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
 
-			if ((id < 14) || id == 21)
+			if ((id < 14) || id == 21 || (id > 28))
 			{
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
 			}
@@ -160,7 +160,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
 
-			if ((id < 14) || id == 21)
+			if ((id < 14) || id == 21 || (id > 28))
 			{
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
 			}
@@ -194,7 +194,7 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		else if (observer->currentScene == SceneType::GAMEPLAY)
 		{
 
-			if ((id < 14) || id == 21)
+			if ((id < 14) || id == 21 || (id > 28))
 			{
 				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
 			}

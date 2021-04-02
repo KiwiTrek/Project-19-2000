@@ -8,6 +8,15 @@
 
 class Entity;
 
+struct  CombatCharacter
+{
+    int x, y;
+    SDL_Rect box;
+    SDL_Rect characterTex;
+    SString hp;
+    SString mp;
+};
+
 class SceneGameplay : public Scene
 {
 public:
@@ -23,15 +32,35 @@ public:
         CONTROLS
     };
 
+    enum CharacterFlags
+    {
+        MC,
+        GRANDPA,
+        CHILDHOOD,
+        EXTROVERTED
+    };
+
+    enum CombatFlags
+    {
+        ATTACK,
+        SKILL,
+        ITEMS,
+        SPECIAL,
+        FLEE
+    };
+
     SceneGameplay();
     virtual ~SceneGameplay();
 
     bool Load();
 
     bool Update(float dt);
+    bool UpdatePauseMenu(float dt);
+    bool UpdateCombat(float dt);
 
     bool Draw();
     bool DrawPauseMenu();
+    bool DrawCombat();
 
     bool Unload();
 
@@ -43,6 +72,7 @@ public:
 private:
 
     Entity* player = nullptr;
+    SDL_Texture* textBox = nullptr;
 
     //MENU
     GuiButton* btnInventory;
@@ -78,11 +108,29 @@ private:
     GuiButton* btnPadLeft;
     GuiButton* btnPadRight;
 
+    //COMBAT
+    bool combat;
+    bool characterSelected;
+    SDL_Texture* combatGui;
+    SDL_Rect combatTextBox;
+    int characterFlags;
+    int combatMenuFlags;
+    CombatCharacter* currentChar;
+    CombatCharacter mainChar;
+    CombatCharacter grandpa;
+    //CombatCharacter childhood;
+    //CombatCharacter extroverted;
+    GuiButton* btnCombatAttack;
+    GuiButton* btnCombatSkills;
+    GuiButton* btnCombatItems;
+    GuiButton* btnCombatSpecial;
+    GuiButton* btnCombatFlee;
 
     //FONTS
     Font* dialogueFont = nullptr;
     Font* buttonFont = nullptr;
 
+    //STATE FLAGS
     int flags;
 };
 
