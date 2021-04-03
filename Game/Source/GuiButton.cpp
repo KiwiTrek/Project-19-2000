@@ -79,27 +79,13 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	{
 	case GuiControlState::DISABLED:
 	{
-		if (observer->currentScene == SceneType::TITLE_SCREEN)
+		if (bounds.w == 200)
 		{
-			if ((id > 4 && id < 11) || id == 18)
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
-			}
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
 		}
-		else if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (bounds.w == 300)
 		{
-			if ((id < 14) || id == 21 || (id > 28))
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
-			}
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 0,0,0,255 });
@@ -112,28 +98,14 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::NORMAL:
 	{
 
-		if (observer->currentScene == SceneType::TITLE_SCREEN)
-		{
-			if ((id > 4 && id < 11) || id == 18)
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
-			}
-		}
-		else if (observer->currentScene == SceneType::GAMEPLAY)
-		{
+		if (bounds.w == 200)
 
-			if ((id < 14) || id == 21 || (id > 28))
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
-			}
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
+		}
+		else if (bounds.w == 300)
+		{
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
@@ -146,28 +118,13 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::FOCUSED:
 	{
 
-		if (observer->currentScene == SceneType::TITLE_SCREEN)
+		if (bounds.w == 200)
 		{
-			if ((id > 4 && id < 11) || id == 18)
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
-			}
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
 		}
-		else if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (bounds.w == 300)
 		{
-
-			if ((id < 14) || id == 21 || (id > 28))
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
-			}
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
@@ -180,30 +137,14 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::PRESSED:
 	{
 
-		if (observer->currentScene == SceneType::TITLE_SCREEN)
+		if (bounds.w == 200)
 		{
-			if ((id > 4 && id < 11) || id == 18)
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
-			}
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
 		}
-		else if (observer->currentScene == SceneType::GAMEPLAY)
+		else if (bounds.w == 300)
 		{
-
-			if ((id < 14) || id == 21 || (id > 28))
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
-			}
-			else
-			{
-				app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
-			}
+			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
 		}
-		
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
 		app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		if (app->render->debug)
