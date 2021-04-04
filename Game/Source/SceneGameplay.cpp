@@ -13,13 +13,15 @@ SceneGameplay::SceneGameplay()
 	float tmpValue = 0;
 
 	//MENU
-	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 120, 200, 60 }, "INVENTORY", 40, this);
-	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 200, 200, 60 }, "SKILLS", 40, this);
-	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 280, 200, 60 }, "SKILL TREE", 35, this);
-	btnEquipment = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 360, 200, 60 }, "EQUIPMENT", 40, this);
-	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 440, 200, 60 }, "STATS", 40, this);
-	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 90, 520, 200, 60 }, "OPTIONS", 40, this);
-	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 600, 200, 60 }, "TITLE SCREEN", 35, this);
+	menuBox = { 324,0,692,540 };
+	menuCharacterBox = { 324,539,204,135 };
+	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 80, 200, 60 }, "INVENTORY", 35, this);
+	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 160, 200, 60 }, "SKILLS", 40, this);
+	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 240, 200, 60 }, "       SKILL TREE", 35, this);
+	btnEquipment = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 320, 200, 60 }, " EQUIPMENT", 35, this);
+	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 400, 200, 60 }, " STATS ", 40, this);
+	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 90, 480, 200, 60 }, "OPTIONS", 35, this);
+	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 560, 200, 60 }, "          TITLE SCREEN", 35, this);
 
 	//OPTIONS
 	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 8, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
@@ -36,7 +38,7 @@ SceneGameplay::SceneGameplay()
 
 	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 10, { 180, 400, 60, 60 }, "FULLSCREEN", 40, this);
 	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 11, { 800, 400, 60, 60 }, "VSync", 40, this);
-	btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 600, 200, 60 }, "CONTROLS", 40, this);
+	btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 600, 200, 60 }, "CONTROLS", 35, this);
 	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 800, 600, 200, 60 }, "BACK", 40, this);
 
 	//CONTROLS
@@ -244,24 +246,50 @@ bool SceneGameplay::DrawPauseMenu()
 
 		if ((flags & 1 << Flags::INVENTORY) != 0)
 		{
-
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 292, app->render->camera.y + 80, false, &menuBox);
 		}
 		else if ((flags & 1 << Flags::SKILLS) != 0)
 		{
-
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 292, app->render->camera.y + 80, false, &menuBox);
 		}
 		else if ((flags & 1 << Flags::SKILL_TREE) != 0)
 		{
-
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 292, app->render->camera.y + 80, false, &menuBox);
 		}
 		else if ((flags & 1 << Flags::EQUIPMENT) != 0)
 		{
-
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 292, app->render->camera.y + 80, false, &menuBox);
 		}
 		else if ((flags & 1 << Flags::STATS) != 0)
 		{
-
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 292, app->render->camera.y + 80, false, &menuBox);
 		}
+
+		// Character Boxes
+		if (characterFlags >= 1)
+		{
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 984, app->render->camera.y + 80, false, &menuCharacterBox);
+			app->render->DrawTexture(combatGui, app->render->camera.x + 984 + 10, app->render->camera.y + 80 + 20, false, &mainChar.characterTex);
+			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), app->render->camera.x + 984 + mainChar.characterTex.w + 15, app->render->camera.y + 80 + 20, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), app->render->camera.x + 984 + mainChar.characterTex.w + 15, app->render->camera.y + 80 + 20 + 30, 28, 1, { 255,255,255,255 });
+		}
+		if (characterFlags >= 3)
+		{
+			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 984, app->render->camera.y + menuCharacterBox.h + 80, false, &menuCharacterBox);
+			app->render->DrawTexture(combatGui, app->render->camera.x + 984 + 10, app->render->camera.y + menuCharacterBox.h + 80 + 20, false, &grandpa.characterTex);
+			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), app->render->camera.x + 984 + grandpa.characterTex.w + 15, app->render->camera.y + menuCharacterBox.h + 80 + 20, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), app->render->camera.x + 984 + grandpa.characterTex.w + 15, app->render->camera.y + menuCharacterBox.h + 80 + 20 + 30, 28, 1, { 255,255,255,255 });
+		}
+		/*
+		if (characterFlags >= 7)
+		{
+			//3rd
+		}
+		if (characterFlags >= 15)
+		{
+			//4th
+		}
+		*/
 	}
 	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{

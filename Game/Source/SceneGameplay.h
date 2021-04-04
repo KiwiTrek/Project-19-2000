@@ -53,6 +53,7 @@ public:
 
     bool Draw();
     bool DrawPauseMenu();
+    bool DrawCharacterBox(CombatCharacter character);
     bool DrawCombat();
 
     bool Unload();
@@ -68,6 +69,8 @@ private:
     SDL_Texture* textBox = nullptr;
 
     //MENU
+    SDL_Rect menuBox;
+    SDL_Rect menuCharacterBox;
     GuiButton* btnInventory;
     GuiButton* btnSkills;
     GuiButton* btnSkillTree;
