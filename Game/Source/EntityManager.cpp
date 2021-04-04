@@ -133,8 +133,8 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 
 bool EntityManager::PostUpdate()
 {
-	//if (!combat)
-	//{
+	if(!app->scene->current->combat)
+	{
 		ListItem<Entity*>* e = entities.start;
 		while (e != nullptr)
 		{
@@ -148,7 +148,7 @@ bool EntityManager::PostUpdate()
 			}
 			e = e->next;
 		}
-	/*}
+	}
 	else
 	{
 		ListItem<Entity*>* e = entities.start;
@@ -165,8 +165,6 @@ bool EntityManager::PostUpdate()
 			e = e->next;
 		}
 	}
-	*/
-
 	return true;
 }
 

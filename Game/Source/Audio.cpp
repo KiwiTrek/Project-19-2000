@@ -50,6 +50,7 @@ bool Audio::Awake(pugi::xml_node& config)
 	else
 	{
 		Mix_VolumeMusic(config.child("music").attribute("volume").as_int(64));
+		auxVolume = config.child("music").attribute("volume").as_int(64);
 		volumeFx = config.child("fx").attribute("volume").as_int(64);
 		LOG("Set volume to: %d\n", Mix_VolumeMusic(-1));
 	}
@@ -91,6 +92,7 @@ bool Audio::Load(pugi::xml_node& save)
 	LOG("Loading SDL rendering info");
 
 	Mix_VolumeMusic(save.child("volume").attribute("value").as_int());
+	auxVolume = save.child("volume").attribute("value").as_int();
 
 	return true;
 }

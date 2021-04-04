@@ -94,14 +94,14 @@ bool SceneGameplay::Load()
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
 	currentChar = &mainChar;
 	mainChar.box = { 1280,0,204,190 };
-	mainChar.character = app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(50, 50, 50, 50, 50, 0, 50, 100));
+	mainChar.character = app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(50, 50, 50, 50, 50, 0, 1.0f, 100));
 	mainChar.characterTex = { 0,252,72,92 };
 	mainChar.hp.Create("HP: %d/%d", tmp, mainChar.character->stats.hPoints);
 	mainChar.mp.Create("ST: %d/%d", tmp, mainChar.character->stats.stress);
 
 	characterFlags = SetBit(characterFlags, (uint)EntityId::VIOLENT);
 	grandpa.box = { 1280,0,204,190 };
-	grandpa.character = app->entities->CreateEntity(grandpa.box.w + 36, app->render->camera.h - grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, Stats(70, 70, 30, 30, 40, 50, 30, 0));
+	grandpa.character = app->entities->CreateEntity(grandpa.box.w + 36, app->render->camera.h - grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, Stats(70, 70, 30, 30, 40, 50, 0.5f, 0));
 	grandpa.characterTex = { 73,252,68,100 };
 	grandpa.hp.Create("HP: %d/%d", tmp, grandpa.character->stats.hPoints);
 	grandpa.mp.Create("MP: %d/%d", tmp, grandpa.character->stats.mPoints);
@@ -469,6 +469,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 8: //VOLUME
 		app->audio->SetMusicVolume(sldrVolume->value);
+		app->audio->auxVolume = sldrVolume->value;
 		break;
 	case 9: //FX
 		app->audio->SetFxVolumeValue(sldrFx->value);

@@ -36,6 +36,7 @@ public:
 	// Get/Set music volume
 	int GetMusicVolume();
 	void SetMusicVolume(int volume);
+	int auxVolume;
 
 	// Get/Set fx volume
 	int GetFxVolume();

@@ -105,7 +105,6 @@ private:
     GuiButton* btnPadRight;
 
     //COMBAT
-    bool combat;
     bool characterSelected; // (For now, this is a temporal value for menu changing)
     SDL_Texture* combatGui;
     SDL_Rect combatTextBox;

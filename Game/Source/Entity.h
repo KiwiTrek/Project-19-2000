@@ -45,15 +45,15 @@ public:
 	/*Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 1, int mPoints = 1, float speed = 0.0f, float stress = 0.0f) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), mPoints(mPoints), speed(speed), stress(stress)
 	{}*/
 
-	Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 1, int mPoints = 1, int speed = 0, int stress = 0) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), mPoints(mPoints), speed(speed), stress(stress)
+	Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 1, int mPoints = 1, float speed = 0, int stress = 0) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), mPoints(mPoints), speed(speed), stress(stress)
 	{}
 
 	Stats()
 	{}
 
 public:
-	int pAtk, mAtk, pDef, mDef, hPoints, mPoints, speed, stress;
-	//float speed;
+	int pAtk, mAtk, pDef, mDef, hPoints, mPoints, stress;
+	float speed;
 
 	// for MC only
 	//float stress;

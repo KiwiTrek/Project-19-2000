@@ -209,6 +209,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 5: //VOLUME
         app->audio->SetMusicVolume(sldrVolume->value);
+        app->audio->auxVolume = sldrVolume->value;
         break;
     case 6: //FX
         app->audio->SetFxVolumeValue(sldrFx->value);

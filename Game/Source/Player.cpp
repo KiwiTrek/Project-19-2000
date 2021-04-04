@@ -7,6 +7,8 @@
 #include "Render.h"
 #include "Map.h"
 #include "EntityManager.h"
+#include "SceneManager.h"
+#include "Scene.h"
 #include "Animation.h"
 #include "Collisions.h"
 
@@ -73,76 +75,88 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 
 bool Player::Update(float dt)
 {
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && currentAnim == &idle)
-		app->SaveRequest();
-
-	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && currentAnim == &idle)
-		app->LoadRequest();
-
 	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		godMode = !godMode;
 
-	if (app->input->CheckButton("select", KEY_DOWN))
-		LOG("Pressing Select");
-
-	if (app->input->CheckButton("cancel", KEY_DOWN))
-		LOG("Pressing Cancel");
-
-	if (app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (!app->scene->current->combat)
 	{
-		inMenu = !inMenu;
-		LOG("Pressing Menu");
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && currentAnim == &idle)
+			app->SaveRequest();
+
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && currentAnim == &idle)
+			app->LoadRequest();
+
+		if (app->input->CheckButton("select", KEY_DOWN))
+			LOG("Pressing Select");
+
+		if (app->input->CheckButton("cancel", KEY_DOWN))
+			LOG("Pressing Cancel");
+
+		if (app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+		{
+			inMenu = !inMenu;
+			if (inMenu)
+			{
+				app->audio->auxVolume = app->audio->GetMusicVolume();
+				app->audio->SetMusicVolume(app->audio->GetMusicVolume() / 2);
+			}
+			else
+			{
+				app->audio->SetMusicVolume(app->audio->auxVolume);
+			}
+			LOG("Pressing Menu");
+		}
+
+		animFlags = ClearBit(animFlags, FlagsAnimation::WALKING);
+		currentAnim->Update(dt);
+
+		if (!inMenu)
+		{
+			if (app->input->CheckButton("right", KEY_REPEAT))
+			{
+				animFlags = 0;
+				animFlags = SetBit(animFlags, FlagsAnimation::RIGHT);
+				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
+				currentAnim = &walkingRight;
+				nextPos.x += 3;
+			}
+			if (app->input->CheckButton("left", KEY_REPEAT))
+			{
+				animFlags = 0;
+				animFlags = SetBit(animFlags, FlagsAnimation::LEFT);
+				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
+				currentAnim = &walkingLeft;
+				nextPos.x -= 3;
+			}
+			if (app->input->CheckButton("down", KEY_REPEAT))
+			{
+				animFlags = 0;
+				animFlags = SetBit(animFlags, FlagsAnimation::DOWN);
+				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
+				currentAnim = &walkingDown;
+				nextPos.y += 3;
+			}
+			if (app->input->CheckButton("up", KEY_REPEAT))
+			{
+				animFlags = 0;
+				animFlags = SetBit(animFlags, FlagsAnimation::UP);
+				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
+				currentAnim = &walkingUp;
+				nextPos.y -= 3;
+			}
+		}
+
+		// IMPORTANT: Before this point use nextPos for referencing the player position
+		app->collisions->ResolveCollisions(entityRect, nextPos);
+		// IMPORTANT: After this point use entityRect for referencing the player position
+		entityRect.x = nextPos.x;
+		entityRect.y = nextPos.y;
+
+		if (animFlags == (1 << FlagsAnimation::DOWN)) currentAnim = &idle;
+		else if (animFlags == (1 << FlagsAnimation::RIGHT)) currentAnim = &idleRight;
+		else if (animFlags == (1 << FlagsAnimation::LEFT)) currentAnim = &idleLeft;
+		else if (animFlags == (1 << FlagsAnimation::UP)) currentAnim = &idleUp;
 	}
-
-	animFlags = ClearBit(animFlags, FlagsAnimation::WALKING);
-	currentAnim->Update(dt);
-
-	if (!inMenu)
-	{
-		if (app->input->CheckButton("right", KEY_REPEAT))
-		{
-			animFlags = 0;
-			animFlags = SetBit(animFlags, FlagsAnimation::RIGHT);
-			animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
-			currentAnim = &walkingRight;
-			nextPos.x += 3;
-		}
-		if (app->input->CheckButton("left", KEY_REPEAT))
-		{
-			animFlags = 0;
-			animFlags = SetBit(animFlags, FlagsAnimation::LEFT);
-			animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
-			currentAnim = &walkingLeft;
-			nextPos.x -= 3;
-		}
-		if (app->input->CheckButton("down", KEY_REPEAT))
-		{
-			animFlags = 0;
-			animFlags = SetBit(animFlags, FlagsAnimation::DOWN);
-			animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
-			currentAnim = &walkingDown;
-			nextPos.y += 3;
-		}
-		if (app->input->CheckButton("up", KEY_REPEAT))
-		{
-			animFlags = 0;
-			animFlags = SetBit(animFlags, FlagsAnimation::UP);
-			animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
-			currentAnim = &walkingUp;
-			nextPos.y -= 3;
-		}
-	}
-
-													// IMPORTANT: Before this point use nextPos for referencing the player position
-	app->collisions->ResolveCollisions(entityRect, nextPos);
-													// IMPORTANT: After this point use entityRect for referencing the player position
-	entityRect.x = nextPos.x;
-	entityRect.y = nextPos.y;
-
-	if (animFlags == (1 << FlagsAnimation::DOWN)) currentAnim = &idle;
-	else if (animFlags == (1 << FlagsAnimation::RIGHT)) currentAnim = &idleRight;
-	else if (animFlags == (1 << FlagsAnimation::LEFT)) currentAnim = &idleLeft;
-	else if (animFlags == (1 << FlagsAnimation::UP)) currentAnim = &idleUp;
 
 	return true;
 }

@@ -70,6 +70,7 @@ public:
     bool transitionRequired;
     SceneType nextScene;
     SceneType currentScene;
+    bool combat;
 };
 
 #endif // __SCENE_H__
