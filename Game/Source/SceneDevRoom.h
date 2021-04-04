@@ -36,7 +36,6 @@ private:
     Entity* playerTest = nullptr;
 
     //COMBAT VARS
-    bool combat = false;
     List<Entity*> turnOrder;
 };
 

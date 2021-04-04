@@ -16,6 +16,7 @@ struct  CombatCharacter
     SDL_Rect characterTex;
     SString hp;
     SString mp;
+    SString stress;
 };
 
 class SceneGameplay : public Scene
@@ -58,10 +59,14 @@ public:
 
     bool Unload();
 
-    // Declare on mouse click event
-    bool OnGuiMouseClickEvent(GuiControl* control);
+    bool SortSpeed(bool isSorted);
+
+    bool IsCharacter(Entity* e);
 
     void ResetButtons();
+
+    // Declare on mouse click event
+    bool OnGuiMouseClickEvent(GuiControl* control);
 
 private:
 
@@ -105,17 +110,23 @@ private:
     GuiButton* btnPadRight;
 
     //COMBAT
+    List<Entity*> turnOrder;
     bool characterSelected; // (For now, this is a temporal value for menu changing)
+
     SDL_Texture* combatGui;
     SDL_Rect combatTextBox;
     SDL_Rect combatMenuBox;
     int characterFlags;
     int combatMenuFlags;
+
     CombatCharacter* currentChar;
     CombatCharacter mainChar;
     CombatCharacter grandpa;
     //CombatCharacter childhood;
     //CombatCharacter extroverted;
+    Entity* enemy1;
+    Entity* enemy2;
+
     GuiButton* btnCombatAttack;
     GuiButton* btnCombatSkills;
     GuiButton* btnCombatItems;

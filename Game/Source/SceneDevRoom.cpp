@@ -66,7 +66,7 @@ bool SceneDevRoom::Update(float dt)
 		SortSpeed(false);
 
 		e = turnOrder.start;
-		while (e->data != nullptr)
+		while (e != nullptr)
 		{
 			if (IsCharacter(e->data))
 			{

@@ -19,7 +19,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 	//currentAnim = &idle;
 
-	// depending on the id each combat entity will have a diferent pool of attacks/skills
+	// depending on the id each combat entity will have a diferent pool of attacks/skills and different name
 	switch (id)
 	{
 	case EntityId::MC:
@@ -32,7 +32,8 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		break;
 	case EntityId::ENEMY_1:
 	{
-		AttackPool.Add(&Attack("auch", AttackType::DAMAGE, Stats(10)));							// example of an attack
+		name = "Stressing Shadow";																		// example of a name
+		AttackPool.Add(&Attack("Magical blow", AttackType::DAMAGE,stats.mAtk));							// example of an attack
 		break;
 	}
 	case EntityId::ENEMY_2:

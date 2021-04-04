@@ -8,6 +8,7 @@
 #include "DynArray.h"
 #include "List.h"
 #include "Log.h"
+#include <time.h>
 
 class Collider;
 
@@ -42,21 +43,14 @@ enum class EntityId
 class Stats
 {
 public:
-	/*Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 1, int mPoints = 1, float speed = 0.0f, float stress = 0.0f) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), mPoints(mPoints), speed(speed), stress(stress)
-	{}*/
-
-	Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 1, int mPoints = 1, float speed = 0, int stress = 0) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), mPoints(mPoints), speed(speed), stress(stress)
+	Stats(int pAtk, int mAtk = 0, int pDef = 0, int mDef = 0, int hPoints = 1, int hPointsMax = 1, int speed = 0, int mPoints = 1, int mPointsMax = 1, int stress = 0, int stressMax = 0) : pAtk(pAtk), mAtk(mAtk), pDef(pDef), mDef(mDef), hPoints(hPoints), hPointsMax(hPointsMax), speed(speed), mPoints(mPoints), mPointsMax(mPointsMax), stress(stress), stressMax(stressMax)
 	{}
 
 	Stats()
 	{}
 
 public:
-	int pAtk, mAtk, pDef, mDef, hPoints, mPoints, stress;
-	float speed;
-
-	// for MC only
-	//float stress;
+	int pAtk, mAtk, pDef, mDef, hPoints, hPointsMax, speed, mPoints, mPointsMax, stress, stressMax; // stress is only for MC
 };
 
 enum class AttackType
@@ -69,12 +63,20 @@ enum class AttackType
 class Attack
 {
 public:
-	Attack(SString name, AttackType type, Stats attackStats) : attackName(name), type(type), attackStats(attackStats)
+	Attack(SString name, AttackType type, int stat1, int stat2 = 0) : attackName(name), type(type), stat1(stat1), stat2(stat2)
 	{}
 
+	void CalculatePrecision(int& i)
+	{
+		srand(time(NULL));
+		int p = rand() % 20 - 9;
+		i += (i * p);
+	}
+
+public:
 	SString attackName;
 	AttackType type;
-	Stats attackStats;
+	int stat1, stat2;
 };
 
 class Entity

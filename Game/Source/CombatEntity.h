@@ -22,6 +22,7 @@ private:
 	Animation idle;
 
 	List<Attack*> AttackPool;
+	SString name;
 };
 
 #endif // !__PLAYER_H__

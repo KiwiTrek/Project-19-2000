@@ -67,6 +67,17 @@ SceneGameplay::SceneGameplay()
 	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 32, { 634,505,200,60 }, "SPECIAL", 40, this);
 	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 33, { 834,505,200,60 }, "FLEE", 40, this);
 
+	ListItem<Entity*>* e = turnOrder.start;
+	while (e != nullptr)
+	{
+		ListItem<Entity*>* eNext = e->next;
+		int i = turnOrder.Find(e->data);
+		delete turnOrder[i];
+		turnOrder.Del(turnOrder.At(i));
+		e = eNext;
+	}
+	turnOrder.Clear();
+
 	flags = 0;
 }
 
@@ -88,23 +99,25 @@ bool SceneGameplay::Load()
 
 	// COMBAT
 	combatMenuFlags = 0;
-	int tmp = 25;
-
 	characterFlags = 0;
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
 	currentChar = &mainChar;
 	mainChar.box = { 1280,0,204,190 };
-	mainChar.character = app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(50, 50, 50, 50, 50, 0, 1.0f, 100));
 	mainChar.characterTex = { 0,252,72,92 };
-	mainChar.hp.Create("HP: %d/%d", tmp, mainChar.character->stats.hPoints);
-	mainChar.mp.Create("ST: %d/%d", tmp, mainChar.character->stats.stress);
+	mainChar.character = app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(20, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
+	mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
+	mainChar.mp.Create("MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
+	mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
 
 	characterFlags = SetBit(characterFlags, (uint)EntityId::VIOLENT);
 	grandpa.box = { 1280,0,204,190 };
-	grandpa.character = app->entities->CreateEntity(grandpa.box.w + 36, app->render->camera.h - grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, Stats(70, 70, 30, 30, 40, 50, 0.5f, 0));
 	grandpa.characterTex = { 73,252,68,100 };
-	grandpa.hp.Create("HP: %d/%d", tmp, grandpa.character->stats.hPoints);
-	grandpa.mp.Create("MP: %d/%d", tmp, grandpa.character->stats.mPoints);
+	grandpa.character = app->entities->CreateEntity(grandpa.box.w + 36, app->render->camera.h - grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, Stats(25, 25, 0, 0, 100, 100, 25, 100, 100));
+	grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+	grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
+
+	enemy1 = app->entities->CreateEntity(50, 300, EntityType::COMBAT_ENTITY, EntityId::ENEMY_1, Stats(0, 10, 10, 10, 40, 40, 60));
+	enemy2 = app->entities->CreateEntity(150, 300, EntityType::COMBAT_ENTITY, EntityId::ENEMY_2, Stats(15, 0, 20, 5, 60, 60, 90));
 
 	LOG("%d", characterFlags);
 
@@ -207,8 +220,39 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 
 bool SceneGameplay::UpdateCombat(float dt)
 {
-	//What you're doing in the Dev Room should go here
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) characterSelected = !characterSelected;
+
+
+	//CHECK WHO IS FIRST
+	ListItem<Entity*>* e = app->entities->entities.start;
+
+	while (e != nullptr)
+	{
+		//ADDS THEM TO THE LIST
+		if (e->data->type == EntityType::COMBAT_ENTITY)
+		{
+			turnOrder.Add(e->data);
+		}
+		e = e->next;
+	}
+
+	SortSpeed(false);
+
+	e = turnOrder.start;
+	while (e != nullptr)
+	{
+		if (IsCharacter(e->data))
+		{
+			//WAIT FOR PLAYER INPUT
+		}
+		else
+		{
+			//ENEMY ATTACK PATTERN?
+		}
+		e = e->next;
+	}
+
+
 	if (characterSelected)
 	{
 		btnCombatAttack->Update(dt);
@@ -217,16 +261,16 @@ bool SceneGameplay::UpdateCombat(float dt)
 		btnCombatSpecial->Update(dt);
 		btnCombatFlee->Update(dt);
 	}
+
 	return true;
 }
 
 bool SceneGameplay::Draw()
 {
-	if (combat) DrawCombat();
+	if (combat)
+		DrawCombat();
 	else
-	{
 		app->render->background = { 0,0,150,255 };
-	}
 
 	return false;
 }
@@ -269,15 +313,15 @@ bool SceneGameplay::DrawPauseMenu()
 		if (characterFlags >= 1)
 		{
 			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 984, app->render->camera.y + 80, false, &menuCharacterBox);
-			app->render->DrawTexture(combatGui, app->render->camera.x + 984 + 10, app->render->camera.y + 80 + 20, false, &mainChar.characterTex);
+			app->render->DrawTexture(combatGui, app->render->camera.x + 984 + 10, app->render->camera.y + 80 + (menuCharacterBox.h / 2 - mainChar.characterTex.h / 2), false, &mainChar.characterTex);
 			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), app->render->camera.x + 984 + mainChar.characterTex.w + 15, app->render->camera.y + 80 + 20, 28, 1, { 255,255,255,255 });
 			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), app->render->camera.x + 984 + mainChar.characterTex.w + 15, app->render->camera.y + 80 + 20 + 30, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), app->render->camera.x + 984 + mainChar.characterTex.w + 15, app->render->camera.y + 80 + 20 + 60, 28, 1, { 255,255,255,255 });
 		}
 		if (characterFlags >= 3)
 		{
 			app->render->DrawTexture(app->gui->atlas, app->render->camera.x + 984, app->render->camera.y + menuCharacterBox.h + 80, false, &menuCharacterBox);
-			app->render->DrawTexture(combatGui, app->render->camera.x + 984 + 10, app->render->camera.y + menuCharacterBox.h + 80 + 20, false, &grandpa.characterTex);
-			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), app->render->camera.x + 984 + grandpa.characterTex.w + 15, app->render->camera.y + menuCharacterBox.h + 80 + 20, 28, 1, { 255,255,255,255 });
+			app->render->DrawTexture(combatGui, app->render->camera.x + 984 + 10, app->render->camera.y + menuCharacterBox.h + 80 + (menuCharacterBox.h / 2 - grandpa.characterTex.h / 2), false, &grandpa.characterTex);			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), app->render->camera.x + 984 + grandpa.characterTex.w + 15, app->render->camera.y + menuCharacterBox.h + 80 + 20, 28, 1, { 255,255,255,255 });
 			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), app->render->camera.x + 984 + grandpa.characterTex.w + 15, app->render->camera.y + menuCharacterBox.h + 80 + 20 + 30, 28, 1, { 255,255,255,255 });
 		}
 		/*
@@ -340,16 +384,17 @@ bool SceneGameplay::DrawCombat()
 		if (characterFlags >= 1)
 		{
 			app->render->DrawTexture(combatGui, app->render->camera.x + mainChar.character->entityRect.x, app->render->camera.y + mainChar.character->entityRect.y, false, &mainChar.box);
-			app->render->DrawTexture(combatGui, app->render->camera.x + mainChar.character->entityRect.x + (mainChar.box.w/2 - mainChar.characterTex.w/2), app->render->camera.y + mainChar.character->entityRect.y + 25, false, &mainChar.characterTex);
-			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), app->render->camera.x + mainChar.character->entityRect.x + 40, app->render->camera.y + mainChar.character->entityRect.y + 25 + mainChar.characterTex.h + 1, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), app->render->camera.x + mainChar.character->entityRect.x + 40, app->render->camera.y + mainChar.character->entityRect.y + 25 + mainChar.characterTex.h + 29, 28, 1, { 255,255,255,255 });
+			app->render->DrawTexture(combatGui, app->render->camera.x + mainChar.character->entityRect.x + 10, app->render->camera.y + mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), false, &mainChar.characterTex);
+			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), app->render->camera.x + mainChar.character->entityRect.x + mainChar.characterTex.w + 15, app->render->camera.y + mainChar.character->entityRect.y + 45, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), app->render->camera.x + mainChar.character->entityRect.x + mainChar.characterTex.w + 15, app->render->camera.y + mainChar.character->entityRect.y + 45 + 30, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), app->render->camera.x + mainChar.character->entityRect.x + mainChar.characterTex.w + 15, app->render->camera.y + mainChar.character->entityRect.y + 45 + 60, 28, 1, { 255,255,255,255 });
 		}
 		if (characterFlags >= 3)
 		{
 			app->render->DrawTexture(combatGui, app->render->camera.x + grandpa.character->entityRect.x, app->render->camera.y + grandpa.character->entityRect.y, false, &grandpa.box);
-			app->render->DrawTexture(combatGui, app->render->camera.x + grandpa.character->entityRect.x + (grandpa.box.w / 2 - grandpa.characterTex.w / 2), app->render->camera.y + grandpa.character->entityRect.y + 25, false, &grandpa.characterTex);
-			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), app->render->camera.x + grandpa.character->entityRect.x + 40, app->render->camera.y + grandpa.character->entityRect.y + 25 + grandpa.characterTex.h - 8, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), app->render->camera.x + grandpa.character->entityRect.x + 40, app->render->camera.y + grandpa.character->entityRect.y + 25 + grandpa.characterTex.h + 20, 28, 1, { 255,255,255,255 });
+			app->render->DrawTexture(combatGui, app->render->camera.x + grandpa.character->entityRect.x + 10, app->render->camera.y + grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2), false, &grandpa.characterTex);
+			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), app->render->camera.x + grandpa.character->entityRect.x + grandpa.characterTex.w + 15, app->render->camera.y + grandpa.character->entityRect.y + 50, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), app->render->camera.x + grandpa.character->entityRect.x + grandpa.characterTex.w + 15, app->render->camera.y + grandpa.character->entityRect.y + 50 + 30, 28, 1, { 255,255,255,255 });
 		}
 		/*
 		if (characterFlags >= 7)
@@ -365,9 +410,10 @@ bool SceneGameplay::DrawCombat()
 	else
 	{
 		app->render->DrawTexture(combatGui, app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
-		app->render->DrawTexture(combatGui, app->render->camera.x + app->render->camera.w - currentChar->box.w - 34 + (currentChar->box.w / 2 - currentChar->characterTex.w / 2), app->render->camera.y + app->render->camera.h - currentChar->box.h, false, &currentChar->characterTex);
-		app->render->DrawText(dialogueFont, currentChar->hp.GetString(), app->render->camera.x + app->render->camera.w - currentChar->box.w + 14, app->render->camera.y + app->render->camera.h - currentChar->box.h + currentChar->characterTex.h - 6, 28, 1, { 255,255,255,255 });
-		app->render->DrawText(dialogueFont, currentChar->mp.GetString(), app->render->camera.x + app->render->camera.w - currentChar->box.w + 14, app->render->camera.y + app->render->camera.h - currentChar->box.h + currentChar->characterTex.h + 22, 28, 1, { 255,255,255,255 });
+		app->render->DrawTexture(combatGui, app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
+		app->render->DrawText(dialogueFont, currentChar->hp.GetString(), app->render->camera.x + app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, { 255,255,255,255 });
+		app->render->DrawText(dialogueFont, currentChar->mp.GetString(), app->render->camera.x + app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, { 255,255,255,255 });
+		if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(), app->render->camera.x + app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, { 255,255,255,255 });
 
 		btnCombatAttack->Draw(app->render->camera.x, app->render->camera.y);
 		btnCombatSkills->Draw(app->render->camera.x, app->render->camera.y);
@@ -397,6 +443,32 @@ bool SceneGameplay::Unload()
 	app->entities->Disable();
 
 	return false;
+}
+
+bool SceneGameplay::SortSpeed(bool isSorted)
+{
+	int count = 0;
+	ListItem<Entity*>* e = turnOrder.start;
+	while (e != nullptr && e->next != nullptr)
+	{
+		if (e->data->stats.speed > e->next->data->stats.speed)
+		{
+			SWAP<Entity*>(e->data, e->next->data);
+			count++;
+		}
+		e = e->next;
+	}
+
+	if (count != 0)
+	{
+		SortSpeed(false);
+	}
+	return true;
+}
+
+bool SceneGameplay::IsCharacter(Entity* e)
+{
+	return (e->id != EntityId::MC && e->id != EntityId::KIND && e->id != EntityId::STUBBORN && e->id != EntityId::VIOLENT);
 }
 
 void SceneGameplay::ResetButtons()
