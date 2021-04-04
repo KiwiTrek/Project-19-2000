@@ -10,6 +10,7 @@ class Entity;
 
 struct  CombatCharacter
 {
+    Entity* character;
     int x, y;
     SDL_Rect box;
     SDL_Rect characterTex;
@@ -30,14 +31,6 @@ public:
         STATS,
         OPTIONS,
         CONTROLS
-    };
-
-    enum CharacterFlags
-    {
-        MC,
-        GRANDPA,
-        CHILDHOOD,
-        EXTROVERTED
     };
 
     enum CombatFlags
@@ -110,9 +103,10 @@ private:
 
     //COMBAT
     bool combat;
-    bool characterSelected;
+    bool characterSelected; // (For now, this is a temporal value for menu changing)
     SDL_Texture* combatGui;
     SDL_Rect combatTextBox;
+    SDL_Rect combatMenuBox;
     int characterFlags;
     int combatMenuFlags;
     CombatCharacter* currentChar;

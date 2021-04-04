@@ -28,7 +28,7 @@ bool SceneTitleScreen::Load()
     titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
     buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
 
-    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
+    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
     noose.Reset();
 
     // GUI: Initialize required controls for the screen
@@ -195,7 +195,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     switch (control->id)
     {
     case 1: //START
-        TransitionToScene(SceneType::DEV_ROOM);
+        TransitionToScene(SceneType::GAMEPLAY);
         break;
     case 2: //CONTINUE
         app->LoadRequest();

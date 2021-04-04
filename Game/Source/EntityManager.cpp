@@ -133,19 +133,39 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 
 bool EntityManager::PostUpdate()
 {
-	ListItem<Entity*>* e = entities.start;
-	while (e != nullptr)
+	//if (!combat)
+	//{
+		ListItem<Entity*>* e = entities.start;
+		while (e != nullptr)
+		{
+			if (e->data->pendingToDelete == true)
+			{
+				DestroyEntity(e->data);
+			}
+			else
+			{
+				e->data->Draw();
+			}
+			e = e->next;
+		}
+	/*}
+	else
 	{
-		if (e->data->pendingToDelete == true)
+		ListItem<Entity*>* e = entities.start;
+		while (e != nullptr)
 		{
-			DestroyEntity(e->data);
+			if (e->data->pendingToDelete == true)
+			{
+				DestroyEntity(e->data);
+			}
+			else if (e->data->type == EntityType::COMBAT_ENTITY)
+			{
+				e->data->Draw();
+			}
+			e = e->next;
 		}
-		else
-		{
-			e->data->Draw();
-		}
-		e = e->next;
 	}
+	*/
 
 	return true;
 }

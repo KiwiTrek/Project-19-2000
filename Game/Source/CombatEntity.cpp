@@ -55,7 +55,7 @@ bool CombatEntity::Update(float dt)
 
 bool CombatEntity::Draw()
 {
-	app->render->DrawRectangle(entityRect, 255, 0, 0, 255);
+	if (app->render->debug) app->render->DrawRectangle(entityRect, 255, 0, 0, 255);
 	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
 
 	return true;
