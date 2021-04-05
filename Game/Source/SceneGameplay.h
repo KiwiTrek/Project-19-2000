@@ -7,6 +7,7 @@
 #include "GuiCheckBox.h"
 
 class Entity;
+class CombatEntity;
 
 struct  CombatCharacter
 {
@@ -61,7 +62,7 @@ public:
 
     bool SortSpeed(bool isSorted);
 
-    bool IsCharacter(Entity* e);
+    bool IsCharacter(CombatEntity* e);
 
     void ResetButtons();
 
@@ -110,8 +111,9 @@ private:
     GuiButton* btnPadRight;
 
     //COMBAT
-    List<Entity*> turnOrder;
+    List<CombatEntity*> turnOrder;
     bool characterSelected; // (For now, this is a temporal value for menu changing)
+    bool holdOn;
 
     SDL_Texture* combatGui;
     SDL_Rect combatTextBox;

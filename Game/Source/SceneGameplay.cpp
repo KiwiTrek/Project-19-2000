@@ -2,6 +2,7 @@
 
 #include "Audio.h"
 #include "EntityManager.h"
+#include "CombatEntity.h"
 #include "Textures.h"
 #include "GuiManager.h"
 #include "Input.h"
@@ -67,10 +68,10 @@ SceneGameplay::SceneGameplay()
 	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 32, { 634,505,200,60 }, "SPECIAL", 40, this);
 	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 33, { 834,505,200,60 }, "FLEE", 40, this);
 
-	ListItem<Entity*>* e = turnOrder.start;
+	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
 	{
-		ListItem<Entity*>* eNext = e->next;
+		ListItem<CombatEntity*>* eNext = e->next;
 		int i = turnOrder.Find(e->data);
 		delete turnOrder[i];
 		turnOrder.Del(turnOrder.At(i));
@@ -98,6 +99,7 @@ bool SceneGameplay::Load()
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	// COMBAT
+	holdOn = true;
 	combatMenuFlags = 0;
 	characterFlags = 0;
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
@@ -116,8 +118,8 @@ bool SceneGameplay::Load()
 	grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 	grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
 
-	enemy1 = app->entities->CreateEntity(50, 300, EntityType::COMBAT_ENTITY, EntityId::ENEMY_1, Stats(0, 10, 10, 10, 40, 40, 60));
-	enemy2 = app->entities->CreateEntity(150, 300, EntityType::COMBAT_ENTITY, EntityId::ENEMY_2, Stats(15, 0, 20, 5, 60, 60, 90));
+	enemy1 = app->entities->CreateEntity(50, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+	enemy2 = app->entities->CreateEntity(150, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
 
 	LOG("%d", characterFlags);
 
@@ -231,25 +233,86 @@ bool SceneGameplay::UpdateCombat(float dt)
 		//ADDS THEM TO THE LIST
 		if (e->data->type == EntityType::COMBAT_ENTITY)
 		{
-			turnOrder.Add(e->data);
+			turnOrder.Add((CombatEntity*)e->data);
 		}
 		e = e->next;
 	}
 
 	SortSpeed(false);
 
-	e = turnOrder.start;
-	while (e != nullptr)
+	ListItem<CombatEntity*>* c = turnOrder.start;
+	while (c != nullptr)
 	{
-		if (IsCharacter(e->data))
+		if (IsCharacter(c->data))
 		{
 			//WAIT FOR PLAYER INPUT
+			characterSelected = true;						//should delete eventually
+			//holdOn = true;
+			switch (c->data->id)
+			{
+			case EntityId::MC:
+				currentChar = &mainChar;
+				break;
+			case EntityId::VIOLENT:
+				currentChar = &grandpa;
+				break;
+			case EntityId::STUBBORN:
+				break;
+			case EntityId::KIND:
+				break;
+			default:
+				break;
+			}
+
+			//player should decide what to do here based on the buttons (guiclickevent)
+			LOG("%s's turn!\n", c->data->name.GetString());
 		}
 		else
 		{
 			//ENEMY ATTACK PATTERN?
+			switch (c->data->id)
+			{
+			case EntityId::STRESSING_SHADOW:
+			{
+				srand(time(NULL));
+				int p = rand() % 10 + 1;
+				if (p >= 6) //Stressing attack
+				{
+					//dialogue that X enemy does Y attack to MC
+					LOG("stress attack!\n");
+					mainChar.character->stats.stress += 10;
+				}
+				else //Magical blow
+				{
+					int pTarget = rand() % 2 + 1;
+					if (pTarget == 1) //MC
+					{
+						c->data->CalculatePrecision(c->data->AttackPool.At(0)->data->stat1);
+						//dialogue that X enemy does Y attack to Z character
+						LOG("damage attack to mc!\n");
+						mainChar.character->stats.hPoints -= c->data->AttackPool.At(0)->data->stat1;
+					}
+					else if (pTarget == 2)
+					{
+						c->data->CalculatePrecision(c->data->AttackPool.At(0)->data->stat1);
+						//dialogue that X enemy does Y attack to Z character
+						LOG("damage attack to grandpa!\n");
+						grandpa.character->stats.hPoints -= c->data->AttackPool.At(0)->data->stat1;
+					}
+				}
+				break;
+			}
+			case EntityId::FURIOUS_SHADOW:
+			{
+				break;
+			}
+			default:
+				break;
+			}
 		}
-		e = e->next;
+
+		//if (!holdOn)
+		c = c->next;
 	}
 
 
@@ -448,12 +511,12 @@ bool SceneGameplay::Unload()
 bool SceneGameplay::SortSpeed(bool isSorted)
 {
 	int count = 0;
-	ListItem<Entity*>* e = turnOrder.start;
+	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr && e->next != nullptr)
 	{
 		if (e->data->stats.speed > e->next->data->stats.speed)
 		{
-			SWAP<Entity*>(e->data, e->next->data);
+			SWAP<CombatEntity*>(e->data, e->next->data);
 			count++;
 		}
 		e = e->next;
@@ -466,9 +529,12 @@ bool SceneGameplay::SortSpeed(bool isSorted)
 	return true;
 }
 
-bool SceneGameplay::IsCharacter(Entity* e)
+bool SceneGameplay::IsCharacter(CombatEntity* e)
 {
-	return (e->id != EntityId::MC && e->id != EntityId::KIND && e->id != EntityId::STUBBORN && e->id != EntityId::VIOLENT);
+	if (e->id != EntityId::MC && e->id != EntityId::KIND && e->id != EntityId::STUBBORN && e->id != EntityId::VIOLENT)
+		return false;
+
+	return true;
 }
 
 void SceneGameplay::ResetButtons()

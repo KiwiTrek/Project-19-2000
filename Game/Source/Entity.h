@@ -26,9 +26,9 @@ enum class EntityId
 	VIOLENT,
 	STUBBORN,
 	KIND,
-	ENEMY_1,
-	ENEMY_2,
-	ENEMY_3,
+	STRESSING_SHADOW,
+	FURIOUS_SHADOW,
+	NIGHTMARE,
 	ENEMY_4,
 	ENEMY_5
 };
@@ -57,7 +57,8 @@ enum class AttackType
 {
 	DAMAGE,
 	BUFF,
-	HEAL
+	HEAL,
+	TAUNT
 };
 
 class Attack
@@ -65,13 +66,6 @@ class Attack
 public:
 	Attack(SString name, AttackType type, int stat1, int stat2 = 0) : attackName(name), type(type), stat1(stat1), stat2(stat2)
 	{}
-
-	void CalculatePrecision(int& i)
-	{
-		srand(time(NULL));
-		int p = rand() % 20 - 9;
-		i += (i * p);
-	}
 
 public:
 	SString attackName;

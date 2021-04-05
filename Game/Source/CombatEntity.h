@@ -16,13 +16,18 @@ public:
 	// Blit
 	bool Draw();
 
+	void CalculatePrecision(int& i);
+
+public:
+
+	List<Attack*> AttackPool;
+	SString name;
+
 private:
 
 	// Animation
 	Animation idle;
 
-	List<Attack*> AttackPool;
-	SString name;
 };
 
 #endif // !__PLAYER_H__

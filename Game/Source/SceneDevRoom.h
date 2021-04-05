@@ -22,21 +22,21 @@ public:
 
     bool Unload();
 
-    bool SortSpeed(bool isSorted);
+    //bool SortSpeed(bool isSorted);
 
-    bool IsCharacter(Entity* e);
+    //bool IsCharacter(Entity* e);
 
 public:
     SDL_Texture* tileSetTex;
 private:
 
     Entity* player = nullptr;
-    Entity* enemyTest = nullptr;
-    Entity* enemyTest2 = nullptr;
-    Entity* playerTest = nullptr;
+    //Entity* enemyTest = nullptr;
+    //Entity* enemyTest2 = nullptr;
+    //Entity* playerTest = nullptr;
 
     //COMBAT VARS
-    List<Entity*> turnOrder;
+    //List<Entity*> turnOrder;
 };
 
 #endif // __SCENEDEVROOM_H__
