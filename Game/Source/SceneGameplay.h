@@ -64,6 +64,8 @@ public:
 
     bool IsCharacter(CombatEntity* e);
 
+    void SelectTarget();
+
     void ResetButtons();
 
     // Declare on mouse click event
@@ -112,8 +114,12 @@ private:
 
     //COMBAT
     List<CombatEntity*> turnOrder;
+    ListItem<CombatEntity*>* currentEntity;
+    CombatEntity* target;
     bool characterSelected; // (For now, this is a temporal value for menu changing)
-    bool holdOn;
+    bool targetAttack;
+    bool finishedAction;
+    int attackSelected;
 
     SDL_Texture* combatGui;
     SDL_Rect combatTextBox;

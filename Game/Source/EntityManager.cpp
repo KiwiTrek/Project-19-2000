@@ -47,7 +47,17 @@ bool EntityManager::Start()
 {
 	// Loading entities textures
 	//playerTex = app->tex->Load("Assets/Textures/playerTest.png");
-	playerTex = app->tex->Load("Assets/Textures/Characters/MCSpriteSheet.png");
+	//playerTex = app->tex->Load("Assets/Textures/Characters/MCSpriteSheet.png");
+	SString tmp("%s%s", folderTexture.GetString(), "Characters/MCSpriteSheet.png");
+	playerTex = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderTexture.GetString(), "Characters/GrandpaSpriteSheet.png");
+	grandpaTex = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
+	enemiesTex = app->tex->Load(tmp.GetString());
 
 	doLogic = true;
 

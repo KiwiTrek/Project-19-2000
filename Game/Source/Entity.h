@@ -61,16 +61,25 @@ enum class AttackType
 	TAUNT
 };
 
+enum class TargetType
+{
+	SELF,
+	ONE,
+	ALL_ENEMIES,
+	ALL_ALLIES
+};
+
 class Attack
 {
 public:
-	Attack(SString name, AttackType type, int stat1, int stat2 = 0) : attackName(name), type(type), stat1(stat1), stat2(stat2)
+	Attack(SString name, AttackType type, TargetType target, int stat1, int stat2 = 0) : attackName(name), type(type), target(target), stat1(stat1), stat2(stat2)
 	{}
 
 public:
 	SString attackName;
 	AttackType type;
 	int stat1, stat2;
+	TargetType target;
 };
 
 class Entity

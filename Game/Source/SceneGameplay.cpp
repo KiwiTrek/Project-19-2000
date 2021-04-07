@@ -99,7 +99,10 @@ bool SceneGameplay::Load()
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	// COMBAT
-	holdOn = true;
+	targetAttack = false;
+	finishedAction = false;
+	combatState = CombatStateType::COMBAT_START;
+	attackSelected = -1;
 	combatMenuFlags = 0;
 	characterFlags = 0;
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
@@ -118,8 +121,8 @@ bool SceneGameplay::Load()
 	grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 	grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
 
-	enemy1 = app->entities->CreateEntity(50, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
-	enemy2 = app->entities->CreateEntity(150, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+	enemy1 = app->entities->CreateEntity(300, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+	enemy2 = app->entities->CreateEntity(700, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
 
 	LOG("%d", characterFlags);
 
@@ -224,96 +227,200 @@ bool SceneGameplay::UpdateCombat(float dt)
 {
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) characterSelected = !characterSelected;
 
-
-	//CHECK WHO IS FIRST
-	ListItem<Entity*>* e = app->entities->entities.start;
-
-	while (e != nullptr)
+	switch (combatState)
 	{
-		//ADDS THEM TO THE LIST
-		if (e->data->type == EntityType::COMBAT_ENTITY)
-		{
-			turnOrder.Add((CombatEntity*)e->data);
-		}
-		e = e->next;
-	}
-
-	SortSpeed(false);
-
-	ListItem<CombatEntity*>* c = turnOrder.start;
-	while (c != nullptr)
+	case COMBAT_START:
 	{
-		if (IsCharacter(c->data))
+		//CHECK WHO IS FIRST
+		ListItem<Entity*>* e = app->entities->entities.start;
+
+		while (e != nullptr)
 		{
-			//WAIT FOR PLAYER INPUT
-			characterSelected = true;						//should delete eventually
-			//holdOn = true;
-			switch (c->data->id)
+			//ADDS THEM TO THE LIST
+			if (e->data->type == EntityType::COMBAT_ENTITY)
 			{
-			case EntityId::MC:
-				currentChar = &mainChar;
-				break;
-			case EntityId::VIOLENT:
-				currentChar = &grandpa;
-				break;
-			case EntityId::STUBBORN:
-				break;
-			case EntityId::KIND:
-				break;
-			default:
-				break;
+				turnOrder.Add((CombatEntity*)e->data);
 			}
+			e = e->next;
+		}
 
-			//player should decide what to do here based on the buttons (guiclickevent)
-			LOG("%s's turn!\n", c->data->name.GetString());
+		SortSpeed(false);
+		combatState = CombatStateType::COMBAT_MIDGAME;
+	}
+		break;
+	case COMBAT_MIDGAME:
+	{
+		if (currentEntity == nullptr)
+		{
+			SortSpeed(false);
+			currentEntity = turnOrder.start;
 		}
 		else
 		{
-			//ENEMY ATTACK PATTERN?
-			switch (c->data->id)
+			if (IsCharacter(currentEntity->data)) // character
 			{
-			case EntityId::STRESSING_SHADOW:
-			{
-				srand(time(NULL));
-				int p = rand() % 10 + 1;
-				if (p >= 6) //Stressing attack
+				//WAIT FOR PLAYER INPUT
+				characterSelected = true;						//should delete eventually
+
+				//player should decide what to do here based on the buttons (guiclickevent)
+				//LOG("%s's turn!\n", currentEntity->data->name.GetString());
+
+				switch (currentEntity->data->id)
 				{
-					//dialogue that X enemy does Y attack to MC
-					LOG("stress attack!\n");
-					mainChar.character->stats.stress += 10;
-				}
-				else //Magical blow
-				{
-					int pTarget = rand() % 2 + 1;
-					if (pTarget == 1) //MC
+				case EntityId::MC:
+					currentChar = &mainChar;
+
+					if (attackSelected == -1)
 					{
-						c->data->CalculatePrecision(c->data->AttackPool.At(0)->data->stat1);
-						//dialogue that X enemy does Y attack to Z character
-						LOG("damage attack to mc!\n");
-						mainChar.character->stats.hPoints -= c->data->AttackPool.At(0)->data->stat1;
 					}
-					else if (pTarget == 2)
+					else if (currentEntity->data->AttackPool.At(attackSelected)->data->target == TargetType::ONE)
 					{
-						c->data->CalculatePrecision(c->data->AttackPool.At(0)->data->stat1);
-						//dialogue that X enemy does Y attack to Z character
-						LOG("damage attack to grandpa!\n");
-						grandpa.character->stats.hPoints -= c->data->AttackPool.At(0)->data->stat1;
+						targetAttack = true;
+						if (target == nullptr)
+							SelectTarget();
+
+						if (target != nullptr)
+						{
+							currentEntity->data->CalculatePrecision(currentEntity->data->AttackPool.At(0)->data->stat1);
+							//dialogue that X character does Y attack to Z enemy
+							LOG("damage attack to %s!\n", target->name.GetString());
+							target->stats.hPoints -= currentEntity->data->AttackPool.At(0)->data->stat1;
+							target = nullptr;
+							finishedAction = true;
+						}
 					}
+					else
+					{
+						switch (attackSelected)
+						{
+							//case 0: //attack
+							//	break;
+						case 1: //skill 1
+							break;
+						case 2: //skill 2
+							break;
+						default:
+							break;
+						}
+					}
+					break;
+				case EntityId::VIOLENT:
+					currentChar = &grandpa;
+
+					if (attackSelected == -1)
+					{
+					}
+					else if (currentEntity->data->AttackPool.At(attackSelected)->data->target == TargetType::ONE)
+					{
+						targetAttack = true;
+						if (target == nullptr)
+							SelectTarget();
+
+						if (target != nullptr)
+						{
+							currentEntity->data->CalculatePrecision(currentEntity->data->AttackPool.At(0)->data->stat1);
+							//dialogue that X character does Y attack to Z enemy
+							LOG("damage attack to %s!\n", target->name.GetString());
+							target->stats.hPoints -= currentEntity->data->AttackPool.At(0)->data->stat1;
+							target = nullptr;
+							finishedAction = true;
+						}
+					}
+					else
+					{
+						switch (attackSelected)
+						{
+							//case 0: //attack
+							//	break;
+						case 1: //skill 1
+							break;
+						case 2: //skill 2
+							break;
+						default:
+							break;
+						}
+					}
+					break;
+				default:
+					break;
 				}
-				break;
 			}
-			case EntityId::FURIOUS_SHADOW:
+			else // enemy
 			{
-				break;
+				//ENEMY ATTACK PATTERN?
+				switch (currentEntity->data->id)
+				{
+				case EntityId::STRESSING_SHADOW:
+				{
+					srand(time(NULL));
+					int p = rand() % 10 + 1;
+					if (p >= 6) //Stressing attack
+					{
+						//dialogue that X enemy does Y attack to MC
+						LOG("stress attack!\n");
+						mainChar.character->stats.stress += 10;
+					}
+					else //Magical blow
+					{
+						int pTarget = rand() % 2 + 1;
+						if (pTarget == 1) //MC
+						{
+							currentEntity->data->CalculatePrecision(currentEntity->data->AttackPool.At(0)->data->stat1);
+							//dialogue that X enemy does Y attack to Z character
+							LOG("damage attack to mc!\n");
+							mainChar.character->stats.hPoints -= currentEntity->data->AttackPool.At(0)->data->stat1;
+						}
+						else if (pTarget == 2) //GRANDPA
+						{
+							currentEntity->data->CalculatePrecision(currentEntity->data->AttackPool.At(0)->data->stat1);
+							//dialogue that X enemy does Y attack to Z character
+							LOG("damage attack to grandpa!\n");
+							grandpa.character->stats.hPoints -= currentEntity->data->AttackPool.At(0)->data->stat1;
+						}
+					}
+					finishedAction = true;
+					break;
+				}
+				case EntityId::FURIOUS_SHADOW:
+				{
+					LOG("NOTHING!\n");
+					finishedAction = true;
+					break;
+				}
+				default:
+					break;
+				}
 			}
-			default:
-				break;
+
+			if (finishedAction)
+			{
+				finishedAction = false;
+				currentEntity = currentEntity->next;
 			}
 		}
 
-		//if (!holdOn)
-		c = c->next;
+		ListItem<CombatEntity*>* e = turnOrder.start;
+		int counter = 0;
+		while (e != nullptr)
+		{
+			if (IsCharacter(e->data) == false)
+				counter++;
+
+			e = e->next;
+		}
+
+		if (counter == 0) combatState = CombatStateType::COMBAT_END;
 	}
+		break;
+	case COMBAT_END:
+		// cool animation as a victory thing and change back to gameplay
+		combat = false;
+		break;
+	default:
+		break;
+	}
+
+
 
 
 	if (characterSelected)
@@ -442,6 +549,8 @@ bool SceneGameplay::DrawCombat()
 	app->render->DrawTexture(combatGui, app->render->camera.x, app->render->camera.y, false, &combatTextBox);
 	app->render->DrawTexture(combatGui, app->render->camera.x, app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
 	//app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
+
+
 	if (!characterSelected)
 	{
 		if (characterFlags >= 1)
@@ -497,6 +606,22 @@ bool SceneGameplay::DrawCombat()
 			app->render->DrawTexture(combatGui, app->render->camera.x + 36, app->render->camera.y + app->render->camera.h - combatMenuBox.h - 25, false, &combatMenuBox);
 		}
 	}
+
+	if (targetAttack) //add more as we go
+	{
+		int x, y;
+		app->input->GetMousePosition(x, y);
+		ListItem<CombatEntity*>* e = turnOrder.start;
+		while (e != nullptr)
+		{
+			if (e->data->collider->Intersects({ x, y, 1, 1 }))
+			{
+				app->render->DrawRectangle(e->data->collider->rect, 255, 255, 255, 150, false);
+			}
+			e = e->next;
+		}
+	}
+
 	return true;
 }
 
@@ -535,6 +660,20 @@ bool SceneGameplay::IsCharacter(CombatEntity* e)
 		return false;
 
 	return true;
+}
+
+void SceneGameplay::SelectTarget()
+{
+	int x, y;
+	app->input->GetMousePosition(x, y);
+	ListItem<CombatEntity*>* e = turnOrder.start;
+	while (e != nullptr)
+	{
+		if (e->data->collider->Intersects({ x, y, 1, 1 }) && app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
+			target = e->data;
+
+		e = e->next;
+	}
 }
 
 void SceneGameplay::ResetButtons()
@@ -664,6 +803,8 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
+		attackSelected = 0;
+		LOG("Who do you want to attack?");
 		break;
 	case 30: //SKILLS
 		ResetButtons();

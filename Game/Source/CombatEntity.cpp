@@ -5,10 +5,12 @@
 #include "Render.h"
 #include "EntityManager.h"
 #include "Animation.h"
+#include "SceneManager.h"
 
 CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y, EntityType::COMBAT_ENTITY, id, stats)
 {
 	this->entityRect = { x,y,128,128 };
+	this->collider = app->collisions->AddCollider(entityRect, Collider::Type::SOLID, app->entities);
 
 	pendingToDelete = false;
 
@@ -18,40 +20,80 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 	//currentAnim = &idle;
 
-	// depending on the id each combat entity will have a diferent pool of attacks/skills and different name
+	// initialize specific combat entity id variables
 	switch (id)
 	{
 	case EntityId::MC:
+	{
 		name = "MC";
-		AttackPool.Add(&Attack("Strike", AttackType::DAMAGE, stats.pAtk));
+
+		SString tmpS = "Strike";
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
+		this->AttackPool.Add(tmpA);
 		break;
+	}
 	case EntityId::VIOLENT:
+	{
 		name = "Grandpa";
-		AttackPool.Add(&Attack("Smite foes", AttackType::DAMAGE, stats.pAtk));
+
+		SString tmpS = "Smite foes";
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
+		this->AttackPool.Add(tmpA);
 		break;
+	}
 	case EntityId::STUBBORN:
 		break;
 	case EntityId::KIND:
 		break;
 	case EntityId::STRESSING_SHADOW:
 	{
-		name = "Stressing Shadow";																		// example of a name
-		AttackPool.Add(&Attack("Magical blow", AttackType::DAMAGE,stats.mAtk));							// example of an attack
-		AttackPool.Add(&Attack("Stressing attack", AttackType::BUFF, 10));
+		stressingShadowSec = { 0,0,128,128 };
+		name = "Stressing Shadow";
+
+		SString tmpS = "Magical blow";
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk);
+		this->AttackPool.Add(tmpA);
+
+		tmpS = "Stressing attack";
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, 10);
+		this->AttackPool.Add(tmpA);
 		break;
 	}
 	case EntityId::FURIOUS_SHADOW:
+	{
+		furiousShadowSec = { 128,0,128,128 };
 		name = "Furious Shadow";
-		AttackPool.Add(&Attack("Getting stronger", AttackType::BUFF, stats.pDef, stats.mDef));
-		AttackPool.Add(&Attack("Fury of blades", AttackType::DAMAGE, stats.pAtk));
+
+		SString tmpS = "Getting stronger";
+		Attack* tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::SELF, stats.pDef, stats.mDef);
+		this->AttackPool.Add(tmpA);
+
+		tmpS = "Fury of blades";
+		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ALL_ALLIES, stats.pAtk);
+		this->AttackPool.Add(tmpA);
 		break;
+	}
 	case EntityId::NIGHTMARE:
+	{
 		name = "Nightmare";
-		AttackPool.Add(&Attack("Bad dream", AttackType::DAMAGE, stats.pAtk));
-		AttackPool.Add(&Attack("Nightmarish", AttackType::BUFF, stats.pDef, stats.mDef));
-		AttackPool.Add(&Attack("Close your eyes", AttackType::TAUNT, 0));
-		AttackPool.Add(&Attack("Grasp of depression", AttackType::BUFF, 0));
+
+		SString tmpS = "Bad dream";
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
+		this->AttackPool.Add(tmpA);
+
+		tmpS = "Nightmarish";
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::SELF, stats.pDef, stats.mDef);
+		this->AttackPool.Add(tmpA);
+
+		tmpS = "Close your eyes";
+		tmpA = new Attack(tmpS, AttackType::TAUNT, TargetType::SELF, 0);
+		this->AttackPool.Add(tmpA);
+
+		tmpS = "Grasp of depression";
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, 0);
+		this->AttackPool.Add(tmpA);
 		break;
+	}
 	case EntityId::ENEMY_4:
 		break;
 	case EntityId::ENEMY_5:
@@ -70,8 +112,36 @@ bool CombatEntity::Update(float dt)
 
 bool CombatEntity::Draw()
 {
-	if (app->render->debug) app->render->DrawRectangle(entityRect, 255, 0, 0, 255);
-	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
+	if (app->scene->current->combat)
+	{
+		if (app->render->debug) app->render->DrawRectangle(entityRect, 255, 0, 0, 255);
+
+		switch (id)
+		{
+		case EntityId::MC:
+			break;
+		case EntityId::VIOLENT:
+			break;
+		case EntityId::STUBBORN:
+			break;
+		case EntityId::KIND:
+			break;
+		case EntityId::STRESSING_SHADOW:
+			app->render->DrawTexture(app->entities->enemiesTex, entityRect.x, entityRect.y, false, &stressingShadowSec);
+			break;
+		case EntityId::FURIOUS_SHADOW:
+			app->render->DrawTexture(app->entities->enemiesTex, entityRect.x, entityRect.y, false, &furiousShadowSec);
+			break;
+		case EntityId::NIGHTMARE:
+			break;
+		case EntityId::ENEMY_4:
+			break;
+		case EntityId::ENEMY_5:
+			break;
+		default:
+			break;
+		}
+	}
 
 	return true;
 }

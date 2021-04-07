@@ -69,6 +69,8 @@ public:
 
 	// textures
 	SDL_Texture* playerTex;
+	SDL_Texture* grandpaTex;
+	SDL_Texture* enemiesTex;
 
 };
 

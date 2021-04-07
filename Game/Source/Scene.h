@@ -15,6 +15,13 @@ enum SceneType
     DEV_ROOM
 };
 
+enum CombatStateType
+{
+    COMBAT_START,
+    COMBAT_MIDGAME,
+    COMBAT_END
+};
+
 class Scene
 {
 public:
@@ -71,6 +78,7 @@ public:
     SceneType nextScene;
     SceneType currentScene;
     bool combat;
+    CombatStateType combatState;
 };
 
 #endif // __SCENE_H__

@@ -34,4 +34,9 @@
     <folderAudio>Assets/Audio/Fx/</folderAudio>
     <folderFonts>Assets/Fonts/</folderFonts>
   </guiManager>
+  <entityManager>
+    <folderTexture>Assets/Textures/</folderTexture>
+    <folderAudioFx>Assets/Audio/Fx/</folderAudioFx>
+    <folderMap>Assets/Map/</folderMap>
+  </entityManager>
 </config>
