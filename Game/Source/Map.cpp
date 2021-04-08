@@ -53,10 +53,7 @@ void Map::Draw()
 						T = GetTileSetFromTileId(tileId);
 						SDL_Rect n = T->GetTileRect(tileId);
 						iPoint pos = MapToWorld(x, y);
-						if (T->GetPropList(tileId - T->firstgId)->properties.GetProperty("NoDraw") == 0)
-						{
-							app->render->DrawTexture(T->texture, pos.x, pos.y, false, &n);
-						}
+						app->render->DrawTexture(T->texture, pos.x, pos.y, false, &n);
 					}
 				}
 			}
@@ -67,12 +64,24 @@ void Map::Draw()
 
 iPoint Map::MapToWorld(int x, int y) const
 {
-	iPoint ret;
+	iPoint ret(0, 0);
+
 	ret.x = x * data.tileWidth;
 	ret.y = y * data.tileHeight;
 
 	return ret;
 }
+
+iPoint Map::WorldToMap(int x, int y) const
+{
+	iPoint ret(0, 0);
+
+	ret.x = x / data.tileWidth;
+	ret.y = y / data.tileHeight;
+	
+	return ret;
+}
+
 
 SDL_Rect TileSet::GetTileRect(int id) const
 {
@@ -505,72 +514,64 @@ void Properties::SetProperty(const char* name, int value)
 	}
 }
 
-void Map::SetTileProperty(int x, int y, const char* property, int value, bool notMovCollision, bool isObject)
-{
-	// MapLayer
-	ListItem <MapLayer*>* mapLayer = data.mapLayer.start;
-	SString layerName;
-	if (isObject)
-	{
-		layerName = "Objects";
-	}
-	else
-	{
-		layerName = "Collisions";
-	}
-	while (mapLayer != NULL)
-	{
-		if (mapLayer->data->name == layerName)
-		{
-			break;
-		}
-		mapLayer = mapLayer->next;
-	}
+//void Map::SetTileProperty(int x, int y, const char* property, int value, bool notMovCollision, bool isObject)
+//{
+//	// MapLayer
+//	ListItem <MapLayer*>* mapLayer = data.mapLayer.start;
+//	SString layerName;
+//	if (isObject)
+//	{
+//		layerName = "Objects";
+//	}
+//	else
+//	{
+//		layerName = "Collisions";
+//	}
+//	while (mapLayer != NULL)
+//	{
+//		if (mapLayer->data->name == layerName)
+//		{
+//			break;
+//		}
+//		mapLayer = mapLayer->next;
+//	}
+//
+//	// TileSet
+//	ListItem <TileSet*>* tileSet = data.tileSets.start;
+//	SString tileSetName;
+//	if (notMovCollision)
+//	{
+//		tileSetName = "dev_room_tiles";
+//	}
+//	else
+//	{
+//		tileSetName = "meta_data";
+//	}
+//	while (tileSet != NULL)
+//	{
+//		if (tileSet->data->name == tileSetName)
+//		{
+//			break;
+//		}
+//		tileSet = tileSet->next;
+//	}
+//
+//	// Gets CollisionId
+//	int id = (int)(mapLayer->data->Get(x, y) - tileSet->data->firstgId);
+//	if (id < 0)
+//	{
+//		return;
+//	}
+//	Tile* currentTile = tileSet->data->GetPropList(id);
+//	currentTile->properties.SetProperty(property, value);
+//}
 
-	// TileSet
-	ListItem <TileSet*>* tileSet = data.tileSets.start;
-	SString tileSetName;
-	if (notMovCollision)
-	{
-		tileSetName = "dev_room_tiles";
-	}
-	else
-	{
-		tileSetName = "meta_data";
-	}
-	while (tileSet != NULL)
-	{
-		if (tileSet->data->name == tileSetName)
-		{
-			break;
-		}
-		tileSet = tileSet->next;
-	}
-
-	// Gets CollisionId
-	int id = (int)(mapLayer->data->Get(x, y) - tileSet->data->firstgId);
-	if (id < 0)
-	{
-		return;
-	}
-	Tile* currentTile = tileSet->data->GetPropList(id);
-	currentTile->properties.SetProperty(property, value);
-}
-
-int Map::GetTileProperty(int x, int y, const char* property, bool notMovCollision, bool isObject) const
+int Map::GetTileProperty(int x, int y, const char* property) const
 {
 	int ret;
 	// MapLayer
 	ListItem<MapLayer*>* mapLayer = data.mapLayer.start;
-	SString layerName;
-	if (isObject)
-	{
-		layerName = "Objects";
-	}
-	else
-	{
-		layerName = "Collisions";
-	}
+	SString layerName = "MetaData";
 	while (mapLayer != NULL)
 	{
 		if (mapLayer->data->name == layerName)
@@ -582,15 +583,7 @@ int Map::GetTileProperty(int x, int y, const char* property, bool notMovCollisio
 
 	// TileSet
 	ListItem<TileSet*>* tileSet = data.tileSets.start;
-	SString tileSetName;
-	if (notMovCollision)
-	{
-		tileSetName = "dev_room_tiles";
-	}
-	else
-	{
-		tileSetName = "meta_data";
-	}
+	SString tileSetName = "meta_data";
 	while (tileSet != NULL)
 	{
 		if (tileSet->data->name == tileSetName)
@@ -608,6 +601,6 @@ int Map::GetTileProperty(int x, int y, const char* property, bool notMovCollisio
 		return ret;
 	}
 	Tile* currentTile = tileSet->data->GetPropList(id);
-	ret = currentTile->properties.GetProperty(property, 0);
+	ret = currentTile->properties.GetProperty(property, -1);
 	return ret;
 }

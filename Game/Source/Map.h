@@ -109,7 +109,7 @@ struct MapData
 	int tileWidth;
 	int tileHeight;
 	SDL_Color backgroundColor;
-	MapTypes type;
+	MapTypes type = MAPTYPE_UNKNOWN;
 	List<TileSet*> tileSets;
 	List<MapLayer*> mapLayer;
 };
@@ -141,14 +141,17 @@ public:
 	// Translates map position to world position
 	iPoint MapToWorld(int x, int y) const;
 
+	// Translates world position to map position
+	iPoint WorldToMap(int x, int y) const;
+
 	//// Creates the data required to check the walkability of the whole map for pathfinding
 	//bool CreateWalkabilityMap(int* width, int* height, uchar** buffer) const;
 
 	// Changes property to value assigned
-	void SetTileProperty(int x, int y, const char* property, int value, bool notMovCollision = false, bool isObject = false);
+	//void SetTileProperty(int x, int y, const char* property, int value, bool metaData);
 
 	// Gets the value of a property in a given tile
-	int GetTileProperty(int x, int y, const char* property, bool notMovCollision = false, bool isObject = false) const;
+	int GetTileProperty(int x, int y, const char* property) const;
 
 	// Stores the data of the whole map
 	MapData data;

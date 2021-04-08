@@ -67,7 +67,7 @@ public:
 
 	// Adds a new collider to the list
 	Collider* AddCollider(SDL_Rect rect, Collider::Type type, Module* listener = nullptr);
-	void ResolveCollisions(SDL_Rect& currentFrame, iPoint nextFrame);
+	SDL_Rect ResolveCollisions(Collider* collider, iPoint nextFrame);
 
 private:
 	// All existing colliders in the scene

@@ -15,7 +15,6 @@
 
 Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 {
-	this->entityRect = { 0,0,50,50 };
 	spawnPos = { 150,150 };
 
 	LOG("Init Player");
@@ -24,6 +23,8 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 		this->nextPos = { spawnPos.x, spawnPos.y };
 	else
 		this->nextPos = { x,y };
+
+	this->entityRect = { nextPos.x, nextPos.y,50,50 };
 
 	pendingToDelete = false;
 	
@@ -70,6 +71,8 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 
 	currentAnim = &idle;
 
+	collider = app->collisions->AddCollider(this->entityRect, Collider::Type::PLAYER, (Module*)app->entities);
+
 	inMenu = false;
 }
 
@@ -109,6 +112,7 @@ bool Player::Update(float dt)
 
 		animFlags = ClearBit(animFlags, FlagsAnimation::WALKING);
 		currentAnim->Update(dt);
+		nextPos = { entityRect.x, entityRect.y };
 
 		if (!inMenu)
 		{
@@ -146,11 +150,8 @@ bool Player::Update(float dt)
 			}
 		}
 
-		// IMPORTANT: Before this point use nextPos for referencing the player position
-		app->collisions->ResolveCollisions(entityRect, nextPos);
-		// IMPORTANT: After this point use entityRect for referencing the player position
-		entityRect.x = nextPos.x;
-		entityRect.y = nextPos.y;
+		entityRect = app->collisions->ResolveCollisions(collider, nextPos);
+		collider->SetPos(entityRect.x, entityRect.y, entityRect.w, entityRect.h);
 
 		if (animFlags == (1 << FlagsAnimation::DOWN)) currentAnim = &idle;
 		else if (animFlags == (1 << FlagsAnimation::RIGHT)) currentAnim = &idleRight;
@@ -166,7 +167,7 @@ bool Player::Draw()
 	app->render->DrawTexture(app->entities->playerTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame(), invert);
 	if (app->render->debug)
 	{
-		app->render->DrawRectangle({ entityRect.x, entityRect.y, entityRect.w, entityRect.h }, 0, 0, 150, 100);
+		app->render->DrawRectangle({ collider->rect.x, collider->rect.y, collider->rect.w, collider->rect.h }, 0, 0, 150, 100);
 	}
 	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
 	return true;

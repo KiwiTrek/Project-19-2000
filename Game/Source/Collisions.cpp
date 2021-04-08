@@ -1,6 +1,7 @@
 #include "Collisions.h"
 
 #include "App.h"
+#include "Map.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -151,26 +152,34 @@ Collider* Collisions::AddCollider(SDL_Rect rect, Collider::Type type, Module* li
 }
 
 
-void Collisions::ResolveCollisions(SDL_Rect& currentFrame, iPoint nextFrame)
+SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 {
-	/*		EXTRACTED FROM DEV TEMPLATE
-
-	// Check if updated player position collides with next tile
-	// IMPROVEMENT: Just check adyacent tiles to player
-	for (int y = 0; y < map->data.height; y++)
+	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
-		for (int x = 0; x < map->data.width; x++)
+		iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y };
+		iPoint tilePos = app->map->WorldToMap(nextFrame.x, nextFrame.y);
+
+		iPoint what = app->map->MapToWorld(tilePos.x, tilePos.y);
+		iPoint the = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
+
+		SDL_Rect tileRect = { what.x,what.y,app->map->data.tileWidth,app->map->data.tileHeight };
+		if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
+			|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::SOLID)
+			&& collider->Intersects(tileRect))
 		{
-			if ((map->data.layers[2]->Get(x, y) >= 484) &&
-				CheckCollision(map->GetTilemapRec(x, y), player->GetBounds()))
+			if (difference.x > 0) nextFrame.x--;
+			else if (difference.x < 0) nextFrame.x++;
+			if (difference.y > 0) nextFrame.y--;
+			else if (difference.y < 0) nextFrame.y++;
+
+			if (difference == iPoint(0, 0))
 			{
-				player->position = tempPlayerPosition;
-				player->jumpSpeed = 0.0f;
-				break;
+				return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 			}
+			return ResolveCollisions(collider, nextFrame);
 		}
 	}
-	*/
+	return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 }
 
 void Collider::SetPos(int x, int y, int w, int h)
@@ -183,5 +192,8 @@ void Collider::SetPos(int x, int y, int w, int h)
 
 bool Collider::Intersects(const SDL_Rect& r) const
 {
-	return (rect.x < r.x + r.w && rect.x + rect.w > r.x && rect.y < r.y + r.h && rect.h + rect.y > r.y);
+	return (rect.x < r.x + r.w
+		&& rect.x + rect.w > r.x
+		&& rect.y < r.y + r.h 
+		&& rect.h + rect.y > r.y);
 }

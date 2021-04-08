@@ -20,7 +20,7 @@ bool SceneDevRoom::Load()
 {
 	app->entities->Enable();
 	app->map->Enable();
-	app->map->Load("devs_room.tmx");
+	app->map->Load("dev_room.tmx");
 
 	// initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
