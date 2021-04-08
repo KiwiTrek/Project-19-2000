@@ -6,6 +6,7 @@
 #include "List.h"
 
 class Entity;
+class SceneCombat;
 
 class SceneDevRoom : public Scene
 {
@@ -31,12 +32,8 @@ public:
 private:
 
     Entity* player = nullptr;
-    //Entity* enemyTest = nullptr;
-    //Entity* enemyTest2 = nullptr;
-    //Entity* playerTest = nullptr;
-
-    //COMBAT VARS
-    //List<Entity*> turnOrder;
+    SceneCombat* combatScene;
+    Font* dialogueFont = nullptr;
 };
 
 #endif // __SCENEDEVROOM_H__

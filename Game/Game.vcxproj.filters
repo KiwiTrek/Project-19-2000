@@ -75,6 +75,9 @@
     <ClCompile Include="Source\Collisions.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneCombat.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -191,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="Source\Collisions.h">
       <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneCombat.h">
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

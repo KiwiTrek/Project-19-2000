@@ -7,18 +7,7 @@
 #include "GuiCheckBox.h"
 
 class Entity;
-class CombatEntity;
-
-struct  CombatCharacter
-{
-    Entity* character;
-    int x, y;
-    SDL_Rect box;
-    SDL_Rect characterTex;
-    SString hp;
-    SString mp;
-    SString stress;
-};
+class SceneCombat;
 
 class SceneGameplay : public Scene
 {
@@ -35,15 +24,6 @@ public:
         CONTROLS
     };
 
-    enum CombatFlags
-    {
-        ATTACK,
-        SKILL,
-        ITEMS,
-        SPECIAL,
-        FLEE
-    };
-
     SceneGameplay();
     virtual ~SceneGameplay();
 
@@ -51,20 +31,11 @@ public:
 
     bool Update(float dt);
     bool UpdatePauseMenu(float dt);
-    bool UpdateCombat(float dt);
 
     bool Draw();
     bool DrawPauseMenu();
-    bool DrawCharacterBox(CombatCharacter character);
-    bool DrawCombat();
 
     bool Unload();
-
-    bool SortSpeed(bool isSorted);
-
-    bool IsCharacter(CombatEntity* e);
-
-    void SelectTarget();
 
     void ResetButtons();
 
@@ -113,33 +84,7 @@ private:
     GuiButton* btnPadRight;
 
     //COMBAT
-    List<CombatEntity*> turnOrder;
-    ListItem<CombatEntity*>* currentEntity;
-    CombatEntity* target;
-    bool characterSelected; // (For now, this is a temporal value for menu changing)
-    bool targetAttack;
-    bool finishedAction;
-    int attackSelected;
-
-    SDL_Texture* combatGui;
-    SDL_Rect combatTextBox;
-    SDL_Rect combatMenuBox;
-    int characterFlags;
-    int combatMenuFlags;
-
-    CombatCharacter* currentChar;
-    CombatCharacter mainChar;
-    CombatCharacter grandpa;
-    //CombatCharacter childhood;
-    //CombatCharacter extroverted;
-    Entity* enemy1;
-    Entity* enemy2;
-
-    GuiButton* btnCombatAttack;
-    GuiButton* btnCombatSkills;
-    GuiButton* btnCombatItems;
-    GuiButton* btnCombatSpecial;
-    GuiButton* btnCombatFlee;
+    SceneCombat* combatScene;
 
     //FONTS
     Font* dialogueFont = nullptr;
