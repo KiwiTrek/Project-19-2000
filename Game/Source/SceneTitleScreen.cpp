@@ -142,7 +142,7 @@ bool SceneTitleScreen::Draw()
     {
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
         SString titleOptions = "Options";
-        app->render->DrawText(buttonFont, titleOptions.GetString(), app->render->camera.x + ((app->render->camera.w - (titleOptions.Length() * 24))/2), 100, 64, 2, { 255, 255, 255, 255 });
+        app->render->DrawText(buttonFont, titleOptions.GetString(), /*app->render->camera.x + */((app->render->camera.w - (titleOptions.Length() * 24))/2), 100, 64, 2, { 255, 255, 255, 255 });
 
         sldrVolume->Draw();
         sldrFx->Draw();
@@ -155,7 +155,7 @@ bool SceneTitleScreen::Draw()
     {
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
         SString titleControls = "Controls";
-        app->render->DrawText(buttonFont, titleControls.GetString(), app->render->camera.x + ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
+        app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
 
         btnKeySelect->Draw();
         btnKeyCancel->Draw();

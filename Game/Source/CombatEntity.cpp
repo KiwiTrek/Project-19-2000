@@ -13,6 +13,9 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	this->collider = app->collisions->AddCollider(entityRect, Collider::Type::SOLID, app->entities);
 
 	pendingToDelete = false;
+	isStunned = false;
+	isTaunted = false;
+	tauntedBy = nullptr;
 
 	// Animation
 
@@ -29,7 +32,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 		SString tmpS = "Strike";
 		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 		break;
 	}
 	case EntityId::VIOLENT:
@@ -38,7 +41,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 		SString tmpS = "Smite foes";
 		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 		break;
 	}
 	case EntityId::STUBBORN:
@@ -52,11 +55,11 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 		SString tmpS = "Magical blow";
 		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 
 		tmpS = "Stressing attack";
 		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, 10);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 		break;
 	}
 	case EntityId::FURIOUS_SHADOW:
@@ -66,11 +69,11 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 		SString tmpS = "Getting stronger";
 		Attack* tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::SELF, stats.pDef, stats.mDef);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 
 		tmpS = "Fury of blades";
 		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ALL_ALLIES, stats.pAtk);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 		break;
 	}
 	case EntityId::NIGHTMARE:
@@ -79,19 +82,19 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 
 		SString tmpS = "Bad dream";
 		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 
 		tmpS = "Nightmarish";
 		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::SELF, stats.pDef, stats.mDef);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 
 		tmpS = "Close your eyes";
 		tmpA = new Attack(tmpS, AttackType::TAUNT, TargetType::SELF, 0);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 
 		tmpS = "Grasp of depression";
 		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, 0);
-		this->AttackPool.Add(tmpA);
+		this->attackPool.Add(tmpA);
 		break;
 	}
 	case EntityId::ENEMY_4:

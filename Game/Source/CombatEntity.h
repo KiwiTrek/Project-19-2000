@@ -20,8 +20,11 @@ public:
 
 public:
 
-	List<Attack*> AttackPool;
+	List<Attack*> attackPool;
 	SString name;
+	bool isStunned;
+	bool isTaunted;
+	CombatEntity* tauntedBy;
 
 private:
 

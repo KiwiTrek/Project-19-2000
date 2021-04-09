@@ -80,6 +80,7 @@ public:
 	AttackType type;
 	int stat1, stat2;
 	TargetType target;
+	int turns;
 };
 
 class Entity

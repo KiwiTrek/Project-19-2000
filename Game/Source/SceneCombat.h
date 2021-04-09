@@ -13,7 +13,7 @@ class CombatEntity;
 
 struct  CombatCharacter
 {
-    Entity* character;
+    CombatEntity* character;
     int x, y;
     SDL_Rect box;
     SDL_Rect characterTex;

@@ -82,12 +82,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + 6 + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 0,0,0,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY + */bounds.y + (bounds.h / 8), textSize, 2, { 0,0,0,255 });
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 0,0,0,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, { 0,0,0,255 });
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
 		if (app->render->debug)
@@ -102,12 +102,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + 6 + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 255, 255, 100);
 		if (app->render->debug)
@@ -122,12 +122,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + 6 + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY + */bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX + */bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 0, 0, 255, 100);
 		if (app->render->debug)
@@ -141,12 +141,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + 6 + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
-			app->render->DrawText(guiFont, text.GetString(), cPosX + bounds.x + (bounds.w - offsetText) / 2, cPosY + bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX + */bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, { 255,255,255,255 });
 		}
 		//app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 255, 0, 0, 100);
 		if (app->render->debug)

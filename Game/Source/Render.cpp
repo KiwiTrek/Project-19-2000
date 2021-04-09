@@ -91,7 +91,7 @@ bool Render::PostUpdate()
 	// Draw full screen rectangle in front of everything
 	if (app->scene->onTransition)
 	{
-		app->render->DrawRectangle(app->render->camera, 0, 0, 0, (uchar)(255.0f * app->scene->transitionAlpha));
+		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, (uchar)(255.0f * app->scene->transitionAlpha));
 	}
 
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.a);
