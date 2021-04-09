@@ -127,10 +127,10 @@ bool CombatEntity::Draw()
 		case EntityId::KIND:
 			break;
 		case EntityId::STRESSING_SHADOW:
-			app->render->DrawTexture(app->entities->enemiesTex, entityRect.x, entityRect.y, false, &stressingShadowSec);
+			app->render->DrawTexture(app->entities->enemiesTex, -app->render->camera.x + entityRect.x, -app->render->camera.y + entityRect.y, false, &stressingShadowSec);
 			break;
 		case EntityId::FURIOUS_SHADOW:
-			app->render->DrawTexture(app->entities->enemiesTex, entityRect.x, entityRect.y, false, &furiousShadowSec);
+			app->render->DrawTexture(app->entities->enemiesTex, -app->render->camera.x + entityRect.x, -app->render->camera.y + entityRect.y, false, &furiousShadowSec);
 			break;
 		case EntityId::NIGHTMARE:
 			break;

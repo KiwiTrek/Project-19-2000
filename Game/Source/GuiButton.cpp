@@ -138,7 +138,6 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 	}
 	case GuiControlState::PRESSED:
 	{
-
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);

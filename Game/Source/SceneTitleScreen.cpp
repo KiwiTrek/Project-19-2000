@@ -29,6 +29,8 @@ bool SceneTitleScreen::Load()
     buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
 
     app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
+    app->render->camera.x = 0;
+    app->render->camera.y = 0;
     noose.Reset();
 
     // GUI: Initialize required controls for the screen
