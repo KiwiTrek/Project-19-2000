@@ -5,6 +5,7 @@
 #include "CombatEntity.h"
 #include "Textures.h"
 #include "GuiManager.h"
+#include "SceneManager.h"
 #include "Input.h"
 #include "Render.h"
 #include "Window.h"
@@ -50,6 +51,7 @@ bool SceneCombat::Load()
 
 	targetAttack = false;
 	finishedAction = false;
+	hasTicked = false;
 	combatState = CombatStateType::COMBAT_START;
 	attackSelected = -1;
 	combatMenuFlags = 0;
@@ -110,7 +112,33 @@ bool SceneCombat::Update(float dt)
 		}
 		else
 		{
-			if (IsCharacter(currentEntity->data)) // character
+			if (!hasTicked)
+			{
+				TickDownBuffs();
+				hasTicked = true;
+			}
+			if (currentEntity->data->stats.hPoints == 0)
+			{
+				//ListItem<CombatEntity*>* e = currentEntity;
+				//currentEntity = currentEntity->next;
+				LOG("%s is dead!", currentEntity->data->name.GetString());
+				//turnOrder.Del(e);
+
+				ListItem<CombatEntity*>* eNext = currentEntity->next;
+				app->entities->DestroyEntity(currentEntity->data);
+				turnOrder.Del(currentEntity);
+				currentEntity = eNext;
+				if (currentEntity == nullptr)
+				{
+					SortSpeed(false);
+					currentEntity = turnOrder.start;
+				}
+
+				VictoryCondition();
+				DefeatCondition();
+			}
+
+			if (IsCharacter(currentEntity->data))													// CHARACTER
 			{
 				//WAIT FOR PLAYER INPUT
 				characterSelected = true;						//should delete eventually
@@ -123,29 +151,29 @@ bool SceneCombat::Update(float dt)
 				case EntityId::MC:
 					currentChar = &mainChar;
 
-					if (currentChar->character->isStunned == false)
+					if (currentEntity->data->isStunned == false)
 					{
-						if (currentChar->character->isTaunted == true)
+						if (currentEntity->data->isTaunted == true)
 						{
-							currentChar->character->isTaunted = false;
-							target = currentChar->character->tauntedBy;
+							currentEntity->data->isTaunted = false;
+							target = currentEntity->data->tauntedBy;
 						}
 
 						//tick down buffs and debuffs
-						ListItem<Attack*>* a = currentChar->character->attackPool.start;												//probaby think of something cuz this will get messy as we implement more enemies
-						while (a != nullptr)
-						{
-							if (a->data->turns > 0)
-							{
-								a->data->turns--;
-								if (a->data->attackName == "10% debuff" && a->data->turns == 0)
-								{
-									currentChar->character->stats.pDef += a->data->stat1 / 10;
-									currentChar->character->stats.mDef += a->data->stat2 / 10;
-								}
-							}
-							a = a->next;
-						}
+						//ListItem<Attack*>* a = currentEntity->data->attackPool.start;												//probaby think of something cuz this will get messy as we implement more enemies
+						//while (a != nullptr)
+						//{
+						//	if (a->data->turns > 0)
+						//	{
+						//		a->data->turns--;
+						//		if (a->data->attackName == "10% debuff" && a->data->turns == 0)
+						//		{
+						//			currentEntity->data->stats.pDef += a->data->stat1 / 10;
+						//			currentEntity->data->stats.mDef += a->data->stat2 / 10;
+						//		}
+						//	}
+						//	a = a->next;
+						//}
 
 						if (attackSelected == -1)
 						{
@@ -158,11 +186,13 @@ bool SceneCombat::Update(float dt)
 
 							if (target != nullptr)
 							{
-								currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);							//probably create a function that attacks since these lines will be repeated many many times
-								//dialogue that X character does Y attack to Z enemy
-								LOG("damage attack to %s!\n", target->name.GetString());
-								target->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - target->stats.pDef);
+								Damage(0, target);
+								//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);							//probably create a function that attacks since these lines will be repeated many many times
+								////dialogue that X character does Y attack to Z enemy
+								//LOG("damage attack to %s!\n", target->name.GetString());
+								//target->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - target->stats.pDef);
 								target = nullptr;
+								targetAttack = false;
 								finishedAction = true;
 							}
 						}
@@ -185,29 +215,29 @@ bool SceneCombat::Update(float dt)
 				case EntityId::VIOLENT:
 					currentChar = &grandpa;
 
-					if (currentChar->character->isStunned == false)
+					if (currentEntity->data->isStunned == false)
 					{
-						if (currentChar->character->isTaunted == true)
+						if (currentEntity->data->isTaunted == true)
 						{
-							currentChar->character->isTaunted = false;
-							target = currentChar->character->tauntedBy;
+							currentEntity->data->isTaunted = false;
+							target = currentEntity->data->tauntedBy;
 						}
 
 						//tick down buffs and debuffs
-						ListItem<Attack*>* a = currentChar->character->attackPool.start;
-						while (a != nullptr)
-						{
-							if (a->data->turns > 0)
-							{
-								a->data->turns--;
-								if (a->data->attackName == "10% debuff" && a->data->turns == 0)
-								{
-									currentChar->character->stats.pDef += a->data->stat1 / 10;
-									currentChar->character->stats.mDef += a->data->stat2 / 10;
-								}
-							}
-							a = a->next;
-						}
+						//ListItem<Attack*>* a = currentEntity->data->attackPool.start;
+						//while (a != nullptr)
+						//{
+						//	if (a->data->turns > 0)
+						//	{
+						//		a->data->turns--;
+						//		if (a->data->attackName == "10% debuff" && a->data->turns == 0)
+						//		{
+						//			currentEntity->data->stats.pDef += a->data->stat1 / 10;
+						//			currentEntity->data->stats.mDef += a->data->stat2 / 10;
+						//		}
+						//	}
+						//	a = a->next;
+						//}
 
 						if (attackSelected == -1)
 						{
@@ -220,11 +250,13 @@ bool SceneCombat::Update(float dt)
 
 							if (target != nullptr)
 							{
-								currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-								//dialogue that X character does Y attack to Z enemy
-								LOG("damage attack to %s!\n", target->name.GetString());
-								target->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - target->stats.pDef);
+								Damage(0, target);
+								//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
+								////dialogue that X character does Y attack to Z enemy
+								//LOG("damage attack to %s!\n", target->name.GetString());
+								//target->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - target->stats.pDef);
 								target = nullptr;
+								targetAttack = false;
 								finishedAction = true;
 							}
 						}
@@ -248,7 +280,7 @@ bool SceneCombat::Update(float dt)
 					break;
 				}
 			}
-			else // enemy
+			else																					// ENEMY
 			{
 				//ENEMY ATTACK PATTERN?
 				switch (currentEntity->data->id)
@@ -260,113 +292,168 @@ bool SceneCombat::Update(float dt)
 					if (p >= 6) //Stressing attack
 					{
 						//dialogue that X enemy does Y attack to MC
-						LOG("stress attack!\n");
+						LOG("%s does stress attack!", currentEntity->data->name.GetString());
 						mainChar.character->stats.stress += 10;
 					}
 					else //Magical blow
 					{
-						int pTarget = rand() % 2 + 1;
-						if (pTarget == 1) //MC
+						int t = EnemyTarget();
+						switch (t)
 						{
-							currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-							//dialogue that X enemy does Y attack to Z character
-							LOG("damage attack to mc!\n");
-							mainChar.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.mDef);
+						case 1: //MC
+							Damage(0, mainChar.character, true);
+							break;
+						case 2: //GRANDPA
+							Damage(0, grandpa.character, true);
+							break;
+						case 3:
+							break;
+						case 4:
+							break;
+						default:
+							break;
 						}
-						else if (pTarget == 2) //GRANDPA
-						{
-							currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-							//dialogue that X enemy does Y attack to Z character
-							LOG("damage attack to grandpa!\n");
-							grandpa.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.mDef);
-						}
+						//if (t == 1) //MC
+						//{
+						//	Damage(0, mainChar.character,true);
+						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
+						//	////dialogue that X enemy does Y attack to Z character
+						//	//LOG("damage attack to mc!\n");
+						//	//mainChar.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.mDef);
+						//}
+						//else if (t == 2) //GRANDPA
+						//{
+						//	Damage(0, grandpa.character, true);
+						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
+						//	////dialogue that X enemy does Y attack to Z character
+						//	//LOG("damage attack to grandpa!\n");
+						//	//grandpa.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.mDef);
+						//}
 					}
 					finishedAction = true;
 					break;
 				}
 				case EntityId::FURIOUS_SHADOW:
 				{
-					if (currentEntity->data->attackPool.At(0)->data->turns != 0) currentEntity->data->attackPool.At(0)->data->turns--;
-
 					srand(time(NULL));
 					int p = rand() % 10 + 1;
 					if (p >= 5) //Getting stronger
 					{
 						//dialogue that X enemy does Y attack
-						LOG("Furious Shadow got stronger!\n");
-						enemy1->stats.pDef = ((enemy1->stats.pDef * 5) / 100);
-						enemy1->stats.mDef = ((enemy1->stats.mDef * 5) / 100);
+						LOG("Furious Shadow got stronger!");
+						currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
+						currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
 						currentEntity->data->attackPool.At(0)->data->turns = 2;
 					}
 					else //Fury of blades
 					{
-						//dialogue that X enemy does Y attack to all characters
-						LOG("Furious Shadow attack to all!\n");
-						currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(1)->data->stat1);
-						int attack = currentEntity->data->attackPool.At(1)->data->stat1;
-						mainChar.character->stats.hPoints -= (attack - mainChar.character->stats.pDef);
-						grandpa.character->stats.hPoints -= (attack - mainChar.character->stats.pDef);
+						Damage(1, mainChar.character);
+						Damage(1, grandpa.character);
+						////dialogue that X enemy does Y attack to all characters
+						//LOG("Furious Shadow attack to all!\n");
+						//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(1)->data->stat1);
+						//int attack = currentEntity->data->attackPool.At(1)->data->stat1;
+						//mainChar.character->stats.hPoints -= (attack - mainChar.character->stats.pDef);
+						//grandpa.character->stats.hPoints -= (attack - mainChar.character->stats.pDef);
 					}
 					finishedAction = true;
 					break;
 				}
 				case EntityId::NIGHTMARE:
 				{
-					if (currentEntity->data->attackPool.At(1)->data->turns != 0) currentEntity->data->attackPool.At(1)->data->turns--;
-
 					srand(time(NULL));
 					int p = rand() % 100 + 1;
 					if (p >= 60) //Bad dream
 					{
-						int pTarget = rand() % 2 + 1;
-						if (pTarget == 1) //MC
+						int t = EnemyTarget();
+						switch (t)
 						{
-							currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-							//dialogue that X enemy does Y attack to Z character
-							LOG("damage attack to mc!\n");
-							mainChar.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.pDef);
+						case 1: //MC
+							Damage(0, mainChar.character);
+							break;
+						case 2: //GRANDPA
+							Damage(0, grandpa.character);
+							break;
+						case 3:
+							break;
+						case 4:
+							break;
+						default:
+							break;
 						}
-						else if (pTarget == 2) //GRANDPA
-						{
-							currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-							//dialogue that X enemy does Y attack to Z character
-							LOG("damage attack to grandpa!\n");
-							grandpa.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.pDef);
-						}
+						//if (t == 1) //MC
+						//{
+						//	Damage(0, mainChar.character);
+						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
+						//	////dialogue that X enemy does Y attack to Z character
+						//	//LOG("damage attack to mc!\n");
+						//	//mainChar.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.pDef);
+						//}
+						//else if (t == 2) //GRANDPA
+						//{
+						//	Damage(0, grandpa.character);
+						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
+						//	////dialogue that X enemy does Y attack to Z character
+						//	//LOG("damage attack to grandpa!\n");
+						//	//grandpa.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.pDef);
+						//}
 					}
 					else if(p >= 30) //Nightmarish
 					{
 						//dialogue that X enemy does Y attack
-						LOG("Furious Shadow got stronger!\n");
-						enemy1->stats.pDef = ((enemy1->stats.pDef * 10) / 100);
-						enemy1->stats.mDef = ((enemy1->stats.mDef * 10) / 100);
+						LOG("Nightmarish got stronger!");
+						currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
+						currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
 						currentEntity->data->attackPool.At(0)->data->turns = 2;
 					}
 					else if (p >= 5) //Close your eyes
 					{
-						int pTarget = rand() % 2 + 1;
-						if (pTarget == 1) //MC
+						int t = EnemyTarget();
+						switch (t)
 						{
+						case 1: //MC
 							//dialogue that X enemy does Y attack to Z character
-							LOG("mc has been taunted!\n");
+							LOG("mc has been taunted!");
 							mainChar.character->isTaunted = true;
 							mainChar.character->tauntedBy = currentEntity->data;
-						}
-						else if (pTarget == 2) //GRANDPA
-						{
+							break;
+						case 2: //GRANDPA
 							//dialogue that X enemy does Y attack to Z character
-							LOG("grandpa has been taunted!\n");
+							LOG("grandpa has been taunted!");
 							grandpa.character->isTaunted = true;
 							grandpa.character->tauntedBy = currentEntity->data;
+							break;
+						case 3:
+							break;
+						case 4:
+							break;
+						default:
+							break;
 						}
+						//if (t == 1) //MC
+						//{
+						//	//dialogue that X enemy does Y attack to Z character
+						//	LOG("mc has been taunted!");
+						//	mainChar.character->isTaunted = true;
+						//	mainChar.character->tauntedBy = currentEntity->data;
+						//}
+						//else if (t == 2) //GRANDPA
+						//{
+						//	//dialogue that X enemy does Y attack to Z character
+						//	LOG("grandpa has been taunted!");
+						//	grandpa.character->isTaunted = true;
+						//	grandpa.character->tauntedBy = currentEntity->data;
+						//}
 					}
 					else //Grasp of depression
 					{
-						int pTarget = rand() % 2 + 1;
-						if (pTarget == 1) //MC
+						int t = EnemyTarget();
+						switch (t)
+						{
+						case 1: //MC
 						{
 							//dialogue that X enemy does Y attack to Z character
-							LOG("mc has been stunned and debuffed!\n");
+							LOG("mc has been stunned and debuffed!");
 							mainChar.character->isStunned = true;
 							SString s = "10% debuff";
 							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
@@ -374,19 +461,52 @@ bool SceneCombat::Update(float dt)
 							mainChar.character->attackPool.Add(a);
 							mainChar.character->stats.pDef -= a->stat1 / 10;
 							mainChar.character->stats.mDef -= a->stat2 / 10;
+							break;
 						}
-						else if (pTarget == 2) //GRANDPA
+						case 2: //GRANDPA
 						{
 							//dialogue that X enemy does Y attack to Z character
-							LOG("grandpa has been stunned and debuffed!\n");
+							LOG("grandpa has been stunned and debuffed!");
 							grandpa.character->isStunned = true;
 							SString s = "10% debuff";
-							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef,grandpa.character->stats.mDef);
+							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
 							a->turns = 1;
 							grandpa.character->attackPool.Add(a);
 							grandpa.character->stats.pDef -= a->stat1 / 10;
 							grandpa.character->stats.mDef -= a->stat2 / 10;
+							break;
 						}
+						case 3:
+							break;
+						case 4:
+							break;
+						default:
+							break;
+						}
+						//if (t == 1) //MC
+						//{
+						//	//dialogue that X enemy does Y attack to Z character
+						//	LOG("mc has been stunned and debuffed!");
+						//	mainChar.character->isStunned = true;
+						//	SString s = "10% debuff";
+						//	Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
+						//	a->turns = 1;
+						//	mainChar.character->attackPool.Add(a);
+						//	mainChar.character->stats.pDef -= a->stat1 / 10;
+						//	mainChar.character->stats.mDef -= a->stat2 / 10;
+						//}
+						//else if (t == 2) //GRANDPA
+						//{
+						//	//dialogue that X enemy does Y attack to Z character
+						//	LOG("grandpa has been stunned and debuffed!");
+						//	grandpa.character->isStunned = true;
+						//	SString s = "10% debuff";
+						//	Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef,grandpa.character->stats.mDef);
+						//	a->turns = 1;
+						//	grandpa.character->attackPool.Add(a);
+						//	grandpa.character->stats.pDef -= a->stat1 / 10;
+						//	grandpa.character->stats.mDef -= a->stat2 / 10;
+						//}
 					}
 
 					finishedAction = true;
@@ -399,27 +519,17 @@ bool SceneCombat::Update(float dt)
 
 			if (finishedAction)
 			{
+				LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
 				finishedAction = false;
+				hasTicked = false;
 				currentEntity = currentEntity->next;
 			}
 		}
-
-		ListItem<CombatEntity*>* e = turnOrder.start;
-		int counter = 0;
-		while (e != nullptr)
-		{
-			if (IsCharacter(e->data) == false)
-				counter++;
-
-			e = e->next;
-		}
-
-		if (counter == 0) combatState = CombatStateType::COMBAT_END;
 	}
 	break;
 	case COMBAT_END:
 		// cool animation as a victory thing and change back to gameplay
-		combat = false;
+		app->scene->current->combat = false;
 		break;
 	default:
 		break;
@@ -453,16 +563,16 @@ bool SceneCombat::Draw(Font* dialogueFont)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x, -app->render->camera.y + mainChar.character->entityRect.y, false, &mainChar.box);
 			app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x + 10, -app->render->camera.y + mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), false, &mainChar.characterTex);
-			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), -app->render->camera.x + mainChar.character->entityRect.x + mainChar.characterTex.w + 15, -app->render->camera.y + mainChar.character->entityRect.y + 45, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), -app->render->camera.x + mainChar.character->entityRect.x + mainChar.characterTex.w + 15, -app->render->camera.y + mainChar.character->entityRect.y + 45 + 30, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), -app->render->camera.x + mainChar.character->entityRect.x + mainChar.characterTex.w + 15, -app->render->camera.y + mainChar.character->entityRect.y + 45 + 60, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15,/* -app->render->camera.y +*/ mainChar.character->entityRect.y + 45, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 30, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 60, 28, 1, { 255,255,255,255 });
 		}
 		if (characterFlags >= 3)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x, -app->render->camera.y + grandpa.character->entityRect.y, false, &grandpa.box);
 			app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x + 10, -app->render->camera.y + grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2), false, &grandpa.characterTex);
-			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), -app->render->camera.x + grandpa.character->entityRect.x + grandpa.characterTex.w + 15, -app->render->camera.y + grandpa.character->entityRect.y + 50, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), -app->render->camera.x + grandpa.character->entityRect.x + grandpa.characterTex.w + 15, -app->render->camera.y + grandpa.character->entityRect.y + 50 + 30, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50 + 30, 28, 1, { 255,255,255,255 });
 		}
 		/*
 		if (characterFlags >= 7)
@@ -479,8 +589,8 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	{
 		app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
 		app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
-		app->render->DrawText(dialogueFont, currentChar->hp.GetString(), -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, { 255,255,255,255 });
-		app->render->DrawText(dialogueFont, currentChar->mp.GetString(), -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, { 255,255,255,255 });
+		app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, { 255,255,255,255 });
+		app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, { 255,255,255,255 });
 		if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, { 255,255,255,255 });
 
 		btnCombatAttack->Draw(-app->render->camera.x, -app->render->camera.y);
@@ -511,9 +621,8 @@ bool SceneCombat::Draw(Font* dialogueFont)
 		while (e != nullptr)
 		{
 			if (e->data->collider->Intersects({ x, y, 1, 1 }))
-			{
-				app->render->DrawRectangle(e->data->collider->rect, 255, 255, 255, 150, false);
-			}
+				app->render->DrawRectangle({ -app->render->camera.x + e->data->collider->rect.x, -app->render->camera.y + e->data->collider->rect.y,e->data->collider->rect.w,e->data->collider->rect.h }, 255, 255, 255, 150, false);
+
 			e = e->next;
 		}
 	}
@@ -567,6 +676,101 @@ void SceneCombat::SelectTarget()
 
 		e = e->next;
 	}
+}
+
+void SceneCombat::TickDownBuffs()
+{
+	ListItem<Attack*>* a = currentEntity->data->attackPool.start;
+	while (a != nullptr)
+	{
+		if (a->data->turns > 0)
+		{
+			a->data->turns--;
+			if (a->data->turns == 0)
+			{
+				if (a->data->attackName == "10% debuff")
+				{
+					currentChar->character->stats.pDef += a->data->stat1 / 10;
+					currentChar->character->stats.mDef += a->data->stat2 / 10;
+				}
+				else if (a->data->attackName == "Getting stronger")
+				{
+					currentChar->character->stats.pDef -= (a->data->stat1 * 5) / 100;
+					currentChar->character->stats.mDef -= (a->data->stat2 * 5) / 100;
+				}
+				else if (a->data->attackName == "Nightmarish")
+				{
+					currentChar->character->stats.pDef -= a->data->stat1 / 10;
+					currentChar->character->stats.mDef -= a->data->stat2 / 10;
+				}
+			}
+		}
+		a = a->next;
+	}
+}
+
+void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
+{
+	currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
+	//dialogue that X character does Y attack to Z enemy
+	LOG("%s does damage attack to %s!",currentEntity->data->name.GetString(), target->name.GetString());
+	int attack = 0;
+	if (!isMagic)
+		attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
+	else
+		attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.mDef);
+
+	if (attack <= 0)
+		attack = 0;
+	target->stats.hPoints -= attack;
+	if (target->stats.hPoints <= 0)
+		target->stats.hPoints = 0;
+}
+
+void SceneCombat::VictoryCondition()
+{
+	ListItem<CombatEntity*>* e = turnOrder.start;
+	int counter = 0;
+	while (e != nullptr)
+	{
+		if (IsCharacter(e->data) == false)
+			counter++;
+
+		e = e->next;
+	}
+
+	if (counter == 0)
+	{
+		combatState = CombatStateType::COMBAT_END;
+		LOG("Victory!\n");
+	}
+}
+
+void SceneCombat::DefeatCondition()
+{
+	ListItem<CombatEntity*>* e = turnOrder.start;
+	int counter = 0;
+	while (e != nullptr)
+	{
+		if (IsCharacter(e->data) == true)
+			counter++;
+
+		e = e->next;
+	}
+
+	if (counter == 0)
+	{
+		combatState = CombatStateType::COMBAT_END;
+		LOG("Defeat!\n");
+	}
+}
+
+int SceneCombat::EnemyTarget()
+{
+	int c = 0;
+	if (mainChar.character != nullptr) c++;
+	if (grandpa.character != nullptr) c++;
+	return  rand() % c + 1;
 }
 
 void SceneCombat::ResetButtons()

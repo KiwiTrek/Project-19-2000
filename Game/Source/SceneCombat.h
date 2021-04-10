@@ -52,6 +52,16 @@ public:
 
     void SelectTarget();
 
+    void TickDownBuffs();
+
+    void VictoryCondition();
+
+    void DefeatCondition();
+
+    int EnemyTarget();
+
+    void Damage(int index, CombatEntity* target, bool isMagic = false);
+
     void ResetButtons();
 
     // Declare on mouse click event
@@ -79,6 +89,7 @@ private:
     bool characterSelected; // (For now, this is a temporal value for menu changing)
     bool targetAttack;
     bool finishedAction;
+    bool hasTicked;
     int attackSelected;
 
     CombatCharacter* currentChar;
