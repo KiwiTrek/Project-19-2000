@@ -104,6 +104,7 @@ struct MapLayer
 
 struct MapData
 {
+	SString name;
 	int width;
 	int height;
 	int tileWidth;
@@ -158,7 +159,7 @@ public:
 
 private:
 	// Load functions
-	bool LoadMap();
+	bool LoadMap(const char* filename);
 	bool LoadTileSetDetails(pugi::xml_node& node, TileSet* set);
 	bool LoadTileSetImage(pugi::xml_node& node, TileSet* set);
 	bool LoadTileSetProperties(pugi::xml_node& node, TileSet* set);

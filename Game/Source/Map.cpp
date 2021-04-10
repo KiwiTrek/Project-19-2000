@@ -143,7 +143,7 @@ bool Map::Load(const char* filename)
 	if (ret == true)
 	{
 		// Load map
-		ret = LoadMap();
+		ret = LoadMap(filename);
 
 		// Load tileset
 		for (pugi::xml_node tileSet = mapFile.child("map").child("tileset"); tileSet && ret; tileSet = tileSet.next_sibling("tileset"))
@@ -181,7 +181,7 @@ bool Map::Load(const char* filename)
 	return ret;
 }
 
-bool Map::LoadMap()
+bool Map::LoadMap(const char* filename)
 {
 	pugi::xml_node map = mapFile.child("map");
 
@@ -194,6 +194,7 @@ bool Map::LoadMap()
 	{
 		LOG("Filling map info");
 		SString strType(map.attribute("orientation").as_string());
+		data.name.Create(filename);
 		data.type = StrToMapType(strType);
 		data.width = map.attribute("width").as_int();
 		data.height = map.attribute("height").as_int();
@@ -423,6 +424,7 @@ void Map::LogInfo()
 {
 	LOG("--------------------------------------------------------------------------");
 	LOG("#Map Data: ");
+	LOG("Name=%s", data.name.GetString());
 	LOG("Width=%d", data.width);
 	LOG("Height=%d", data.height);
 	LOG("TileWidth=%d", data.tileWidth);

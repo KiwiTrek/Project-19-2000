@@ -819,6 +819,8 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
+		LOG("You fled!");
+		app->scene->current->combat = false;
 		break;
 	default:
 		break;

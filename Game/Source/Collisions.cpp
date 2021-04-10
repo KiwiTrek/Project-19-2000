@@ -2,6 +2,7 @@
 
 #include "App.h"
 #include "Map.h"
+#include "Audio.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -17,23 +18,113 @@ Collisions::Collisions()
 
 	matrix[Collider::Type::AIR][Collider::Type::AIR] = false;
 	matrix[Collider::Type::AIR][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::AIR][Collider::Type::PLAYER] = false;
+	matrix[Collider::Type::AIR][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::AIR][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::AIR][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::AIR][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::AIR][Collider::Type::ENEMY_SPAWN] = false;
 	matrix[Collider::Type::AIR][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::AIR][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::AIR][Collider::Type::PLAYER] = false;
 
 	matrix[Collider::Type::SOLID][Collider::Type::AIR] = false;
 	matrix[Collider::Type::SOLID][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::PLAYER] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::ENEMY_SPAWN] = false;
 	matrix[Collider::Type::SOLID][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::SOLID][Collider::Type::PLAYER] = false;
 
-	matrix[Collider::Type::PLAYER][Collider::Type::AIR] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::INTERACTABLE] = true;
+	matrix[Collider::Type::DOOR][Collider::Type::AIR] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::DOOR][Collider::Type::PLAYER] = true;
+
+	matrix[Collider::Type::PUZZLE][Collider::Type::AIR] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::PUZZLE][Collider::Type::PLAYER] = true;
+
+	matrix[Collider::Type::OTHER][Collider::Type::AIR] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::OTHER][Collider::Type::PLAYER] = false;
+
+	matrix[Collider::Type::EVENT][Collider::Type::AIR] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::EVENT][Collider::Type::PLAYER] = true;
+
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::AIR] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::PLAYER] = true;
 
 	matrix[Collider::Type::INTERACTABLE][Collider::Type::AIR] = false;
 	matrix[Collider::Type::INTERACTABLE][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::PLAYER] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::INTERACTABLE] = true;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::INTERACTABLE][Collider::Type::PLAYER] = true;
+
+	matrix[Collider::Type::DEBUG][Collider::Type::AIR] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::DOOR] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::PUZZLE] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::EVENT] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::ENEMY_SPAWN] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::INTERACTABLE] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::DEBUG][Collider::Type::PLAYER] = false;
+
+	matrix[Collider::Type::PLAYER][Collider::Type::AIR] = false;
+	matrix[Collider::Type::PLAYER][Collider::Type::SOLID] = false;
+	matrix[Collider::Type::PLAYER][Collider::Type::DOOR] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::PUZZLE] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::OTHER] = false;
+	matrix[Collider::Type::PLAYER][Collider::Type::EVENT] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::ENEMY_SPAWN] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::INTERACTABLE] = true;
+	matrix[Collider::Type::PLAYER][Collider::Type::DEBUG] = false;
+	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
 
 }
 
@@ -163,6 +254,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 		iPoint the = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
 
 		SDL_Rect tileRect = { what.x,what.y,app->map->data.tileWidth,app->map->data.tileHeight };
+		LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
 		if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
 			|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::SOLID)
 			&& collider->Intersects(tileRect))
@@ -177,6 +269,218 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 				return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 			}
 			return ResolveCollisions(collider, nextFrame);
+		}
+		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
+			|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::DOOR)
+			&& collider->Intersects(tileRect))
+		{
+			if (app->map->data.name == "tutorial.tmx")
+			{
+				switch (tilePos.x)
+				{
+				case 15:
+				{
+					switch (tilePos.y)
+					{
+					case 28:
+						return { 15 * app->map->data.tileWidth, (39 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					case 38:
+						return { 15 * app->map->data.tileWidth, (28 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					case 50:
+						return { 15 * app->map->data.tileWidth, (64 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					case 63:
+						return { 15 * app->map->data.tileWidth, (50 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					case 78:
+						return { 15 * app->map->data.tileWidth, (88 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					case 87:
+						return { 15 * app->map->data.tileWidth, (78 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 21:
+				{
+					return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+					break;
+				}
+				case 38:
+				{
+					switch (tilePos.y)
+					{
+					case 14:
+						return { (20 * app->map->data.tileWidth) - 1, 26 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					case 36:
+						return { 64 * app->map->data.tileWidth, (89 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					case 92:
+						return { 64 * app->map->data.tileWidth, (10 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 64:
+				{
+					switch (tilePos.y)
+					{
+					case 9:
+						return { 38 * app->map->data.tileWidth, (92 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					case 65:
+						app->map->CleanUp();
+						app->map->Load("home.tmx");
+						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { (44 * app->map->data.tileWidth) - 1, (30 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+						break;
+					case 90:
+						return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				default:
+					break;
+				}
+			}
+			else if (app->map->data.name == "home.tmx")
+			{
+				switch (tilePos.x)
+				{
+				case 13:
+				{
+					return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+					break;
+				}
+				case 23:
+				{
+					switch (tilePos.y)
+					{
+					case 7:
+						break;
+					case 8:
+						break;
+					case 13:
+						return { (12 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					case 14:
+						return { (12 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					case 36:
+						return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 24:
+				{
+					break;
+				}
+				case 25:
+				{
+					break;
+				}
+				case 30:
+				{
+					return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h};
+					break;
+				}
+				case 31:
+				{
+					switch (tilePos.y)
+					{
+					case 4:
+						break;
+					case 18:
+						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 32:
+				{
+					switch (tilePos.y)
+					{
+					case 4:
+						break;
+					case 18:
+						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 33:
+				{
+					return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+					break;
+				}
+				case 38:
+				{
+					return { 32 * app->map->data.tileWidth, (17 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+					break;
+				}
+				case 39:
+				{
+					switch (tilePos.y)
+					{
+					case 7:
+						break;
+					case 8:
+						break;
+					case 13:
+						return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					case 14:
+						return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					case 34:
+						return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 40:
+				{
+					return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+					break;
+				}
+				case 45:
+				{
+					app->map->CleanUp();
+					app->map->Load("tutorial.tmx");
+					app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+					if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+					break;
+				}
+				case 52:
+				{
+					switch (tilePos.y)
+					{
+					case 13:
+						return { (38 * app->map->data.tileWidth) - 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					case 14:
+						return { (38 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				default:
+					break;
+				}
+			}
 		}
 	}
 	return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };

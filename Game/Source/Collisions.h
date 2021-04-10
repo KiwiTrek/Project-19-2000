@@ -16,8 +16,14 @@ public:
 		NONE = -1,
 		AIR,
 		SOLID,
-		PLAYER,
+		DOOR,
+		PUZZLE,
+		OTHER,
+		EVENT,
+		ENEMY_SPAWN,
 		INTERACTABLE,
+		DEBUG,
+		PLAYER,
 		MAX
 	};
 

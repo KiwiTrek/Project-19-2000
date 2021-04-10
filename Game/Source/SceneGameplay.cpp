@@ -77,16 +77,16 @@ bool SceneGameplay::Load()
 
 	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
 
+	app->map->Load("tutorial.tmx");
 	// Initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	// COMBAT
 	combatScene->Load();
 
-	app->render->camera.x = 200;
-	app->render->camera.y = 100;
+	app->render->camera.x = 0;
+	app->render->camera.y = 0;
 
-	app->map->Load("home.tmx");
 	app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
 
 	return false;

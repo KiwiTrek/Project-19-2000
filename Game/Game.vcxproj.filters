@@ -183,9 +183,6 @@
     <ClInclude Include="Source\SceneDevRoom.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Object.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CombatEntity.h">
       <Filter>Entities</Filter>
     </ClInclude>

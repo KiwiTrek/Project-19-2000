@@ -28,6 +28,7 @@ bool SceneTitleScreen::Load()
     titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
     buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
 
+    app->audio->SetMusicVolume(app->audio->auxVolume);
     app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
     app->render->camera.x = 0;
     app->render->camera.y = 0;

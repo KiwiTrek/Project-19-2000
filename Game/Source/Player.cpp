@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "App.h"
+#include "Window.h"
 #include "Textures.h"
 #include "Input.h"
 #include "Audio.h"
@@ -15,7 +16,16 @@
 
 Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 {
-	spawnPos = { 150,150 };
+	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
+	{
+		spawnPos = { 15,90 };
+		spawnPos.x *= app->map->data.tileWidth;
+		spawnPos.y *= app->map->data.tileHeight;
+	}
+	else
+	{
+		spawnPos = { 150,150 };
+	}
 
 	LOG("Init Player");
 
@@ -123,6 +133,7 @@ bool Player::Update(float dt)
 				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
 				currentAnim = &walkingRight;
 				nextPos.x += 3;
+				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.x += 10;
 			}
 			if (app->input->CheckButton("left", KEY_REPEAT))
 			{
@@ -131,6 +142,7 @@ bool Player::Update(float dt)
 				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
 				currentAnim = &walkingLeft;
 				nextPos.x -= 3;
+				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.x -= 10;
 			}
 			if (app->input->CheckButton("down", KEY_REPEAT))
 			{
@@ -139,6 +151,7 @@ bool Player::Update(float dt)
 				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
 				currentAnim = &walkingDown;
 				nextPos.y += 3;
+				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.y += 10;
 			}
 			if (app->input->CheckButton("up", KEY_REPEAT))
 			{
@@ -147,11 +160,18 @@ bool Player::Update(float dt)
 				animFlags = SetBit(animFlags, FlagsAnimation::WALKING);
 				currentAnim = &walkingUp;
 				nextPos.y -= 3;
+				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.y -= 10;
 			}
 		}
 
-		entityRect = app->collisions->ResolveCollisions(collider, nextPos);
+		if (!godMode) entityRect = app->collisions->ResolveCollisions(collider, nextPos);
+		else entityRect = { nextPos.x,nextPos.y,entityRect.w,entityRect.h };
+
 		collider->SetPos(entityRect.x, entityRect.y, entityRect.w, entityRect.h);
+		uint width, height;
+		app->win->GetWindowSize(width, height);
+		app->render->camera.x = -(entityRect.x - (int)width / 2 + entityRect.w / 2);
+		app->render->camera.y = -(entityRect.y - (int)height / 2 + entityRect.h / 2);
 
 		if (animFlags == (1 << FlagsAnimation::DOWN)) currentAnim = &idle;
 		else if (animFlags == (1 << FlagsAnimation::RIGHT)) currentAnim = &idleRight;
