@@ -336,6 +336,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 					case 65:
 						app->map->CleanUp();
 						app->map->Load("home.tmx");
+						app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
 						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { (44 * app->map->data.tileWidth) - 1, (30 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 						break;
@@ -468,10 +469,10 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 					switch (tilePos.y)
 					{
 					case 13:
-						return { (38 * app->map->data.tileWidth) - 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						return { (39 * app->map->data.tileWidth) - 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					case 14:
-						return { (38 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						return { (39 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					default:
 						break;
