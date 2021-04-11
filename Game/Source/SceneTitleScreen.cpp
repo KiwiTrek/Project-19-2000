@@ -241,7 +241,7 @@ bool SceneTitleScreen::Unload()
     app->tex->UnLoad(nooseBG);
     app->tex->UnLoad(titleCard);
     app->gui->CleanUp();
-
+    app->scene->currentButton = nullptr;
     return true;
 }
 

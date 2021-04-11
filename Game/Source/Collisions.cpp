@@ -362,7 +362,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 			{
 				switch (tilePos.x)
 				{
-				case 13:
+				case 12:
 				{
 					return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 					break;
@@ -372,14 +372,16 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					switch (tilePos.y)
 					{
 					case 7:
+						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 						break;
 					case 8:
+						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 						break;
 					case 13:
-						return { (12 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					case 14:
-						return { (12 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					case 36:
 						return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
@@ -387,6 +389,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					default:
 						break;
 					}
+					break;
 				}
 				case 24:
 				{
@@ -406,6 +409,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					switch (tilePos.y)
 					{
 					case 4:
+						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 						break;
 					case 18:
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
@@ -413,12 +417,14 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					default:
 						break;
 					}
+					break;
 				}
 				case 32:
 				{
 					switch (tilePos.y)
 					{
 					case 4:
+						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 						break;
 					case 18:
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
@@ -426,6 +432,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					default:
 						break;
 					}
+					break;
 				}
 				case 33:
 				{
@@ -442,8 +449,10 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					switch (tilePos.y)
 					{
 					case 7:
+						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 						break;
 					case 8:
+						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 						break;
 					case 13:
 						return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
@@ -457,18 +466,33 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					default:
 						break;
 					}
+					break;
 				}
 				case 40:
 				{
-					return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+					switch (tilePos.y)
+					{
+					case 34:
+						return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
 					break;
 				}
 				case 45:
 				{
-					app->map->CleanUp();
-					app->map->Load("tutorial.tmx");
-					app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
-					if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+					switch (tilePos.y)
+					{
+					case 30:
+						app->map->CleanUp();
+						app->map->Load("tutorial.tmx");
+						app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
 					break;
 				}
 				case 52:
@@ -484,6 +508,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					default:
 						break;
 					}
+					break;
 				}
 				default:
 					break;

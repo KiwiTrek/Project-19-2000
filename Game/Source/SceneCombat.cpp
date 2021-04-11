@@ -12,43 +12,6 @@
 
 SceneCombat::SceneCombat()
 {
-	float tmpValue = 0;
-
-	//COMBAT
-	combatTextBox = { 0,0,1280,248 };
-	combatMenuBox = { 305,249,1001,130 };
-	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 34,505,200,60 }, "ATTACK", 40, this);
-	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 234,505,200,60 }, "SKILLS", 40, this);
-	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 434,505,200,60 }, "ITEMS", 40, this);
-	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 634,505,200,60 }, "SPECIAL", 40, this);
-	btnCombatSpecial->state = GuiControlState::DISABLED;
-	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 834,505,200,60 }, "FLEE", 40, this);
-
-	btnCombatSkill1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 36, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 1", 40, this);
-	btnCombatSkill2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 256, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 2", 40, this);
-	btnCombatSkill3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 8, { 476, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 3", 40, this);
-	btnCombatSkill4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 36, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 4", 40, this);
-	btnCombatSkill5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 10, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 5", 40, this);
-	btnCombatSkill6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 6", 40, this);
-
-	btnCombatItem1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 36, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 1", 40, this);
-	btnCombatItem2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 256, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 2", 40, this);
-	btnCombatItem3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 476, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 3", 40, this);
-	btnCombatItem4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 36, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 4", 40, this);
-	btnCombatItem5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 5", 40, this);
-	btnCombatItem6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 6", 40, this);
-
-	ListItem<CombatEntity*>* e = turnOrder.start;
-	while (e != nullptr)
-	{
-		ListItem<CombatEntity*>* eNext = e->next;
-		int i = turnOrder.Find(e->data);
-		delete turnOrder[i];
-		turnOrder.Del(turnOrder.At(i));
-		e = eNext;
-	}
-	turnOrder.Clear();
-
 	flags = 0;
 
 	characterFlags = 0;
@@ -88,6 +51,41 @@ bool SceneCombat::Load()
 
 	//enemy1 = app->entities->CreateEntity(300, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
 	//enemy2 = app->entities->CreateEntity(700, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+
+		//COMBAT
+	combatTextBox = { 0,0,1280,248 };
+	combatMenuBox = { 305,249,1001,130 };
+	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 29, { 34,505,200,60 }, "ATTACK", 40, this);
+	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 30, { 234,505,200,60 }, "SKILLS", 40, this);
+	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 31, { 434,505,200,60 }, "ITEMS", 40, this);
+	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 32, { 634,505,200,60 }, "SPECIAL", 40, this);
+	btnCombatSpecial->state = GuiControlState::DISABLED;
+	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 33, { 834,505,200,60 }, "FLEE", 40, this);
+
+	btnCombatSkill1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 34, { 36, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 1", 40, this);
+	btnCombatSkill2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 35, { 256, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 2", 40, this);
+	btnCombatSkill3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 36, { 476, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 3", 40, this);
+	btnCombatSkill4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 37, { 36, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 4", 40, this);
+	btnCombatSkill5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 38, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 5", 40, this);
+	btnCombatSkill6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 39, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 6", 40, this);
+
+	btnCombatItem1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 40, { 36, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 1", 40, this);
+	btnCombatItem2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 41, { 256, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 2", 40, this);
+	btnCombatItem3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 42, { 476, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 3", 40, this);
+	btnCombatItem4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 43, { 36, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 4", 40, this);
+	btnCombatItem5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 44, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 5", 40, this);
+	btnCombatItem6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 45, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 6", 40, this);
+
+	ListItem<CombatEntity*>* e = turnOrder.start;
+	while (e != nullptr)
+	{
+		ListItem<CombatEntity*>* eNext = e->next;
+		int i = turnOrder.Find(e->data);
+		delete turnOrder[i];
+		turnOrder.Del(turnOrder.At(i));
+		e = eNext;
+	}
+	turnOrder.Clear();
 
 	LOG("%d", characterFlags);
 
@@ -555,6 +553,7 @@ bool SceneCombat::Update(float dt)
 		enemy1 = nullptr;
 		enemy2 = nullptr;
 		enemy3 = nullptr;
+		app->scene->current->combatCooldown = 1.0f;
 		break;
 	}
 	default:
@@ -690,6 +689,7 @@ bool SceneCombat::Draw(Font* dialogueFont)
 
 bool SceneCombat::Unload()
 {
+	// Clean buttons from id 29 to id 45
 	return true;
 }
 
@@ -906,32 +906,32 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 	switch (control->id)
 	{
 		//COMBAT
-	case 1: //ATTACK
+	case 29: //ATTACK
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 0;
 		LOG("Who do you want to attack?");
 		break;
-	case 2: //SKILLS
+	case 30: //SKILLS
 		ResetButtons();
 		btnCombatSkills->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SKILL);
 		break;
-	case 3: //ITEMS
+	case 31: //ITEMS
 		ResetButtons();
 		btnCombatItems->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
 		break;
-	case 4: //SPECIAL
+	case 32: //SPECIAL
 		ResetButtons();
 		btnCombatSpecial->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SPECIAL);
 		break;
-	case 5: //FLEE
+	case 33: //FLEE
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -939,78 +939,78 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		app->scene->current->combat = false;
 		once = true;
 		break;
-	case 6: //SKILL 1
+	case 34: //SKILL 1
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 1;
 		break;
-	case 7: //SKILL 2
+	case 35: //SKILL 2
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 2;
 		break;
-	case 8: //SKILL 3
+	case 36: //SKILL 3
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 3;
 		break;
-	case 9: //SKILL 4
+	case 37: //SKILL 4
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 4;
 		break;
-	case 10: //SKILL 5
+	case 38: //SKILL 5
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 5;
 		break;
-	case 11: //SKILL 6
+	case 39: //SKILL 6
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 6;
 		break;
-	case 12: //ITEM 1
+	case 40: //ITEM 1
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 1");
 		break;
-	case 13: //ITEM 2
+	case 41: //ITEM 2
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 2");
 		break;
-	case 14: //ITEM 3
+	case 42: //ITEM 3
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 3");
 		break;
-	case 15: //ITEM 4
+	case 43: //ITEM 4
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 4");
 		break;
-	case 16: //ITEM 5
+	case 44: //ITEM 5
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 5");
 		break;
-	case 17: //ITEM 6
+	case 45: //ITEM 6
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
