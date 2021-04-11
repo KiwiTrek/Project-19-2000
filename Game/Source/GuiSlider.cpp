@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Fonts.h"
+#include "SceneManager.h"
 
 #include "Log.h"
 
@@ -97,6 +98,60 @@ bool GuiSlider::Update(float dt)
 	}
 
 	return false;
+}
+bool GuiSlider::Update(float dt, int minId, int maxId)
+{
+	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
+	{
+		if (app->scene->currentButton->next != nullptr && app->input->CheckButton("down", KEY_DOWN))
+		{
+			if (app->scene->currentButton->next->data->id <= maxId)
+			{
+				app->scene->currentButton->data->state = GuiControlState::NORMAL;
+				app->scene->currentButton = app->scene->currentButton->next;
+				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
+				app->audio->PlayFx(hover);
+			}
+		}
+		else if (app->scene->currentButton->prev != nullptr && app->input->CheckButton("up", KEY_DOWN))
+		{
+			if (app->scene->currentButton->prev->data->id >= minId)
+			{
+				app->scene->currentButton->data->state = GuiControlState::NORMAL;
+				app->scene->currentButton = app->scene->currentButton->prev;
+				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
+				app->audio->PlayFx(hover);
+			}
+		}
+		if (app->input->CheckButton("right", KEY_REPEAT))
+		{
+			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
+				app->audio->PlayFx(click);
+			app->scene->currentButton->data->state = GuiControlState::PRESSED;
+			bounds.x += 2;
+			NotifyObserver();
+		}
+		if (app->input->CheckButton("left", KEY_REPEAT))
+		{
+			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
+				app->audio->PlayFx(click);
+			app->scene->currentButton->data->state = GuiControlState::PRESSED;
+			bounds.x -= 2;
+			NotifyObserver();
+		}
+
+	}
+
+	if (bounds.x < limits.x)
+	{
+		bounds.x = limits.x;
+	}
+	if ((bounds.x + bounds.w) >= (limits.x + limits.w))
+	{
+		bounds.x = limits.x + limits.w - bounds.w;
+	}
+
+	return true;
 }
 
 bool GuiSlider::Draw(int cPosX, int cPosY)

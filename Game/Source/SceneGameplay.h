@@ -37,8 +37,6 @@ public:
 
     bool Unload();
 
-    void ResetButtons();
-
     // Declare on mouse click event
     bool OnGuiMouseClickEvent(GuiControl* control);
 

@@ -6,6 +6,8 @@
 #include "Textures.h"
 #include "GuiManager.h"
 #include "Window.h"
+#include "List.h"
+#include "SceneManager.h"
 
 #include "EntityManager.h"
 
@@ -43,6 +45,7 @@ bool SceneTitleScreen::Load()
     btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 400, 300, 60 }, "CONTINUE", 40, this);
     btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 500, 300, 60 }, "OPTIONS", 40, this);
     btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 600, 300, 60 }, "EXIT", 40, this);
+    /*if (app->input->GetControllerName() != "unplugged") btnStart->state = GuiControlState::FOCUSED;*/
 
     //OPTIONS
     sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
@@ -61,7 +64,7 @@ bool SceneTitleScreen::Load()
     boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", 40, this);
     btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 180, 600, 200, 60 }, "CONTROLS", 35, this);
     btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 10, { 800, 600, 200, 60 }, "BACK", 40, this);
-
+    
     //CONTROLS
     btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 180, 120, 300, 60 }, "SELECT", 40, this);
     btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 200, 300, 60 }, "CANCEL", 40, this);
@@ -79,6 +82,8 @@ bool SceneTitleScreen::Load()
     btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 520, 300, 60 }, "LEFT", 40, this);
     btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 600, 300, 60 }, "RIGHT", 40, this);
 
+    app->scene->currentButton = app->gui->controls.start;
+
     return false;
 }
 
@@ -87,39 +92,88 @@ bool SceneTitleScreen::Update(float dt)
     if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
     noose.Update(dt);
 
-    if ((flags & 1<<Flags::OPTIONS) == 0 && (flags & 1<<Flags::CONTROLS) == 0)
+    ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
+    while (gamepadControls->next != nullptr)
     {
-        btnStart->Update(dt);
-        btnContinue->Update(dt);
-        btnOptions->Update(dt);
-        btnExit->Update(dt);
+        if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
+        {
+            usingGamepad = true;
+            break;
+        }
+
+        gamepadControls = gamepadControls->next;
     }
-    else if ((flags & 1 << Flags::CONTROLS) == 0)
+    int tmpX = 0, tmpY = 0;
+    app->input->GetMouseMotion(tmpX, tmpY);
+    if (((tmpX > 2 || tmpX < -2) || (tmpY > 2 ||tmpY < -2)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+        usingGamepad = false;
+
+    if (usingGamepad)
     {
-        sldrVolume->Update(dt);
-        sldrFx->Update(dt);
-        boxFullScreen->Update(dt);
-        boxVSync->Update(dt);
-        btnControls->Update(dt);
-        btnBack->Update(dt);
+        if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+        {
+            if (changeMenu)
+            {
+                app->scene->currentButton = app->gui->controls.At(0);
+                changeMenu = false;
+            }
+            app->scene->currentButton->data->Update(dt, 1, 4);
+        }
+        else if ((flags & 1 << Flags::CONTROLS) == 0)
+        {
+            if (changeMenu)
+            {
+                app->scene->currentButton = app->gui->controls.At(4);
+                changeMenu = false;
+            }
+            app->scene->currentButton->data->Update(dt, 5, 10);
+        }
+        else
+        {
+            if (changeMenu)
+            {
+                app->scene->currentButton = app->gui->controls.At(10);
+                changeMenu = false;
+            }
+            app->scene->currentButton->data->Update(dt, 11, 25);
+        }
     }
     else
     {
-        btnKeySelect->Update(dt);
-        btnKeyCancel->Update(dt);
-        btnKeyMenu->Update(dt);
-        btnKeyUp->Update(dt);
-        btnKeyDown->Update(dt);
-        btnKeyLeft->Update(dt);
-        btnKeyRight->Update(dt);
-        btnBack2->Update(dt);
-        btnPadSelect->Update(dt);
-        btnPadCancel->Update(dt);
-        btnPadMenu->Update(dt);
-        btnPadUp->Update(dt);
-        btnPadDown->Update(dt);
-        btnPadLeft->Update(dt);
-        btnPadRight->Update(dt);
+        if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+        {
+            btnStart->Update(dt);
+            btnContinue->Update(dt);
+            btnOptions->Update(dt);
+            btnExit->Update(dt);
+        }
+        else if ((flags & 1 << Flags::CONTROLS) == 0)
+        {
+            sldrVolume->Update(dt);
+            sldrFx->Update(dt);
+            boxFullScreen->Update(dt);
+            boxVSync->Update(dt);
+            btnControls->Update(dt);
+            btnBack->Update(dt);
+        }
+        else
+        {
+            btnKeySelect->Update(dt);
+            btnKeyCancel->Update(dt);
+            btnKeyMenu->Update(dt);
+            btnKeyUp->Update(dt);
+            btnKeyDown->Update(dt);
+            btnKeyLeft->Update(dt);
+            btnKeyRight->Update(dt);
+            btnBack2->Update(dt);
+            btnPadSelect->Update(dt);
+            btnPadCancel->Update(dt);
+            btnPadMenu->Update(dt);
+            btnPadUp->Update(dt);
+            btnPadDown->Update(dt);
+            btnPadLeft->Update(dt);
+            btnPadRight->Update(dt);
+        }
     }
 
     //LOG("%d", flags);
@@ -174,7 +228,7 @@ bool SceneTitleScreen::Draw()
         btnPadLeft->Draw();
         btnPadRight->Draw();
     }
-
+    if (usingGamepad) app->scene->currentButton->data->Draw();
     //char test[64] = { 0 };
     //sprintf_s(test, 64, "SCORE: %03i", 56);
     //app->render->DrawText(dialogueFont, test, 700, 640, 64, 2, { 0, 255, 255, 255 });
@@ -186,6 +240,7 @@ bool SceneTitleScreen::Unload()
 {
     app->tex->UnLoad(nooseBG);
     app->tex->UnLoad(titleCard);
+    app->gui->CleanUp();
 
     return true;
 }
@@ -206,6 +261,8 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 3: //OPTIONS
         flags = SetBit(flags, Flags::OPTIONS);
+        changeMenu = true;
+        app->gui->ResetButtons();
         break;
     case 4: //EXIT
         app->exitRequest = true;
@@ -226,9 +283,13 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 9: //CONTROLS
         flags = SetBit(flags, Flags::CONTROLS);
+        changeMenu = true;
+        app->gui->ResetButtons();
         break;
     case 10: //BACK
         flags = ClearBit(flags, Flags::OPTIONS);
+        changeMenu = true;
+        app->gui->ResetButtons();
         break;
     case 11: //KEY SELECT
         break;
@@ -246,6 +307,8 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 18: //BACK 2
         flags = ClearBit(flags, Flags::CONTROLS);
+        changeMenu = true;
+        app->gui->ResetButtons();
         break;
     case 19: //PAD SELECT
         break;

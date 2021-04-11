@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Fonts.h"
+#include "SceneManager.h"
 
 GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::CHECKBOX, id)
 {
@@ -65,6 +66,45 @@ bool GuiCheckBox::Update(float dt)
 	}
 
 	return false;
+}
+
+bool GuiCheckBox::Update(float dt, int minId, int maxId)
+{
+	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
+	{
+		if (app->scene->currentButton->next != nullptr && app->input->CheckButton("down", KEY_DOWN))
+		{
+			if (app->scene->currentButton->next->data->id <= maxId)
+			{
+				app->scene->currentButton->data->state = GuiControlState::NORMAL;
+				app->scene->currentButton = app->scene->currentButton->next;
+				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
+				app->audio->PlayFx(hover);
+			}
+		}
+		else if (app->scene->currentButton->prev != nullptr && app->input->CheckButton("up", KEY_DOWN))
+		{
+			if (app->scene->currentButton->prev->data->id >= minId)
+			{
+				app->scene->currentButton->data->state = GuiControlState::NORMAL;
+				app->scene->currentButton = app->scene->currentButton->prev;
+				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
+				app->audio->PlayFx(hover);
+			}
+		}
+		if (app->input->CheckButton("select", KEY_REPEAT))
+		{
+			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
+				app->audio->PlayFx(click);
+			app->scene->currentButton->data->state = GuiControlState::PRESSED;
+		}
+		if (app->input->CheckButton("select", KEY_UP))
+		{
+			checked = !checked;
+			NotifyObserver();
+		}
+	}
+	return true;
 }
 
 bool GuiCheckBox::Draw(int cPosX, int cPosY)

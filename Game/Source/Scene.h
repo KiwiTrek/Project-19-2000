@@ -79,6 +79,8 @@ public:
     SceneType currentScene;
     bool combat;
     CombatStateType combatState;
+
+    bool usingGamepad = true;
 };
 
 #endif // __SCENE_H__

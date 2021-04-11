@@ -24,6 +24,7 @@ enum class GuiControlState
 	PRESSED,
 };
 
+
 class GuiControl
 {
 public:
@@ -46,6 +47,10 @@ public:
 
 	// Called each loop iteration
 	virtual bool Update(float dt)
+	{
+		return true;
+	}
+	virtual bool Update(float dt, int minId, int maxId)
 	{
 		return true;
 	}

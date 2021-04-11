@@ -34,6 +34,8 @@ public:
 public:
 	Scene* current;
 
+	ListItem<GuiControl*>* currentButton = nullptr;
+
 	bool onTransition;
 	float transitionAlpha;
 private:

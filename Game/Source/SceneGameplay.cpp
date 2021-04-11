@@ -13,8 +13,23 @@
 
 SceneGameplay::SceneGameplay()
 {
-	float tmpValue = 0;
+	//COMBAT
+	combatScene = new SceneCombat();
+}
 
+SceneGameplay::~SceneGameplay()
+{}
+
+bool SceneGameplay::Load()
+{
+	app->entities->Enable();
+
+	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
+	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
+
+	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
+
+	float tmpValue = 0;
 	//MENU
 	menuBox = { 324,0,692,540 };
 	menuCharacterBox = { 324,539,204,135 };
@@ -60,22 +75,6 @@ SceneGameplay::SceneGameplay()
 	btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 440, 300, 60 }, "DOWN", 40, this);
 	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 520, 300, 60 }, "LEFT", 40, this);
 	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 800, 600, 300, 60 }, "RIGHT", 40, this);
-
-	//COMBAT
-	combatScene = new SceneCombat();
-}
-
-SceneGameplay::~SceneGameplay()
-{}
-
-bool SceneGameplay::Load()
-{
-	app->entities->Enable();
-
-	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
-	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
-
-	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
 
 	app->map->Load("tutorial.tmx");
 	// Initialize player
@@ -178,7 +177,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
-		ResetButtons();
+		app->gui->ResetButtons();
 		flags = ToggleBit(flags, Flags::MENU);
 	}
 	return true;
@@ -299,22 +298,13 @@ bool SceneGameplay::Unload()
 	// TODO: Unload all resources
 	combatScene->Unload();
 	app->entities->Disable();
+	app->gui->CleanUp();
 
 	return false;
 }
 
 
-void SceneGameplay::ResetButtons()
-{
-	btnInventory->state = GuiControlState::NORMAL;
-	btnEquipment->state = GuiControlState::NORMAL;
-	btnSkills->state = GuiControlState::NORMAL;
-	btnSkillTree->state = GuiControlState::NORMAL;
-	btnEquipment->state = GuiControlState::NORMAL;
-	btnStats->state = GuiControlState::NORMAL;
-	btnOptions->state = GuiControlState::NORMAL;
 
-}
 
 //----------------------------------------------------------
 // Manage GUI events for this screen
@@ -325,37 +315,37 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	{
 	//MENU
 	case 1: //INVENTORY
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnInventory->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::INVENTORY);
 		break;
 	case 2: //SKILLS
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnSkills->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::SKILLS);
 		break;
 	case 3: //SKILL TREE
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnSkillTree->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::SKILL_TREE);
 		break;
 	case 4: //EQUIPMENT
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnEquipment->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::EQUIPMENT);
 		break;
 	case 5: //STATS
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnStats->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::STATS);
 		break;
 	case 6: //OPTIONS
-		ResetButtons();
+		app->gui->ResetButtons();
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::OPTIONS);
 		break;

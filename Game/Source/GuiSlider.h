@@ -14,6 +14,7 @@ public:
 
 	// Called each loop iteration
 	bool Update(float dt);
+	bool Update(float dt, int minId, int maxId);
 
 	// Blit
 	bool Draw(int cPosX = 0, int cPosY = 0);

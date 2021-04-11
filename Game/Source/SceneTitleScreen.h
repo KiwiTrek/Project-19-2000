@@ -30,12 +30,16 @@ public:
     // Declare on mouse click event
     bool OnGuiMouseClickEvent(GuiControl* control);
 
+
 private:
 
     SDL_Texture* nooseBG;
     SDL_Texture* titleCard;
 
     Animation noose;
+
+ 
+    bool changeMenu = false;
 
     //MAIN MENU
     GuiButton* btnStart;

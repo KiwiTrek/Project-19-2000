@@ -101,6 +101,16 @@ void GuiManager::DestroyGuiControl(GuiControl* entity)
 	controls.Del(controls.At(i));
 }
 
+void GuiManager::ResetButtons()
+{
+	ListItem<GuiControl*>* currentControlList = controls.start;
+	while (currentControlList->next != nullptr)
+	{
+		currentControlList->data->state = GuiControlState::NORMAL;
+		currentControlList = currentControlList->next;
+	}
+}
+
 bool GuiManager::CleanUp()
 {
 	ListItem<GuiControl*>* e = controls.start;

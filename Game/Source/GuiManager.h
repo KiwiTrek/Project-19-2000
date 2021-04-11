@@ -31,6 +31,8 @@ public:
 	GuiControl* CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits = 0);
 	void DestroyGuiControl(GuiControl* entity);
 
+	void ResetButtons();
+
 public:
 	SString folderTexture;
 	SString folderAudio;

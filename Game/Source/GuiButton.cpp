@@ -5,6 +5,8 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Fonts.h"
+#include "SceneManager.h"
+
 
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -67,9 +69,51 @@ bool GuiButton::Update(float dt)
 		{
 			state = GuiControlState::NORMAL;
 		}
+		
 	}
 
 	return false;
+}
+bool GuiButton::Update(float dt, int minId, int maxId)
+{
+	this->state = GuiControlState::FOCUSED;
+
+	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
+	{
+		if (app->scene->currentButton->next != nullptr && app->input->CheckButton("down", KEY_DOWN))
+		{
+			if (app->scene->currentButton->next->data->id <= maxId)
+			{
+				app->scene->currentButton->data->state = GuiControlState::NORMAL;
+				app->scene->currentButton = app->scene->currentButton->next;
+				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
+				app->audio->PlayFx(hover);
+			}
+		}
+		else if (app->scene->currentButton->prev != nullptr && app->input->CheckButton("up", KEY_DOWN))
+		{
+			if (app->scene->currentButton->prev->data->id >= minId)
+			{
+				app->scene->currentButton->data->state = GuiControlState::NORMAL;
+				app->scene->currentButton = app->scene->currentButton->prev;
+				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
+				app->audio->PlayFx(hover);
+			}
+		}
+		if (app->input->CheckButton("select", KEY_REPEAT))
+		{
+			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
+				app->audio->PlayFx(click);
+			app->scene->currentButton->data->state = GuiControlState::PRESSED;
+		}
+		if (app->input->CheckButton("select", KEY_UP))
+		{
+			NotifyObserver();
+		}
+	}
+
+
+	return true;
 }
 
 bool GuiButton::Draw(int cPosX, int cPosY)
