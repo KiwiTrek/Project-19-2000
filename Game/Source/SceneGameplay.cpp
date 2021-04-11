@@ -81,7 +81,7 @@ bool SceneGameplay::Load()
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	// COMBAT
-	combatScene->Load();
+	//combatScene->Load();
 
 	app->render->camera.x = 0;
 	app->render->camera.y = 0;

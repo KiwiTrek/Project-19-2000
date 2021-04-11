@@ -3,6 +3,16 @@
 
 #include "Entity.h"
 
+class SaveState
+{
+public:
+	SaveState(Stats stats, int id) : stats(stats), id(id)
+	{}
+
+public:
+	Stats stats;
+	int id;
+};
 
 class Player : public Entity
 {
@@ -24,6 +34,9 @@ public:
 
 	// Blit
 	bool Draw();
+
+public:
+	List<SaveState*> combatSaveStates;
 
 private:
 	bool godMode = false;

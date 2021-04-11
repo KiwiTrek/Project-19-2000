@@ -95,7 +95,7 @@ bool SceneCombat::Load()
 bool SceneCombat::Update(float dt)
 {
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) characterSelected = !characterSelected;
-
+	LOG("%d", turnOrder.Count());
 	switch (combatState)
 	{
 	case COMBAT_START:
@@ -540,14 +540,10 @@ bool SceneCombat::Update(float dt)
 		ListItem<CombatEntity*>* e = turnOrder.start;
 		while (e != nullptr)
 		{
-			ListItem<CombatEntity*>* eNext = nullptr;
-			if (!IsCharacter(e->data))
-			{
-				eNext = e->next;
-				e->data->pendingToDelete = true;
-				app->entities->DestroyEntity(e->data);
-				turnOrder.Del(e);
-			}
+			ListItem<CombatEntity*>* eNext = e->next;
+			e->data->pendingToDelete = true;
+			app->entities->DestroyEntity(e->data);
+			turnOrder.Del(e);
 			e = eNext;
 		}
 		enemy1 = nullptr;
