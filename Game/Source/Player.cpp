@@ -124,7 +124,7 @@ bool Player::Update(float dt)
 		currentAnim->Update(dt);
 		nextPos = { entityRect.x, entityRect.y };
 
-		if (!inMenu)
+		if (!inMenu || !app->scene->current->combat)
 		{
 			if (app->input->CheckButton("right", KEY_REPEAT))
 			{
@@ -164,7 +164,7 @@ bool Player::Update(float dt)
 			}
 		}
 
-		if (!godMode) entityRect = app->collisions->ResolveCollisions(collider, nextPos);
+		if (!godMode) entityRect = app->collisions->ResolveCollisions(collider, nextPos,dt);
 		else entityRect = { nextPos.x,nextPos.y,entityRect.w,entityRect.h };
 
 		collider->SetPos(entityRect.x, entityRect.y, entityRect.w, entityRect.h);

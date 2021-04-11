@@ -3,6 +3,11 @@
 #include "App.h"
 #include "Map.h"
 #include "Audio.h"
+#include <time.h>
+#include "SceneManager.h"
+#include "SceneGameplay.h"
+#include "SceneDevRoom.h"
+#include "SceneCombat.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -126,6 +131,8 @@ Collisions::Collisions()
 	matrix[Collider::Type::PLAYER][Collider::Type::DEBUG] = false;
 	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
 
+	srand(time(NULL));
+
 }
 
 Collisions::~Collisions()
@@ -243,7 +250,7 @@ Collider* Collisions::AddCollider(SDL_Rect rect, Collider::Type type, Module* li
 }
 
 
-SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
+SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,float dt)
 {
 	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
@@ -268,7 +275,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 			{
 				return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 			}
-			return ResolveCollisions(collider, nextFrame);
+			return ResolveCollisions(collider, nextFrame,dt);
 		}
 		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
 			|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::DOOR)
@@ -483,6 +490,38 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame)
 				}
 			}
 		}
+		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::ENEMY_SPAWN
+		|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
+		&& collider->Intersects(tileRect) && !app->scene->current->combat)
+		{
+
+		if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
+		if (app->scene->current->combatCooldown <= 0)
+		{
+
+			int e = rand() % 100 + 1;
+			if (e <= 30)
+			{
+				app->scene->current->combat = true;
+				//combatScene->Load();
+				if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+				{
+					SceneGameplay* s = (SceneGameplay*)app->scene->current;
+					s->enteringCombat = true;
+					s->combatScene->Load();
+				}
+				else if (app->scene->current->currentScene == SceneType::DEV_ROOM)
+				{
+					SceneDevRoom* s = (SceneDevRoom*)app->scene->current;
+					s->enteringCombat = true;
+					s->combatScene->Load();
+				}
+			}
+			else app->scene->current->combatCooldown = 1.0f;
+
+		}
+		}
+
 	}
 	return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 }

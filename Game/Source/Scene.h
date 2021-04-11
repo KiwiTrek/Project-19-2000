@@ -78,6 +78,7 @@ public:
     SceneType nextScene;
     SceneType currentScene;
     bool combat;
+    float combatCooldown;
     CombatStateType combatState;
 
     bool usingGamepad = true;

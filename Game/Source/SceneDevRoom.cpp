@@ -31,6 +31,8 @@ bool SceneDevRoom::Load()
 
 	app->audio->StopMusic();
 
+	enteringCombat = false;
+
 	return false;
 }
 
@@ -40,7 +42,14 @@ bool SceneDevRoom::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) combat = !combat;
 	// L02: DONE 3: Request Load / Save when pressing L/S
 
-	if (combat) combatScene->Update(dt);
+	if (combat)
+	{
+		if (enteringCombat) {
+			enteringCombat = false;
+			combatScene->SpawnEnemies();
+		}
+		combatScene->Update(dt);
+	}
 
 	return true;
 }

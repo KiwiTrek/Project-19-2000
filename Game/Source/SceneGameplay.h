@@ -40,6 +40,12 @@ public:
     // Declare on mouse click event
     bool OnGuiMouseClickEvent(GuiControl* control);
 
+public:
+
+    //COMBAT
+    SceneCombat* combatScene;
+    bool enteringCombat;
+
 private:
 
     Entity* player = nullptr;
@@ -80,9 +86,6 @@ private:
     GuiButton* btnPadDown;
     GuiButton* btnPadLeft;
     GuiButton* btnPadRight;
-
-    //COMBAT
-    SceneCombat* combatScene;
 
     //FONTS
     Font* dialogueFont = nullptr;

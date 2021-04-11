@@ -86,8 +86,8 @@ bool SceneCombat::Load()
 	grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 	grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
 
-	enemy1 = app->entities->CreateEntity(300, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
-	enemy2 = app->entities->CreateEntity(700, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+	//enemy1 = app->entities->CreateEntity(300, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+	//enemy2 = app->entities->CreateEntity(700, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
 
 	LOG("%d", characterFlags);
 
@@ -536,9 +536,27 @@ bool SceneCombat::Update(float dt)
 	}
 	break;
 	case COMBAT_END:
+	{
 		// cool animation as a victory thing and change back to gameplay
 		app->scene->current->combat = false;
+		ListItem<CombatEntity*>* e = turnOrder.start;
+		while (e != nullptr)
+		{
+			ListItem<CombatEntity*>* eNext = nullptr;
+			if (!IsCharacter(e->data))
+			{
+				eNext = e->next;
+				e->data->pendingToDelete = true;
+				app->entities->DestroyEntity(e->data);
+				turnOrder.Del(e);
+			}
+			e = eNext;
+		}
+		enemy1 = nullptr;
+		enemy2 = nullptr;
+		enemy3 = nullptr;
 		break;
+	}
 	default:
 		break;
 	}
@@ -812,6 +830,64 @@ int SceneCombat::EnemyTarget()
 	if (grandpa.character != nullptr) c++;
 	return  rand() % c + 1;
 }
+
+
+void SceneCombat::SpawnEnemies()
+{
+	srand(time(NULL));
+	int e = rand() % 3 + 1;
+	for (int i = 0; i < e; i++) {
+		iPoint pos;
+		Entity* currentEnemy;
+		pos.y = 300;
+		switch (e)
+		{
+		case 1:
+			pos.x = 576;
+			currentEnemy = enemy1;
+			break;
+		case 2:
+			if (i == 0)
+			{
+				pos.x = 341;
+				currentEnemy = enemy1;
+			}
+			else
+			{
+				pos.x = 810;
+				currentEnemy = enemy2;
+			}
+
+			break;
+		case 3:
+			if (i == 0)
+			{
+				pos.x = 224;
+				currentEnemy = enemy1;
+			}
+			else if (i == 1)
+			{
+				pos.x = 576;
+				currentEnemy = enemy2;
+			}
+			else
+			{
+				pos.x = 928;
+				currentEnemy = enemy3;
+			}
+			break;
+		default:
+			break;
+		}
+
+
+		int type = rand() % 2 + 1;
+		if (type == 1) { currentEnemy = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60)); }
+		else if (type == 2) { currentEnemy = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90)); }
+
+	}
+}
+
 
 void SceneCombat::ResetButtons()
 {

@@ -62,6 +62,8 @@ public:
 
     void Damage(int index, CombatEntity* target, bool isMagic = false);
 
+    void SpawnEnemies();
+
     void ResetButtons();
 
     // Declare on mouse click event
@@ -96,6 +98,7 @@ private:
     CombatCharacter* currentChar;
     Entity* enemy1;
     Entity* enemy2;
+    Entity* enemy3;
 
     int combatMenuFlags;
     GuiButton* btnCombatAttack;

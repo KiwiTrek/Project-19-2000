@@ -98,9 +98,20 @@ bool SceneGameplay::Update(float dt)
 	//if (input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) app->SaveGameRequest();
 
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) combat = !combat;
-
-	if (combat) combatScene->Update(dt);
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		combat = true;
+		enteringCombat = true;
+		combatScene->Load();
+	}
+	if (combat)
+	{
+		if (enteringCombat) {
+			enteringCombat = false;
+			combatScene->SpawnEnemies();
+		}
+		combatScene->Update(dt);
+	}
 	else
 	{
 		UpdatePauseMenu(dt);
