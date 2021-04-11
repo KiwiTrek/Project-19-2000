@@ -91,6 +91,7 @@ private:
     bool finishedAction;
     bool hasTicked;
     int attackSelected;
+    bool once;
 
     CombatCharacter* currentChar;
     Entity* enemy1;
@@ -102,6 +103,18 @@ private:
     GuiButton* btnCombatItems;
     GuiButton* btnCombatSpecial;
     GuiButton* btnCombatFlee;
+    GuiButton* btnCombatSkill1;
+    GuiButton* btnCombatSkill2;
+    GuiButton* btnCombatSkill3;
+    GuiButton* btnCombatSkill4;
+    GuiButton* btnCombatSkill5;
+    GuiButton* btnCombatSkill6;
+    GuiButton* btnCombatItem1;
+    GuiButton* btnCombatItem2;
+    GuiButton* btnCombatItem3;
+    GuiButton* btnCombatItem4;
+    GuiButton* btnCombatItem5;
+    GuiButton* btnCombatItem6;
 };
 
 #endif // __SCENECOMBAT_H__

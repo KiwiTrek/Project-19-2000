@@ -17,11 +17,26 @@ SceneCombat::SceneCombat()
 	//COMBAT
 	combatTextBox = { 0,0,1280,248 };
 	combatMenuBox = { 305,249,1001,130 };
-	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 29, { 34,505,200,60 }, "ATTACK", 40, this);
-	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 30, { 234,505,200,60 }, "SKILLS", 40, this);
-	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 31, { 434,505,200,60 }, "ITEMS", 40, this);
-	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 32, { 634,505,200,60 }, "SPECIAL", 40, this);
-	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 33, { 834,505,200,60 }, "FLEE", 40, this);
+	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 34,505,200,60 }, "ATTACK", 40, this);
+	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 234,505,200,60 }, "SKILLS", 40, this);
+	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 434,505,200,60 }, "ITEMS", 40, this);
+	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 634,505,200,60 }, "SPECIAL", 40, this);
+	btnCombatSpecial->state = GuiControlState::DISABLED;
+	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 834,505,200,60 }, "FLEE", 40, this);
+
+	btnCombatSkill1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 36, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 1", 40, this);
+	btnCombatSkill2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 256, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 2", 40, this);
+	btnCombatSkill3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 8, { 476, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "skill 3", 40, this);
+	btnCombatSkill4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 36, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 4", 40, this);
+	btnCombatSkill5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 10, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 5", 40, this);
+	btnCombatSkill6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "skill 6", 40, this);
+
+	btnCombatItem1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 36, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 1", 40, this);
+	btnCombatItem2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 256, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 2", 40, this);
+	btnCombatItem3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 476, app->render->camera.h - combatMenuBox.h - 25,200,60 }, "item 3", 40, this);
+	btnCombatItem4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 36, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 4", 40, this);
+	btnCombatItem5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 5", 40, this);
+	btnCombatItem6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 6", 40, this);
 
 	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
@@ -55,6 +70,7 @@ bool SceneCombat::Load()
 	combatState = CombatStateType::COMBAT_START;
 	attackSelected = -1;
 	combatMenuFlags = 0;
+	once = true;
 
 	currentChar = &mainChar;
 	mainChar.box = { 1280,0,204,190 };
@@ -141,7 +157,11 @@ bool SceneCombat::Update(float dt)
 			if (IsCharacter(currentEntity->data))													// CHARACTER
 			{
 				//WAIT FOR PLAYER INPUT
-				characterSelected = true;						//should delete eventually
+				if (once) //i think we should use the flags menu to turn this true only when there are no "main buttons" selected
+				{
+					once = false;
+					characterSelected = true;						//should delete eventually
+				}
 
 				//player should decide what to do here based on the buttons (guiclickevent)
 				//LOG("%s's turn!\n", currentEntity->data->name.GetString());
@@ -157,23 +177,8 @@ bool SceneCombat::Update(float dt)
 						{
 							currentEntity->data->isTaunted = false;
 							target = currentEntity->data->tauntedBy;
+							attackSelected = 0;
 						}
-
-						//tick down buffs and debuffs
-						//ListItem<Attack*>* a = currentEntity->data->attackPool.start;												//probaby think of something cuz this will get messy as we implement more enemies
-						//while (a != nullptr)
-						//{
-						//	if (a->data->turns > 0)
-						//	{
-						//		a->data->turns--;
-						//		if (a->data->attackName == "10% debuff" && a->data->turns == 0)
-						//		{
-						//			currentEntity->data->stats.pDef += a->data->stat1 / 10;
-						//			currentEntity->data->stats.mDef += a->data->stat2 / 10;
-						//		}
-						//	}
-						//	a = a->next;
-						//}
 
 						if (attackSelected == -1)
 						{
@@ -186,11 +191,33 @@ bool SceneCombat::Update(float dt)
 
 							if (target != nullptr)
 							{
-								Damage(0, target);
-								//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);							//probably create a function that attacks since these lines will be repeated many many times
-								////dialogue that X character does Y attack to Z enemy
-								//LOG("damage attack to %s!\n", target->name.GetString());
-								//target->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - target->stats.pDef);
+								switch (attackSelected)
+								{
+								case 0: //attack
+									Damage(0, target);
+									break;
+									//case 1: //skill 1
+									//	LOG("skill 1");
+									//	break;
+									//case 2: //skill 2
+									//	LOG("skill 2");
+									//	break;
+									//case 3: //skill 3
+									//	LOG("skill 3");
+									//	break;
+									//case 4: //skill 4
+									//	LOG("skill 4");
+									//	break;
+									//case 5: //skill 5
+									//	LOG("skill 5");
+									//	break;
+									//case 6: //skill 6
+									//	LOG("skill 6");
+									//	break;
+								default:
+									break;
+								}
+								attackSelected = -1;
 								target = nullptr;
 								targetAttack = false;
 								finishedAction = true;
@@ -200,17 +227,34 @@ bool SceneCombat::Update(float dt)
 						{
 							switch (attackSelected)
 							{
-								//case 0: //attack
-								//	break;
 							case 1: //skill 1
+								LOG("skill 1");
 								break;
 							case 2: //skill 2
+								LOG("skill 2");
+								break;
+							case 3: //skill 3
+								LOG("skill 3");
+								break;
+							case 4: //skill 4
+								LOG("skill 4");
+								break;
+							case 5: //skill 5
+								LOG("skill 5");
+								break;
+							case 6: //skill 6
+								LOG("skill 6");
 								break;
 							default:
 								break;
 							}
+							attackSelected = -1;
+							finishedAction = true;
 						}
 					}
+					else
+						finishedAction = true;
+
 					break;
 				case EntityId::VIOLENT:
 					currentChar = &grandpa;
@@ -221,23 +265,8 @@ bool SceneCombat::Update(float dt)
 						{
 							currentEntity->data->isTaunted = false;
 							target = currentEntity->data->tauntedBy;
+							attackSelected = 0;
 						}
-
-						//tick down buffs and debuffs
-						//ListItem<Attack*>* a = currentEntity->data->attackPool.start;
-						//while (a != nullptr)
-						//{
-						//	if (a->data->turns > 0)
-						//	{
-						//		a->data->turns--;
-						//		if (a->data->attackName == "10% debuff" && a->data->turns == 0)
-						//		{
-						//			currentEntity->data->stats.pDef += a->data->stat1 / 10;
-						//			currentEntity->data->stats.mDef += a->data->stat2 / 10;
-						//		}
-						//	}
-						//	a = a->next;
-						//}
 
 						if (attackSelected == -1)
 						{
@@ -250,11 +279,33 @@ bool SceneCombat::Update(float dt)
 
 							if (target != nullptr)
 							{
-								Damage(0, target);
-								//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-								////dialogue that X character does Y attack to Z enemy
-								//LOG("damage attack to %s!\n", target->name.GetString());
-								//target->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - target->stats.pDef);
+								switch (attackSelected)
+								{
+								case 0: //attack
+									Damage(0, target);
+									break;
+								//case 1: //skill 1
+								//	LOG("skill 1");
+								//	break;
+								//case 2: //skill 2
+								//	LOG("skill 2");
+								//	break;
+								//case 3: //skill 3
+								//	LOG("skill 3");
+								//	break;
+								//case 4: //skill 4
+								//	LOG("skill 4");
+								//	break;
+								//case 5: //skill 5
+								//	LOG("skill 5");
+								//	break;
+								//case 6: //skill 6
+								//	LOG("skill 6");
+								//	break;
+								default:
+									break;
+								}
+								attackSelected = -1;
 								target = nullptr;
 								targetAttack = false;
 								finishedAction = true;
@@ -264,17 +315,40 @@ bool SceneCombat::Update(float dt)
 						{
 							switch (attackSelected)
 							{
-								//case 0: //attack
-								//	break;
 							case 1: //skill 1
+								LOG("skill 1");
 								break;
 							case 2: //skill 2
+								LOG("skill 2");
+								break;
+							case 3: //skill 3
+								LOG("skill 3");
+								break;
+							case 4: //skill 4
+								LOG("skill 4");
+								break;
+							case 5: //skill 5
+								LOG("skill 5");
+								break;
+							case 6: //skill 6
+								LOG("skill 6");
 								break;
 							default:
 								break;
 							}
+							attackSelected = -1;
+							finishedAction = true;
 						}
 					}
+					else
+						finishedAction = true;
+
+					break;
+				case EntityId::STUBBORN:
+					finishedAction = true;
+					break;
+				case EntityId::KIND:
+					finishedAction = true;
 					break;
 				default:
 					break;
@@ -294,6 +368,7 @@ bool SceneCombat::Update(float dt)
 						//dialogue that X enemy does Y attack to MC
 						LOG("%s does stress attack!", currentEntity->data->name.GetString());
 						mainChar.character->stats.stress += 10;
+						mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
 					}
 					else //Magical blow
 					{
@@ -302,9 +377,11 @@ bool SceneCombat::Update(float dt)
 						{
 						case 1: //MC
 							Damage(0, mainChar.character, true);
+							mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
 							break;
 						case 2: //GRANDPA
 							Damage(0, grandpa.character, true);
+							grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 							break;
 						case 3:
 							break;
@@ -313,22 +390,6 @@ bool SceneCombat::Update(float dt)
 						default:
 							break;
 						}
-						//if (t == 1) //MC
-						//{
-						//	Damage(0, mainChar.character,true);
-						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-						//	////dialogue that X enemy does Y attack to Z character
-						//	//LOG("damage attack to mc!\n");
-						//	//mainChar.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.mDef);
-						//}
-						//else if (t == 2) //GRANDPA
-						//{
-						//	Damage(0, grandpa.character, true);
-						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-						//	////dialogue that X enemy does Y attack to Z character
-						//	//LOG("damage attack to grandpa!\n");
-						//	//grandpa.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.mDef);
-						//}
 					}
 					finishedAction = true;
 					break;
@@ -348,13 +409,11 @@ bool SceneCombat::Update(float dt)
 					else //Fury of blades
 					{
 						Damage(1, mainChar.character);
+						mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
 						Damage(1, grandpa.character);
-						////dialogue that X enemy does Y attack to all characters
-						//LOG("Furious Shadow attack to all!\n");
-						//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(1)->data->stat1);
-						//int attack = currentEntity->data->attackPool.At(1)->data->stat1;
-						//mainChar.character->stats.hPoints -= (attack - mainChar.character->stats.pDef);
-						//grandpa.character->stats.hPoints -= (attack - mainChar.character->stats.pDef);
+						grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+						//dialogue that X enemy does Y attack to all characters
+						LOG("Furious Shadow attack to all!\n");
 					}
 					finishedAction = true;
 					break;
@@ -370,9 +429,11 @@ bool SceneCombat::Update(float dt)
 						{
 						case 1: //MC
 							Damage(0, mainChar.character);
+							mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
 							break;
 						case 2: //GRANDPA
 							Damage(0, grandpa.character);
+							grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 							break;
 						case 3:
 							break;
@@ -381,22 +442,6 @@ bool SceneCombat::Update(float dt)
 						default:
 							break;
 						}
-						//if (t == 1) //MC
-						//{
-						//	Damage(0, mainChar.character);
-						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-						//	////dialogue that X enemy does Y attack to Z character
-						//	//LOG("damage attack to mc!\n");
-						//	//mainChar.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.pDef);
-						//}
-						//else if (t == 2) //GRANDPA
-						//{
-						//	Damage(0, grandpa.character);
-						//	//currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(0)->data->stat1);
-						//	////dialogue that X enemy does Y attack to Z character
-						//	//LOG("damage attack to grandpa!\n");
-						//	//grandpa.character->stats.hPoints -= (currentEntity->data->attackPool.At(0)->data->stat1 - mainChar.character->stats.pDef);
-						//}
 					}
 					else if(p >= 30) //Nightmarish
 					{
@@ -430,20 +475,6 @@ bool SceneCombat::Update(float dt)
 						default:
 							break;
 						}
-						//if (t == 1) //MC
-						//{
-						//	//dialogue that X enemy does Y attack to Z character
-						//	LOG("mc has been taunted!");
-						//	mainChar.character->isTaunted = true;
-						//	mainChar.character->tauntedBy = currentEntity->data;
-						//}
-						//else if (t == 2) //GRANDPA
-						//{
-						//	//dialogue that X enemy does Y attack to Z character
-						//	LOG("grandpa has been taunted!");
-						//	grandpa.character->isTaunted = true;
-						//	grandpa.character->tauntedBy = currentEntity->data;
-						//}
 					}
 					else //Grasp of depression
 					{
@@ -483,30 +514,6 @@ bool SceneCombat::Update(float dt)
 						default:
 							break;
 						}
-						//if (t == 1) //MC
-						//{
-						//	//dialogue that X enemy does Y attack to Z character
-						//	LOG("mc has been stunned and debuffed!");
-						//	mainChar.character->isStunned = true;
-						//	SString s = "10% debuff";
-						//	Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
-						//	a->turns = 1;
-						//	mainChar.character->attackPool.Add(a);
-						//	mainChar.character->stats.pDef -= a->stat1 / 10;
-						//	mainChar.character->stats.mDef -= a->stat2 / 10;
-						//}
-						//else if (t == 2) //GRANDPA
-						//{
-						//	//dialogue that X enemy does Y attack to Z character
-						//	LOG("grandpa has been stunned and debuffed!");
-						//	grandpa.character->isStunned = true;
-						//	SString s = "10% debuff";
-						//	Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef,grandpa.character->stats.mDef);
-						//	a->turns = 1;
-						//	grandpa.character->attackPool.Add(a);
-						//	grandpa.character->stats.pDef -= a->stat1 / 10;
-						//	grandpa.character->stats.mDef -= a->stat2 / 10;
-						//}
 					}
 
 					finishedAction = true;
@@ -522,6 +529,7 @@ bool SceneCombat::Update(float dt)
 				LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
 				finishedAction = false;
 				hasTicked = false;
+				once = true;
 				currentEntity = currentEntity->next;
 			}
 		}
@@ -542,6 +550,25 @@ bool SceneCombat::Update(float dt)
 		btnCombatItems->Update(dt);
 		btnCombatSpecial->Update(dt);
 		btnCombatFlee->Update(dt);
+
+		if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+		{
+			btnCombatSkill1->Update(dt);
+			btnCombatSkill2->Update(dt);
+			btnCombatSkill3->Update(dt);
+			btnCombatSkill4->Update(dt);
+			btnCombatSkill5->Update(dt);
+			btnCombatSkill6->Update(dt);
+		}
+		else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+		{
+			btnCombatItem1->Update(dt);
+			btnCombatItem2->Update(dt);
+			btnCombatItem3->Update(dt);
+			btnCombatItem4->Update(dt);
+			btnCombatItem5->Update(dt);
+			btnCombatItem6->Update(dt);
+		}
 	}
 
 	return true;
@@ -602,10 +629,23 @@ bool SceneCombat::Draw(Font* dialogueFont)
 		if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + 36, -app->render->camera.y + app->render->camera.h - combatMenuBox.h - 25, false, &combatMenuBox);
+			btnCombatSkill1->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSkill2->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSkill3->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSkill4->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSkill5->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSkill6->Draw(-app->render->camera.x, -app->render->camera.y);
 		}
 		else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + 36, -app->render->camera.y + app->render->camera.h - combatMenuBox.h - 25, false, &combatMenuBox);
+			btnCombatItem1->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatItem2->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatItem3->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatItem4->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatItem5->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatItem6->Draw(-app->render->camera.x, -app->render->camera.y);
+
 		}
 		else if ((combatMenuFlags & 1 << Flags::SPECIAL) != 0)
 		{
@@ -778,7 +818,7 @@ void SceneCombat::ResetButtons()
 	btnCombatAttack->state = GuiControlState::NORMAL;
 	btnCombatSkills->state = GuiControlState::NORMAL;
 	btnCombatItems->state = GuiControlState::NORMAL;
-	btnCombatSpecial->state = GuiControlState::NORMAL;
+	btnCombatSpecial->state = GuiControlState::DISABLED;						//this should be in normal state in the future
 	btnCombatFlee->state = GuiControlState::NORMAL;
 }
 
@@ -790,37 +830,116 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 	switch (control->id)
 	{
 		//COMBAT
-	case 29: //ATTACK
+	case 1: //ATTACK
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 0;
 		LOG("Who do you want to attack?");
 		break;
-	case 30: //SKILLS
+	case 2: //SKILLS
 		ResetButtons();
 		btnCombatSkills->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SKILL);
 		break;
-	case 31: //ITEMS
+	case 3: //ITEMS
 		ResetButtons();
 		btnCombatItems->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
 		break;
-	case 32: //SPECIAL
+	case 4: //SPECIAL
 		ResetButtons();
 		btnCombatSpecial->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SPECIAL);
 		break;
-	case 33: //FLEE
+	case 5: //FLEE
 		ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		LOG("You fled!");
 		app->scene->current->combat = false;
+		once = true;
+		break;
+	case 6: //SKILL 1
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		attackSelected = 1;
+		break;
+	case 7: //SKILL 2
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		attackSelected = 2;
+		break;
+	case 8: //SKILL 3
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		attackSelected = 3;
+		break;
+	case 9: //SKILL 4
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		attackSelected = 4;
+		break;
+	case 10: //SKILL 5
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		attackSelected = 5;
+		break;
+	case 11: //SKILL 6
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		attackSelected = 6;
+		break;
+	case 12: //ITEM 1
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		finishedAction = true;
+		LOG("Item 1");
+		break;
+	case 13: //ITEM 2
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		finishedAction = true;
+		LOG("Item 2");
+		break;
+	case 14: //ITEM 3
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		finishedAction = true;
+		LOG("Item 3");
+		break;
+	case 15: //ITEM 4
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		finishedAction = true;
+		LOG("Item 4");
+		break;
+	case 16: //ITEM 5
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		finishedAction = true;
+		LOG("Item 5");
+		break;
+	case 17: //ITEM 6
+		ResetButtons();
+		combatMenuFlags = 0;
+		characterSelected = false;
+		finishedAction = true;
+		LOG("Item 6");
 		break;
 	default:
 		break;

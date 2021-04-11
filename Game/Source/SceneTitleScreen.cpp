@@ -79,7 +79,7 @@ bool SceneTitleScreen::Load()
     btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 520, 300, 60 }, "LEFT", 40, this);
     btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 600, 300, 60 }, "RIGHT", 40, this);
 
-    return true;
+    return false;
 }
 
 bool SceneTitleScreen::Update(float dt)
