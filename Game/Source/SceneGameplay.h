@@ -91,6 +91,8 @@ private:
     Font* dialogueFont = nullptr;
     Font* buttonFont = nullptr;
 
+    bool onPause = false;
+
     //STATE FLAGS
     int flags;
 };

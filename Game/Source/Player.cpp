@@ -135,7 +135,7 @@ bool Player::Update(float dt)
 		currentAnim->Update(dt);
 		nextPos = { entityRect.x, entityRect.y };
 
-		if (!inMenu || !app->scene->current->combat)
+		if ((!inMenu || !app->scene->current->combat) && !app->entities->inPause)
 		{
 			if (app->input->CheckButton("right", KEY_REPEAT))
 			{

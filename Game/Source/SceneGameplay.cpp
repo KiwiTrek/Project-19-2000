@@ -3,6 +3,7 @@
 
 #include "Audio.h"
 #include "EntityManager.h"
+#include "SceneManager.h"
 #include "CombatEntity.h"
 #include "Textures.h"
 #include "GuiManager.h"
@@ -10,6 +11,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Window.h"
+#include "Player.h"
 
 SceneGameplay::SceneGameplay()
 {
@@ -88,6 +90,11 @@ bool SceneGameplay::Load()
 
 	app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
 
+	// Used for the Gamepad GUI control
+	app->scene->currentButton = app->gui->controls.start;
+	changeMenu = false;
+	usingGamepad = true;
+
 	return false;
 }
 
@@ -123,73 +130,127 @@ bool SceneGameplay::Update(float dt)
 
 bool SceneGameplay::UpdatePauseMenu(float dt)
 {
-	if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	// Logic for using Gamepad or mouse (GUI)
+	ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
+	while (gamepadControls->next != nullptr)
 	{
-		btnInventory->Update(dt);
-		btnSkills->Update(dt);
-		btnSkillTree->Update(dt);
-		btnEquipment->Update(dt);
-		btnStats->Update(dt);
-		btnOptions->Update(dt);
-		btnTitleScreen->Update(dt);
+		if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
+		{
+			usingGamepad = true;
+			break;
+		}
 
-		if ((flags & 1 << Flags::INVENTORY) != 0)
-		{
-			// arrow buttons maybe?
-			// buttons for each item i supose?
-		}
-		else if ((flags & 1 << Flags::SKILLS) != 0)
-		{
-			// arrow buttons maybe?
-			// buttons for each skill i supose?
-		}
-		else if ((flags & 1 << Flags::SKILL_TREE) != 0)
-		{
-			// arrow buttons maybe?
-			// buttons for each skill in the skill tree?
-			// the skill tree lines change when you get the node?
-		}
-		else if ((flags & 1 << Flags::EQUIPMENT) != 0)
-		{
-			// buttons for every equipment??? ps: oh lord
-		}
-		else if ((flags & 1 << Flags::STATS) != 0)
-		{
-			// no buttons here? since its only the stats
-		}
+		gamepadControls = gamepadControls->next;
 	}
-	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	int tmpX = 0, tmpY = 0;
+	app->input->GetMouseMotion(tmpX, tmpY);
+	if (((tmpX > 2 || tmpX < -2) || (tmpY > 2 || tmpY < -2)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+		usingGamepad = false;
+
+	// Calls update with gamepad parameters (GUI)
+	if (usingGamepad)
 	{
-		sldrVolume->Update(dt);
-		sldrFx->Update(dt);
-		boxFullScreen->Update(dt);
-		boxVSync->Update(dt);
-		btnControls->Update(dt);
-		btnBack->Update(dt);
+		if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(0);
+				changeMenu = false;
+			}
+			app->scene->currentButton->data->Update(dt, 1, 7);
+		}
+		else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(7);
+				changeMenu = false;
+			}
+			app->scene->currentButton->data->Update(dt, 8, 13);
+		}
+		else if ((flags & 1 << Flags::CONTROLS) != 0)
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(13);
+				changeMenu = false;
+			}
+			app->scene->currentButton->data->Update(dt, 14, 28);
+		}
 	}
-	else if ((flags & 1 << Flags::CONTROLS) != 0)
+	// Calls update for mouse parameters (GUI)
+	else
 	{
-		btnKeySelect->Update(dt);
-		btnKeyCancel->Update(dt);
-		btnKeyMenu->Update(dt);
-		btnKeyUp->Update(dt);
-		btnKeyDown->Update(dt);
-		btnKeyLeft->Update(dt);
-		btnKeyRight->Update(dt);
-		btnBack2->Update(dt);
-		btnPadSelect->Update(dt);
-		btnPadCancel->Update(dt);
-		btnPadMenu->Update(dt);
-		btnPadUp->Update(dt);
-		btnPadDown->Update(dt);
-		btnPadLeft->Update(dt);
-		btnPadRight->Update(dt);
+		if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			btnInventory->Update(dt);
+			btnSkills->Update(dt);
+			btnSkillTree->Update(dt);
+			btnEquipment->Update(dt);
+			btnStats->Update(dt);
+			btnOptions->Update(dt);
+			btnTitleScreen->Update(dt);
+
+			if ((flags & 1 << Flags::INVENTORY) != 0)
+			{
+				// arrow buttons maybe?
+				// buttons for each item i supose?
+			}
+			else if ((flags & 1 << Flags::SKILLS) != 0)
+			{
+				// arrow buttons maybe?
+				// buttons for each skill i supose?
+			}
+			else if ((flags & 1 << Flags::SKILL_TREE) != 0)
+			{
+				// arrow buttons maybe?
+				// buttons for each skill in the skill tree?
+				// the skill tree lines change when you get the node?
+			}
+			else if ((flags & 1 << Flags::EQUIPMENT) != 0)
+			{
+				// buttons for every equipment??? ps: oh lord
+			}
+			else if ((flags & 1 << Flags::STATS) != 0)
+			{
+				// no buttons here? since its only the stats
+			}
+		}
+		else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			sldrVolume->Update(dt);
+			sldrFx->Update(dt);
+			boxFullScreen->Update(dt);
+			boxVSync->Update(dt);
+			btnControls->Update(dt);
+			btnBack->Update(dt);
+		}
+		else if ((flags & 1 << Flags::CONTROLS) != 0)
+		{
+			btnKeySelect->Update(dt);
+			btnKeyCancel->Update(dt);
+			btnKeyMenu->Update(dt);
+			btnKeyUp->Update(dt);
+			btnKeyDown->Update(dt);
+			btnKeyLeft->Update(dt);
+			btnKeyRight->Update(dt);
+			btnBack2->Update(dt);
+			btnPadSelect->Update(dt);
+			btnPadCancel->Update(dt);
+			btnPadMenu->Update(dt);
+			btnPadUp->Update(dt);
+			btnPadDown->Update(dt);
+			btnPadLeft->Update(dt);
+			btnPadRight->Update(dt);
+		}
 	}
+	
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
 		app->gui->ResetButtons();
 		flags = ToggleBit(flags, Flags::MENU);
+		app->entities->inPause = !app->entities->inPause;
 	}
 	return true;
 }
@@ -309,7 +370,9 @@ bool SceneGameplay::Unload()
 	// TODO: Unload all resources
 	combatScene->Unload();
 	app->entities->Disable();
+
 	app->gui->CleanUp();
+	app->scene->currentButton = nullptr;
 
 	return false;
 }
@@ -357,8 +420,12 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		app->gui->ResetButtons();
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::OPTIONS);
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
 		break;
 	case 7: //TITLE SCREEN
+		app->entities->inPause = false;
 		TransitionToScene(SceneType::TITLE_SCREEN);
 		break;
 	case 8: //VOLUME
@@ -379,9 +446,15 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	//CONTROLS
 	case 12: //CONTROLS
 		flags = SetBit(flags, Flags::CONTROLS);
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
 		break;
 	case 13: //BACK
 		flags = ClearBit(flags, Flags::OPTIONS);
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
 		break;
 	case 14: //KEY SELECT
 		break;
@@ -399,6 +472,9 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 21: //BACK 2
 		flags = ClearBit(flags, Flags::CONTROLS);
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
 		break;
 	case 22: //PAD SELECT
 		break;

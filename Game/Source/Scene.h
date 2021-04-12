@@ -81,7 +81,9 @@ public:
     float combatCooldown;
     CombatStateType combatState;
 
-    bool usingGamepad = true;
+    bool usingGamepad;
+
+    bool changeMenu;
 };
 
 #endif // __SCENE_H__

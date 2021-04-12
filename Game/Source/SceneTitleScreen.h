@@ -38,9 +38,6 @@ private:
 
     Animation noose;
 
- 
-    bool changeMenu = false;
-
     //MAIN MENU
     GuiButton* btnStart;
     GuiButton* btnContinue;

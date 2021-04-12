@@ -64,8 +64,6 @@ public:
 
     void SpawnEnemies();
 
-    void ResetButtons();
-
     // Declare on mouse click event
     bool OnGuiMouseClickEvent(GuiControl* control);
 

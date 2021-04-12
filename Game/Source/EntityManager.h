@@ -72,6 +72,8 @@ public:
 	SDL_Texture* grandpaTex;
 	SDL_Texture* enemiesTex;
 
+	bool inPause = false;
+
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__

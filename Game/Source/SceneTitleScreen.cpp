@@ -82,16 +82,21 @@ bool SceneTitleScreen::Load()
     btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 520, 300, 60 }, "LEFT", 40, this);
     btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 600, 300, 60 }, "RIGHT", 40, this);
 
+    // Used for the Gamepad GUI control
     app->scene->currentButton = app->gui->controls.start;
+    changeMenu = false;
+    usingGamepad = true;
 
     return false;
 }
+
 
 bool SceneTitleScreen::Update(float dt)
 {
     if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
     noose.Update(dt);
-
+    
+    // Logic for using Gamepad or mouse (GUI)
     ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
     while (gamepadControls->next != nullptr)
     {
@@ -108,6 +113,7 @@ bool SceneTitleScreen::Update(float dt)
     if (((tmpX > 2 || tmpX < -2) || (tmpY > 2 ||tmpY < -2)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
         usingGamepad = false;
 
+    // Calls update with gamepad parameters (GUI)
     if (usingGamepad)
     {
         if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
@@ -138,6 +144,7 @@ bool SceneTitleScreen::Update(float dt)
             app->scene->currentButton->data->Update(dt, 11, 25);
         }
     }
+    // Calls update for mouse parameters (GUI)
     else
     {
         if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
@@ -240,8 +247,10 @@ bool SceneTitleScreen::Unload()
 {
     app->tex->UnLoad(nooseBG);
     app->tex->UnLoad(titleCard);
+
     app->gui->CleanUp();
     app->scene->currentButton = nullptr;
+
     return true;
 }
 
@@ -263,6 +272,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         flags = SetBit(flags, Flags::OPTIONS);
         changeMenu = true;
         app->gui->ResetButtons();
+        usingGamepad = true;
         break;
     case 4: //EXIT
         app->exitRequest = true;
@@ -285,11 +295,13 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         flags = SetBit(flags, Flags::CONTROLS);
         changeMenu = true;
         app->gui->ResetButtons();
+        usingGamepad = true;
         break;
     case 10: //BACK
         flags = ClearBit(flags, Flags::OPTIONS);
         changeMenu = true;
         app->gui->ResetButtons();
+        usingGamepad = true;
         break;
     case 11: //KEY SELECT
         break;
@@ -309,6 +321,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         flags = ClearBit(flags, Flags::CONTROLS);
         changeMenu = true;
         app->gui->ResetButtons();
+        usingGamepad = true;
         break;
     case 19: //PAD SELECT
         break;

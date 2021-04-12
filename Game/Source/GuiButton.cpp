@@ -80,7 +80,7 @@ bool GuiButton::Update(float dt, int minId, int maxId)
 
 	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
 	{
-		if (app->scene->currentButton->next != nullptr && app->input->CheckButton("down", KEY_DOWN))
+		if (app->scene->currentButton->next != nullptr && (app->input->CheckButton("down", KEY_DOWN) || app->input->CheckButton("right", KEY_DOWN)))
 		{
 			if (app->scene->currentButton->next->data->id <= maxId)
 			{
@@ -90,7 +90,7 @@ bool GuiButton::Update(float dt, int minId, int maxId)
 				app->audio->PlayFx(hover);
 			}
 		}
-		else if (app->scene->currentButton->prev != nullptr && app->input->CheckButton("up", KEY_DOWN))
+		else if (app->scene->currentButton->prev != nullptr && (app->input->CheckButton("up", KEY_DOWN) || app->input->CheckButton("left", KEY_DOWN)))
 		{
 			if (app->scene->currentButton->prev->data->id >= minId)
 			{

@@ -556,33 +556,61 @@ bool SceneCombat::Update(float dt)
 		break;
 	}
 
-	if (characterSelected)
-	{
-		btnCombatAttack->Update(dt);
-		btnCombatSkills->Update(dt);
-		btnCombatItems->Update(dt);
-		btnCombatSpecial->Update(dt);
-		btnCombatFlee->Update(dt);
 
-		if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+	// Logic for using Gamepad or mouse (GUI)
+	ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
+	while (gamepadControls->next != nullptr)
+	{
+		if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
 		{
-			btnCombatSkill1->Update(dt);
-			btnCombatSkill2->Update(dt);
-			btnCombatSkill3->Update(dt);
-			btnCombatSkill4->Update(dt);
-			btnCombatSkill5->Update(dt);
-			btnCombatSkill6->Update(dt);
+			usingGamepad = true;
+			break;
 		}
-		else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+
+		gamepadControls = gamepadControls->next;
+	}
+	int tmpX = 0, tmpY = 0;
+	app->input->GetMouseMotion(tmpX, tmpY);
+	if (((tmpX > 2 || tmpX < -2) || (tmpY > 2 || tmpY < -2)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+		usingGamepad = false;
+
+	// Calls update with gamepad parameters (GUI)
+	if (usingGamepad)
+	{
+
+	}
+	// Calls update for mouse parameters (GUI)
+	else
+	{
+		if (characterSelected)
 		{
-			btnCombatItem1->Update(dt);
-			btnCombatItem2->Update(dt);
-			btnCombatItem3->Update(dt);
-			btnCombatItem4->Update(dt);
-			btnCombatItem5->Update(dt);
-			btnCombatItem6->Update(dt);
+			btnCombatAttack->Update(dt);
+			btnCombatSkills->Update(dt);
+			btnCombatItems->Update(dt);
+			btnCombatSpecial->Update(dt);
+			btnCombatFlee->Update(dt);
+
+			if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+			{
+				btnCombatSkill1->Update(dt);
+				btnCombatSkill2->Update(dt);
+				btnCombatSkill3->Update(dt);
+				btnCombatSkill4->Update(dt);
+				btnCombatSkill5->Update(dt);
+				btnCombatSkill6->Update(dt);
+			}
+			else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+			{
+				btnCombatItem1->Update(dt);
+				btnCombatItem2->Update(dt);
+				btnCombatItem3->Update(dt);
+				btnCombatItem4->Update(dt);
+				btnCombatItem5->Update(dt);
+				btnCombatItem6->Update(dt);
+			}
 		}
 	}
+	
 
 	return true;
 }
@@ -884,16 +912,6 @@ void SceneCombat::SpawnEnemies()
 	}
 }
 
-
-void SceneCombat::ResetButtons()
-{
-	btnCombatAttack->state = GuiControlState::NORMAL;
-	btnCombatSkills->state = GuiControlState::NORMAL;
-	btnCombatItems->state = GuiControlState::NORMAL;
-	btnCombatSpecial->state = GuiControlState::DISABLED;						//this should be in normal state in the future
-	btnCombatFlee->state = GuiControlState::NORMAL;
-}
-
 //----------------------------------------------------------
 // Manage GUI events for this screen
 //----------------------------------------------------------
@@ -903,32 +921,32 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 	{
 		//COMBAT
 	case 29: //ATTACK
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 0;
 		LOG("Who do you want to attack?");
 		break;
 	case 30: //SKILLS
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnCombatSkills->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SKILL);
 		break;
 	case 31: //ITEMS
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnCombatItems->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
 		break;
 	case 32: //SPECIAL
-		ResetButtons();
+		app->gui->ResetButtons();
 		btnCombatSpecial->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SPECIAL);
 		break;
 	case 33: //FLEE
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		LOG("You fled!");
@@ -936,78 +954,78 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		once = true;
 		break;
 	case 34: //SKILL 1
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 1;
 		break;
 	case 35: //SKILL 2
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 2;
 		break;
 	case 36: //SKILL 3
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 3;
 		break;
 	case 37: //SKILL 4
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 4;
 		break;
 	case 38: //SKILL 5
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 5;
 		break;
 	case 39: //SKILL 6
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		attackSelected = 6;
 		break;
 	case 40: //ITEM 1
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 1");
 		break;
 	case 41: //ITEM 2
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 2");
 		break;
 	case 42: //ITEM 3
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 3");
 		break;
 	case 43: //ITEM 4
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 4");
 		break;
 	case 44: //ITEM 5
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;
 		LOG("Item 5");
 		break;
 	case 45: //ITEM 6
-		ResetButtons();
+		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
 		finishedAction = true;

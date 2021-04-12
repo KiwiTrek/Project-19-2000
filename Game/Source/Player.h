@@ -38,6 +38,8 @@ public:
 public:
 	List<SaveState*> combatSaveStates;
 
+	
+
 private:
 	bool godMode = false;
 	bool inMenu = false;

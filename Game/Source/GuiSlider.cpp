@@ -101,6 +101,8 @@ bool GuiSlider::Update(float dt)
 }
 bool GuiSlider::Update(float dt, int minId, int maxId)
 {
+	this->state = GuiControlState::FOCUSED;
+
 	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
 	{
 		if (app->scene->currentButton->next != nullptr && app->input->CheckButton("down", KEY_DOWN))
