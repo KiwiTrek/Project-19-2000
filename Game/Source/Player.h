@@ -40,7 +40,6 @@ public:
 
 private:
 	bool godMode = false;
-	bool inMenu = false;
 	iPoint playerPos;
 
 	// Animations stuff

@@ -26,7 +26,15 @@ class Scene
 {
 public:
 
-	Scene() : active(true), loaded(false), transitionRequired(false) {}
+	Scene() : active(true), loaded(false), transitionRequired(false)
+    {
+        combat = false;
+        combatCooldown = 1.0f;
+        enteringCombat = false;
+        usingGamepad = true;
+        inMenu = false;
+        changeMenu = false;
+    }
 
     virtual bool Load()
     {
@@ -84,6 +92,7 @@ public:
 
     bool usingGamepad;
 
+    bool inMenu;
     bool changeMenu;
 };
 

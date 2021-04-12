@@ -18,13 +18,13 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 {
 	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
-		spawnPos = { 15,90 };
+		if (app->map->data.name == "tutorial.tmx") spawnPos = { 15,90 };
 		spawnPos.x *= app->map->data.tileWidth;
 		spawnPos.y *= app->map->data.tileHeight;
 	}
 	else
 	{
-		spawnPos = { 150,150 };
+		spawnPos = { 1,1 };
 	}
 
 	LOG("Init Player");
@@ -83,8 +83,6 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 
 	collider = app->collisions->AddCollider(this->entityRect, Collider::Type::PLAYER, (Module*)app->entities);
 
-	inMenu = false;
-
 	ListItem<SaveState*>* e = combatSaveStates.start;
 	while (e != nullptr)
 	{
@@ -118,8 +116,8 @@ bool Player::Update(float dt)
 
 		if (app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		{
-			inMenu = !inMenu;
-			if (inMenu)
+			app->scene->current->inMenu = !app->scene->current->inMenu;
+			if (app->scene->current->inMenu)
 			{
 				app->audio->auxVolume = app->audio->GetMusicVolume();
 				app->audio->SetMusicVolume(app->audio->GetMusicVolume() / 2);
@@ -135,7 +133,7 @@ bool Player::Update(float dt)
 		currentAnim->Update(dt);
 		nextPos = { entityRect.x, entityRect.y };
 
-		if ((!inMenu || !app->scene->current->combat) && !app->entities->inPause)
+		if ((!app->scene->current->inMenu || !app->scene->current->combat) && !app->entities->inPause)
 		{
 			if (app->input->CheckButton("right", KEY_REPEAT))
 			{

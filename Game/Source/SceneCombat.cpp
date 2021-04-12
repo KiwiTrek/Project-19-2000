@@ -27,7 +27,9 @@ bool SceneCombat::Load()
 	// COMBAT
 	combatGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
 
-	currentChar = &mainChar;
+	if (currentChar != nullptr) currentChar = nullptr;
+	if (target != nullptr) target = nullptr;
+	if (currentEntity != nullptr) currentEntity = nullptr;
 	mainChar.box = { 1280,0,204,190 };
 	mainChar.characterTex = { 0,252,72,92 };
 	mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(20, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
@@ -75,6 +77,10 @@ bool SceneCombat::Load()
 
 bool SceneCombat::Start()
 {
+	if (currentChar != nullptr) currentChar = nullptr;
+	if (target != nullptr) target = nullptr;
+	if (currentEntity != nullptr) currentEntity = nullptr;
+	characterSelected = false;
 	targetAttack = false;
 	finishedAction = false;
 	hasTicked = false;
@@ -86,9 +92,7 @@ bool SceneCombat::Start()
 	while (e != nullptr)
 	{
 		ListItem<CombatEntity*>* eNext = e->next;
-		int i = turnOrder.Find(e->data);
-		delete turnOrder[i];
-		turnOrder.Del(turnOrder.At(i));
+		turnOrder.Del(e);
 		e = eNext;
 	}
 	turnOrder.Clear();
@@ -102,7 +106,7 @@ bool SceneCombat::Start()
 bool SceneCombat::Update(float dt)
 {
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) characterSelected = !characterSelected;
-	LOG("%d", turnOrder.Count());
+	LOG("%d", app->entities->entities.Count());
 	switch (combatState)
 	{
 	case COMBAT_START:
@@ -130,6 +134,18 @@ bool SceneCombat::Update(float dt)
 		{
 			SortSpeed(false);
 			currentEntity = turnOrder.start;
+			if (IsCharacter(currentEntity->data))
+				switch (currentEntity->data->id)
+				{
+				case EntityId::MC:
+					currentChar = &mainChar;
+					break;
+				case EntityId::VIOLENT:
+					currentChar = &grandpa;
+					break;
+				default:
+					break;
+				}
 		}
 		else
 		{
@@ -718,10 +734,21 @@ bool SceneCombat::Finish()
 		}
 		e = eNext;
 	}
+	turnOrder.Clear();
 
 	if (enemy1 != nullptr) enemy1 = nullptr;
 	if (enemy2 != nullptr) enemy2 = nullptr;
 	if (enemy3 != nullptr) enemy3 = nullptr;
+	if (currentChar != nullptr) currentChar = nullptr;
+	if (target != nullptr) target = nullptr;
+	if (currentEntity != nullptr) currentEntity = nullptr;
+	characterSelected = false;
+	targetAttack = false;
+	finishedAction = false;
+	hasTicked = false;
+	attackSelected = -1;
+	combatMenuFlags = 0;
+	once = true;
 	app->scene->current->combatCooldown = 1.0f;
 	app->scene->current->combat = false;
 
@@ -804,7 +831,8 @@ void SceneCombat::TickDownBuffs()
 				}
 			}
 		}
-		a = a->next;
+		if (a->next != nullptr) a = a->next;
+		else break;
 	}
 }
 

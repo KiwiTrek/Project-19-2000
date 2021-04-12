@@ -97,6 +97,7 @@ bool SceneGameplay::Load()
 	changeMenu = false;
 	enteringCombat = false;
 	usingGamepad = true;
+	inMenu = false;
 
 	return false;
 }

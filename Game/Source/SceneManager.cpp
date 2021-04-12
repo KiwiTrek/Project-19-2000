@@ -87,7 +87,11 @@ bool SceneManager::Update(float dt)
 				current->Unload();	// Unload current screen
 				next->Load();	// Load next screen
 
-				RELEASE(current);	// Free current pointer
+				if (current != nullptr)
+				{
+					RELEASE(current);	// Free current pointer
+					current = nullptr;
+				}
 				current = next;		// Assign next pointer
 				next = nullptr;
 

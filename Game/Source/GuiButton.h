@@ -32,8 +32,8 @@ private:
 	SDL_Rect focusedSmall;
 	SDL_Rect pressedSmall;
 
-	bool hoverPlay = true;
-	bool clickPlay = true;
+	bool hoverPlay;
+	bool clickPlay;
 };
 
 #endif // __GUIBUTTON_H__

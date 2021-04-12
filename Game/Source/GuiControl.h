@@ -36,11 +36,6 @@ public:
 	{
 		texture = NULL;
 		guiFont = nullptr;
-	/*	titleFont = -1;
-		hoverFont = -1;
-		pressedFont = -1;
-		disabledFont = -1;*/
-
 		hover = -1;
 		click = -1;
 	}
@@ -68,13 +63,9 @@ public:
 	}
 
 	// Sets all fonts used in gui
-	void SetFonts(Font* defaultId/*, int titleId, int hoverId, int pressedId, int disabledId*/)
+	void SetFonts(Font* defaultId)
 	{
 		guiFont = defaultId;
-		//titleFont = titleId;
-		//hoverFont = hoverId;
-		//pressedFont = pressedId;
-		//disabledFont = disabledId;
 	}
 
 	void SetSounds(int hoverSoundId, int clickSoundId)
@@ -111,10 +102,6 @@ public:
 
 	// Fonts
 	Font* guiFont;
-	//int titleFont;
-	//int hoverFont;
-	//int pressedFont;
-	//int disabledFont;
 
 	// Sounds
 	int click;

@@ -18,6 +18,8 @@ GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiCont
 	pressed = { 123,144,60, 60 };
 	disabled = { 185,144,60, 60 };
 	check = { 245,144,60, 60 };
+
+	checked = false;
 }
 
 GuiCheckBox::~GuiCheckBox()

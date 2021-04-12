@@ -25,6 +25,8 @@ GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(
 	pressedSmall = { 0,607,200,60 };
 	disabledSmall = { 0,672,200,60 };
 
+	hoverPlay = true;
+	clickPlay = true;
 }
 
 GuiButton::~GuiButton()
