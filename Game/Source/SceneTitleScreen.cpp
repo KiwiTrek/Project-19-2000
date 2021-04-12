@@ -208,6 +208,7 @@ bool SceneTitleScreen::Draw()
 
         sldrVolume->Draw();
         sldrFx->Draw();
+        if (app->scene->fullscreenChecked) boxFullScreen->checked = true;
         boxFullScreen->Draw();
         boxVSync->Draw();
         btnControls->Draw();

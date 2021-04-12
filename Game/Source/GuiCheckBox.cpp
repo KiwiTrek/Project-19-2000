@@ -58,6 +58,7 @@ bool GuiCheckBox::Update(float dt)
 			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
 			{
 				checked = !checked;
+				app->scene->fullscreenChecked = !app->scene->fullscreenChecked;
 				NotifyObserver();
 			}
 		}
@@ -103,6 +104,7 @@ bool GuiCheckBox::Update(float dt, int minId, int maxId)
 		if (app->input->CheckButton("select", KEY_UP))
 		{
 			checked = !checked;
+			app->scene->fullscreenChecked = !app->scene->fullscreenChecked;
 			NotifyObserver();
 		}
 	}

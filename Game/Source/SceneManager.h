@@ -38,9 +38,13 @@ public:
 
 	bool onTransition;
 	float transitionAlpha;
+
+	bool fullscreenChecked = false;
 private:
 	Scene* next;
 	bool fadeOutCompleted;
+
+
 };
 
 #endif // __SCENEMANAGER_H__
