@@ -81,8 +81,8 @@ bool SceneLogo::Draw()
 
 bool SceneLogo::Unload()
 {
-    app->tex->UnLoad(logo);
-    app->audio->UnloadFx(logoFx);
+    if (logo != nullptr) app->tex->UnLoad(logo);
+    if (logoFx != -1) app->audio->UnloadFx(logoFx);
 
     return false;
 }

@@ -80,6 +80,7 @@ public:
     bool combat;
     float combatCooldown;
     CombatStateType combatState;
+    bool enteringCombat;
 
     bool usingGamepad;
 

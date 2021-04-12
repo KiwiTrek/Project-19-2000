@@ -245,11 +245,11 @@ bool SceneTitleScreen::Draw()
 
 bool SceneTitleScreen::Unload()
 {
-    app->tex->UnLoad(nooseBG);
-    app->tex->UnLoad(titleCard);
-
-    app->gui->CleanUp();
-    app->scene->currentButton = nullptr;
+    if (nooseBG != nullptr) app->tex->UnLoad(nooseBG);
+    if (titleCard != nullptr) app->tex->UnLoad(titleCard);
+    app->gui->Disable();
+    if (buttonFont != nullptr) delete buttonFont;
+    if (app->scene->currentButton != nullptr) app->scene->currentButton = nullptr;
 
     return true;
 }

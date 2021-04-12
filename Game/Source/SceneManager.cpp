@@ -161,6 +161,7 @@ bool SceneManager::CleanUp()
 	LOG("Freeing scene");
 
 	if (current != nullptr) current->Unload();
+	if (next != nullptr) next = nullptr;
 
 	return true;
 }

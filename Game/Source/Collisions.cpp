@@ -519,28 +519,14 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 		|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
 		&& collider->Intersects(tileRect) && !app->scene->current->combat)
 		{
-
 		if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
 		if (app->scene->current->combatCooldown <= 0)
 		{
-
 			int e = rand() % 100 + 1;
 			if (e <= 30)
 			{
 				app->scene->current->combat = true;
-				//combatScene->Load();
-				if (app->scene->current->currentScene == SceneType::GAMEPLAY)
-				{
-					SceneGameplay* s = (SceneGameplay*)app->scene->current;
-					s->enteringCombat = true;
-					s->combatScene->Load();
-				}
-				else if (app->scene->current->currentScene == SceneType::DEV_ROOM)
-				{
-					SceneDevRoom* s = (SceneDevRoom*)app->scene->current;
-					s->enteringCombat = true;
-					s->combatScene->Load();
-				}
+				app->scene->current->enteringCombat = true;
 			}
 			else app->scene->current->combatCooldown = 1.0f;
 

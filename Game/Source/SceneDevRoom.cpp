@@ -31,6 +31,7 @@ bool SceneDevRoom::Load()
 
 	app->audio->StopMusic();
 
+	combat = false;
 	enteringCombat = false;
 
 	return false;
@@ -39,14 +40,19 @@ bool SceneDevRoom::Load()
 bool SceneDevRoom::Update(float dt)
 {
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::TITLE_SCREEN);
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) combat = !combat;
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		combat = true;
+		enteringCombat = true;
+	}
 	// L02: DONE 3: Request Load / Save when pressing L/S
 
 	if (combat)
 	{
-		if (enteringCombat) {
+		if (enteringCombat)
+		{
 			enteringCombat = false;
-			combatScene->SpawnEnemies();
+			combatScene->Start();
 		}
 		combatScene->Update(dt);
 	}
@@ -69,8 +75,15 @@ bool SceneDevRoom::Draw()
 bool SceneDevRoom::Unload()
 {
 	// TODO: Unload all resources
-	combatScene->Unload();
+	if (combatScene != nullptr)
+	{
+		combatScene->Unload();
+		combatScene = nullptr;
+	}
 	app->entities->Disable();
+	if (dialogueFont != nullptr) delete dialogueFont;
+	app->entities->Disable();
+	app->map->Disable();
 
 	return false;
 }

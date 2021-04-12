@@ -40,29 +40,24 @@ public:
 
     bool Load();
 
+    bool Start();
+    void SpawnEnemies();
+    bool SortSpeed(bool isSorted);
+
     bool Update(float dt);
+    void Damage(int index, CombatEntity* target, bool isMagic = false);
+    void SelectTarget();
+    int EnemyTarget();
+    bool IsCharacter(CombatEntity* e);
+    void TickDownBuffs();
 
     bool Draw(Font* dialogueFont);
 
-    bool Unload();
-
-    bool SortSpeed(bool isSorted);
-
-    bool IsCharacter(CombatEntity* e);
-
-    void SelectTarget();
-
-    void TickDownBuffs();
-
+    bool Finish();
     void VictoryCondition();
-
     void DefeatCondition();
 
-    int EnemyTarget();
-
-    void Damage(int index, CombatEntity* target, bool isMagic = false);
-
-    void SpawnEnemies();
+    bool Unload();
 
     // Declare on mouse click event
     bool OnGuiMouseClickEvent(GuiControl* control);

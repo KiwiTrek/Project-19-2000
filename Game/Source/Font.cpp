@@ -48,6 +48,8 @@ Font::Font(const char* rtpFontFile)
 
 Font::~Font()
 {
+	app->tex->UnLoad(texture);
+	fontLoaded = false;
 }
 
 SDL_Texture* Font::GetTextureAtlas()

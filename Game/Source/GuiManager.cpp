@@ -114,18 +114,28 @@ void GuiManager::ResetButtons()
 bool GuiManager::CleanUp()
 {
 	ListItem<GuiControl*>* e = controls.start;
+	ListItem<GuiControl*>* eNext;
 	while (e != nullptr)
 	{
-		ListItem<GuiControl*>* eNext = e->next;
-		DestroyGuiControl(e->data);
-		e = eNext;
+		if (e->next != nullptr)
+		{
+			ListItem<GuiControl*>* eNext = e->next;
+			DestroyGuiControl(e->data);
+			e = eNext;
+		}
+		else
+		{
+			DestroyGuiControl(e->data);
+			break;
+		}
 	}
 	controls.Clear();
 
 	// Unload FONTS
-
-	app->audio->UnloadFx(hoverSoundId);
-	app->audio->UnloadFx(clickSoundId);
+	if (atlas != nullptr) app->tex->UnLoad(atlas);
+	if (guiFontId != nullptr) delete guiFontId;
+	if (hoverSoundId != -1) app->audio->UnloadFx(hoverSoundId);
+	if (clickSoundId != -1) app->audio->UnloadFx(clickSoundId);
 
 	return true;
 }

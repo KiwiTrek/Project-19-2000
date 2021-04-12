@@ -31,7 +31,6 @@ public:
     SDL_Texture* tileSetTex;
     //COMBAT
     SceneCombat* combatScene;
-    bool enteringCombat;
 private:
 
     Entity* player = nullptr;

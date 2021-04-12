@@ -33,6 +33,7 @@ bool SceneGameplay::Load()
 
 	float tmpValue = 0;
 	//MENU
+	app->gui->Enable();
 	menuBox = { 324,0,692,540 };
 	menuCharacterBox = { 324,539,204,135 };
 	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 80, 200, 60 }, "INVENTORY", 35, this);
@@ -78,12 +79,13 @@ bool SceneGameplay::Load()
 	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 520, 300, 60 }, "LEFT", 40, this);
 	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 800, 600, 300, 60 }, "RIGHT", 40, this);
 
+	app->map->Enable();
 	app->map->Load("tutorial.tmx");
 	// Initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	// COMBAT
-	//combatScene->Load();
+	combatScene->Load();
 
 	app->render->camera.x = 0;
 	app->render->camera.y = 0;
@@ -93,6 +95,7 @@ bool SceneGameplay::Load()
 	// Used for the Gamepad GUI control
 	app->scene->currentButton = app->gui->controls.start;
 	changeMenu = false;
+	enteringCombat = false;
 	usingGamepad = true;
 
 	return false;
@@ -109,13 +112,14 @@ bool SceneGameplay::Update(float dt)
 	{
 		combat = true;
 		enteringCombat = true;
-		combatScene->Load();
 	}
+
 	if (combat)
 	{
-		if (enteringCombat) {
+		if (enteringCombat)
+		{
 			enteringCombat = false;
-			combatScene->SpawnEnemies();
+			combatScene->Start();
 		}
 		combatScene->Update(dt);
 	}
@@ -368,11 +372,20 @@ bool SceneGameplay::DrawPauseMenu()
 bool SceneGameplay::Unload()
 {
 	// TODO: Unload all resources
-	combatScene->Unload();
+	if (combatScene != nullptr)
+	{
+		combatScene->Unload();
+		combatScene = nullptr;
+	}
 	app->entities->Disable();
+	app->map->Disable();
 
-	app->gui->CleanUp();
-	app->scene->currentButton = nullptr;
+	if (buttonFont != nullptr) delete buttonFont;
+	if (dialogueFont != nullptr) delete dialogueFont;
+	if (textBox != nullptr) app->tex->UnLoad(textBox);
+
+	app->gui->Disable();
+	if (app->scene->currentButton != nullptr) app->scene->currentButton = nullptr;
 
 	return false;
 }

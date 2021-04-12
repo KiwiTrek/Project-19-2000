@@ -44,7 +44,6 @@ public:
 
     //COMBAT
     SceneCombat* combatScene;
-    bool enteringCombat;
 
 private:
 

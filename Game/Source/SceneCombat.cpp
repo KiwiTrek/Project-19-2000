@@ -27,14 +27,6 @@ bool SceneCombat::Load()
 	// COMBAT
 	combatGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
 
-	targetAttack = false;
-	finishedAction = false;
-	hasTicked = false;
-	combatState = CombatStateType::COMBAT_START;
-	attackSelected = -1;
-	combatMenuFlags = 0;
-	once = true;
-
 	currentChar = &mainChar;
 	mainChar.box = { 1280,0,204,190 };
 	mainChar.characterTex = { 0,252,72,92 };
@@ -76,6 +68,20 @@ bool SceneCombat::Load()
 	btnCombatItem5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 44, { 256, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 5", 40, this);
 	btnCombatItem6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 45, { 476, app->render->camera.h - combatMenuBox.h + 35,200,60 }, "item 6", 40, this);
 
+	LOG("%d", characterFlags);
+
+	return false;
+}
+
+bool SceneCombat::Start()
+{
+	targetAttack = false;
+	finishedAction = false;
+	hasTicked = false;
+	attackSelected = -1;
+	combatMenuFlags = 0;
+	once = true;
+
 	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
 	{
@@ -87,9 +93,10 @@ bool SceneCombat::Load()
 	}
 	turnOrder.Clear();
 
-	LOG("%d", characterFlags);
+	SpawnEnemies();
+	combatState = CombatStateType::COMBAT_START;
 
-	return false;
+	return true;
 }
 
 bool SceneCombat::Update(float dt)
@@ -535,21 +542,7 @@ bool SceneCombat::Update(float dt)
 	break;
 	case COMBAT_END:
 	{
-		// cool animation as a victory thing and change back to gameplay
-		app->scene->current->combat = false;
-		ListItem<CombatEntity*>* e = turnOrder.start;
-		while (e != nullptr)
-		{
-			ListItem<CombatEntity*>* eNext = e->next;
-			e->data->pendingToDelete = true;
-			app->entities->DestroyEntity(e->data);
-			turnOrder.Del(e);
-			e = eNext;
-		}
-		enemy1 = nullptr;
-		enemy2 = nullptr;
-		enemy3 = nullptr;
-		app->scene->current->combatCooldown = 1.0f;
+		Finish();
 		break;
 	}
 	default:
@@ -711,9 +704,33 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	return true;
 }
 
+bool SceneCombat::Finish()
+{
+	// cool animation as a victory thing and change back to gameplay
+	ListItem<CombatEntity*>* e = turnOrder.start;
+	while (e != nullptr)
+	{
+		ListItem<CombatEntity*>* eNext = e->next;
+		if (!IsCharacter(e->data))
+		{
+			e->data->pendingToDelete = true;
+			app->entities->DestroyEntity(e->data);
+		}
+		e = eNext;
+	}
+
+	if (enemy1 != nullptr) enemy1 = nullptr;
+	if (enemy2 != nullptr) enemy2 = nullptr;
+	if (enemy3 != nullptr) enemy3 = nullptr;
+	app->scene->current->combatCooldown = 1.0f;
+	app->scene->current->combat = false;
+
+	return true;
+}
+
 bool SceneCombat::Unload()
 {
-	// Clean buttons from id 29 to id 45
+	if (combatGui != nullptr) app->tex->UnLoad(combatGui);
 	return true;
 }
 
@@ -950,7 +967,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		combatMenuFlags = 0;
 		characterSelected = false;
 		LOG("You fled!");
-		app->scene->current->combat = false;
+		Finish();
 		once = true;
 		break;
 	case 34: //SKILL 1

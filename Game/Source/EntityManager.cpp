@@ -77,16 +77,27 @@ bool EntityManager::CleanUp()
 {
 	// Destroy entities
 	ListItem<Entity*>* e = entities.start;
+	ListItem<Entity*>* eNext = nullptr;
 	while (e != nullptr)
 	{
-		ListItem<Entity*>* eNext = e->next;
-		DestroyEntity(e->data);
-		e = eNext;
+		if (e->next != nullptr)
+		{
+			eNext = e->next;
+			DestroyEntity(e->data);
+			e = eNext;
+		}
+		else
+		{
+			DestroyEntity(e->data);
+			break;
+		}
 	}
 	entities.Clear();
 
 	// Unloading entities textures
-	app->tex->UnLoad(playerTex);
+	if (playerTex != nullptr) app->tex->UnLoad(playerTex);
+	if (grandpaTex != nullptr) app->tex->UnLoad(grandpaTex);
+	if (enemiesTex != nullptr) app->tex->UnLoad(enemiesTex);
 
 	return true;
 }
@@ -202,7 +213,6 @@ void EntityManager::OnCollision(Collider* c1, Collider* c2)
 
 bool EntityManager::OnGuiMouseClickEvent(GuiControl* control)
 {
-	
 	return true;
 }
 
