@@ -132,10 +132,26 @@ bool GuiManager::CleanUp()
 	controls.Clear();
 
 	// Unload FONTS
-	if (atlas != nullptr) app->tex->UnLoad(atlas);
-	if (guiFontId != nullptr) delete guiFontId;
-	if (hoverSoundId != -1) app->audio->UnloadFx(hoverSoundId);
-	if (clickSoundId != -1) app->audio->UnloadFx(clickSoundId);
+	if (atlas != nullptr)
+	{
+		app->tex->UnLoad(atlas);
+		atlas = nullptr;
+	}
+	if (guiFontId != nullptr)
+	{
+		delete guiFontId;
+		guiFontId = nullptr;
+	}
+	if (hoverSoundId != -1)
+	{
+		app->audio->UnloadFx(hoverSoundId);
+		hoverSoundId = -1;
+	}
+	if (clickSoundId != -1)
+	{
+		app->audio->UnloadFx(clickSoundId);
+		clickSoundId = -1;
+	}
 
 	return true;
 }
