@@ -101,6 +101,9 @@ bool GuiSlider::Update(float dt)
 }
 bool GuiSlider::Update(float dt, int minId, int maxId)
 {
+	float tmpValue = (float)maxValue / (float)(limits.w - bounds.w);
+	value = (bounds.x - limits.x) * tmpValue;
+
 	this->state = GuiControlState::FOCUSED;
 
 	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
@@ -130,7 +133,7 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
 				app->audio->PlayFx(click);
 			app->scene->currentButton->data->state = GuiControlState::PRESSED;
-			bounds.x += 2;
+			bounds.x += 3;
 			NotifyObserver();
 		}
 		if (app->input->CheckButton("left", KEY_REPEAT))
@@ -138,7 +141,7 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
 				app->audio->PlayFx(click);
 			app->scene->currentButton->data->state = GuiControlState::PRESSED;
-			bounds.x -= 2;
+			bounds.x -= 3;
 			NotifyObserver();
 		}
 
