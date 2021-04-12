@@ -444,7 +444,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		TransitionToScene(SceneType::TITLE_SCREEN);
 		break;
 	case 8: //VOLUME
-		app->audio->SetMusicVolume(sldrVolume->value);
+		app->audio->SetMusicVolume(sldrVolume->value / 2);
 		app->audio->auxVolume = sldrVolume->value;
 		break;
 	case 9: //FX
