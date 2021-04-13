@@ -24,6 +24,7 @@ SceneGameplay::~SceneGameplay()
 
 bool SceneGameplay::Load()
 {
+	app->collisions->Enable();
 	app->entities->Enable();
 
 	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
@@ -398,6 +399,7 @@ bool SceneGameplay::Unload()
 		combatScene = nullptr;
 	}
 	app->entities->Disable();
+	app->collisions->Disable();
 	app->map->Disable();
 
 	if (buttonFont != nullptr) delete buttonFont;

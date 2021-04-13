@@ -75,7 +75,7 @@ bool SceneCombat::Load()
 	return false;
 }
 
-bool SceneCombat::Start()
+bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 {
 	if (currentChar != nullptr) currentChar = nullptr;
 	if (target != nullptr) target = nullptr;
@@ -97,7 +97,7 @@ bool SceneCombat::Start()
 	}
 	turnOrder.Clear();
 
-	SpawnEnemies();
+	SpawnEnemies(id1, id2, id3);
 
 	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
 	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
@@ -637,7 +637,6 @@ bool SceneCombat::Update(float dt)
 bool SceneCombat::Draw(Font* dialogueFont)
 {
 	//switch (ZONE)
-	app->render->background = { 125,33,129,255 };
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
 	//app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
@@ -911,60 +910,196 @@ int SceneCombat::EnemyTarget()
 }
 
 
-void SceneCombat::SpawnEnemies()
+void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 {
-	srand(time(NULL));
-	int e = rand() % 3 + 1;
-	for (int i = 0; i < e; i++) {
-		iPoint pos;
-		Entity* currentEnemy;
-		pos.y = 300;
-		switch (e)
+	if (id1 != EntityId::NOT_COMBAT || id2 != EntityId::NOT_COMBAT || id3 != EntityId::NOT_COMBAT)
+	{
+		int c = 0;
+		if (id1 != EntityId::NOT_COMBAT) c++;
+		if (id2 != EntityId::NOT_COMBAT) c++;
+		if (id3 != EntityId::NOT_COMBAT) c++;
+
+
+		srand(time(NULL));
+		for (int i = 0; i < c; i++)
 		{
-		case 1:
-			pos.x = 576;
-			currentEnemy = enemy1;
-			break;
-		case 2:
-			if (i == 0)
-			{
-				pos.x = 341;
-				currentEnemy = enemy1;
-			}
-			else
-			{
-				pos.x = 810;
-				currentEnemy = enemy2;
-			}
 
-			break;
-		case 3:
-			if (i == 0)
+			iPoint pos;
+			pos.y = 300;
+			switch (c)
 			{
-				pos.x = 224;
-				currentEnemy = enemy1;
-			}
-			else if (i == 1)
-			{
+			case 1:
 				pos.x = 576;
-				currentEnemy = enemy2;
+				switch (id1)
+				{
+				case EntityId::STRESSING_SHADOW:
+					enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+					break;
+				case EntityId::FURIOUS_SHADOW:
+					enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+					break;
+				case EntityId::NIGHTMARE:
+					enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::NIGHTMARE, Stats(10, 0, 20, 10, 70, 70, 70));
+					break;
+				default:
+					break;
+				}
+				break;
+			case 2:
+				if (i == 0)
+				{
+					pos.x = 341;
+					switch (id1)
+					{
+					case EntityId::STRESSING_SHADOW:
+						enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+						break;
+					case EntityId::FURIOUS_SHADOW:
+						enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+						break;
+					case EntityId::NIGHTMARE:
+						enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::NIGHTMARE, Stats(10, 0, 20, 10, 70, 70, 70));
+						break;
+					default:
+						break;
+					}
+				}
+				else
+				{
+					pos.x = 810;
+					switch (id2)
+					{
+					case EntityId::STRESSING_SHADOW:
+						enemy2 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+						break;
+					case EntityId::FURIOUS_SHADOW:
+						enemy2 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+						break;
+					case EntityId::NIGHTMARE:
+						enemy2 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::NIGHTMARE, Stats(10, 0, 20, 10, 70, 70, 70));
+						break;
+					default:
+						break;
+					}
+				}
+				break;
+			case 3:
+				if (i == 0)
+				{
+					pos.x = 224;
+					switch (id1)
+					{
+					case EntityId::STRESSING_SHADOW:
+						enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+						break;
+					case EntityId::FURIOUS_SHADOW:
+						enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+						break;
+					case EntityId::NIGHTMARE:
+						enemy1 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::NIGHTMARE, Stats(10, 0, 20, 10, 70, 70, 70));
+						break;
+					default:
+						break;
+					}
+				}
+				else if (i == 1)
+				{
+					pos.x = 576;
+					switch (id2)
+					{
+					case EntityId::STRESSING_SHADOW:
+						enemy2 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+						break;
+					case EntityId::FURIOUS_SHADOW:
+						enemy2 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+						break;
+					case EntityId::NIGHTMARE:
+						enemy2 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::NIGHTMARE, Stats(10, 0, 20, 10, 70, 70, 70));
+						break;
+					default:
+						break;
+					}
+				}
+				else
+				{
+					pos.x = 928;
+					switch (id3)
+					{
+					case EntityId::STRESSING_SHADOW:
+						enemy3 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
+						break;
+					case EntityId::FURIOUS_SHADOW:
+						enemy3 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
+						break;
+					case EntityId::NIGHTMARE:
+						enemy3 = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::NIGHTMARE, Stats(10, 0, 20, 10, 70, 70, 70));
+						break;
+					default:
+						break;
+					}
+				}
+				break;
+			default:
+				break;
 			}
-			else
-			{
-				pos.x = 928;
-				currentEnemy = enemy3;
-			}
-			break;
-		default:
-			break;
 		}
-
-
-		int type = rand() % 2 + 1;
-		if (type == 1) { currentEnemy = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60)); }
-		else if (type == 2) { currentEnemy = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90)); }
-
 	}
+	else
+	{
+		srand(time(NULL));
+		int e = rand() % 3 + 1;
+		for (int i = 0; i < e; i++)
+		{
+			iPoint pos;
+			Entity* currentEnemy;
+			pos.y = 300;
+			switch (e)
+			{
+			case 1:
+				pos.x = 576;
+				currentEnemy = enemy1;
+				break;
+			case 2:
+				if (i == 0)
+				{
+					pos.x = 341;
+					currentEnemy = enemy1;
+				}
+				else
+				{
+					pos.x = 810;
+					currentEnemy = enemy2;
+				}
+				break;
+			case 3:
+				if (i == 0)
+				{
+					pos.x = 224;
+					currentEnemy = enemy1;
+				}
+				else if (i == 1)
+				{
+					pos.x = 576;
+					currentEnemy = enemy2;
+				}
+				else
+				{
+					pos.x = 928;
+					currentEnemy = enemy3;
+				}
+				break;
+			default:
+				break;
+			}
+
+			int type = rand() % 2 + 1;
+			if (type == 1) { currentEnemy = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60)); }
+			else if (type == 2) { currentEnemy = app->entities->CreateEntity(pos.x, pos.y, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90)); }
+		}
+	}
+
+	if (id1 == EntityId::NIGHTMARE || id2 == EntityId::NIGHTMARE || id3 == EntityId::NIGHTMARE) app->render->background = { 0,0,0,255 };
+	else app->render->background = { 125,33,129,255 };
 }
 
 //----------------------------------------------------------

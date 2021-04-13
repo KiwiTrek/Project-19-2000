@@ -24,7 +24,7 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 	}
 	else
 	{
-		spawnPos = { 1,1 };
+		spawnPos = { 320,320 };
 	}
 
 	LOG("Init Player");
@@ -160,6 +160,13 @@ bool Player::Update(float dt)
 		app->win->GetWindowSize(width, height);
 		app->render->camera.x = -(entityRect.x - (int)width / 2 + entityRect.w / 2);
 		app->render->camera.y = -(entityRect.y - (int)height / 2 + entityRect.h / 2);
+		//app->render->camera.x = -(entityRect.x - (int)width / 2 + entityRect.w);
+		//app->render->camera.y = -(entityRect.y - (int)height / 2 - 64 + entityRect.h);
+
+		//if ((app->render->camera.x + entityRect.x) < (app->map->data.tileWidth * 9)) app->render->camera.x += (250.0f * dt);
+		//if ((entityRect.w + app->render->camera.x + entityRect.x) > ((int)width - app->map->data.tileWidth * 11)) app->render->camera.x -= (250.0f * dt);
+		//if ((app->render->camera.y + entityRect.y) < (app->map->data.tileHeight * 5)) app->render->camera.y += floor(250.0f * dt);
+		//if ((entityRect.h + app->render->camera.y + entityRect.y) > ((int)height - app->map->data.tileHeight * 7)) app->render->camera.y -= floor(250.0f * dt);
 
 		if (animFlags == (1 << FlagsAnimation::DOWN)) currentAnim = &idle;
 		else if (animFlags == (1 << FlagsAnimation::RIGHT)) currentAnim = &idleRight;

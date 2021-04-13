@@ -50,7 +50,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		break;
 	case EntityId::STRESSING_SHADOW:
 	{
-		stressingShadowSec = { 0,0,128,128 };
+		stressingShadowSec = { 128,0,128,128 };
 		name = "Stressing Shadow";
 
 		SString tmpS = "Magical blow";
@@ -64,7 +64,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	}
 	case EntityId::FURIOUS_SHADOW:
 	{
-		furiousShadowSec = { 128,0,128,128 };
+		furiousShadowSec = { 0,0,128,128 };
 		name = "Furious Shadow";
 
 		SString tmpS = "Getting stronger";
@@ -78,6 +78,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	}
 	case EntityId::NIGHTMARE:
 	{
+		nightmareSec = { 256,0,128,128 };
 		name = "Nightmare";
 
 		SString tmpS = "Bad dream";
@@ -121,14 +122,6 @@ bool CombatEntity::Draw()
 
 		switch (id)
 		{
-		case EntityId::MC:
-			break;
-		case EntityId::VIOLENT:
-			break;
-		case EntityId::STUBBORN:
-			break;
-		case EntityId::KIND:
-			break;
 		case EntityId::STRESSING_SHADOW:
 			app->render->DrawTexture(app->entities->enemiesTex, -app->render->camera.x + entityRect.x, -app->render->camera.y + entityRect.y, false, &stressingShadowSec);
 			break;
@@ -136,6 +129,7 @@ bool CombatEntity::Draw()
 			app->render->DrawTexture(app->entities->enemiesTex, -app->render->camera.x + entityRect.x, -app->render->camera.y + entityRect.y, false, &furiousShadowSec);
 			break;
 		case EntityId::NIGHTMARE:
+			app->render->DrawTexture(app->entities->enemiesTex, -app->render->camera.x + entityRect.x, -app->render->camera.y + entityRect.y, false, &nightmareSec);
 			break;
 		case EntityId::ENEMY_4:
 			break;

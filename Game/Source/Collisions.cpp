@@ -132,7 +132,6 @@ Collisions::Collisions()
 	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
 
 	srand(time(NULL));
-
 }
 
 Collisions::~Collisions()
@@ -145,6 +144,7 @@ void Collisions::Init()
 
 bool Collisions::Start()
 {
+	onceNightmare = true;
 	return true;
 }
 
@@ -257,13 +257,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 		iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y };
 		iPoint tilePos = app->map->WorldToMap(nextFrame.x, nextFrame.y);
 
-		iPoint what = app->map->MapToWorld(tilePos.x, tilePos.y);
-		iPoint the = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
+		iPoint tileWorldPos = app->map->MapToWorld(tilePos.x, tilePos.y);
+		iPoint tilePosLowerRight = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
 
-		SDL_Rect tileRect = { what.x,what.y,app->map->data.tileWidth,app->map->data.tileHeight };
+		SDL_Rect tileRect = { tileWorldPos.x,tileWorldPos.y,app->map->data.tileWidth,app->map->data.tileHeight };
 		LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
 		if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
-			|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::SOLID)
+			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::SOLID)
 			&& collider->Intersects(tileRect))
 		{
 			if (difference.x > 0) nextFrame.x--;
@@ -271,14 +271,10 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 			if (difference.y > 0) nextFrame.y--;
 			else if (difference.y < 0) nextFrame.y++;
 
-			if (difference == iPoint(0, 0))
-			{
-				return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-			}
-			return ResolveCollisions(collider, nextFrame,dt);
+			if (difference != iPoint(0, 0)) return ResolveCollisions(collider, nextFrame, dt);
 		}
 		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
-			|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::DOOR)
+			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::DOOR)
 			&& collider->Intersects(tileRect))
 		{
 			if (app->map->data.name == "tutorial.tmx")
@@ -333,6 +329,17 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						break;
 					}
 				}
+				case 63:
+				{
+					switch (tilePos.y)
+					{
+					case 82:
+						break;
+					default:
+						break;
+					}
+					break;
+				}
 				case 64:
 				{
 					switch (tilePos.y)
@@ -346,9 +353,30 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
 						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { (44 * app->map->data.tileWidth) - 1, (30 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
+					case 82:
 						break;
 					case 90:
 						return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					default:
+						break;
+					}
+				}
+				case 65:
+				{
+					switch (tilePos.y)
+					{
+					case 82:
+						break;
+					default:
+						break;
+					}
+				}
+				case 66:
+				{
+					switch (tilePos.y)
+					{
+					case 82:
 						break;
 					default:
 						break;
@@ -401,7 +429,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				}
 				case 30:
 				{
-					return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h};
+					return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 					break;
 				}
 				case 31:
@@ -516,21 +544,58 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 			}
 		}
 		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::ENEMY_SPAWN
-		|| app->map->GetTileProperty(the.x, the.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
-		&& collider->Intersects(tileRect) && !app->scene->current->combat)
+			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
+			&& collider->Intersects(tileRect) && !app->scene->current->combat)
 		{
-		if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
-		if (app->scene->current->combatCooldown <= 0)
-		{
-			int e = rand() % 100 + 1;
-			if (e <= 30)
+			if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
+			if (app->scene->current->combatCooldown <= 0)
 			{
-				app->scene->current->combat = true;
-				app->scene->current->enteringCombat = true;
-			}
-			else app->scene->current->combatCooldown = 1.0f;
+				int e = rand() % 100 + 1;
+				if (e <= 30)
+				{
+					app->scene->current->combat = true;
+					app->scene->current->enteringCombat = true;
+				}
+				else app->scene->current->combatCooldown = 1.0f;
 
+			}
 		}
+		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::EVENT
+			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::EVENT)
+			&& collider->Intersects(tileRect) && !app->scene->current->combat)
+		{
+			if (app->map->data.name == "tutorial.tmx")
+			{
+				switch (tilePos.y)
+				{
+				case 82:
+					LOG("EVENT TILE");
+					if (onceNightmare)
+					{
+						onceNightmare = false;
+						app->scene->current->combat = true;
+						app->scene->current->enteringCombat = true;
+
+						if (app->scene->current->enteringCombat)
+						{
+							app->scene->current->enteringCombat = false;
+							if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+							{
+								SceneGameplay* g = (SceneGameplay*)app->scene->current;
+								g->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
+							}
+							else if (app->scene->current->currentScene == SceneType::DEV_ROOM)
+							{
+								SceneDevRoom* d = (SceneDevRoom*)app->scene->current;
+								d->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
+							}
+						}
+					}
+					break;
+				default:
+					break;
+				}
+			}
 		}
 
 	}

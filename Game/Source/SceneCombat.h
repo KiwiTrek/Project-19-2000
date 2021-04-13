@@ -40,8 +40,8 @@ public:
 
     bool Load();
 
-    bool Start();
-    void SpawnEnemies();
+    bool Start(EntityId id1 = EntityId::NOT_COMBAT, EntityId id2 = EntityId::NOT_COMBAT, EntityId id3 = EntityId::NOT_COMBAT);
+    void SpawnEnemies(EntityId id1, EntityId id2, EntityId id3);
     bool SortSpeed(bool isSorted);
 
     bool Update(float dt);

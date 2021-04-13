@@ -18,6 +18,7 @@ SceneDevRoom::~SceneDevRoom()
 
 bool SceneDevRoom::Load()
 {
+	app->collisions->Enable();
 	app->entities->Enable();
 	app->map->Enable();
 	app->map->Load("dev_room.tmx");
@@ -82,7 +83,7 @@ bool SceneDevRoom::Unload()
 	}
 	app->entities->Disable();
 	if (dialogueFont != nullptr) delete dialogueFont;
-	app->entities->Disable();
+	app->collisions->Disable();
 	app->map->Disable();
 
 	return false;

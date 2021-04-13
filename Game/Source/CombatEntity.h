@@ -32,6 +32,7 @@ private:
 	Animation idle;
 	SDL_Rect stressingShadowSec;
 	SDL_Rect furiousShadowSec;
+	SDL_Rect nightmareSec;
 
 };
 

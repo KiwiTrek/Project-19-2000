@@ -82,5 +82,7 @@ private:
 	// The collision matrix. Defines the interaction for two collider types
 	// If set to false, collider 1 will ignore collider 2
 	bool matrix[Collider::Type::MAX][Collider::Type::MAX];
+
+	bool onceNightmare;
 };
 #endif // !__COLLISIONS_H__
