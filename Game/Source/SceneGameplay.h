@@ -95,8 +95,8 @@ private:
     //STATE FLAGS
     int flags;
 
-    bool inOptions = false;  // Bool to know if the player is on the options
-    bool inControls = false; // Bool to know if the player is on the controls
+    //bool inOptions = false;  // Bool to know if the player is on the options
+    //bool inControls = false; // Bool to know if the player is on the controls
     //bool inInventory = false;
     //bool inSkills = false;
     //bool inSkillTree = false;

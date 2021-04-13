@@ -70,14 +70,14 @@ bool SceneGameplay::Load()
 	btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 180, 440, 300, 60 }, "DOWN", 40, this);
 	btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 180, 520, 300, 60 }, "LEFT", 40, this);
 	btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 180, 600, 300, 60 }, "RIGHT", 40, this);
-	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
-	btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 120, 300, 60 }, "SELECT", 40, this);
-	btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 200, 300, 60 }, "CANCEL", 40, this);
-	btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 280, 300, 60 }, "MENU", 40, this);
-	btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 360, 300, 60 }, "UP", 40, this);
-	btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 440, 300, 60 }, "DOWN", 40, this);
-	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 520, 300, 60 }, "LEFT", 40, this);
-	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 800, 600, 300, 60 }, "RIGHT", 40, this);
+	btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 120, 300, 60 }, "SELECT", 40, this);
+	btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 200, 300, 60 }, "CANCEL", 40, this);
+	btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 280, 300, 60 }, "MENU", 40, this);
+	btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 360, 300, 60 }, "UP", 40, this);
+	btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 440, 300, 60 }, "DOWN", 40, this);
+	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 520, 300, 60 }, "LEFT", 40, this);
+	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 600, 300, 60 }, "RIGHT", 40, this);
+	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
 
 	app->map->Enable();
 	app->map->Load("tutorial.tmx");
@@ -96,7 +96,9 @@ bool SceneGameplay::Load()
 	app->scene->currentButton = app->gui->controls.start;
 	changeMenu = false;
 	enteringCombat = false;
-	usingGamepad = true;
+	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
+	app->input->mouseMotionX = 0;
+	app->input->mouseMotionY = 0;
 	inMenu = false;
 
 	return false;
@@ -144,12 +146,11 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			usingGamepad = true;
 			break;
 		}
-
 		gamepadControls = gamepadControls->next;
 	}
 	int tmpX = 0, tmpY = 0;
 	app->input->GetMouseMotion(tmpX, tmpY);
-	if (((tmpX > 2 || tmpX < -2) || (tmpY > 2 || tmpY < -2)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+	if (((tmpX > 1 || tmpX < -1) || (tmpY > 1 || tmpY < -1)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
 		usingGamepad = false;
 
 	// Calls update with gamepad parameters (GUI)
@@ -159,7 +160,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		{
 			if (changeMenu)
 			{
-				app->scene->currentButton = app->gui->controls.At(0);
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnInventory));
 				changeMenu = false;
 			}
 			app->scene->currentButton->data->Update(dt, 1, 7);
@@ -168,7 +169,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		{
 			if (changeMenu)
 			{
-				app->scene->currentButton = app->gui->controls.At(7);
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(sldrVolume));
 				changeMenu = false;
 			}
 			app->scene->currentButton->data->Update(dt, 8, 13);
@@ -177,7 +178,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		{
 			if (changeMenu)
 			{
-				app->scene->currentButton = app->gui->controls.At(13);
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnKeySelect));
 				changeMenu = false;
 			}
 			app->scene->currentButton->data->Update(dt, 14, 28);
@@ -254,7 +255,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
 		// Logic to manage pause menu and menu flags bit
-		if (!inOptions && !inControls)
+		if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 		{
 			app->gui->ResetButtons();
 			flags = ToggleBit(flags, Flags::MENU);
@@ -262,12 +263,12 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		}
 
 		// Volume between pause menu and gameplay logic
-		if (app->entities->inPause && !inOptions && !inControls)
+		if (app->entities->inPause && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 		{
 			app->audio->auxVolume = app->audio->GetMusicVolume();
 			app->audio->SetMusicVolume(app->audio->GetMusicVolume() / 3);
 		}
-		else if (inOptions || inControls);
+		else if ((flags & 1 << Flags::OPTIONS) != 0 || (flags & 1 << Flags::CONTROLS) != 0);
 		else
 		{
 			app->audio->SetMusicVolume(app->audio->auxVolume);
@@ -456,8 +457,6 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		app->gui->ResetButtons();
 		usingGamepad = true;
 
-		inOptions = true;
-
 		break;
 	case 7: //TITLE SCREEN
 		app->entities->inPause = false;
@@ -485,8 +484,6 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
-
-		inControls = true;
 		break;
 	case 13: //BACK (OPTIONS BACK)
 		flags = ClearBit(flags, Flags::OPTIONS);
@@ -494,8 +491,6 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
-
-		inOptions = false;
 		break;
 	case 14: //KEY SELECT
 		break;
@@ -511,29 +506,27 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 20: //KEY RIGHT
 		break;
-	case 21: //BACK 2 (CONTROLS BACK)
+	case 21: //PAD SELECT
+		break;
+	case 22: //PAD CANCEL
+		break;
+	case 23: //PAD MENU
+		break;
+	case 24: //PAD UP
+		break;
+	case 25: //PAD DOWN
+		break;
+	case 26: //PAD LEFT
+		break;
+	case 27: //PAD RIGHT
+		break;
+	case 28: //BACK 2 (CONTROLS BACK)
 		flags = ClearBit(flags, Flags::CONTROLS);
 
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
 
-		inControls = false;
-
-		break;
-	case 22: //PAD SELECT
-		break;
-	case 23: //PAD CANCEL
-		break;
-	case 24: //PAD MENU
-		break;
-	case 25: //PAD UP
-		break;
-	case 26: //PAD DOWN
-		break;
-	case 27: //PAD LEFT
-		break;
-	case 28: //PAD RIGHT
 		break;
 	default:
 		break;

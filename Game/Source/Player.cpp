@@ -53,7 +53,7 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 
 	for (int i = 0; i < 4; i++)
 	{
-		walkingDown.PushBack({ (entityRect.w * i) + (2*(i+1)),2,50,50 });
+		walkingDown.PushBack({ (entityRect.w * i) + (2 * (i + 1)),2,50,50 });
 	}
 	walkingDown.speed = 10.f;
 	walkingDown.loop = true;
@@ -81,18 +81,7 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 
 	currentAnim = &idle;
 
-	collider = app->collisions->AddCollider(this->entityRect, Collider::Type::PLAYER, (Module*)app->entities);
-
-	ListItem<SaveState*>* e = combatSaveStates.start;
-	while (e != nullptr)
-	{
-		ListItem<SaveState*>* eNext = e->next;
-		int i = combatSaveStates.Find(e->data);
-		delete combatSaveStates[i];
-		combatSaveStates.Del(combatSaveStates.At(i));
-		e = eNext;
-	}
-	combatSaveStates.Clear();
+	collider = app->collisions->AddCollider({ this->entityRect }, Collider::Type::PLAYER, (Module*)app->entities);
 }
 
 bool Player::Update(float dt)
@@ -161,32 +150,6 @@ bool Player::Update(float dt)
 				nextPos.y -= 3;
 				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.y -= 10;
 			}
-		}
-
-		ListItem<Entity*>* e = app->entities->entities.start;
-		while (e != nullptr)
-		{
-			if (e->data->id == EntityId::MC)
-			{
-				SaveState* save = new SaveState(e->data->stats, 1);
-				combatSaveStates.Add(save);
-			}
-			else if (e->data->id == EntityId::VIOLENT)
-			{
-				SaveState* save = new SaveState(e->data->stats, 2);
-				combatSaveStates.Add(save);
-			}
-			else if (e->data->id == EntityId::STUBBORN)
-			{
-				SaveState* save = new SaveState(e->data->stats, 3);
-				combatSaveStates.Add(save);
-			}
-			else if (e->data->id == EntityId::KIND)
-			{
-				SaveState* save = new SaveState(e->data->stats, 4);
-				combatSaveStates.Add(save);
-			}
-			e = e->next;
 		}
 
 		if (!godMode) entityRect = app->collisions->ResolveCollisions(collider, nextPos,dt);

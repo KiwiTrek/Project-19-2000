@@ -98,6 +98,12 @@ bool SceneCombat::Start()
 	turnOrder.Clear();
 
 	SpawnEnemies();
+
+	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
+	app->input->mouseMotionX = 0;
+	app->input->mouseMotionY = 0;
+
 	combatState = CombatStateType::COMBAT_START;
 
 	return true;
@@ -182,6 +188,7 @@ bool SceneCombat::Update(float dt)
 				{
 					once = false;
 					characterSelected = true;						//should delete eventually
+					changeMenu = true;
 				}
 
 				//player should decide what to do here based on the buttons (guiclickevent)
@@ -575,18 +582,21 @@ bool SceneCombat::Update(float dt)
 			usingGamepad = true;
 			break;
 		}
-
 		gamepadControls = gamepadControls->next;
 	}
 	int tmpX = 0, tmpY = 0;
 	app->input->GetMouseMotion(tmpX, tmpY);
-	if (((tmpX > 2 || tmpX < -2) || (tmpY > 2 || tmpY < -2)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+	if (((tmpX > 1 || tmpX < -1) || (tmpY > 1 || tmpY < -1)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
 		usingGamepad = false;
 
 	// Calls update with gamepad parameters (GUI)
 	if (usingGamepad)
 	{
-
+		//if (changeMenu)
+		//{
+		//	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+		//	changeMenu = false;
+		//}
 	}
 	// Calls update for mouse parameters (GUI)
 	else
@@ -1002,37 +1012,43 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		attackSelected = 1;
+		//attackSelected = 1;
+										finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 35: //SKILL 2
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		attackSelected = 2;
+		//attackSelected = 2;
+		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 36: //SKILL 3
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		attackSelected = 3;
+		//attackSelected = 3;
+		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 37: //SKILL 4
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		attackSelected = 4;
+		//attackSelected = 4;
+		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 38: //SKILL 5
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		attackSelected = 5;
+		//attackSelected = 5;
+		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 39: //SKILL 6
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		attackSelected = 6;
+		//attackSelected = 6;
+		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 40: //ITEM 1
 		app->gui->ResetButtons();
