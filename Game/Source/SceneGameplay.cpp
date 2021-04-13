@@ -253,10 +253,25 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
-		app->gui->ResetButtons();
-		flags = ToggleBit(flags, Flags::MENU);
-		app->entities->inPause = !app->entities->inPause;
+		if (!inOptions && !inControls)
+		{
+			app->gui->ResetButtons();
+			flags = ToggleBit(flags, Flags::MENU);
+			app->entities->inPause = !app->entities->inPause;
+		}
+
+		if (app->entities->inPause && !inOptions && !inControls)
+		{
+			app->audio->auxVolume = app->audio->GetMusicVolume();
+			app->audio->SetMusicVolume(app->audio->GetMusicVolume() / 3);
+		}
+		else if (inOptions || inControls);
+		else
+		{
+			app->audio->SetMusicVolume(app->audio->auxVolume);
+		}
 	}
+
 	return true;
 }
 
@@ -432,12 +447,15 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		flags = SetBit(flags, Flags::STATS);
 		break;
 	case 6: //OPTIONS
-		app->gui->ResetButtons();
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::OPTIONS);
+
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		inOptions = true;
+
 		break;
 	case 7: //TITLE SCREEN
 		app->entities->inPause = false;
@@ -461,15 +479,21 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	//CONTROLS
 	case 12: //CONTROLS
 		flags = SetBit(flags, Flags::CONTROLS);
+
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		inControls = true;
 		break;
-	case 13: //BACK
+	case 13: //BACK (OPTIONS BACK)
 		flags = ClearBit(flags, Flags::OPTIONS);
+
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		inOptions = false;
 		break;
 	case 14: //KEY SELECT
 		break;
@@ -485,11 +509,15 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 20: //KEY RIGHT
 		break;
-	case 21: //BACK 2
+	case 21: //BACK 2 (CONTROLS BACK)
 		flags = ClearBit(flags, Flags::CONTROLS);
+
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		inControls = false;
+
 		break;
 	case 22: //PAD SELECT
 		break;

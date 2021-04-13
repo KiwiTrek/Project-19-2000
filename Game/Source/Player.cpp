@@ -114,26 +114,16 @@ bool Player::Update(float dt)
 		if (app->input->CheckButton("cancel", KEY_DOWN))
 			LOG("Pressing Cancel");
 
-		if (app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		{
-			app->scene->current->inMenu = !app->scene->current->inMenu;
-			if (app->scene->current->inMenu)
-			{
-				app->audio->auxVolume = app->audio->GetMusicVolume();
-				app->audio->SetMusicVolume(app->audio->GetMusicVolume() / 2);
-			}
-			else
-			{
-				app->audio->SetMusicVolume(app->audio->auxVolume);
-			}
+		if ((app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN))
 			LOG("Pressing Menu");
-		}
+		
+
 
 		animFlags = ClearBit(animFlags, FlagsAnimation::WALKING);
 		currentAnim->Update(dt);
 		nextPos = { entityRect.x, entityRect.y };
 
-		if ((!app->scene->current->inMenu || !app->scene->current->combat) && !app->entities->inPause)
+		if (!app->scene->current->combat && !app->entities->inPause)
 		{
 			if (app->input->CheckButton("right", KEY_REPEAT))
 			{

@@ -94,6 +94,14 @@ private:
 
     //STATE FLAGS
     int flags;
+
+    bool inOptions = false;  // Bool to manage the user not to pause and move while in options and controls
+    bool inControls = false; // Bool to manage the user not to pause and move while in options and controls
+    //bool inInventory = false;
+    //bool inSkills = false;
+    //bool inSkillTree = false;
+    //bool inEquipment = false;
+    //bool inStats = false;
 };
 
 #endif // __SCENEGAMEPLAY_H__

@@ -108,6 +108,8 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 
 	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
 	{
+
+		// Logic for going from one button to another
 		if (app->scene->currentButton->next != nullptr && app->input->CheckButton("down", KEY_DOWN))
 		{
 			if (app->scene->currentButton->next->data->id <= maxId)
@@ -128,18 +130,28 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 				app->audio->PlayFx(hover);
 			}
 		}
-		if (app->input->CheckButton("right", KEY_REPEAT))
+
+		// Logic for slider and fx
+		if (app->input->CheckButton("right", KEY_DOWN))
 		{
 			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
 				app->audio->PlayFx(click);
 			app->scene->currentButton->data->state = GuiControlState::PRESSED;
+		}
+		if (app->input->CheckButton("right", KEY_REPEAT))
+		{
+			app->scene->currentButton->data->state = GuiControlState::PRESSED;
 			bounds.x += 3;
 			NotifyObserver();
 		}
-		if (app->input->CheckButton("left", KEY_REPEAT))
+		if (app->input->CheckButton("left", KEY_DOWN))
 		{
 			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
 				app->audio->PlayFx(click);
+			app->scene->currentButton->data->state = GuiControlState::PRESSED;
+		}
+		if (app->input->CheckButton("left", KEY_REPEAT))
+		{
 			app->scene->currentButton->data->state = GuiControlState::PRESSED;
 			bounds.x -= 3;
 			NotifyObserver();
