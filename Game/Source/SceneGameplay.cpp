@@ -253,6 +253,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
+		// Logic to manage pause menu and menu flags bit
 		if (!inOptions && !inControls)
 		{
 			app->gui->ResetButtons();
@@ -260,6 +261,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			app->entities->inPause = !app->entities->inPause;
 		}
 
+		// Volume between pause menu and gameplay logic
 		if (app->entities->inPause && !inOptions && !inControls)
 		{
 			app->audio->auxVolume = app->audio->GetMusicVolume();

@@ -95,8 +95,8 @@ private:
     //STATE FLAGS
     int flags;
 
-    bool inOptions = false;  // Bool to manage the user not to pause and move while in options and controls
-    bool inControls = false; // Bool to manage the user not to pause and move while in options and controls
+    bool inOptions = false;  // Bool to know if the player is on the options
+    bool inControls = false; // Bool to know if the player is on the controls
     //bool inInventory = false;
     //bool inSkills = false;
     //bool inSkillTree = false;
