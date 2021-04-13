@@ -279,7 +279,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         app->exitRequest = true;
         break;
     case 5: //VOLUME
-        app->audio->SetMusicVolume(sldrVolume->value);
+        app->audio->SetMusicVolume(sldrVolume->value / 2);
         app->audio->auxVolume = sldrVolume->value;
         break;
     case 6: //FX
