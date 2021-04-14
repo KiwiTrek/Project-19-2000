@@ -7,6 +7,7 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "GuiManager.h"
+#include "DialogSystem.h"
 
 #include "SceneManager.h"
 

@@ -7,6 +7,7 @@
 
 class Entity;
 class SceneCombat;
+class DialogSystem;
 
 class SceneDevRoom : public Scene
 {
@@ -35,6 +36,7 @@ private:
 
     Entity* player = nullptr;
     Font* dialogueFont = nullptr;
+    DialogSystem* dialogSystem = nullptr;
 };
 
 #endif // __SCENEDEVROOM_H__

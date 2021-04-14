@@ -81,6 +81,9 @@
     <ClCompile Include="Source\NPC.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DialogSystem.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -200,6 +203,12 @@
     </ClInclude>
     <ClInclude Include="Source\NPC.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DialogSystem.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DialogUtils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

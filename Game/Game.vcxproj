@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Collisions.cpp" />
     <ClCompile Include="Source\CombatEntity.cpp" />
+    <ClCompile Include="Source\DialogSystem.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\Font.cpp" />
     <ClCompile Include="Source\GuiButton.cpp" />
@@ -125,6 +126,8 @@
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Collisions.h" />
     <ClInclude Include="Source\CombatEntity.h" />
+    <ClInclude Include="Source\DialogSystem.h" />
+    <ClInclude Include="Source\DialogUtils.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\Font.h" />

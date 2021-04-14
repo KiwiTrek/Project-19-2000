@@ -24,6 +24,8 @@ public:
 	// Blit
 	bool Draw();
 
+	bool inDialog;
+
 private:
 	bool godMode = false;
 	iPoint playerPos;

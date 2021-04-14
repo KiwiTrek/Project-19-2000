@@ -1,0 +1,60 @@
+<dialog id="1">
+  
+  
+	<options speaker="Oscar" value="You don't look like you're from around here.">
+    
+		<option value="I've lived here all my life!">
+      
+			<options speaker="Oscar" id="bowler" value="Oh really? Then you must know Mr.Bowler.">
+        
+				<option value="Mr.Bowler is a good friend of mine!">
+					<line speaker="Oscar" value="You liar! There ain't no Mr.Bowler, I made him up!"></line>
+				</option>
+        
+				<option value="Who?">
+					<line speaker="Oscar" id="end-eat" value="Don't worry about it. Do you want something to eat?"></line>
+				</option>
+        
+			</options>
+      
+		</option>
+    
+    
+		<option value="Testing begins here."> <!-- OPTION STARTS HERE...................................-->
+      
+      
+			<options speaker="Witt" value="This is my first second line."> <!-- SPEAKER ASKS 1............-->
+        
+				<option value="Tell me a story"> <!-- SECOND OPTIONS 1......................................-->
+          <line speaker="Witt" value="PART I"></line>
+          <line speaker="Witt" value="PART II"></line>
+          <line speaker="Witt" value="PART III"></line>
+          
+          <options speaker="Witt" value="Did you like it?">
+            
+            <option value="Yes.">
+              <line speaker="Witt" value="Glad to hear that"></line>
+             </option>
+            
+            <option value="No.">
+              <line speaker="Witt" value="Tch."></line>
+             </option>
+            
+          </options>
+          
+				</option> <!-- SECOND OPTIONS 1 END.........................................................-->
+        
+				<option value="Leave"> <!-- SECOND OPTIONS 2................................................-->
+          <line speaker="Witt" value="See you later!"></line>
+				</option> <!-- SECOND OPTIONS 2 END.........................................................-->
+        
+			</options> <!-- SPEAKER ASKS 1 END............................................................-->
+      
+      
+		</option> <!-- OPTION ENDS HERE.................................................................-->
+    
+  
+	</options>
+  
+  
+</dialog>
