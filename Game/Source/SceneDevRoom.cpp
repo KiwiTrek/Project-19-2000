@@ -2,6 +2,7 @@
 #include "SceneCombat.h"
 
 #include "Audio.h"
+#include "GuiManager.h"
 #include "EntityManager.h"
 #include "Input.h"
 #include "Render.h"
@@ -22,6 +23,7 @@ bool SceneDevRoom::Load()
 	app->entities->Enable();
 	app->map->Enable();
 	app->map->Load("dev_room.tmx");
+	app->gui->Enable();
 
 	// initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
@@ -84,6 +86,7 @@ bool SceneDevRoom::Unload()
 	app->entities->Disable();
 	if (dialogueFont != nullptr) delete dialogueFont;
 	app->collisions->Disable();
+	app->gui->Disable();
 	app->map->Disable();
 
 	return false;

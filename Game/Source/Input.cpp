@@ -157,7 +157,7 @@ bool Input::PreUpdate()
 			mouseMotionY = event.motion.yrel / scale;
 			mouseX = event.motion.x / scale;
 			mouseY = event.motion.y / scale;
-			LOG("Mouse motion x %d y %d", mouseMotionX, mouseMotionY);
+			//LOG("Mouse motion x %d y %d", mouseMotionX, mouseMotionY);
 			break;
 		}
 		case(SDL_CONTROLLERDEVICEADDED):

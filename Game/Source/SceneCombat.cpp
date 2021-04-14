@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "GuiManager.h"
 #include "SceneManager.h"
+#include "SceneGameplay.h"
 #include "Input.h"
 #include "Render.h"
 #include "Window.h"
@@ -114,7 +115,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 bool SceneCombat::Update(float dt)
 {
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) characterSelected = !characterSelected;
-	LOG("%d", app->entities->entities.Count());
+	//LOG("%d", app->entities->entities.Count());
 	switch (combatState)
 	{
 	case COMBAT_START:
@@ -191,6 +192,7 @@ bool SceneCombat::Update(float dt)
 					once = false;
 					characterSelected = true;						//should delete eventually
 					changeMenu = true;
+					
 				}
 
 				//player should decide what to do here based on the buttons (guiclickevent)
@@ -588,17 +590,59 @@ bool SceneCombat::Update(float dt)
 	}
 	int tmpX = 0, tmpY = 0;
 	app->input->GetMouseMotion(tmpX, tmpY);
-	if (((tmpX > 1 || tmpX < -1) || (tmpY > 1 || tmpY < -1)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+	if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
 		usingGamepad = false;
 
 	// Calls update with gamepad parameters (GUI)
 	if (usingGamepad)
 	{
-		//if (changeMenu)
-		//{
-		//	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
-		//	changeMenu = false;
-		//}
+		if (changeMenu)
+		{
+			app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+			changeMenu = false;
+		}
+		if (characterSelected)
+		{
+			app->scene->currentButton->data->Update(dt, 29, 33);
+			if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+			{
+				if (changeMenu)
+				{
+					app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatSkill1));
+					changeMenu = false;
+				}
+				else
+				{
+					app->scene->currentButton->data->Update(dt, 34, 39);
+					if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
+					{
+						app->gui->ResetButtons();
+						app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+						combatMenuFlags = 0;
+						changeMenu = true;
+					}
+				}
+			}
+			else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+			{
+				if (changeMenu)
+				{
+					app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatItem1));
+					changeMenu = false;
+				}
+				else
+				{
+					app->scene->currentButton->data->Update(dt, 40, 45);
+					if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
+					{
+						app->gui->ResetButtons();
+						app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+						changeMenu = true;
+						combatMenuFlags = 0;
+					}
+				}
+			}
+		}
 	}
 	// Calls update for mouse parameters (GUI)
 	else
@@ -642,8 +686,6 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
 	//app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
-
-
 
 	if (!characterSelected)
 	{
@@ -763,6 +805,15 @@ bool SceneCombat::Finish()
 	scripted = false;
 	app->scene->current->combatCooldown = 1.0f;
 	app->scene->current->combat = false;
+	if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+	{
+		SceneGameplay* s = (SceneGameplay*)app->scene->current;
+		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(s->btnInventory));
+	}
+	else
+	{
+		app->scene->currentButton = nullptr;
+	}
 
 	return true;
 }
@@ -804,15 +855,22 @@ bool SceneCombat::IsCharacter(CombatEntity* e)
 
 void SceneCombat::SelectTarget()
 {
-	int x, y;
-	app->input->GetMousePosition(x, y);
-	ListItem<CombatEntity*>* e = turnOrder.start;
-	while (e != nullptr)
+	if (usingGamepad)
 	{
-		if (e->data->collider->Intersects({ x, y, 1, 1 }) && app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
-			target = e->data;
+		// Select target with gamepad
+	}
+	else
+	{
+		int x, y;
+		app->input->GetMousePosition(x, y);
+		ListItem<CombatEntity*>* e = turnOrder.start;
+		while (e != nullptr)
+		{
+			if (e->data->collider->Intersects({ x, y, 1, 1 }) && app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP)
+				target = e->data;
 
-		e = e->next;
+			e = e->next;
+		}
 	}
 }
 
@@ -1129,18 +1187,21 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		btnCombatSkills->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SKILL);
+		changeMenu = true;
 		break;
 	case 31: //ITEMS
 		app->gui->ResetButtons();
 		btnCombatItems->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
+		changeMenu = true;
 		break;
 	case 32: //SPECIAL
 		app->gui->ResetButtons();
 		btnCombatSpecial->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SPECIAL);
+		changeMenu = true;
 		break;
 	case 33: //FLEE
 	{
@@ -1165,7 +1226,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		combatMenuFlags = 0;
 		characterSelected = false;
 		//attackSelected = 1;
-										finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
 		break;
 	case 35: //SKILL 2
 		app->gui->ResetButtons();

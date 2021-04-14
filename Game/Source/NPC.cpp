@@ -66,7 +66,7 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 
 		currentAnim = &vibin;
 
-		collider = app->collisions->AddCollider(this->entityRect, Collider::Type::INTERACTABLE, (Module*)app->entities);
+		collider = app->collisions->AddCollider({ x - 5,y - 5,62,40 }, Collider::Type::INTERACTABLE, (Module*)app->entities);
 		break;
 	}
 	default:

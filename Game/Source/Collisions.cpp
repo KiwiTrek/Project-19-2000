@@ -263,7 +263,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 		iPoint tilePosLowerRight = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
 
 		SDL_Rect tileRect = { tileWorldPos.x,tileWorldPos.y,app->map->data.tileWidth,app->map->data.tileHeight };
-		LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
+		//LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
 		if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
 			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::SOLID)
 			&& collider->Intersects(tileRect))

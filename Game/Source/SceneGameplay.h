@@ -51,6 +51,7 @@ public:
     Entity* shopDude = nullptr;
 
     Entity* player = nullptr;
+    GuiButton* btnInventory;
 
 private:
     SDL_Texture* textBox = nullptr;
@@ -58,7 +59,6 @@ private:
     //MENU
     SDL_Rect menuBox;
     SDL_Rect menuCharacterBox;
-    GuiButton* btnInventory;
     GuiButton* btnSkills;
     GuiButton* btnSkillTree;
     GuiButton* btnEquipment;
