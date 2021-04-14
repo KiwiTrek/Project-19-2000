@@ -26,6 +26,7 @@ bool SceneCombat::Load()
 {
 	// COMBAT
 	combatGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
+	scripted = false;
 
 	if (currentChar != nullptr) currentChar = nullptr;
 	if (target != nullptr) target = nullptr;
@@ -87,6 +88,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	attackSelected = -1;
 	combatMenuFlags = 0;
 	once = true;
+	scripted = false;
 
 	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
@@ -758,6 +760,7 @@ bool SceneCombat::Finish()
 	attackSelected = -1;
 	combatMenuFlags = 0;
 	once = true;
+	scripted = false;
 	app->scene->current->combatCooldown = 1.0f;
 	app->scene->current->combat = false;
 
@@ -1098,7 +1101,11 @@ void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 		}
 	}
 
-	if (id1 == EntityId::NIGHTMARE || id2 == EntityId::NIGHTMARE || id3 == EntityId::NIGHTMARE) app->render->background = { 0,0,0,255 };
+	if (id1 == EntityId::NIGHTMARE || id2 == EntityId::NIGHTMARE || id3 == EntityId::NIGHTMARE)
+	{
+		app->render->background = { 0,0,0,255 };
+		scripted = true;
+	}
 	else app->render->background = { 125,33,129,255 };
 }
 
@@ -1136,13 +1143,23 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SPECIAL);
 		break;
 	case 33: //FLEE
+	{
 		app->gui->ResetButtons();
-		combatMenuFlags = 0;
-		characterSelected = false;
-		LOG("You fled!");
-		Finish();
-		once = true;
+		if (scripted)
+		{
+			LOG("You can't flee!");
+			break;
+		}
+		else
+		{
+			combatMenuFlags = 0;
+			characterSelected = false;
+			LOG("You fled!");
+			Finish();
+			once = true;
+		}
 		break;
+	}
 	case 34: //SKILL 1
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;

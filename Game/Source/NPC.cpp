@@ -61,7 +61,7 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 		vibin.PushBack({ 0,48,54,36 });	
 		vibin.PushBack({ 54,48,54,36 });
 
-		vibin.speed = 0.5f;
+		vibin.speed = 0.8f;
 		vibin.loop = true;
 
 		currentAnim = &vibin;

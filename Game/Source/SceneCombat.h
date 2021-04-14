@@ -85,6 +85,7 @@ private:
     bool targetAttack;
     bool finishedAction;
     bool hasTicked;
+    bool scripted;
     int attackSelected;
     bool once;
 
@@ -111,6 +112,6 @@ private:
     GuiButton* btnCombatItem4;
     GuiButton* btnCombatItem5;
     GuiButton* btnCombatItem6;
-};
+}
 
 #endif // __SCENECOMBAT_H__
