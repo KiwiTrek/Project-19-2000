@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "CombatEntity.h"
+#include "NPC.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -54,6 +55,10 @@ bool EntityManager::Start()
 	tmp.Clear();
 	tmp.Create("%s%s", folderTexture.GetString(), "Characters/GrandpaSpriteSheet.png");
 	grandpaTex = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderTexture.GetString(), "Characters/NPCs.png");
+	NPCTex = app->tex->Load(tmp.GetString());
 
 	tmp.Clear();
 	tmp.Create("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
@@ -102,7 +107,7 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats/*, Entity* playerPointer, EnemyType eType*/)
+Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer/* EnemyType eType*/)
 {
 	Entity* ret = nullptr;
 
@@ -118,6 +123,10 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 	{
 		ret = new CombatEntity(x, y, id, stats);
 		break;
+	}
+	case EntityType::NPC:
+	{
+		ret = new Npc(x, y, npcId, playerPointer);
 	}
 	}
 
@@ -202,13 +211,13 @@ void EntityManager::DestroyEntity(Entity* entity)
 
 void EntityManager::OnCollision(Collider* c1, Collider* c2)
 {
-	/*for (int i = 0; i < entities.Count(); i++)
+	for (int i = 0; i < entities.Count(); i++)
 	{
 		if (c1 == entities[i]->collider)
 		{
 			entities[i]->OnCollision(c1, c2);
 		}
-	}*/
+	}
 }
 
 bool EntityManager::OnGuiMouseClickEvent(GuiControl* control)

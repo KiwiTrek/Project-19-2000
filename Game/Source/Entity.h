@@ -16,6 +16,7 @@ enum class EntityType
 {
 	PLAYER,
 	COMBAT_ENTITY,
+	NPC,
 	UNKNOWN
 };
 
@@ -31,6 +32,15 @@ enum class EntityId
 	NIGHTMARE,
 	ENEMY_4,
 	ENEMY_5
+};
+
+enum NpcId
+{
+	NONE,
+	HERO,
+	GRANDPA,
+	CAT,
+	STORE_GUY,
 };
 
 //enum EnemyType

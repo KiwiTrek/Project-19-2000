@@ -8,6 +8,8 @@
 #include "SceneGameplay.h"
 #include "SceneDevRoom.h"
 #include "SceneCombat.h"
+#include "EntityManager.h"
+#include "NPC.h" 
 
 #include "Defs.h"
 #include "Log.h"
@@ -351,6 +353,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						app->map->CleanUp();
 						app->map->Load("home.tmx");
 						app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+						if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+						{
+							SceneGameplay* s = (SceneGameplay*)app->scene->current;
+							s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
+							s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
+							s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
+						}
 						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { (44 * app->map->data.tileWidth) - 1, (30 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					case 82:
@@ -515,6 +524,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					case 30:
 						app->map->CleanUp();
 						app->map->Load("tutorial.tmx");
+						if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+						{
+							SceneGameplay* s = (SceneGameplay*)app->scene->current;
+							app->entities->DestroyEntity(s->hero);
+							app->entities->DestroyEntity(s->shopDude);
+							app->entities->DestroyEntity(s->cat);
+						}
 						app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
 						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;

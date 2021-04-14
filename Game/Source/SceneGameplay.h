@@ -45,9 +45,14 @@ public:
     //COMBAT
     SceneCombat* combatScene;
 
-private:
+    //NPCs
+    Entity* hero = nullptr;
+    Entity* cat = nullptr;
+    Entity* shopDude = nullptr;
 
     Entity* player = nullptr;
+
+private:
     SDL_Texture* textBox = nullptr;
 
     //MENU

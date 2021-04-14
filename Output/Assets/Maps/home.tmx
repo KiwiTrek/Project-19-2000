@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="65" height="39" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.5" tiledversion="1.5.0" orientation="orthogonal" renderorder="right-down" width="65" height="39" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
  <tileset firstgid="1" name="home_tileSet" tilewidth="64" tileheight="64" tilecount="448" columns="28">
   <image source="HomeTileSet.png" width="1792" height="1024"/>
-  <terraintypes>
-   <terrain name="House" tile="-1"/>
-  </terraintypes>
+  <wangsets>
+   <wangset name="Terrenos" type="corner" tile="-1">
+    <wangcolor name="House" color="#ff0000" tile="-1" probability="1"/>
+   </wangset>
+  </wangsets>
  </tileset>
  <tileset firstgid="449" name="meta_data" tilewidth="64" tileheight="64" tilecount="8" columns="4">
   <image source="meta_data.png" width="256" height="128"/>
-  <terraintypes>
-   <terrain name="meta" tile="-1"/>
-  </terraintypes>
   <tile id="0">
    <properties>
     <property name="CollisionId" type="int" value="1"/>
@@ -51,6 +50,11 @@
     <property name="CollisionId" type="int" value="8"/>
    </properties>
   </tile>
+  <wangsets>
+   <wangset name="Terrenos" type="corner" tile="-1">
+    <wangcolor name="meta" color="#ff0000" tile="-1" probability="1"/>
+   </wangset>
+  </wangsets>
  </tileset>
  <layer id="4" name="Ground" width="65" height="39">
   <properties>
@@ -4762,7 +4766,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="403"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -4828,12 +4832,12 @@
    <tile/>
    <tile gid="275"/>
    <tile gid="276"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="403"/>
+   <tile gid="404"/>
+   <tile gid="403"/>
+   <tile gid="404"/>
+   <tile gid="405"/>
+   <tile gid="404"/>
    <tile/>
    <tile/>
    <tile/>
@@ -12323,52 +12327,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="449"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="449"/>
-   <tile gid="449"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="449"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -12393,6 +12351,10 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="449"/>
+   <tile gid="449"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile gid="449"/>
    <tile/>
@@ -12407,17 +12369,13 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="449"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="449"/>
-   <tile gid="449"/>
    <tile/>
-   <tile gid="449"/>
    <tile/>
-   <tile gid="449"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -12458,7 +12416,53 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="449"/>
+   <tile gid="449"/>
    <tile/>
+   <tile gid="449"/>
+   <tile/>
+   <tile gid="449"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile gid="449"/>
+   <tile gid="449"/>
+   <tile gid="449"/>
+   <tile gid="449"/>
+   <tile gid="449"/>
+   <tile gid="449"/>
    <tile gid="449"/>
    <tile/>
    <tile/>
