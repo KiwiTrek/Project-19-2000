@@ -270,8 +270,8 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         TransitionToScene(SceneType::GAMEPLAY);
         break;
     case 2: //CONTINUE
-        app->LoadRequest();
         TransitionToScene(SceneType::GAMEPLAY);
+        app->scene->continueLoadRequest = true;
         break;
     case 3: //OPTIONS
         flags = SetBit(flags, Flags::OPTIONS);

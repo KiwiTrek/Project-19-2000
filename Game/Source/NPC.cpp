@@ -31,11 +31,8 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 		this->entityRect = { x, y,34,46 };
 
 		idle.PushBack({ 0,0,34,46 });
-
 		idleLeft.PushBack({ 34,0,34,46 });
-
 		idleRight.PushBack({ 102,0,34,46 });
-
 		idleUp.PushBack({ 68,0,34,46 });
 
 		currentAnim = &idle;
@@ -59,9 +56,9 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 		this->entityRect = { x, y,54,36 };
 
 		vibin.PushBack({ 0,48,54,36 });	
-		vibin.PushBack({ 54,48,54,36 });
+		vibin.PushBack({ 56,48,54,36 });
 
-		vibin.speed = 0.8f;
+		vibin.speed = 1.5f;
 		vibin.loop = true;
 
 		currentAnim = &vibin;
@@ -78,7 +75,7 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 }
 
 
-bool Npc::Update(float dt, NpcId npcId)
+bool Npc::Update(float dt)
 {
 	//switch (npcId)
 	//{

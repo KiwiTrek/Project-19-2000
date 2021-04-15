@@ -37,10 +37,11 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 	this->entityRect = { nextPos.x, nextPos.y,50,50 };
 
 	pendingToDelete = false;
-	
+	godMode = false;
+
 	// Animation
 	
-	int flags = 1 << FlagsAnimation::DOWN;
+	animFlags = 0;
 
 	idle.PushBack({ 2,2,50,50 });
 
@@ -91,11 +92,14 @@ bool Player::Update(float dt)
 
 	if (!app->scene->current->combat)
 	{
-		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && currentAnim == &idle)
-			app->SaveRequest();
+		if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+		{
+			if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN && currentAnim == &idle)
+				app->SaveRequest();
 
-		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN && currentAnim == &idle)
-			app->LoadRequest();
+			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && currentAnim == &idle)
+				app->LoadRequest();
+		}
 
 		if (app->input->CheckButton("select", KEY_DOWN))
 			LOG("Pressing Select");
@@ -106,8 +110,6 @@ bool Player::Update(float dt)
 		if ((app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN))
 			LOG("Pressing Menu");
 		
-
-
 		animFlags = ClearBit(animFlags, FlagsAnimation::WALKING);
 		currentAnim->Update(dt);
 		nextPos = { entityRect.x, entityRect.y };

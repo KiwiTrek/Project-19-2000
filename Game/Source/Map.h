@@ -139,7 +139,10 @@ public:
 	bool CleanUp();
 
 	// Load new map
-	bool Load(const char* path);
+	bool LoadNewMap(const char* path);
+
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&);
 
 	// Translates map position to world position
 	iPoint MapToWorld(int x, int y) const;

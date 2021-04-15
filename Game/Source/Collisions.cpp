@@ -225,14 +225,23 @@ bool Collisions::CleanUp()
 	return true;
 }
 
-bool Collisions::Load(pugi::xml_node&)
+bool Collisions::Load(pugi::xml_node& save)
 {
-	return true;
+	bool ret = true;
+	pugi::xml_attribute flags = save.child("flags").attribute("nightmareBoss");
+	if (flags.empty()) ret = false;
+	else
+	{
+		onceNightmare = flags.as_bool(true);
+	}
+	return ret;
 }
 
-bool Collisions::Save(pugi::xml_node&)
+bool Collisions::Save(pugi::xml_node& save)
 {
-	return true;
+	bool ret = true;
+	ret = save.append_child("flags").append_attribute("nightmareBoss").set_value(onceNightmare);
+	return ret;
 }
 
 Collider* Collisions::AddCollider(SDL_Rect rect, Collider::Type type, Module* listener)
@@ -351,7 +360,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						break;
 					case 65:
 						app->map->CleanUp();
-						app->map->Load("home.tmx");
+						app->map->LoadNewMap("home.tmx");
 						app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
 						if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 						{
@@ -523,7 +532,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					{
 					case 30:
 						app->map->CleanUp();
-						app->map->Load("tutorial.tmx");
+						app->map->LoadNewMap("tutorial.tmx");
 						if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 						{
 							SceneGameplay* s = (SceneGameplay*)app->scene->current;
@@ -585,7 +594,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				switch (tilePos.y)
 				{
 				case 82:
-					LOG("EVENT TILE");
+					//LOG("EVENT TILE");
 					if (onceNightmare)
 					{
 						onceNightmare = false;
@@ -613,7 +622,31 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				}
 			}
 		}
-
+		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::INTERACTABLE
+			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::INTERACTABLE)
+			&& collider->Intersects(tileRect) && !app->scene->current->combat)
+		{
+			if (app->map->data.name == "home.tmx")
+			{
+				switch (tilePos.y)
+				{
+				case 16:
+				case 17:
+					switch (tilePos.x)
+					{
+					case 38:
+					case 39:
+						app->SaveRequest();
+						break;
+					default:
+						break;
+					}
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 	return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 }

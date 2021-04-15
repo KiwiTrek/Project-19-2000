@@ -18,7 +18,7 @@ public:
 	Npc(int x, int y, NpcId id, Entity* player);
 
 	// Called each loop iteration
-	bool Update(float dt, NpcId npcId);
+	bool Update(float dt);
 
 	// Blit
 	bool Draw();

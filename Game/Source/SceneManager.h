@@ -37,6 +37,7 @@ public:
 	ListItem<GuiControl*>* currentButton = nullptr;
 
 	bool onTransition;
+	bool continueLoadRequest;
 	float transitionAlpha;
 
 	bool fullscreenChecked = false;

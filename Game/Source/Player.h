@@ -25,9 +25,9 @@ public:
 	bool Draw();
 
 	bool inDialog;
+	bool godMode;
 
 private:
-	bool godMode = false;
 	iPoint playerPos;
 
 	// Animations stuff

@@ -25,7 +25,7 @@ bool SceneDevRoom::Load()
 	app->collisions->Enable();
 	app->entities->Enable();
 	app->map->Enable();
-	app->map->Load("dev_room.tmx");
+	app->map->LoadNewMap("dev_room.tmx");
 	app->gui->Enable();
 
 	dialogSystem = new DialogSystem();

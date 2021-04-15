@@ -1,5 +1,10 @@
 #include "App.h"
 
+#include "Audio.h"
+#include "EntityManager.h"
+#include "NPC.h"
+#include "SceneManager.h"
+#include "SceneGameplay.h"
 #include "Render.h"
 #include "Textures.h"
 #include "Map.h"
@@ -145,7 +150,7 @@ bool Map::CleanUp()
 	return true;
 }
 
-bool Map::Load(const char* filename)
+bool Map::LoadNewMap(const char* filename)
 {
 	bool ret = true;
 
@@ -589,6 +594,7 @@ void Properties::SetProperty(const char* name, int value)
 int Map::GetTileProperty(int x, int y, const char* property) const
 {
 	int ret = 0;
+	if (data.type == MapTypes::MAPTYPE_UNKNOWN) return ret;
 	// MapLayer
 	ListItem<MapLayer*>* mapLayer = data.mapLayer.start;
 	SString layerName = "MetaData";
@@ -625,5 +631,36 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 	}
 	Tile* currentTile = tileSet->data->GetPropList(id);
 	ret = currentTile->properties.GetProperty(property, -1);
+	return ret;
+}
+
+bool Map::Load(pugi::xml_node& save)
+{
+	bool ret = true;
+	CleanUp();
+	ret = LoadNewMap(save.child("data").attribute("name").as_string());
+	if (ret && data.type != MapTypes::MAPTYPE_UNKNOWN)
+	{
+		if (data.name == "tutorial.tmx")
+		{
+			app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+		}
+		else if (data.name == "home.tmx")
+		{
+			app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+		}
+	}
+	return ret;
+}
+
+bool Map::Save(pugi::xml_node& save)
+{
+	bool ret = true;
+	if (data.type != MapTypes::MAPTYPE_UNKNOWN)
+	{
+		pugi::xml_node mapName = save.append_child("data");
+		ret = mapName.append_attribute("name").set_value(data.name.GetString());
+	}
+	else ret = false;
 	return ret;
 }

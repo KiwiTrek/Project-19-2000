@@ -3,6 +3,7 @@
 #include "Audio.h"
 #include "EntityManager.h"
 #include "CombatEntity.h"
+#include "Player.h"
 #include "Textures.h"
 #include "GuiManager.h"
 #include "SceneManager.h"
@@ -74,6 +75,8 @@ bool SceneCombat::Load()
 
 	LOG("%d", characterFlags);
 
+	heDed = false;
+
 	return false;
 }
 
@@ -106,6 +109,8 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;
+
+	heDed = false;
 
 	combatState = CombatStateType::COMBAT_START;
 
@@ -908,20 +913,56 @@ void SceneCombat::TickDownBuffs()
 
 void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 {
-	currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
-	//dialogue that X character does Y attack to Z enemy
-	LOG("%s does damage attack to %s!",currentEntity->data->name.GetString(), target->name.GetString());
-	int attack = 0;
-	if (!isMagic)
-		attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
-	else
-		attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.mDef);
+	ListItem<Entity*>* e = app->entities->entities.start;
+	Player* player = nullptr;
+	while (e != nullptr)
+	{
+		if (e->data->type == EntityType::PLAYER) break;
+		e = e->next;
+	}
+	if (e != nullptr)
+	{
+		player = (Player*)e->data;
+	}
 
-	if (attack <= 0)
-		attack = 0;
-	target->stats.hPoints -= attack;
-	if (target->stats.hPoints <= 0)
-		target->stats.hPoints = 0;
+	if (player != nullptr && !player->godMode)
+	{
+		currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
+		//dialogue that X character does Y attack to Z enemy
+		LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+		int attack = 0;
+		if (!isMagic)
+			attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
+		else
+			attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.mDef);
+
+		if (attack <= 0)
+			attack = 0;
+		target->stats.hPoints -= attack;
+		if (target->stats.hPoints <= 0)
+			target->stats.hPoints = 0;
+	}
+	else
+	{
+		if (!IsCharacter(target))
+		{
+			currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
+			//dialogue that X character does Y attack to Z enemy
+			LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+			int attack = 0;
+			if (!isMagic)
+				attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
+			else
+				attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.mDef);
+
+			if (attack <= 0)
+				attack = 0;
+			target->stats.hPoints -= attack;
+			if (target->stats.hPoints <= 0)
+				target->stats.hPoints = 0;
+		}
+		else LOG("You're god, no damage taken!");
+	}
 }
 
 void SceneCombat::VictoryCondition()
@@ -951,12 +992,12 @@ void SceneCombat::DefeatCondition()
 	{
 		if (IsCharacter(e->data) == true)
 			counter++;
-
 		e = e->next;
 	}
 
 	if (counter == 0)
 	{
+		heDed = true;
 		combatState = CombatStateType::COMBAT_END;
 		LOG("Defeat!\n");
 	}

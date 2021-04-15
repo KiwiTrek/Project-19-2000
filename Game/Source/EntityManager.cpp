@@ -10,7 +10,8 @@
 #include "Fonts.h"
 #include "GuiManager.h"
 #include "SceneManager.h"
-#include "Scene.h"
+#include "SceneGameplay.h"
+#include "SceneCombat.h"
 #include "Player.h"
 #include "CombatEntity.h"
 #include "NPC.h"
@@ -166,6 +167,7 @@ bool EntityManager::PostUpdate()
 	if(!app->scene->current->combat)
 	{
 		ListItem<Entity*>* e = entities.start;
+		Entity* p = nullptr;
 		while (e != nullptr)
 		{
 			if (e->data->pendingToDelete == true)
@@ -174,10 +176,12 @@ bool EntityManager::PostUpdate()
 			}
 			else
 			{
+				if (e->data->type == EntityType::PLAYER) p = e->data;
 				e->data->Draw();
 			}
 			e = e->next;
 		}
+		p->Draw();
 	}
 	else
 	{
@@ -230,70 +234,67 @@ bool EntityManager::Load(pugi::xml_node& save)
 	LOG("Loading entities data");
 	bool ret = true;
 
-	//// Clear the list
-	//ListItem<Entity*>* e = entities.start;
-	//while (e != nullptr)
-	//{
-	//	ListItem<Entity*>* eNext = e->next;
-	//	DestroyEntity(e->data);
-	//	e = eNext;
-	//}
-	//entities.Clear();
+	// Clear the list
+	ListItem<Entity*>* e = entities.start;
+	while (e != nullptr)
+	{
+		ListItem<Entity*>* eNext = e->next;
+		DestroyEntity(e->data);
+		e = eNext;
+	}
+	entities.Clear();
 
-	//// Initialize the entity variables
-	//int x = 0;
-	//int y = 0;
-	//EntityType type = EntityType::UNKNOWN;
-	//EnemyType eType = EnemyType::NO_TYPE;
-	//Player* pp = nullptr;
+	SceneGameplay* s = nullptr;
+	SceneCombat* cbt = nullptr;
+	if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+	{
+		s = (SceneGameplay*)app->scene->current;
+		cbt = s->combatScene;
+		s->player = nullptr;
+		if (app->map->data.name == "home.tmx")
+		{
+			s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
+			s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
+			s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
+		}
+	}
 
-	//for (pugi::xml_node entity = save.child("entity"); entity && ret; entity = entity.next_sibling("entity"))
-	//{
-	//	x = entity.child("coordinates").attribute("x").as_int();
-	//	y = entity.child("coordinates").attribute("y").as_int();
-	//	switch (entity.child("type").attribute("value").as_int())
-	//	{
-	//	case 0:
-	//		type = EntityType::PLAYER;
-	//		break;
-	//	case 1:
-	//		type = EntityType::ENEMY;
-	//		break;
-	//	case 2:
-	//		type = EntityType::COIN;
-	//		break;
-	//	case 3:
-	//		type = EntityType::FRUIT;
-	//		break;
-	//	default:
-	//		type = EntityType::UNKNOWN;
-	//		break;
-	//	}
-	//	switch (entity.child("eType").attribute("value").as_int())
-	//	{
-	//	case 1:
-	//		eType = EnemyType::GROUND;
-	//		break;
-	//	case 2:
-	//		eType = EnemyType::FLYING;
-	//		break;
-	//	default:
-	//		eType = EnemyType::NO_TYPE;
-	//		break;
-	//	}
+	iPoint coords = { 0,0 };
+	pugi::xml_node player = save.child("player");
+	pugi::xml_node coordsNode = player.child("coordinates");
+	coords = { coordsNode.attribute("x").as_int(-1),coordsNode.attribute("x").as_int(-1) };
+	s->player = app->entities->CreateEntity(coords.x, coords.y, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
-	//	if (type == EntityType::PLAYER)
-	//	{
-	//		pp = (Player*)CreateEntity(x, y, type, nullptr, eType);
-	//		pp->lives = entity.child("lives").attribute("value").as_int(3);
-	//		pp->firstCheckpoint = entity.child("checkpoint").attribute("value").as_bool();
-	//		app->scene->player = pp;
-	//	}
-	//	else
-	//	{
-	//		CreateEntity(x, y, type, pp, eType);
-	//	}
-	//}
+	while (!player.empty())
+	{
+		Stats newChar = (0);
+		newChar.hPoints = player.next_sibling().child("stats").attribute("hPoints").as_int(1);
+		newChar.hPointsMax = player.next_sibling().child("stats").attribute("hPointsMax").as_int(1);
+		newChar.mPoints = player.next_sibling().child("stats").attribute("mPoints").as_int(1);
+		newChar.mPointsMax = player.next_sibling().child("stats").attribute("mPointsMax").as_int(1);
+		newChar.pAtk = player.next_sibling().child("stats").attribute("pAtk").as_int(0);
+		newChar.pDef = player.next_sibling().child("stats").attribute("pDef").as_int(0);
+		newChar.mAtk = player.next_sibling().child("stats").attribute("mAtk").as_int(0);
+		newChar.mDef = player.next_sibling().child("stats").attribute("mDef").as_int(0);
+		newChar.speed = player.next_sibling().child("stats").attribute("speed").as_int(0);
+		newChar.stress = player.next_sibling().child("stats").attribute("stress").as_int(0);
+		newChar.stressMax = player.next_sibling().child("stats").attribute("stressMax").as_int(0);
+		if (player.next_sibling().name() == "MC")
+		{
+			cbt->mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - cbt->mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, newChar);
+			cbt->mainChar.hp.Create("HP: %d/%d", cbt->mainChar.character->stats.hPoints, cbt->mainChar.character->stats.hPointsMax);
+			cbt->mainChar.mp.Create("MP: %d/%d", cbt->mainChar.character->stats.mPoints, cbt->mainChar.character->stats.mPointsMax);
+			cbt->mainChar.stress.Create("ST: %d/%d", cbt->mainChar.character->stats.stress, cbt->mainChar.character->stats.stressMax);
+		}
+		else if (player.next_sibling().name() == "Grandpa")
+		{
+			cbt->grandpa.character = (CombatEntity*)app->entities->CreateEntity(cbt->grandpa.box.w + 36, app->render->camera.h - cbt->grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, newChar);
+			cbt->grandpa.hp.Create("HP: %d/%d", cbt->grandpa.character->stats.hPoints, cbt->grandpa.character->stats.hPointsMax);
+			cbt->grandpa.mp.Create("MP: %d/%d", cbt->grandpa.character->stats.mPoints, cbt->grandpa.character->stats.mPointsMax);
+		}
+		player = player.next_sibling();
+	}
+
 	return ret;
 }
 
@@ -302,60 +303,40 @@ bool EntityManager::Save(pugi::xml_node& save)
 	LOG("Saving entities data");
 	bool ret = true;
 
-	/*ListItem<Entity*>* e = entities.start;
+	ListItem<Entity*>* e = entities.start;
+	Player* p = nullptr;
+	CombatEntity* c = nullptr;
 	while (e != nullptr)
 	{
-		pugi::xml_node entity = save.append_child("entity");
-		pugi::xml_node entityCoords = entity.append_child("coordinates");
-		entityCoords.append_attribute("x").set_value(e->data->entityRect.x);
-		entityCoords.append_attribute("y").set_value(e->data->entityRect.y);
-		int type = 0;
-		switch (e->data->type)
+		if (e->data->type == EntityType::PLAYER)
 		{
-		case EntityType::PLAYER:
+			p = (Player*)e->data;
+			pugi::xml_node player = save.append_child("player");
+			pugi::xml_node coords = player.append_child("coordinates");
+			coords.append_attribute("x").set_value(p->entityRect.x);
+			coords.append_attribute("y").set_value(p->entityRect.y);
+		}
+		if (e->data->type == EntityType::COMBAT_ENTITY)
 		{
-			Player* pp = (Player*)e->data;
-			entity.append_child("lives").append_attribute("value").set_value(pp->lives);
-			entity.append_child("checkpoint").append_attribute("value").set_value(pp->firstCheckpoint);
-			type = 0;
-			break;
+			c = (CombatEntity*)e->data;
+			pugi::xml_node character = save.append_child(c->name.GetString());
+			pugi::xml_node stats = character.append_child("stats");
+			stats.append_attribute("pAtk").set_value(c->stats.pAtk);
+			stats.append_attribute("mAtk").set_value(c->stats.mAtk);
+			stats.append_attribute("pDef").set_value(c->stats.pDef);
+			stats.append_attribute("mDef").set_value(c->stats.mDef);
+			stats.append_attribute("hPoints").set_value(c->stats.hPoints);
+			stats.append_attribute("hPointsMax").set_value(c->stats.hPointsMax);
+			stats.append_attribute("speed").set_value(c->stats.speed);
+			stats.append_attribute("mPoints").set_value(c->stats.mPoints);
+			stats.append_attribute("mPointsMax").set_value(c->stats.mPointsMax);
+			if (c->id == EntityId::MC)
+			{
+				stats.append_attribute("stress").set_value(c->stats.stress);
+				stats.append_attribute("stressMax").set_value(c->stats.stressMax);
+			}
 		}
-		case EntityType::ENEMY:
-		{
-			type = 1;
-			break;
-		}
-		case EntityType::COIN:
-		{
-			type = 2;
-			break;
-		}
-		case EntityType::FRUIT:
-		{
-			type = 3;
-			break;
-		}
-		default:
-		{
-			break;
-		}
-		}
-		entity.append_child("type").append_attribute("value").set_value(type);
-		int eType = 0;
-		switch (e->data->eType)
-		{
-		case EnemyType::GROUND:
-			eType = 1;
-			break;
-		case EnemyType::FLYING:
-			eType = 2;
-			break;
-		default:
-			break;
-		}
-		entity.append_child("eType").append_attribute("value").set_value(eType);
-
 		e = e->next;
-	}*/
+	}
 	return ret;
 }

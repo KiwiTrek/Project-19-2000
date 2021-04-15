@@ -81,9 +81,13 @@ bool SceneGameplay::Load()
 	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
 
 	app->map->Enable();
-	app->map->Load("tutorial.tmx");
+	app->map->LoadNewMap("tutorial.tmx");
 	// Initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
+
+	hero = nullptr;
+	shopDude = nullptr;
+	cat = nullptr;
 
 	// COMBAT
 	combatScene->Load();
@@ -103,6 +107,8 @@ bool SceneGameplay::Load()
 	flags = 0;
 	inMenu = false;
 
+	if (app->scene->continueLoadRequest) app->LoadRequest();
+
 	return false;
 }
 
@@ -119,6 +125,7 @@ bool SceneGameplay::Update(float dt)
 		enteringCombat = true;
 	}
 
+
 	if (combat)
 	{
 		if (enteringCombat)
@@ -133,6 +140,8 @@ bool SceneGameplay::Update(float dt)
 		UpdatePauseMenu(dt);
 		//Update normal scene
 	}
+
+	if (combatScene->heDed) TransitionToScene(SceneType::TITLE_SCREEN);
 
 	return true;
 }

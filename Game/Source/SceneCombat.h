@@ -66,6 +66,7 @@ public:
 public:
     //STATE FLAGS
     int flags;
+    bool heDed;
 
     SDL_Texture* combatGui;
     SDL_Rect combatTextBox;

@@ -1,12 +1,29 @@
 <?xml version="1.0"?>
-<!-- L02: TODO 4: Create a simulation xml file to read -->
-<game_state>
-	<input />
+<save_state>
 	<window />
+	<input />
 	<textures />
-	<audio />
-	<scene />
-	<renderer>
-		<camera x="0" y="0" />
-	</renderer>
-</game_state>
+	<audio>
+		<volume value="64" />
+	</audio>
+	<map>
+		<data name="home.tmx" />
+	</map>
+	<scenemanager />
+	<entityManager>
+		<player>
+			<coordinates x="2012" y="853" />
+		</player>
+		<MC>
+			<stats pAtk="20" mAtk="0" pDef="10" mDef="10" hPoints="40" hPointsMax="100" speed="50" mPoints="100" mPointsMax="100" stress="30" stressMax="100" />
+		</MC>
+		<Grandpa>
+			<stats pAtk="25" mAtk="25" pDef="0" mDef="0" hPoints="100" hPointsMax="100" speed="25" mPoints="100" mPointsMax="100" />
+		</Grandpa>
+	</entityManager>
+	<collisions>
+		<flags nightmareBoss="false" />
+	</collisions>
+	<guiManager />
+	<renderer />
+</save_state>
