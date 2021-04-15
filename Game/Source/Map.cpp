@@ -29,6 +29,23 @@ bool Map::Awake(pugi::xml_node& config)
 	return true;
 }
 
+
+bool Map::Start() 
+{
+	data.backgroundColor = { 0, 0, 0, 0 };
+	data.height = 0;
+	data.mapLayer.Clear();
+	data.name.Clear();
+	data.tileHeight = 0;
+	data.tileSets.Clear();
+	data.tileWidth = 0;
+	data.type = MapTypes::MAPTYPE_UNKNOWN;
+	data.width = 0;
+	mapLoaded = false;
+	
+	return true;
+}
+
 void Map::Draw()
 {
 	if (mapLoaded == false)
@@ -570,11 +587,11 @@ void Properties::SetProperty(const char* name, int value)
 
 int Map::GetTileProperty(int x, int y, const char* property) const
 {
-	int ret;
+	int ret = 0;
 	// MapLayer
 	ListItem<MapLayer*>* mapLayer = data.mapLayer.start;
 	SString layerName = "MetaData";
-	while (mapLayer != NULL)
+	while (mapLayer != nullptr)
 	{
 		if (mapLayer->data->name == layerName)
 		{
@@ -583,10 +600,12 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 		mapLayer = mapLayer->next;
 	}
 
+	if (mapLayer == nullptr) return ret;
+
 	// TileSet
 	ListItem<TileSet*>* tileSet = data.tileSets.start;
 	SString tileSetName = "meta_data";
-	while (tileSet != NULL)
+	while (tileSet != nullptr)
 	{
 		if (tileSet->data->name == tileSetName)
 		{
@@ -595,11 +614,12 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 		tileSet = tileSet->next;
 	}
 
+	if (tileSet == nullptr) return ret;
+
 	// Gets CollisionId
 	int id = (int)(mapLayer->data->Get(x, y) - tileSet->data->firstgId);
 	if (id < 0)
 	{
-		ret = 0;
 		return ret;
 	}
 	Tile* currentTile = tileSet->data->GetPropList(id);
