@@ -29,12 +29,15 @@ bool SceneTitleScreen::Load()
     nooseBG = app->tex->Load("Assets/Textures/NooseBG.png");
     titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
     buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
+    titleFx = app->audio->LoadFx("Assets/Audio/Fx/TitleFX.wav");
 
     app->audio->SetMusicVolume(app->audio->auxVolume);
     app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
     app->render->camera.x = 0;
     app->render->camera.y = 0;
     noose.Reset();
+
+    app->audio->PlayFx(titleFx, 0);
 
     // GUI: Initialize required controls for the screen
     float tmpValue = 0;
@@ -248,6 +251,7 @@ bool SceneTitleScreen::Unload()
 {
     if (nooseBG != nullptr) app->tex->UnLoad(nooseBG);
     if (titleCard != nullptr) app->tex->UnLoad(titleCard);
+    if (titleFx != -1) app->audio->UnloadFx(titleFx);
     app->gui->Disable();
     if (buttonFont != nullptr) delete buttonFont;
     if (app->scene->currentButton != nullptr) app->scene->currentButton = nullptr;

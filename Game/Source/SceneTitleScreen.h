@@ -72,6 +72,9 @@ private:
     //FONTS
     Font* buttonFont = nullptr;
 
+    //SOUND
+    int titleFx;
+
     unsigned char flags;
 };
 
