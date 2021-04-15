@@ -124,10 +124,6 @@ private:
 	pugi::xml_document saveFile;
 	pugi::xml_node save;
 
-	pugi::xml_document configFile;
-	pugi::xml_node config;
-	pugi::xml_node configApp;
-
 	// Frame variables
 	PerfTimer pTimer;
 	uint64 frameCount = 0;

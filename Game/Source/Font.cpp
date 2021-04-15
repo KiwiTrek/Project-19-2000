@@ -43,6 +43,7 @@ Font::Font(const char* rtpFontFile)
 		}
 
 		fontLoaded = true;
+		xmlDocFontAtlas.reset();
 	}
 }
 

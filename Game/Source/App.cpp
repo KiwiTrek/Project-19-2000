@@ -111,6 +111,8 @@ bool App::Awake()
 			ret = item->data->Awake(config.child(item->data->name.GetString()));
 			item = item->next;
 		}
+
+		configFile.reset();
 	}
 
 	PERF_PEEK(pTimer);
