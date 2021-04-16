@@ -184,8 +184,28 @@ bool Player::Draw()
 	app->render->DrawTexture(app->entities->playerTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame(), invert);
 	if (app->render->debug)
 	{
-		app->render->DrawRectangle({ collider->rect.x, collider->rect.y, collider->rect.w, collider->rect.h }, 0, 0, 150, 100);
+		app->render->DrawRectangle(collider->rect, 0, 0, 150, 100);
 	}
 	//app->render->DrawTexture(app->entities->playerTex, playerPos.x, playerPos.y, false, &currentAnim->GetCurrentFrame(), invert);
 	return true;
+}
+
+void Player::OnCollision(Collider* c1, Collider* c2)
+{
+	if (c2->type == Collider::Type::SOLID)
+	{
+		while (c1->Intersects(c2->rect))
+		{
+			iPoint difference = { c2->rect.x - c1->rect.x, c2->rect.y - c1->rect.y };
+
+			if (difference.x > 0) c1->rect.x--;
+			else if (difference.x < 0) c1->rect.x++;
+
+			if (difference.y > 0) c1->rect.y--;
+			else if (difference.y < 0) c1->rect.y++;
+		}
+	}
+	
+	entityRect.x = c1->rect.x;
+	entityRect.y = c1->rect.y;
 }

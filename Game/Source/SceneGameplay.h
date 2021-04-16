@@ -50,6 +50,7 @@ public:
     Entity* hero = nullptr;
     Entity* cat = nullptr;
     Entity* shopDude = nullptr;
+    Entity* grandpa = nullptr;
 
     Entity* player = nullptr;
     GuiButton* btnInventory;

@@ -24,6 +24,8 @@ public:
 	// Blit
 	bool Draw();
 
+	void OnCollision(Collider* c1, Collider* c2);
+
 	bool inDialog;
 	bool godMode;
 

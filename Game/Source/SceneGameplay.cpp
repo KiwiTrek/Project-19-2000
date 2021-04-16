@@ -90,6 +90,7 @@ bool SceneGameplay::Load()
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	hero = nullptr;
+	grandpa = nullptr;
 	shopDude = nullptr;
 	cat = nullptr;
 
@@ -162,7 +163,6 @@ bool SceneGameplay::Update(float dt)
 		if (dialogSystem->selectedOption < 0) dialogSystem->selectedOption = 0;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 	{
 		combat = true;
@@ -464,7 +464,6 @@ bool SceneGameplay::Unload()
 	if (buttonFont != nullptr) delete buttonFont;
 	if (dialogueFont != nullptr) delete dialogueFont;
 	if (textBox != nullptr) app->tex->UnLoad(textBox);
-	if (dialogueFont != nullptr) delete dialogueFont;
 
 	app->gui->Disable();
 	if (app->scene->currentButton != nullptr) app->scene->currentButton = nullptr;

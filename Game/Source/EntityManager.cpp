@@ -251,12 +251,6 @@ bool EntityManager::Load(pugi::xml_node& save)
 		s = (SceneGameplay*)app->scene->current;
 		cbt = s->combatScene;
 		s->player = nullptr;
-		if (app->map->data.name == "home.tmx")
-		{
-			s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
-			s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
-			s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
-		}
 	}
 
 	iPoint coords = { 0,0 };
@@ -264,6 +258,13 @@ bool EntityManager::Load(pugi::xml_node& save)
 	pugi::xml_node coordsNode = player.child("coordinates");
 	coords = { coordsNode.attribute("x").as_int(-1),coordsNode.attribute("y").as_int(-1) };
 	s->player = app->entities->CreateEntity(coords.x, coords.y, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
+	if (app->map->data.name == "home.tmx")
+	{
+		s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
+		s->grandpa = app->entities->CreateEntity((31 * 64) + 48, 7 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA, s->player);
+		s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
+		s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
+	}
 
 	while (!player.empty())
 	{

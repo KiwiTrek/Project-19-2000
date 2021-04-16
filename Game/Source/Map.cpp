@@ -145,7 +145,7 @@ bool Map::CleanUp()
 	}
 	data.mapLayer.Clear();
 
-	mapFile.reset();
+	if (mapFile != nullptr) mapFile.reset();
 
 	return true;
 }
@@ -607,7 +607,7 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 		mapLayer = mapLayer->next;
 	}
 
-	if (mapLayer == nullptr) return ret;
+	if (mapLayer->data == nullptr || mapLayer == nullptr) return ret;
 
 	// TileSet
 	ListItem<TileSet*>* tileSet = data.tileSets.start;
@@ -621,7 +621,7 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 		tileSet = tileSet->next;
 	}
 
-	if (tileSet == nullptr) return ret;
+	if (tileSet->data == nullptr || tileSet == nullptr) return ret;
 
 	// Gets CollisionId
 	int id = (int)(mapLayer->data->Get(x, y) - tileSet->data->firstgId);

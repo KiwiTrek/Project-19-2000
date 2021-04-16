@@ -32,6 +32,7 @@ private:
 	NpcId npcId = NpcId::NONE;
 	// Animations stuff
 	int animFlags;
+	Collider* collision;
 
 	// Animation
 	Animation idle;
