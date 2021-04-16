@@ -262,7 +262,7 @@ bool EntityManager::Load(pugi::xml_node& save)
 	iPoint coords = { 0,0 };
 	pugi::xml_node player = save.child("player");
 	pugi::xml_node coordsNode = player.child("coordinates");
-	coords = { coordsNode.attribute("x").as_int(-1),coordsNode.attribute("x").as_int(-1) };
+	coords = { coordsNode.attribute("x").as_int(-1),coordsNode.attribute("y").as_int(-1) };
 	s->player = app->entities->CreateEntity(coords.x, coords.y, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
 	while (!player.empty())
@@ -279,14 +279,15 @@ bool EntityManager::Load(pugi::xml_node& save)
 		newChar.speed = player.next_sibling().child("stats").attribute("speed").as_int(0);
 		newChar.stress = player.next_sibling().child("stats").attribute("stress").as_int(0);
 		newChar.stressMax = player.next_sibling().child("stats").attribute("stressMax").as_int(0);
-		if (player.next_sibling().name() == "MC")
+		SString name = player.next_sibling().name();
+		if (name == "MC")
 		{
 			cbt->mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - cbt->mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, newChar);
 			cbt->mainChar.hp.Create("HP: %d/%d", cbt->mainChar.character->stats.hPoints, cbt->mainChar.character->stats.hPointsMax);
 			cbt->mainChar.mp.Create("MP: %d/%d", cbt->mainChar.character->stats.mPoints, cbt->mainChar.character->stats.mPointsMax);
 			cbt->mainChar.stress.Create("ST: %d/%d", cbt->mainChar.character->stats.stress, cbt->mainChar.character->stats.stressMax);
 		}
-		else if (player.next_sibling().name() == "Grandpa")
+		else if (name == "Grandpa")
 		{
 			cbt->grandpa.character = (CombatEntity*)app->entities->CreateEntity(cbt->grandpa.box.w + 36, app->render->camera.h - cbt->grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, newChar);
 			cbt->grandpa.hp.Create("HP: %d/%d", cbt->grandpa.character->stats.hPoints, cbt->grandpa.character->stats.hPointsMax);
