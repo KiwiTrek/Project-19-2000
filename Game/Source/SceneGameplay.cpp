@@ -12,6 +12,8 @@
 #include "Render.h"
 #include "Window.h"
 #include "Player.h"
+#include "DialogSystem.h"
+#include "DialogUtils.h"
 
 SceneGameplay::SceneGameplay()
 {
@@ -26,6 +28,8 @@ bool SceneGameplay::Load()
 {
 	app->collisions->Enable();
 	app->entities->Enable();
+
+	dialogSystem = new DialogSystem();
 
 	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
 	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
@@ -117,6 +121,46 @@ bool SceneGameplay::Update(float dt)
 	// L02: DONE 3: Request Load / Save when pressing L/S
 	//if (input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) app->LoadGameRequest();
 	//if (input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) app->SaveGameRequest();
+
+	// So player doesnt move while in dialog
+	Player* tmp = (Player*)player;
+
+	if (dialogSystem->currentDialog != nullptr)
+	{
+		tmp->inDialog = true;
+	}
+	else
+	{
+		tmp->inDialog = false;
+	}
+
+	/* ONLY FOR TESTING */
+
+	if (app->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN) {
+		dialogSystem->StartDialog("1");
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN) {
+		dialogSystem->StartDialog("2");
+	}
+
+	// The key to skip to the next dialog line.
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) {
+		dialogSystem->NextDialog();
+	}
+
+	// Select the next option.
+	if (dialogSystem->currentDialog != nullptr && app->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN) {
+		dialogSystem->selectedOption += 1;
+		if (dialogSystem->selectedOption == dialogSystem->currentDialog->children->size())
+			dialogSystem->selectedOption = dialogSystem->currentDialog->children->size() - 1;
+	}
+
+	// Select the previous option.
+	if (dialogSystem->currentDialog != nullptr && app->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN) {
+		dialogSystem->selectedOption -= 1;
+		if (dialogSystem->selectedOption < 0) dialogSystem->selectedOption = 0;
+	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
@@ -298,6 +342,11 @@ bool SceneGameplay::Draw()
 		app->map->Draw();
 	}
 
+	if (dialogSystem->currentDialog != nullptr)
+	{
+		dialogSystem->DrawDialog(dialogueFont);
+	}
+
 	return false;
 }
 
@@ -415,6 +464,7 @@ bool SceneGameplay::Unload()
 	if (buttonFont != nullptr) delete buttonFont;
 	if (dialogueFont != nullptr) delete dialogueFont;
 	if (textBox != nullptr) app->tex->UnLoad(textBox);
+	if (dialogueFont != nullptr) delete dialogueFont;
 
 	app->gui->Disable();
 	if (app->scene->currentButton != nullptr) app->scene->currentButton = nullptr;

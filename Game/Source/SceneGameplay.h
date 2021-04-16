@@ -8,6 +8,7 @@
 
 class Entity;
 class SceneCombat;
+class DialogSystem;
 
 class SceneGameplay : public Scene
 {
@@ -99,6 +100,9 @@ private:
 
     //STATE FLAGS
     int flags;
+
+    //DIALOG
+    DialogSystem* dialogSystem = nullptr;
 
     //bool inOptions = false;  // Bool to know if the player is on the options
     //bool inControls = false; // Bool to know if the player is on the controls
