@@ -94,6 +94,10 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	once = true;
 	scripted = false;
 
+	firstLine.Clear();
+	secondLine.Clear();
+	thirdLine.Clear();
+
 	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
 	{
@@ -175,6 +179,7 @@ bool SceneCombat::Update(float dt)
 				//ListItem<CombatEntity*>* e = currentEntity;
 				//currentEntity = currentEntity->next;
 				LOG("%s is dead!", currentEntity->data->name.GetString());
+				NextLine("%s is dead!", currentEntity->data->name.GetString());
 				//turnOrder.Del(e);
 
 				ListItem<CombatEntity*>* eNext = currentEntity->next;
@@ -408,6 +413,7 @@ bool SceneCombat::Update(float dt)
 					{
 						//dialogue that X enemy does Y attack to MC
 						LOG("%s does stress attack!", currentEntity->data->name.GetString());
+						NextLine("%s does stress attack!", currentEntity->data->name.GetString());
 						mainChar.character->stats.stress += 10;
 						mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
 					}
@@ -443,6 +449,7 @@ bool SceneCombat::Update(float dt)
 					{
 						//dialogue that X enemy does Y attack
 						LOG("Furious Shadow got stronger!");
+						NextLine("Furious Shadow got stronger!");
 						currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
 						currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
 						currentEntity->data->attackPool.At(0)->data->turns = 2;
@@ -455,6 +462,7 @@ bool SceneCombat::Update(float dt)
 						grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 						//dialogue that X enemy does Y attack to all characters
 						LOG("Furious Shadow attack to all!\n");
+						NextLine("Furious Shadow attack to all!");
 					}
 					finishedAction = true;
 					break;
@@ -488,6 +496,7 @@ bool SceneCombat::Update(float dt)
 					{
 						//dialogue that X enemy does Y attack
 						LOG("Nightmarish got stronger!");
+						NextLine("Nightmarish got stronger!");
 						currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
 						currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
 						currentEntity->data->attackPool.At(0)->data->turns = 2;
@@ -500,12 +509,14 @@ bool SceneCombat::Update(float dt)
 						case 1: //MC
 							//dialogue that X enemy does Y attack to Z character
 							LOG("mc has been taunted!");
+							NextLine("You have been taunted!");
 							mainChar.character->isTaunted = true;
 							mainChar.character->tauntedBy = currentEntity->data;
 							break;
 						case 2: //GRANDPA
 							//dialogue that X enemy does Y attack to Z character
 							LOG("grandpa has been taunted!");
+							NextLine("Grandpa has been taunted!");
 							grandpa.character->isTaunted = true;
 							grandpa.character->tauntedBy = currentEntity->data;
 							break;
@@ -526,6 +537,7 @@ bool SceneCombat::Update(float dt)
 						{
 							//dialogue that X enemy does Y attack to Z character
 							LOG("mc has been stunned and debuffed!");
+							NextLine("You have been stunned and debuffed!");
 							mainChar.character->isStunned = true;
 							SString s = "10% debuff";
 							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
@@ -539,6 +551,7 @@ bool SceneCombat::Update(float dt)
 						{
 							//dialogue that X enemy does Y attack to Z character
 							LOG("grandpa has been stunned and debuffed!");
+							NextLine("Grandpa have been stunned and debuffed!");
 							grandpa.character->isStunned = true;
 							SString s = "10% debuff";
 							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
@@ -694,6 +707,11 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	//switch (ZONE)
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
+
+	app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 55, 48, 2, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 55 + 48, 48, 2, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 55 + 96, 48, 2, { 255,255,255,255 });
+
 	//app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
 
 	if (!characterSelected)
@@ -829,6 +847,14 @@ bool SceneCombat::Finish()
 
 bool SceneCombat::Unload()
 {
+	mainChar.hp.Clear();
+	mainChar.mp.Clear();
+	mainChar.stress.Clear();
+
+	grandpa.hp.Clear();
+	grandpa.mp.Clear();
+	grandpa.stress.Clear();
+
 	if (combatGui != nullptr) app->tex->UnLoad(combatGui);
 	return true;
 }
@@ -934,6 +960,7 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 		currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
 		//dialogue that X character does Y attack to Z enemy
 		LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+		NextLine("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());		// Doesn't work weh
 		int attack = 0;
 		if (!isMagic)
 			attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
@@ -953,6 +980,7 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 			currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
 			//dialogue that X character does Y attack to Z enemy
 			LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+			NextLine("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());	// Doesn't work weh
 			int attack = 0;
 			if (!isMagic)
 				attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
@@ -965,7 +993,11 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 			if (target->stats.hPoints <= 0)
 				target->stats.hPoints = 0;
 		}
-		else LOG("You're god, no damage taken!");
+		else
+		{
+			LOG("You're god, no damage taken!");
+			NextLine("God Mode active. No damage recieved.");
+		}
 	}
 }
 
@@ -985,6 +1017,7 @@ void SceneCombat::VictoryCondition()
 	{
 		combatState = CombatStateType::COMBAT_END;
 		LOG("Victory!\n");
+		NextLine("Victory!");
 	}
 }
 
@@ -1004,6 +1037,7 @@ void SceneCombat::DefeatCondition()
 		heDed = true;
 		combatState = CombatStateType::COMBAT_END;
 		LOG("Defeat!\n");
+		NextLine("Defeat!");
 	}
 }
 
@@ -1212,6 +1246,17 @@ void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 	else app->render->background = { 125,33,129,255 };
 }
 
+void SceneCombat::NextLine(const char* line, ...)
+{
+	firstLine.Clear();
+	firstLine.Create(secondLine.GetString());
+	secondLine.Clear();
+	secondLine.Create(thirdLine.GetString());
+	thirdLine.Clear();
+	thirdLine.Create(line);
+}
+
+
 //----------------------------------------------------------
 // Manage GUI events for this screen
 //----------------------------------------------------------
@@ -1226,6 +1271,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		characterSelected = false;
 		attackSelected = 0;
 		LOG("Who do you want to attack?");
+		NextLine("Who do you want to attack?");
 		break;
 	case 30: //SKILLS
 		app->gui->ResetButtons();
@@ -1254,6 +1300,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		if (scripted)
 		{
 			LOG("You can't flee!");
+			NextLine("You can't flee!");
 			break;
 		}
 		else
@@ -1261,6 +1308,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 			combatMenuFlags = 0;
 			characterSelected = false;
 			LOG("You fled!");
+			NextLine("You fled!");
 			Finish();
 			once = true;
 		}

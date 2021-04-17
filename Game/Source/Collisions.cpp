@@ -163,8 +163,7 @@ bool Collisions::PreUpdate()
 	{
 		if (colliders[i] != nullptr && colliders[i]->pendingToDelete == true)
 		{
-			delete colliders[i];
-			colliders[i] = nullptr;
+			RELEASE(colliders[i]);
 		}
 	}
 
@@ -216,11 +215,7 @@ bool Collisions::CleanUp()
 
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
-		if (colliders[i] != nullptr)
-		{
-			delete colliders[i];
-			colliders[i] = nullptr;
-		}
+		RELEASE(colliders[i]);
 	}
 
 	return true;

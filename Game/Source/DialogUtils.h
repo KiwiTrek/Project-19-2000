@@ -1,6 +1,7 @@
 #ifndef __DIALOGUTILS_H__
 #define __DIALOGUTILS_H__
 
+#include "Defs.h"
 #include "Log.h"
 
 #include <vector>
@@ -27,8 +28,8 @@ public:
 	}
 
 	~DialogNode() {
-		delete children;
-		delete attributes;
+		RELEASE(children);
+		RELEASE(attributes);
 	}
 
 	void SetAttributes(Attributes* _attributes) {

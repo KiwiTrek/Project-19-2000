@@ -127,6 +127,7 @@ bool EntityManager::CleanUp()
 	app->tex->UnLoad(playerTex);
 	app->tex->UnLoad(grandpaTex);
 	app->tex->UnLoad(enemiesTex);
+	app->tex->UnLoad(NPCTex);
 
 	return true;
 }
@@ -232,7 +233,7 @@ void EntityManager::DestroyEntity(Entity* entity)
 	//	entity->collider->pendingToDelete = true;
 	//}
 	int i = entities.Find(entity);
-	delete entities[i];
+	RELEASE(entities[i]);
 	entities.Del(entities.At(i));
 }
 
@@ -257,13 +258,22 @@ bool EntityManager::Load(pugi::xml_node& save)
 	LOG("Loading entities data");
 	bool ret = true;
 
-	// Clear the list
+	// Destroy entities
 	ListItem<Entity*>* e = entities.start;
+	ListItem<Entity*>* eNext = nullptr;
 	while (e != nullptr)
 	{
-		ListItem<Entity*>* eNext = e->next;
-		DestroyEntity(e->data);
-		e = eNext;
+		if (e->next != nullptr)
+		{
+			eNext = e->next;
+			DestroyEntity(e->data);
+			e = eNext;
+		}
+		else
+		{
+			DestroyEntity(e->data);
+			break;
+		}
 	}
 	entities.Clear();
 
@@ -307,14 +317,19 @@ bool EntityManager::Load(pugi::xml_node& save)
 		if (name == "MC")
 		{
 			cbt->mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - cbt->mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, newChar);
+			cbt->mainChar.hp.Clear();
 			cbt->mainChar.hp.Create("HP: %d/%d", cbt->mainChar.character->stats.hPoints, cbt->mainChar.character->stats.hPointsMax);
+			cbt->mainChar.mp.Clear();
 			cbt->mainChar.mp.Create("MP: %d/%d", cbt->mainChar.character->stats.mPoints, cbt->mainChar.character->stats.mPointsMax);
+			cbt->mainChar.stress.Clear();
 			cbt->mainChar.stress.Create("ST: %d/%d", cbt->mainChar.character->stats.stress, cbt->mainChar.character->stats.stressMax);
 		}
 		else if (name == "Grandpa")
 		{
 			cbt->grandpa.character = (CombatEntity*)app->entities->CreateEntity(cbt->grandpa.box.w + 36, app->render->camera.h - cbt->grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, newChar);
+			cbt->grandpa.hp.Clear();
 			cbt->grandpa.hp.Create("HP: %d/%d", cbt->grandpa.character->stats.hPoints, cbt->grandpa.character->stats.hPointsMax);
+			cbt->grandpa.mp.Clear();
 			cbt->grandpa.mp.Create("MP: %d/%d", cbt->grandpa.character->stats.mPoints, cbt->grandpa.character->stats.mPointsMax);
 		}
 		player = player.next_sibling();

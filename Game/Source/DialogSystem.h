@@ -26,8 +26,6 @@ public:
 
 	void NextDialog();
 
-	Font* dialogueFont = nullptr;
-
 	DialogNode* ParseDialogXML(pugi::xml_node dialogRoot);
 
 	DialogNode* currentDialog = nullptr;

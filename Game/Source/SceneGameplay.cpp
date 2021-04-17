@@ -538,6 +538,8 @@ bool SceneGameplay::Unload()
 	app->collisions->Disable();
 	app->map->Disable();
 
+	RELEASE(dialogSystem);
+
 	RELEASE(buttonFont);
 	RELEASE(dialogueFont);
 	app->tex->UnLoad(textBox);

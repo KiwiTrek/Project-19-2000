@@ -50,6 +50,7 @@ public:
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
+    void NextLine(const char* line, ...);
 
     bool Draw(Font* dialogueFont);
 
@@ -113,6 +114,10 @@ private:
     GuiButton* btnCombatItem4;
     GuiButton* btnCombatItem5;
     GuiButton* btnCombatItem6;
+
+    SString firstLine;
+    SString secondLine;
+    SString thirdLine;
 };
 
 #endif // __SCENECOMBAT_H__
