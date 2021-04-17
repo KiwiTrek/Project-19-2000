@@ -2,6 +2,7 @@
 #define __LIST_H__
 
 #include "Defs.h"
+#include "Log.h"
 
 // Contains items from double linked list
 template<class tdata>
@@ -59,7 +60,7 @@ public:
 	{
 		ListItem<tdata>* dataItem;
 		dataItem = new ListItem<tdata>(item);
-
+		LOG("Stop9");
 		if (start == NULL)
 		{
 			start = end = dataItem;
@@ -72,6 +73,7 @@ public:
 		}
 
 		++size;
+		LOG("StopA");
 		return(dataItem);
 	}
 
@@ -121,7 +123,7 @@ public:
 		ListItem<tdata>* pData;
 		ListItem<tdata>* pNext;
 		pData = start;
-
+		
 		while (pData != NULL)
 		{
 			pNext = pData->next;

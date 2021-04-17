@@ -145,6 +145,14 @@ bool Map::CleanUp()
 	}
 	data.mapLayer.Clear();
 
+	data.name.Clear();
+	data.width = 0;
+	data.height = 0;
+	data.tileWidth = 0;
+	data.tileHeight = 0;
+	data.backgroundColor = {0,0,0,0};
+	data.type = MAPTYPE_UNKNOWN;
+
 	if (mapFile != nullptr) mapFile.reset();
 
 	return true;
@@ -184,17 +192,21 @@ bool Map::LoadNewMap(const char* filename)
 			{
 				ret = LoadTileSetProperties(tileSet, set);
 			}
+			LOG("Stop1");
 			data.tileSets.Add(set);
+			LOG("Stop2");
 		}
 
 		// Load layers
 		for (pugi::xml_node layer = mapFile.child("map").child("layer"); layer && ret; layer = layer.next_sibling("layer"))
 		{
 			MapLayer* set = new MapLayer();
+			LOG("Stop3");
 			if (ret == true)
 			{
 				ret = LoadLayer(layer, set);
 			}
+			LOG("Stop4");
 			data.mapLayer.Add(set);
 		}
 		LogInfo();
@@ -324,14 +336,16 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 	pugi::xml_node property;
 	for (property = node.child("property"); property; property = property.next_sibling("property"))
 	{
+		LOG("Stop5");
 		Properties::Property* prop = new Properties::Property();
 
-		prop->name = property.attribute("name").as_string();
+		prop->name = property.attribute("name").as_string("undefined");
 		prop->value = property.attribute("value").as_int();
 
 		properties.list.Add(prop);
+		LOG("Stop6");
 	}
-
+	LOG("Stop7");
 	return true;
 }
 

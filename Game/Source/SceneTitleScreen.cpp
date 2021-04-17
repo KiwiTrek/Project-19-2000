@@ -91,6 +91,7 @@ bool SceneTitleScreen::Load()
     if (app->input->GetControllerName() != "unplugged") usingGamepad = false;
     app->input->mouseMotionX = 0;
     app->input->mouseMotionY = 0;
+    app->scene->continueLoadRequest = false;
 
     return false;
 }

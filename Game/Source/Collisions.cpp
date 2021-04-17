@@ -263,389 +263,402 @@ Collider* Collisions::AddCollider(SDL_Rect rect, Collider::Type type, Module* li
 
 SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,float dt)
 {
-	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
+	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN && nextFrame.x >= 0 && nextFrame.y >= 0)
 	{
-		iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y };
-		iPoint tilePos = app->map->WorldToMap(nextFrame.x, nextFrame.y);
-
-		iPoint tileWorldPos = app->map->MapToWorld(tilePos.x, tilePos.y);
-		iPoint tilePosLowerRight = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
-
-		SDL_Rect tileRect = { tileWorldPos.x,tileWorldPos.y,app->map->data.tileWidth,app->map->data.tileHeight };
-		//LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
-		if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
-			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::SOLID)
-			&& collider->Intersects(tileRect))
+		if (nextFrame.x < app->map->data.width && nextFrame.y < app->map->data.height)
 		{
-			if (difference.x > 0) nextFrame.x--;
-			else if (difference.x < 0) nextFrame.x++;
-			if (difference.y > 0) nextFrame.y--;
-			else if (difference.y < 0) nextFrame.y++;
+			iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y };
+			iPoint tilePos = app->map->WorldToMap(nextFrame.x, nextFrame.y);
 
-			if (difference != iPoint(0, 0)) return ResolveCollisions(collider, nextFrame, dt);
-		}
-		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
-			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::DOOR)
-			&& collider->Intersects(tileRect))
-		{
-			if (app->map->data.name == "tutorial.tmx")
+			iPoint tileWorldPos = app->map->MapToWorld(tilePos.x, tilePos.y);
+			iPoint tilePosLowerRight = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
+
+			SDL_Rect tileRect = { tileWorldPos.x,tileWorldPos.y,app->map->data.tileWidth,app->map->data.tileHeight };
+			//LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
+			if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::SOLID)
+				&& collider->Intersects(tileRect))
 			{
-				switch (tilePos.x)
-				{
-				case 15:
-				{
-					switch (tilePos.y)
-					{
-					case 28:
-						return { 15 * app->map->data.tileWidth, (39 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					case 38:
-						return { 15 * app->map->data.tileWidth, (28 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					case 50:
-						return { 15 * app->map->data.tileWidth, (64 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					case 63:
-						return { 15 * app->map->data.tileWidth, (50 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					case 78:
-						return { 15 * app->map->data.tileWidth, (88 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					case 87:
-						return { 15 * app->map->data.tileWidth, (78 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-				}
-				case 21:
-				{
-					return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-					break;
-				}
-				case 38:
-				{
-					switch (tilePos.y)
-					{
-					case 14:
-						return { (20 * app->map->data.tileWidth) - 1, 26 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					case 36:
-						return { 64 * app->map->data.tileWidth, (89 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					case 92:
-						return { 64 * app->map->data.tileWidth, (10 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-				}
-				case 63:
-				{
-					switch (tilePos.y)
-					{
-					case 82:
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 64:
-				{
-					switch (tilePos.y)
-					{
-					case 9:
-						return { 38 * app->map->data.tileWidth, (92 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					case 65:
-						app->map->CleanUp();
-						app->map->LoadNewMap("home.tmx");
-						app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
-						if (app->scene->current->currentScene == SceneType::GAMEPLAY)
-						{
-							SceneGameplay* s = (SceneGameplay*)app->scene->current;
-							s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
-							s->grandpa = app->entities->CreateEntity((31 * 64) + 48, 7 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA, s->player);
-							s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
-							s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
-						}
-						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { (44 * app->map->data.tileWidth) - 1, (30 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					case 82:
-						break;
-					case 90:
-						return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-				}
-				case 65:
-				{
-					switch (tilePos.y)
-					{
-					case 82:
-						break;
-					default:
-						break;
-					}
-				}
-				case 66:
-				{
-					switch (tilePos.y)
-					{
-					case 82:
-						break;
-					default:
-						break;
-					}
-				}
-				default:
-					break;
-				}
+				if (difference.x > 0) nextFrame.x--;
+				else if (difference.x < 0) nextFrame.x++;
+				if (difference.y > 0) nextFrame.y--;
+				else if (difference.y < 0) nextFrame.y++;
+
+				if (difference != iPoint(0, 0)) return ResolveCollisions(collider, nextFrame, dt);
 			}
-			else if (app->map->data.name == "home.tmx")
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::DOOR)
+				&& collider->Intersects(tileRect))
 			{
-				switch (tilePos.x)
+				if (app->map->data.name == "tutorial.tmx")
 				{
-				case 12:
-				{
-					return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-					break;
-				}
-				case 23:
-				{
-					switch (tilePos.y)
-					{
-					case 7:
-						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-						break;
-					case 8:
-						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-						break;
-					case 13:
-						return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					case 14:
-						return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					case 36:
-						return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 24:
-				{
-					break;
-				}
-				case 25:
-				{
-					break;
-				}
-				case 30:
-				{
-					return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-					break;
-				}
-				case 31:
-				{
-					switch (tilePos.y)
-					{
-					case 4:
-						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-						break;
-					case 18:
-						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 32:
-				{
-					switch (tilePos.y)
-					{
-					case 4:
-						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-						break;
-					case 18:
-						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 33:
-				{
-					return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-					break;
-				}
-				case 38:
-				{
-					return { 32 * app->map->data.tileWidth, (17 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-					break;
-				}
-				case 39:
-				{
-					switch (tilePos.y)
-					{
-					case 7:
-						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-						break;
-					case 8:
-						return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-						break;
-					case 13:
-						return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					case 14:
-						return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					case 34:
-						return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 40:
-				{
-					switch (tilePos.y)
-					{
-					case 34:
-						return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 45:
-				{
-					switch (tilePos.y)
-					{
-					case 30:
-						app->map->CleanUp();
-						app->map->LoadNewMap("tutorial.tmx");
-						if (app->scene->current->currentScene == SceneType::GAMEPLAY)
-						{
-							SceneGameplay* s = (SceneGameplay*)app->scene->current;
-							if (s->hero != nullptr) app->entities->DestroyEntity(s->hero);
-							if (s->grandpa != nullptr) app->entities->DestroyEntity(s->grandpa);
-							if (s->shopDude != nullptr) app->entities->DestroyEntity(s->shopDude);
-							if (s->cat != nullptr) app->entities->DestroyEntity(s->cat);
-						}
-						app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
-						if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN) return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				case 52:
-				{
-					switch (tilePos.y)
-					{
-					case 13:
-						return { (39 * app->map->data.tileWidth) - 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					case 14:
-						return { (39 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-				default:
-					break;
-				}
-			}
-		}
-		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::ENEMY_SPAWN
-			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
-			&& collider->Intersects(tileRect) && !app->scene->current->combat)
-		{
-			if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
-			if (app->scene->current->combatCooldown <= 0)
-			{
-				int e = rand() % 100 + 1;
-				if (e <= 30)
-				{
-					app->scene->current->combat = true;
-					app->scene->current->enteringCombat = true;
-				}
-				else app->scene->current->combatCooldown = 1.0f;
-
-			}
-		}
-		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::EVENT
-			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::EVENT)
-			&& collider->Intersects(tileRect) && !app->scene->current->combat)
-		{
-			if (app->map->data.name == "tutorial.tmx")
-			{
-				switch (tilePos.y)
-				{
-				case 82:
-					//LOG("EVENT TILE");
-					if (onceNightmare)
-					{
-						onceNightmare = false;
-						app->scene->current->combat = true;
-						app->scene->current->enteringCombat = true;
-
-						if (app->scene->current->enteringCombat)
-						{
-							app->scene->current->enteringCombat = false;
-							if (app->scene->current->currentScene == SceneType::GAMEPLAY)
-							{
-								SceneGameplay* g = (SceneGameplay*)app->scene->current;
-								g->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
-							}
-							else if (app->scene->current->currentScene == SceneType::DEV_ROOM)
-							{
-								SceneDevRoom* d = (SceneDevRoom*)app->scene->current;
-								d->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
-							}
-						}
-					}
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::INTERACTABLE
-			|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::INTERACTABLE)
-			&& collider->Intersects(tileRect) && !app->scene->current->combat)
-		{
-			if (app->map->data.name == "home.tmx")
-			{
-				switch (tilePos.y)
-				{
-				case 16:
-				case 17:
 					switch (tilePos.x)
 					{
+					case 15:
+					{
+						switch (tilePos.y)
+						{
+						case 28:
+							return { 15 * app->map->data.tileWidth, (39 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+							break;
+						case 38:
+							return { 15 * app->map->data.tileWidth, (28 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						case 50:
+							return { 15 * app->map->data.tileWidth, (64 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+							break;
+						case 63:
+							return { 15 * app->map->data.tileWidth, (50 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						case 78:
+							return { 15 * app->map->data.tileWidth, (88 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+							break;
+						case 87:
+							return { 15 * app->map->data.tileWidth, (78 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+					}
+					case 21:
+					{
+						return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					}
 					case 38:
+					{
+						switch (tilePos.y)
+						{
+						case 14:
+							return { (20 * app->map->data.tileWidth) - 1, 26 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 36:
+							return { 64 * app->map->data.tileWidth, (89 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						case 92:
+							return { 64 * app->map->data.tileWidth, (10 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+					}
+					case 63:
+					{
+						switch (tilePos.y)
+						{
+						case 82:
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 64:
+					{
+						switch (tilePos.y)
+						{
+						case 9:
+							return { 38 * app->map->data.tileWidth, (92 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						case 65:
+							app->map->CleanUp();
+							if (app->map->data.type == MapTypes::MAPTYPE_UNKNOWN)
+							{
+								if (app->map->LoadNewMap("home.tmx"))
+								{
+									app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+									{
+										SceneGameplay* s = (SceneGameplay*)app->scene->current;
+										s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
+										s->grandpa = app->entities->CreateEntity((31 * 64) + 48, 7 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA, s->player);
+										s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
+										s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
+									}
+									return { (44 * app->map->data.tileWidth) - 1, (30 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+								}
+							}
+							break;
+						case 82:
+							break;
+						case 90:
+							return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+					}
+					case 65:
+					{
+						switch (tilePos.y)
+						{
+						case 82:
+							break;
+						default:
+							break;
+						}
+					}
+					case 66:
+					{
+						switch (tilePos.y)
+						{
+						case 82:
+							break;
+						default:
+							break;
+						}
+					}
+					default:
+						break;
+					}
+				}
+				else if (app->map->data.name == "home.tmx")
+				{
+					switch (tilePos.x)
+					{
+					case 12:
+					{
+						return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						break;
+					}
+					case 23:
+					{
+						switch (tilePos.y)
+						{
+						case 7:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 8:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 13:
+							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 14:
+							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 36:
+							return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 24:
+					{
+						break;
+					}
+					case 25:
+					{
+						break;
+					}
+					case 30:
+					{
+						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					}
+					case 31:
+					{
+						switch (tilePos.y)
+						{
+						case 4:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 18:
+							return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 32:
+					{
+						switch (tilePos.y)
+						{
+						case 4:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 18:
+							return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 33:
+					{
+						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+						break;
+					}
+					case 38:
+					{
+						return { 32 * app->map->data.tileWidth, (17 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+						break;
+					}
 					case 39:
-						app->SaveRequest();
+					{
+						switch (tilePos.y)
+						{
+						case 7:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 8:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 13:
+							return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 14:
+							return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 34:
+							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 40:
+					{
+						switch (tilePos.y)
+						{
+						case 34:
+							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 45:
+					{
+						switch (tilePos.y)
+						{
+						case 30:
+							app->map->CleanUp();
+							if (app->map->data.type == MapTypes::MAPTYPE_UNKNOWN)
+							{
+								if (app->map->LoadNewMap("tutorial.tmx"))
+								{
+									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+									{
+										SceneGameplay* s = (SceneGameplay*)app->scene->current;
+										if (s->hero != nullptr) app->entities->DestroyEntity(s->hero);
+										if (s->grandpa != nullptr) app->entities->DestroyEntity(s->grandpa);
+										if (s->shopDude != nullptr) app->entities->DestroyEntity(s->shopDude);
+										if (s->cat != nullptr) app->entities->DestroyEntity(s->cat);
+									}
+									app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+									return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
+								}
+							}
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					case 52:
+					{
+						switch (tilePos.y)
+						{
+						case 13:
+							return { (39 * app->map->data.tileWidth) - 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 14:
+							return { (39 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
+						break;
+					}
+					default:
+						break;
+					}
+				}
+			}
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::ENEMY_SPAWN
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
+				&& collider->Intersects(tileRect) && !app->scene->current->combat)
+			{
+				if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
+				if (app->scene->current->combatCooldown <= 0)
+				{
+					int e = rand() % 100 + 1;
+					if (e <= 30)
+					{
+						app->scene->current->combat = true;
+						app->scene->current->enteringCombat = true;
+					}
+					else app->scene->current->combatCooldown = 1.0f;
+
+				}
+			}
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::EVENT
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::EVENT)
+				&& collider->Intersects(tileRect) && !app->scene->current->combat)
+			{
+				if (app->map->data.name == "tutorial.tmx")
+				{
+					switch (tilePos.y)
+					{
+					case 82:
+						//LOG("EVENT TILE");
+						if (onceNightmare)
+						{
+							onceNightmare = false;
+							app->scene->current->combat = true;
+							app->scene->current->enteringCombat = true;
+
+							if (app->scene->current->enteringCombat)
+							{
+								app->scene->current->enteringCombat = false;
+								if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+								{
+									SceneGameplay* g = (SceneGameplay*)app->scene->current;
+									g->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
+								}
+								else if (app->scene->current->currentScene == SceneType::DEV_ROOM)
+								{
+									SceneDevRoom* d = (SceneDevRoom*)app->scene->current;
+									d->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
+								}
+							}
+						}
 						break;
 					default:
 						break;
 					}
-					break;
-				default:
-					break;
+				}
+			}
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::INTERACTABLE
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::INTERACTABLE)
+				&& collider->Intersects(tileRect) && !app->scene->current->combat)
+			{
+				if (app->map->data.name == "home.tmx")
+				{
+					switch (tilePos.y)
+					{
+					case 16:
+					case 17:
+						switch (tilePos.x)
+						{
+						case 38:
+						case 39:
+							app->SaveRequest();
+							break;
+						default:
+							break;
+						}
+						break;
+					default:
+						break;
+					}
 				}
 			}
 		}

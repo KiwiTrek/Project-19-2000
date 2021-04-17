@@ -34,7 +34,7 @@ enum class EntityId
 	ENEMY_5
 };
 
-enum NpcId
+enum class NpcId
 {
 	NONE,
 	HERO,

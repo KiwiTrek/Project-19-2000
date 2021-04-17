@@ -25,6 +25,8 @@ SceneManager::SceneManager() : Module()
 
 	onTransition = false;
 	fadeOutCompleted = false;
+	continueLoadRequest = false;
+
 	transitionAlpha = 0.0f;;
 }
 
@@ -47,6 +49,12 @@ bool SceneManager::Start()
 	current = new SceneLogo();
 	current->Load();
 	next = nullptr;
+
+	onTransition = false;
+	fadeOutCompleted = false;
+	continueLoadRequest = false;
+
+	transitionAlpha = 0.0f;;
 
 	return true;
 }
@@ -165,7 +173,7 @@ bool SceneManager::CleanUp()
 	LOG("Freeing scene");
 
 	if (current != nullptr) current->Unload();
-	if (next != nullptr) next = nullptr;
+	//if (next != nullptr) next = nullptr;
 
 	return true;
 }
