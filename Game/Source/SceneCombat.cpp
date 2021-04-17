@@ -149,6 +149,7 @@ bool SceneCombat::Update(float dt)
 			SortSpeed(false);
 			currentEntity = turnOrder.start;
 			if (IsCharacter(currentEntity->data))
+			{
 				switch (currentEntity->data->id)
 				{
 				case EntityId::MC:
@@ -160,6 +161,7 @@ bool SceneCombat::Update(float dt)
 				default:
 					break;
 				}
+			}
 		}
 		else
 		{
@@ -179,6 +181,7 @@ bool SceneCombat::Update(float dt)
 				if (!IsCharacter(currentEntity->data)) app->entities->DestroyEntity(currentEntity->data);
 				turnOrder.Del(currentEntity);
 				currentEntity = eNext;
+				currentChar = nullptr;
 				if (currentEntity == nullptr)
 				{
 					SortSpeed(false);
