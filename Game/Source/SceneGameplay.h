@@ -104,6 +104,11 @@ private:
 
     //DIALOG
     DialogSystem* dialogSystem = nullptr;
+    SDL_Texture* dialogGui;
+    SDL_Rect dialogTextBox;
+    SDL_Rect portraitBox;
+    SDL_Rect shopKeeperPortrait;
+    SDL_Rect catPortrait;
 
     //bool inOptions = false;  // Bool to know if the player is on the options
     //bool inControls = false; // Bool to know if the player is on the controls

@@ -47,6 +47,19 @@ bool EntityManager::Awake(pugi::xml_node& config)
 
 bool EntityManager::Start()
 {
+	// Initializing dialogue bools
+	dialogCounter = 0;
+
+	talkingToShopkeeper = false;
+	shopkeeperFinishedTalk = false;
+	shopkeeperFinishedTalkRequest = false;
+	shopkeeperActive = false;
+
+	talkingToCat = false;
+	catFinishedTalk = false;
+	catFinishedTalkRequest = false;
+	catActive = false;
+
 	// Loading entities textures
 	//playerTex = app->tex->Load("Assets/Textures/playerTest.png");
 	//playerTex = app->tex->Load("Assets/Textures/Characters/MCSpriteSheet.png");

@@ -3,16 +3,27 @@
 #include "SceneCombat.h"
 #include "SceneDevRoom.h"
 #include "SceneManager.h"
+#include "EntityManager.h"
+#include "Entity.h"
 
 #include "App.h"
 #include "Render.h"
 #include "Input.h"
 #include "Font.h"
+#include "Player.h"
 
 #include <utility>
 
 #include "Log.h"
 
+void ShopKeeperFinished()
+{
+	app->entities->shopkeeperFinishedTalkRequest = true;
+}
+void CatFinished()
+{
+	app->entities->catFinishedTalkRequest = true;
+}
 
 std::string ToUpperCase(std::string input)
 {
@@ -23,8 +34,8 @@ std::string ToUpperCase(std::string input)
 	for (i; i < input.end(); i++)
 	{
 		char c = *i;
-		if (c >= 97 && c <= 122)
-			c -= 32;
+		/*if (c >= 97 && c <= 122)
+			c -= 32;*/
 		output += c;
 	}
 
@@ -33,8 +44,12 @@ std::string ToUpperCase(std::string input)
 
 DialogSystem::DialogSystem()
 {
-	LoadDialog("Assets/Dialog/Normal.xml");
-	LoadDialog("Assets/Dialog/Combat.xml");
+	LoadDialog("Assets/Dialog/Cat.xml");
+	LoadDialog("Assets/Dialog/ShopKeeper.xml");
+
+	// Register a callback functions
+	callbacks[std::string("shopkeeper_finished")] = std::function<void()>(&ShopKeeperFinished);
+	callbacks[std::string("cat_finished")] = std::function<void()>(&CatFinished);
 }
 
 DialogSystem::~DialogSystem()
@@ -47,7 +62,7 @@ DialogSystem::~DialogSystem()
 void DialogSystem::DrawDialog(Font* dialogueFont)
 {
 	// Draw the background rectangle.
-	app->render->DrawRectangle(SDL_Rect({ 0, (app->render->camera.h / 3) * 2, app->render->camera.w, app->render->camera.h / 3 }), 43, 176, 132, 255, true, false);
+	//app->render->DrawRectangle(SDL_Rect({ 0, (app->render->camera.h / 3) * 2, app->render->camera.w, app->render->camera.h / 3 }), 43, 176, 132, 255, true, false);
 
 	// Set the text to uppercase, since our font only supports uppercase. //CHANGE
 	std::string text = ToUpperCase(currentDialog->attributes->at("value"));
@@ -55,7 +70,7 @@ void DialogSystem::DrawDialog(Font* dialogueFont)
 
 	// Write the dialog line.
 	//app->font->BlitText(10, (app->render->camera.h / 3) * 2 + 10, 0, text.c_str());
-	app->render->DrawText(dialogueFont, text.c_str(), 10, (app->render->camera.h / 3) * 2 + 10, 28, 1, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, { 255,255,255,255 });
 
 	// If the current node is a question, we should also draw the possible answers
 	if (currentDialog->type == DialogNode::NodeType::OPTIONS)
@@ -70,11 +85,11 @@ void DialogSystem::DrawDialog(Font* dialogueFont)
 			//text = (*i)->attributes->at("value");
 			// Draw them, increasing the y offset at every iteration.
 			// app->fonts->BlitText(30, (app->render->camera.h / 3) * 2 + 30 + (18 * y), 0, text.c_str());
-			app->render->DrawText(dialogueFont, text.c_str(), 30, (app->render->camera.h / 3) * 2 + 42 + (28 * y), 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 82 + (30 * y), 30, 1, { 255,255,255,255 });
 			y++;
 		}
 		// Draw a small black rectangle next to the selected option.
-		SDL_Rect selectedRectangle = SDL_Rect({ 14, (app->render->camera.h / 3) * 2 + 52 + (28 * selectedOption), 6, 6 });
+		SDL_Rect selectedRectangle = SDL_Rect({ 42, (app->render->camera.h / 3) * 2 + 94 + (30 * selectedOption), 6, 6 });
 		app->render->DrawRectangle(selectedRectangle, 250, 0, 0, 255, true, false);
 	}
 }

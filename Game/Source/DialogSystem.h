@@ -9,6 +9,7 @@
 #include "Module.h"
 
 class DialogNode;
+class Entity;
 
 class DialogSystem {
 public:

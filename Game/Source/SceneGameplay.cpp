@@ -36,6 +36,12 @@ bool SceneGameplay::Load()
 
 	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
 
+	dialogGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
+	dialogTextBox = { 0,0,1280,248 };
+	portraitBox = { 1276,0,208,190 };
+	shopKeeperPortrait = { 0,355,72,93 };
+	catPortrait = { 78,391,78,52 };
+
 	float tmpValue = 0;
 	//MENU
 	app->gui->Enable();
@@ -119,9 +125,20 @@ bool SceneGameplay::Load()
 
 bool SceneGameplay::Update(float dt)
 {
-	// L02: DONE 3: Request Load / Save when pressing L/S
-	//if (input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) app->LoadGameRequest();
-	//if (input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) app->SaveGameRequest();
+
+	// STARTING DIALOG STUFF
+	if (app->entities->dialogCounter > 0 && dialogSystem->currentDialog == nullptr)
+	{
+		app->entities->dialogCounter++;
+		if (app->entities->dialogCounter >= 10)
+		{
+			app->entities->dialogCounter = 0;
+			app->entities->shopkeeperFinishedTalk = false;
+			app->entities->catFinishedTalk = false;
+			app->entities->shopkeeperActive = false;
+			app->entities->catActive = false;
+		}
+	}
 
 	// So player doesnt move while in dialog
 	Player* tmp = (Player*)player;
@@ -135,34 +152,51 @@ bool SceneGameplay::Update(float dt)
 		tmp->inDialog = false;
 	}
 
-	/* ONLY FOR TESTING */
-
-	if (app->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN) {
-		dialogSystem->StartDialog("1");
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN) {
-		dialogSystem->StartDialog("2");
-	}
-
 	// The key to skip to the next dialog line.
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) {
+	if (app->input->CheckButton("select", KEY_DOWN) && dialogSystem->currentDialog != nullptr) {
+		if (app->entities->shopkeeperFinishedTalkRequest == true)
+		{
+			app->entities->shopkeeperFinishedTalk = false;
+		}
+		else if (app->entities->catFinishedTalkRequest == true)
+		{
+			app->entities->catFinishedTalk = false;
+		}
 		dialogSystem->NextDialog();
 	}
 
+	if (app->entities->talkingToShopkeeper == true && dialogSystem->currentDialog == nullptr)
+	{
+		dialogSystem->StartDialog("2");
+		app->entities->talkingToShopkeeper = false;
+	}
+
+	if (app->entities->talkingToCat == true && dialogSystem->currentDialog == nullptr)
+	{
+		dialogSystem->StartDialog("3");
+		app->entities->talkingToCat = false;
+	}
+
 	// Select the next option.
-	if (dialogSystem->currentDialog != nullptr && app->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN) {
+	if (dialogSystem->currentDialog != nullptr && app->input->CheckButton("down", KEY_DOWN)) {
 		dialogSystem->selectedOption += 1;
 		if (dialogSystem->selectedOption == dialogSystem->currentDialog->children->size())
 			dialogSystem->selectedOption = dialogSystem->currentDialog->children->size() - 1;
 	}
 
 	// Select the previous option.
-	if (dialogSystem->currentDialog != nullptr && app->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN) {
+	if (dialogSystem->currentDialog != nullptr && app->input->CheckButton("up", KEY_DOWN)) {
 		dialogSystem->selectedOption -= 1;
 		if (dialogSystem->selectedOption < 0) dialogSystem->selectedOption = 0;
 	}
 
+	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+		LOG("Breakpoint");
+	}
+	// END OF DIALOG STUFF
+
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 	{
 		combat = true;
@@ -344,6 +378,16 @@ bool SceneGameplay::Draw()
 
 	if (dialogSystem->currentDialog != nullptr)
 	{
+		app->render->DrawTexture(dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogTextBox);
+		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &portraitBox);
+		if (app->entities->shopkeeperFinishedTalk == false && app->entities->shopkeeperActive == true)
+		{
+			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &shopKeeperPortrait);
+		}
+		if (app->entities->catFinishedTalk == false && app->entities->catActive == true)
+		{
+			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 580, false, &catPortrait);
+		}
 		dialogSystem->DrawDialog(dialogueFont);
 	}
 

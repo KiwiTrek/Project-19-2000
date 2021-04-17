@@ -12,6 +12,8 @@
 #include "Scene.h"
 #include "Animation.h"
 #include "Collisions.h"
+#include "Player.h"
+#include "DialogSystem.h"
 
 
 Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::NPC)
@@ -204,6 +206,29 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 			else if (this->entityRect.y + this->entityRect.h - 5 < playerPtr->entityRect.y)
 			{
 				this->currentAnim = &idle;
+			}
+			break;
+		}
+			case NpcId::STORE_GUY:
+		{
+			LOG("Interaction ShopKeeper");
+			app->entities->shopkeeperActive = true;
+			if (app->entities->dialogCounter == 0)
+			{
+				app->entities->talkingToShopkeeper = true;
+				app->entities->dialogCounter = 1;
+			}
+			break;
+		}
+
+		case NpcId::CAT:
+		{
+			LOG("Interaction Kitty");
+			app->entities->catActive = true;
+			if (app->entities->dialogCounter == 0)
+			{
+				app->entities->talkingToCat = true;
+				app->entities->dialogCounter = 1;
 			}
 			break;
 		}

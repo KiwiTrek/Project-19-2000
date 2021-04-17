@@ -75,6 +75,19 @@ public:
 
 	bool inPause = false;
 
+	// Some options for dialogs. I am sorry for doing it this way.
+	bool talkingToShopkeeper;
+	bool shopkeeperFinishedTalk;
+	bool shopkeeperFinishedTalkRequest;
+	bool shopkeeperActive;
+
+	bool talkingToCat;
+	bool catFinishedTalk;
+	bool catFinishedTalkRequest;
+	bool catActive;
+
+	int dialogCounter;
+
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__
