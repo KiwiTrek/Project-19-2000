@@ -133,7 +133,7 @@ bool SceneDevRoom::Unload()
 		combatScene = nullptr;
 	}
 	app->entities->Disable();
-	if (dialogueFont != nullptr) delete dialogueFont;
+	RELEASE(dialogueFont);
 	app->collisions->Disable();
 	app->gui->Disable();
 	app->map->Disable();

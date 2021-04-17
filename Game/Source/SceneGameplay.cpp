@@ -461,12 +461,12 @@ bool SceneGameplay::Unload()
 	app->collisions->Disable();
 	app->map->Disable();
 
-	if (buttonFont != nullptr) delete buttonFont;
-	if (dialogueFont != nullptr) delete dialogueFont;
-	if (textBox != nullptr) app->tex->UnLoad(textBox);
+	RELEASE(buttonFont);
+	RELEASE(dialogueFont);
+	app->tex->UnLoad(textBox);
 
 	app->gui->Disable();
-	if (app->scene->currentButton != nullptr) app->scene->currentButton = nullptr;
+	app->scene->currentButton = nullptr;
 
 	return false;
 }

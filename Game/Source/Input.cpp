@@ -23,9 +23,9 @@ Input::Input() : Module()
 // Destructor
 Input::~Input()
 {
-	delete[] keyboard;
+	RELEASE_ARRAY(keyboard);
 	delete[] mouseButtons;
-	delete[] gamePad;
+	RELEASE_ARRAY(gamePad);
 }
 
 // Called before render is available

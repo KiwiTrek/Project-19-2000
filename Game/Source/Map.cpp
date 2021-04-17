@@ -37,6 +37,7 @@ bool Map::Awake(pugi::xml_node& config)
 
 bool Map::Start() 
 {
+	mapFile.reset();
 	data.backgroundColor = { 0, 0, 0, 0 };
 	data.height = 0;
 	data.mapLayer.Clear();
@@ -152,8 +153,7 @@ bool Map::CleanUp()
 	data.tileHeight = 0;
 	data.backgroundColor = {0,0,0,0};
 	data.type = MAPTYPE_UNKNOWN;
-
-	if (mapFile != nullptr) mapFile.reset();
+	mapFile.reset();
 
 	return true;
 }
@@ -333,17 +333,22 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 
 bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
-	pugi::xml_node property;
-	for (property = node.child("property"); property; property = property.next_sibling("property"))
+	pugi::xml_node property = node.child("property");
+	if (property != NULL)
 	{
-		LOG("Stop5");
-		Properties::Property* prop = new Properties::Property();
+		for (property; property != NULL; property = property.next_sibling("property"))
+		{
+			LOG("Stop5");
+			Properties::Property* prop = new Properties::Property();
 
-		prop->name = property.attribute("name").as_string("undefined");
-		prop->value = property.attribute("value").as_int();
+			prop->name = property.attribute("name").as_string();
+			prop->value = property.attribute("value").as_int();
+			LOG("Stop5.5");
 
-		properties.list.Add(prop);
-		LOG("Stop6");
+			properties.list.Add(prop);
+			LOG("Stop6");
+		}
+
 	}
 	LOG("Stop7");
 	return true;

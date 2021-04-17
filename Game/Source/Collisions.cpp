@@ -265,7 +265,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 {
 	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN && nextFrame.x >= 0 && nextFrame.y >= 0)
 	{
-		if (nextFrame.x < app->map->data.width && nextFrame.y < app->map->data.height)
+		if (nextFrame.x < app->map->data.width * 64 && nextFrame.y < app->map->data.height * 64)
 		{
 			iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y };
 			iPoint tilePos = app->map->WorldToMap(nextFrame.x, nextFrame.y);
@@ -547,10 +547,10 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 									{
 										SceneGameplay* s = (SceneGameplay*)app->scene->current;
-										if (s->hero != nullptr) app->entities->DestroyEntity(s->hero);
-										if (s->grandpa != nullptr) app->entities->DestroyEntity(s->grandpa);
-										if (s->shopDude != nullptr) app->entities->DestroyEntity(s->shopDude);
-										if (s->cat != nullptr) app->entities->DestroyEntity(s->cat);
+										app->entities->DestroyEntity(s->hero);
+										app->entities->DestroyEntity(s->grandpa);
+										app->entities->DestroyEntity(s->shopDude);
+										app->entities->DestroyEntity(s->cat);
 									}
 									app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
 									return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };

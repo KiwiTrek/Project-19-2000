@@ -60,7 +60,6 @@ public:
 	{
 		ListItem<tdata>* dataItem;
 		dataItem = new ListItem<tdata>(item);
-		LOG("Stop9");
 		if (start == NULL)
 		{
 			start = end = dataItem;
@@ -73,7 +72,6 @@ public:
 		}
 
 		++size;
-		LOG("StopA");
 		return(dataItem);
 	}
 

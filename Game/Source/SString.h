@@ -73,8 +73,7 @@ public:
 	// Destructor
 	virtual ~SString()
 	{
-		if(str != NULL)
-			delete[] str;
+		RELEASE_ARRAY(str);
 	}
 
 	const SString& Create(const char *format, ...)
@@ -136,7 +135,7 @@ public:
 	{
 		if(string.Length() + 1 > size)
 		{
-			delete[] str;
+			RELEASE_ARRAY(str);
 			Alloc(string.Length() + 1);
 		}
 		else
@@ -157,7 +156,7 @@ public:
 		{
 			if(strlen(string) + 1 > size)
 			{
-				delete[] str;
+				RELEASE_ARRAY(str);
 				Alloc(strlen(string)+1);
 			}
 			else
@@ -182,7 +181,7 @@ public:
 			char* tmp = str;
 			Alloc(need_size);
 			strcpy_s(str, size, tmp);
-			delete[] tmp;
+			RELEASE_ARRAY(tmp);
 		}
 
 		strcat_s(str, size, string.str);
@@ -201,7 +200,7 @@ public:
 				char* tmp = str;
 				Alloc(need_size);
 				strcpy_s(str, size, tmp);
-				delete[] tmp;
+				RELEASE_ARRAY(tmp);
 			}
 
 			strcat_s(str, size, string);
@@ -284,7 +283,7 @@ public:
 				char* tmp = str;
 				Alloc(needed_size);
 				strcpy_s(str, size, tmp);
-				delete tmp;
+				RELEASE(tmp);
 			}
 
 			for(uint i = 0; i < size - src_len; ++i)
@@ -344,7 +343,7 @@ public:
 			{
 				char* tmp = buffer.str;
 				buffer.Alloc(s);
-				delete[] tmp;
+				RELEASE_ARRAY(tmp);
 			}
 
 			strncpy_s(buffer.str, s, &str[start], s);

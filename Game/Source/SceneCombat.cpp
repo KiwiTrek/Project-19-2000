@@ -30,9 +30,9 @@ bool SceneCombat::Load()
 	combatGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
 	scripted = false;
 
-	if (currentChar != nullptr) currentChar = nullptr;
-	if (target != nullptr) target = nullptr;
-	if (currentEntity != nullptr) currentEntity = nullptr;
+	currentChar = nullptr;
+	target = nullptr;
+	currentEntity = nullptr;
 	mainChar.box = { 1280,0,204,190 };
 	mainChar.characterTex = { 0,252,72,92 };
 	mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(20, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
@@ -82,9 +82,9 @@ bool SceneCombat::Load()
 
 bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 {
-	if (currentChar != nullptr) currentChar = nullptr;
-	if (target != nullptr) target = nullptr;
-	if (currentEntity != nullptr) currentEntity = nullptr;
+	currentChar = nullptr;
+	target = nullptr;
+	currentEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
 	finishedAction = false;
@@ -794,12 +794,12 @@ bool SceneCombat::Finish()
 	}
 	turnOrder.Clear();
 
-	if (enemy1 != nullptr) enemy1 = nullptr;
-	if (enemy2 != nullptr) enemy2 = nullptr;
-	if (enemy3 != nullptr) enemy3 = nullptr;
-	if (currentChar != nullptr) currentChar = nullptr;
-	if (target != nullptr) target = nullptr;
-	if (currentEntity != nullptr) currentEntity = nullptr;
+	enemy1 = nullptr;
+	enemy2 = nullptr;
+	enemy3 = nullptr;
+	currentChar = nullptr;
+	target = nullptr;
+	currentEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
 	finishedAction = false;

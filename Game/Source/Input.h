@@ -172,7 +172,7 @@ public:
 
 public:
 	bool windowEvents[WE_COUNT];
-	KeyState*	keyboard;
+	KeyState* keyboard;
 	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
 	GamePad pad;
 	KeyState* gamePad;

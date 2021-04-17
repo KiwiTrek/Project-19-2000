@@ -18,6 +18,12 @@ struct Properties
 {
 	struct Property
 	{
+		Property()
+		{
+			name.Clear();
+			value = 0;
+		}
+
 		SString name;
 		int value;
 	};

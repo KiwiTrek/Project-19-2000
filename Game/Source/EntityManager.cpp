@@ -101,9 +101,9 @@ bool EntityManager::CleanUp()
 	entities.Clear();
 
 	// Unloading entities textures
-	if (playerTex != nullptr) app->tex->UnLoad(playerTex);
-	if (grandpaTex != nullptr) app->tex->UnLoad(grandpaTex);
-	if (enemiesTex != nullptr) app->tex->UnLoad(enemiesTex);
+	app->tex->UnLoad(playerTex);
+	app->tex->UnLoad(grandpaTex);
+	app->tex->UnLoad(enemiesTex);
 
 	return true;
 }
