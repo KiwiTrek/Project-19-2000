@@ -182,6 +182,7 @@ bool SceneCombat::Update(float dt)
 				turnOrder.Del(currentEntity);
 				currentEntity = eNext;
 				currentChar = nullptr;
+				characterSelected = false;
 				if (currentEntity == nullptr)
 				{
 					SortSpeed(false);
