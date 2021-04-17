@@ -86,6 +86,16 @@ public:
 	bool catFinishedTalkRequest;
 	bool catActive;
 
+	bool talkingToSuperhero;
+	bool superheroFinishedTalk;
+	bool superheroFinishedTalkRequest;
+	bool superheroActive;
+
+	bool talkingToGrandpa;
+	bool grandpaFinishedTalk;
+	bool grandpaFinishedTalkRequest;
+	bool grandpaActive;
+
 	int dialogCounter;
 
 };

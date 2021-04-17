@@ -109,6 +109,8 @@ private:
     SDL_Rect portraitBox;
     SDL_Rect shopKeeperPortrait;
     SDL_Rect catPortrait;
+    SDL_Rect grandpaPortrait;
+    SDL_Rect superheroPortrait;
 
     //bool inOptions = false;  // Bool to know if the player is on the options
     //bool inControls = false; // Bool to know if the player is on the controls

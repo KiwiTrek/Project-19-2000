@@ -1,0 +1,23 @@
+<dialog id="4">
+
+  <options speaker="Superhero" value="HA, HA, HA, hello MC, worry not, BECAUSE I AM HERE">
+    <option value="I guess since you are part of my imagination you never change.">
+      <line speaker="Superhero" value="A hero once, a hero always! But that doesnt have to apply to you, "></line>
+      <line speaker="Superhero" value="you can get better, improve, you can be the best version of yourself. "></line>
+      <line speaker="Superhero" value="and I am here to help you. HA! HA! HA!" callback="superhero_finished"></line>
+    </option>
+
+    <option value="You will always be my favorite">
+      <line speaker="Superhero" value="Why was I your favorite? Oh you know it, I was the strongest, the fastest,"></line>
+      <line speaker="Superhero" value="and the one you always thought you would never get to be… "></line>
+      <line speaker="Superhero" value="A WRONG STATEMENT, MIND YOU!"></line>
+      <line speaker="Superhero" value="Because you don’t need to be me, you need to be yourself."></line>
+      <line speaker="Superhero" value="You need to be the SUPER YOU!!!" callback="superhero_finished"></line>
+    </option>
+
+  </options>
+
+</dialog>
+
+
+

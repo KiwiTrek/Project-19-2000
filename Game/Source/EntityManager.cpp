@@ -60,6 +60,16 @@ bool EntityManager::Start()
 	catFinishedTalkRequest = false;
 	catActive = false;
 
+	talkingToSuperhero = false;
+	superheroFinishedTalk = false;
+	superheroFinishedTalkRequest = false;
+	superheroActive = false;
+
+	talkingToGrandpa = false;
+	grandpaFinishedTalk = false;
+	grandpaFinishedTalkRequest = false;
+	grandpaActive = false;
+
 	// Loading entities textures
 	//playerTex = app->tex->Load("Assets/Textures/playerTest.png");
 	//playerTex = app->tex->Load("Assets/Textures/Characters/MCSpriteSheet.png");

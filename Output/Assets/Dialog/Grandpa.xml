@@ -1,0 +1,20 @@
+<dialog id="1">
+
+  <options speaker="Grandpa" value="I will help you however I can, son, but you will have to do the hard part alone.">
+    
+    <option value="Why are you here grandfather?">
+      <line speaker="Grandpa" value="Well, somebody had to take care of you."></line>
+      <line speaker="Grandpa" value="And who better than ye old grandpa to do that!" callback="grandpa_finished"></line>
+    </option>
+
+    <option value="Why am I here?">
+      <line speaker="Grandpa" value="Ah, dear grandson..."></line>
+      <line speaker="Grandpa" value="Everybody goes throught hard times. You are here because of your spirit."></line>
+      <line speaker="Grandpa" value="Find whatever brought you here, and defeat it." callback="grandpa_finished"></line>
+    </option>
+
+  </options>
+
+</dialog>
+
+

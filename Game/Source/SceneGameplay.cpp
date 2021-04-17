@@ -41,6 +41,8 @@ bool SceneGameplay::Load()
 	portraitBox = { 1276,0,208,190 };
 	shopKeeperPortrait = { 0,355,72,93 };
 	catPortrait = { 78,391,78,52 };
+	superheroPortrait = { 1324,351,72,95 };
+	grandpaPortrait = { 74,248,68,100 };
 
 	float tmpValue = 0;
 	//MENU
@@ -125,18 +127,25 @@ bool SceneGameplay::Load()
 
 bool SceneGameplay::Update(float dt)
 {
-
 	// STARTING DIALOG STUFF
 	if (app->entities->dialogCounter > 0 && dialogSystem->currentDialog == nullptr)
 	{
 		app->entities->dialogCounter++;
-		if (app->entities->dialogCounter >= 10)
+		if (app->entities->dialogCounter >= 3)
 		{
 			app->entities->dialogCounter = 0;
+
 			app->entities->shopkeeperFinishedTalk = false;
-			app->entities->catFinishedTalk = false;
 			app->entities->shopkeeperActive = false;
+
+			app->entities->catFinishedTalk = false;
 			app->entities->catActive = false;
+
+			app->entities->superheroFinishedTalk = false;
+			app->entities->superheroActive = false;
+
+			app->entities->grandpaFinishedTalk = false;
+			app->entities->grandpaActive = false;
 		}
 	}
 
@@ -162,7 +171,21 @@ bool SceneGameplay::Update(float dt)
 		{
 			app->entities->catFinishedTalk = false;
 		}
+		else if (app->entities->superheroFinishedTalkRequest == true)
+		{
+			app->entities->superheroFinishedTalk = false;
+		}
+		else if (app->entities->grandpaFinishedTalkRequest == true)
+		{
+			app->entities->grandpaFinishedTalk = false;
+		}
 		dialogSystem->NextDialog();
+	}
+
+	if (app->entities->talkingToGrandpa == true && dialogSystem->currentDialog == nullptr)
+	{
+		dialogSystem->StartDialog("1");
+		app->entities->talkingToGrandpa = false;
 	}
 
 	if (app->entities->talkingToShopkeeper == true && dialogSystem->currentDialog == nullptr)
@@ -175,6 +198,12 @@ bool SceneGameplay::Update(float dt)
 	{
 		dialogSystem->StartDialog("3");
 		app->entities->talkingToCat = false;
+	}
+
+	if (app->entities->talkingToSuperhero == true && dialogSystem->currentDialog == nullptr)
+	{
+		dialogSystem->StartDialog("4");
+		app->entities->talkingToSuperhero = false;
 	}
 
 	// Select the next option.
@@ -190,10 +219,6 @@ bool SceneGameplay::Update(float dt)
 		if (dialogSystem->selectedOption < 0) dialogSystem->selectedOption = 0;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-	{
-		LOG("Breakpoint");
-	}
 	// END OF DIALOG STUFF
 
 	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
@@ -387,6 +412,14 @@ bool SceneGameplay::Draw()
 		if (app->entities->catFinishedTalk == false && app->entities->catActive == true)
 		{
 			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 580, false, &catPortrait);
+		}
+		if (app->entities->superheroFinishedTalk == false && app->entities->superheroActive == true)
+		{
+			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &superheroPortrait);
+		}
+		if (app->entities->grandpaFinishedTalk == false && app->entities->grandpaActive == true)
+		{
+			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &grandpaPortrait);
 		}
 		dialogSystem->DrawDialog(dialogueFont);
 	}

@@ -122,15 +122,7 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 
 bool Npc::Update(float dt)
 {
-	//switch (npcId)
-	//{
-	//case NpcId::CAT:
-	//{
-	//	
-	//}
-	//default:
-	//	break;
-	//}
+
 	currentAnim->Update(dt);
 	
 	return true;
@@ -141,12 +133,23 @@ bool Npc::Draw()
 	switch (npcId)
 	{
 	case NpcId::HERO:
+		if (app->entities->grandpaActive == false)
+		{
+			app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
+		}
+		break;
 	case NpcId::STORE_GUY:
-	case NpcId::CAT:
 		app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
+		break;
+	case NpcId::CAT:
+		if (app->entities->superheroActive == false)
+		{
+		app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
+		}
 		break;
 	case NpcId::GRANDPA:
 		app->render->DrawTexture(app->entities->grandpaTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
+		break;
 	default:
 		break;
 	}
@@ -188,6 +191,13 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 					this->currentAnim = &idleLeft;
 				}
 			}
+			LOG("Interaction super hero");
+			app->entities->superheroActive = true;
+			if (app->entities->dialogCounter == 0)
+			{
+				app->entities->talkingToSuperhero = true;
+				app->entities->dialogCounter = 1;
+			}
 			break;
 		}
 		case NpcId::GRANDPA:
@@ -210,6 +220,14 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 				{
 					this->currentAnim = &idleLeft;
 				}
+			}
+
+			LOG("Interaction super hero");
+			app->entities->grandpaActive = true;
+			if (app->entities->dialogCounter == 0)
+			{
+				app->entities->talkingToGrandpa = true;
+				app->entities->dialogCounter = 1;
 			}
 			break;
 		}

@@ -24,6 +24,14 @@ void CatFinished()
 {
 	app->entities->catFinishedTalkRequest = true;
 }
+void SuperheroFinished()
+{
+	app->entities->superheroFinishedTalkRequest = true;
+}
+void GrandpaFinished()
+{
+	app->entities->grandpaFinishedTalkRequest = true;
+}
 
 std::string ToUpperCase(std::string input)
 {
@@ -46,10 +54,14 @@ DialogSystem::DialogSystem()
 {
 	LoadDialog("Assets/Dialog/Cat.xml");
 	LoadDialog("Assets/Dialog/ShopKeeper.xml");
+	LoadDialog("Assets/Dialog/Grandpa.xml");
+	LoadDialog("Assets/Dialog/Superhero.xml");
 
 	// Register a callback functions
 	callbacks[std::string("shopkeeper_finished")] = std::function<void()>(&ShopKeeperFinished);
 	callbacks[std::string("cat_finished")] = std::function<void()>(&CatFinished);
+	callbacks[std::string("superhero_finished")] = std::function<void()>(&SuperheroFinished);
+	callbacks[std::string("grandpa_finished")] = std::function<void()>(&GrandpaFinished);
 }
 
 DialogSystem::~DialogSystem()

@@ -147,6 +147,7 @@ void Collisions::Init()
 bool Collisions::Start()
 {
 	onceNightmare = true;
+	saveOnce = false;
 	return true;
 }
 
@@ -645,12 +646,28 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					switch (tilePos.y)
 					{
 					case 16:
+					{
+						switch (tilePos.x)
+						{
+						case 38:
+						case 39:
+							saveOnce = false;
+							break;
+						default:
+							break;
+						}
+						break;
+					}
 					case 17:
 						switch (tilePos.x)
 						{
 						case 38:
 						case 39:
-							app->SaveRequest();
+							if (saveOnce == false)
+							{
+								app->SaveRequest();
+								saveOnce = true;
+							}
 							break;
 						default:
 							break;

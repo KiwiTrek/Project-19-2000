@@ -2,12 +2,12 @@
   
       <options speaker="Cat" value="You pet the cat, it mews back happily">
         <option value="I could always count on you CAT">
-          <line speaker="Cat" value="Any time i was feeling down or depressed you were there." callback="cat_finished"></line>
+          <line speaker="Cat" value="Any time I was feeling down or depressed you were there." callback="cat_finished"></line>
         </option>
 
         <option value="I wish I was a Cat...">
           <line speaker="Cat" value="Life would be easier."></line>
-          <line speaker="Cat" value="CAT purrs looking at you confused" callback="cat_finished"></line>
+          <line speaker="Cat" value="CAT purrs looking at you, confused >.>" callback="cat_finished"></line>
         </option>
 
       </options>

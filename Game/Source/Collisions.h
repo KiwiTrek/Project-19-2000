@@ -84,5 +84,6 @@ private:
 	bool matrix[Collider::Type::MAX][Collider::Type::MAX];
 
 	bool onceNightmare;
+	bool saveOnce;
 };
 #endif // !__COLLISIONS_H__
