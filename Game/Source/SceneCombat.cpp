@@ -176,7 +176,7 @@ bool SceneCombat::Update(float dt)
 				//turnOrder.Del(e);
 
 				ListItem<CombatEntity*>* eNext = currentEntity->next;
-				app->entities->DestroyEntity(currentEntity->data);
+				if (!IsCharacter(currentEntity->data)) app->entities->DestroyEntity(currentEntity->data);
 				turnOrder.Del(currentEntity);
 				currentEntity = eNext;
 				if (currentEntity == nullptr)

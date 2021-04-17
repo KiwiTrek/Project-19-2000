@@ -169,43 +169,47 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 		{
 		case NpcId::HERO:
 		{
-			if (this->entityRect.x + this->entityRect.w - 5 < playerPtr->entityRect.x)
+			if (this->collider->rect.y + this->collider->rect.h > playerPtr->entityRect.y && this->collision->rect.y < playerPtr->entityRect.y)
 			{
-				this->currentAnim = &idleRight;
+				this->currentAnim = &idle;
 			}
-			else if (this->entityRect.x + 5 > playerPtr->entityRect.x + playerPtr->entityRect.w)
-			{
-				this->currentAnim = &idleLeft;
-			}
-
-			if (this->entityRect.y + 5 > playerPtr->entityRect.y + playerPtr->entityRect.h)
+			if (this->collider->rect.y < playerPtr->entityRect.y + playerPtr->entityRect.h && this->collision->rect.y > playerPtr->entityRect.y)
 			{
 				this->currentAnim = &idleUp;
 			}
-			else if (this->entityRect.y + this->entityRect.h - 5 < playerPtr->entityRect.y)
+			else if (this->collision->rect.y + this->collision->rect.h > playerPtr->entityRect.y)
 			{
-				this->currentAnim = &idle;
+				if (this->collision->rect.x < playerPtr->entityRect.x)
+				{
+					this->currentAnim = &idleRight;
+				}
+				else if (this->collision->rect.x > playerPtr->entityRect.x)
+				{
+					this->currentAnim = &idleLeft;
+				}
 			}
 			break;
 		}
 		case NpcId::GRANDPA:
 		{
-			if (this->entityRect.x + this->entityRect.w - 5 < playerPtr->entityRect.x)
+			if (this->collider->rect.y + this->collider->rect.h > playerPtr->entityRect.y && this->collision->rect.y < playerPtr->entityRect.y)
 			{
-				this->currentAnim = &idleRight;
+				this->currentAnim = &idle;
 			}
-			else if (this->entityRect.x + 5 > playerPtr->entityRect.x + playerPtr->entityRect.w)
-			{
-				this->currentAnim = &idleLeft;
-			}
-
-			if (this->entityRect.y + 5 > playerPtr->entityRect.y + playerPtr->entityRect.h)
+			if (this->collider->rect.y < playerPtr->entityRect.y + playerPtr->entityRect.h && this->collision->rect.y > playerPtr->entityRect.y)
 			{
 				this->currentAnim = &idleUp;
 			}
-			else if (this->entityRect.y + this->entityRect.h - 5 < playerPtr->entityRect.y)
+			else if (this->collision->rect.y + this->collision->rect.h > playerPtr->entityRect.y)
 			{
-				this->currentAnim = &idle;
+				if (this->collision->rect.x < playerPtr->entityRect.x)
+				{
+					this->currentAnim = &idleRight;
+				}
+				else if (this->collision->rect.x > playerPtr->entityRect.x)
+				{
+					this->currentAnim = &idleLeft;
+				}
 			}
 			break;
 		}
