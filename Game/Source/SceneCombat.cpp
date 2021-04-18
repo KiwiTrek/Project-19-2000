@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "SceneCombat.h"
 
 #include "Audio.h"
@@ -1000,9 +1001,9 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 			currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
 			//dialogue that X character does Y attack to Z enemy
 			LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
-			LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
 			char tmp[75];
 			sprintf(tmp, "%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+			NextLine(tmp);
 			int attack = 0;
 			if (!isMagic)
 				attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
