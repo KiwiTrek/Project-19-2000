@@ -50,7 +50,7 @@ public:
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
-    void NextLine(const char* line, ...);
+    void NextLine(const char* line);
 
     bool Draw(Font* dialogueFont);
 

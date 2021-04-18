@@ -570,6 +570,7 @@ bool SceneGameplay::Unload()
 	RELEASE(buttonFont);
 	RELEASE(dialogueFont);
 	app->tex->UnLoad(textBox);
+	app->tex->UnLoad(dialogGui);
 	savingText.Clear();
 
 	app->gui->Disable();

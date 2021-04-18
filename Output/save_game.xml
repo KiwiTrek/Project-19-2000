@@ -12,7 +12,7 @@
 	<scenemanager />
 	<entityManager>
 		<player>
-			<coordinates x="2488" y="1089" />
+			<coordinates x="2496" y="1988" />
 		</player>
 		<MC>
 			<stats pAtk="20" mAtk="0" pDef="10" mDef="10" hPoints="40" hPointsMax="100" speed="50" mPoints="100" mPointsMax="100" stress="30" stressMax="100" />

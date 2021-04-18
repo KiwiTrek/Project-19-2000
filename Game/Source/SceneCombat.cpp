@@ -179,7 +179,9 @@ bool SceneCombat::Update(float dt)
 				//ListItem<CombatEntity*>* e = currentEntity;
 				//currentEntity = currentEntity->next;
 				LOG("%s is dead!", currentEntity->data->name.GetString());
-				NextLine("%s is dead!", currentEntity->data->name.GetString());
+				char tmp[50];
+				sprintf(tmp, "%s is dead!", currentEntity->data->name.GetString());
+				NextLine(tmp);
 				//turnOrder.Del(e);
 
 				ListItem<CombatEntity*>* eNext = currentEntity->next;
@@ -206,7 +208,14 @@ bool SceneCombat::Update(float dt)
 					once = false;
 					characterSelected = true;						//should delete eventually
 					changeMenu = true;
-					
+
+					if (currentEntity->data->id == EntityId::MC) NextLine("It's your turn!");
+					else
+					{
+						char tmp[50];
+						sprintf(tmp, "It's %s's turn!", currentEntity->data->name.GetString());
+						NextLine(tmp);
+					}
 				}
 
 				//player should decide what to do here based on the buttons (guiclickevent)
@@ -413,7 +422,9 @@ bool SceneCombat::Update(float dt)
 					{
 						//dialogue that X enemy does Y attack to MC
 						LOG("%s does stress attack!", currentEntity->data->name.GetString());
-						NextLine("%s does stress attack!", currentEntity->data->name.GetString());
+						char tmp[75];
+						sprintf(tmp, "%s does stress attack!", currentEntity->data->name.GetString());
+						NextLine(tmp);
 						mainChar.character->stats.stress += 10;
 						mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
 					}
@@ -708,9 +719,9 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
 
-	app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 55, 48, 2, { 255,255,255,255 });
-	app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 55 + 48, 48, 2, { 255,255,255,255 });
-	app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 55 + 96, 48, 2, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52, 48, 2, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 48, 48, 2, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 96, 48, 2, { 255,255,255,255 });
 
 	//app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
 
@@ -744,11 +755,14 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	}
 	else
 	{
-		app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
-		app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
-		app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, { 255,255,255,255 });
-		app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, { 255,255,255,255 });
-		if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, { 255,255,255,255 });
+		if (currentChar != nullptr)
+		{
+			app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
+			app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
+			app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, { 255,255,255,255 });
+			if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, { 255,255,255,255 });
+		}
 
 		btnCombatAttack->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnCombatSkills->Draw(-app->render->camera.x, -app->render->camera.y);
@@ -815,6 +829,10 @@ bool SceneCombat::Finish()
 		e = eNext;
 	}
 	turnOrder.Clear();
+
+	firstLine.Clear();
+	secondLine.Clear();
+	thirdLine.Clear();
 
 	enemy1 = nullptr;
 	enemy2 = nullptr;
@@ -960,7 +978,9 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 		currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
 		//dialogue that X character does Y attack to Z enemy
 		LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
-		NextLine("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());		// Doesn't work weh
+		char tmp[75];
+		sprintf(tmp, "%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+		NextLine(tmp);
 		int attack = 0;
 		if (!isMagic)
 			attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
@@ -980,7 +1000,9 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 			currentEntity->data->CalculatePrecision(currentEntity->data->attackPool.At(index)->data->stat1);
 			//dialogue that X character does Y attack to Z enemy
 			LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
-			NextLine("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());	// Doesn't work weh
+			LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+			char tmp[75];
+			sprintf(tmp, "%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
 			int attack = 0;
 			if (!isMagic)
 				attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
@@ -1240,13 +1262,18 @@ void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 
 	if (id1 == EntityId::NIGHTMARE || id2 == EntityId::NIGHTMARE || id3 == EntityId::NIGHTMARE)
 	{
+		NextLine("A nightmare emerges...");
 		app->render->background = { 0,0,0,255 };
 		scripted = true;
 	}
-	else app->render->background = { 125,33,129,255 };
+	else
+	{
+		NextLine("Some monsters want to fight!");
+		app->render->background = { 125,33,129,255 };
+	}
 }
 
-void SceneCombat::NextLine(const char* line, ...)
+void SceneCombat::NextLine(const char* line)
 {
 	firstLine.Clear();
 	firstLine.Create(secondLine.GetString());
