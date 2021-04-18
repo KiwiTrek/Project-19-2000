@@ -16,7 +16,7 @@ Set in the 21th century. Shattered Dreams is about a 23 years old guy. He lost c
 - Support for both keyboard and gamepad*.
 
 ## Controls (By default)
-![Controls](https://github.com/WillyTrek19/Project-19-2000/blob/master/Screenshots/Controls.png)
+![Controls](https://github.com/WillyTrek19/Project-19-2000/blob/master/Screenshots/ControlsImage.png)
 
 ## Developers
 
