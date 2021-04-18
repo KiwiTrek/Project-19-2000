@@ -109,6 +109,7 @@ public:
 	bool vsync = false;
 	bool exitRequest = false;
 
+	bool saveRequest;// public so I can draw Miku's saving game dialog
 private:
 
 	int argc;
@@ -118,7 +119,6 @@ private:
 
 	List<Module *> modules;
 
-	bool saveRequest;
 	bool loadRequest;
 	bool capRequest;
 	pugi::xml_document saveFile;

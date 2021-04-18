@@ -5,6 +5,7 @@
 #include "GuiButton.h"
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
+#include "SString.h"
 
 class Entity;
 class SceneCombat;
@@ -111,6 +112,11 @@ private:
     SDL_Rect catPortrait;
     SDL_Rect grandpaPortrait;
     SDL_Rect superheroPortrait;
+    SDL_Rect hatsunePortrait;
+
+    SString savingText;
+    int savingCounter;
+    bool savingBool;
 
     //bool inOptions = false;  // Bool to know if the player is on the options
     //bool inControls = false; // Bool to know if the player is on the controls

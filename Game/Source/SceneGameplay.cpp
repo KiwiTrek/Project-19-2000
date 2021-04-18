@@ -33,6 +33,10 @@ bool SceneGameplay::Load()
 
 	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
 	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
+	// Saving dialog thingies
+	savingText = { "Game saved succsessfully." };
+	savingBool = false;
+	savingCounter = 0;
 
 	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
 
@@ -43,6 +47,7 @@ bool SceneGameplay::Load()
 	catPortrait = { 78,391,78,52 };
 	superheroPortrait = { 1324,351,72,95 };
 	grandpaPortrait = { 74,248,68,100 };
+	hatsunePortrait = { 1400,346,84,100 };
 
 	float tmpValue = 0;
 	//MENU
@@ -424,6 +429,28 @@ bool SceneGameplay::Draw()
 		dialogSystem->DrawDialog(dialogueFont);
 	}
 
+	if (app->saveRequest == true)
+	{
+		savingBool = true;
+	}
+	if (savingBool == true)
+	{
+		savingCounter++;
+	}
+	if (savingCounter >= 120)
+	{
+		savingBool = false;
+		savingCounter = 0;
+	}
+
+	if (savingBool == true)
+	{
+		app->render->DrawTexture(dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogTextBox);
+		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &portraitBox);
+		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &hatsunePortrait);
+		app->render->DrawText(dialogueFont, savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, { 255,255,255,255 });
+	}
+
 	return false;
 }
 
@@ -543,6 +570,7 @@ bool SceneGameplay::Unload()
 	RELEASE(buttonFont);
 	RELEASE(dialogueFont);
 	app->tex->UnLoad(textBox);
+	savingText.Clear();
 
 	app->gui->Disable();
 	app->scene->currentButton = nullptr;

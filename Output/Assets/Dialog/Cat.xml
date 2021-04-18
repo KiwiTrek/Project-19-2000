@@ -7,7 +7,7 @@
 
         <option value="I wish I was a Cat...">
           <line speaker="Cat" value="Life would be easier."></line>
-          <line speaker="Cat" value="CAT purrs looking at you, confused >.>" callback="cat_finished"></line>
+          <line speaker="Cat" value="CAT purrs looking at you, confused >. >" callback="cat_finished"></line>
         </option>
 
       </options>

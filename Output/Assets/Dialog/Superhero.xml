@@ -9,9 +9,9 @@
 
     <option value="You will always be my favorite">
       <line speaker="Superhero" value="Why was I your favorite? Oh you know it, I was the strongest, the fastest,"></line>
-      <line speaker="Superhero" value="and the one you always thought you would never get to be… "></line>
+      <line speaker="Superhero" value="and the one you always thought you would never get to be. "></line>
       <line speaker="Superhero" value="A WRONG STATEMENT, MIND YOU!"></line>
-      <line speaker="Superhero" value="Because you don’t need to be me, you need to be yourself."></line>
+      <line speaker="Superhero" value="Because you don’t need that."></line>
       <line speaker="Superhero" value="You need to be the SUPER YOU!!!" callback="superhero_finished"></line>
     </option>
 
