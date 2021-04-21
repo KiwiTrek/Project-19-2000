@@ -2,6 +2,7 @@
 #define __SCENELOGO_H__
 
 #include "Scene.h"
+#include "Point.h"
 
 #include "SDL/include/SDL.h"
 
@@ -23,13 +24,15 @@ public:
 private:
 
     SDL_Texture* logo;
+    iPoint pos;
 
     bool onceFx;
+    bool onceOut;
     int logoFx;
     
     int state;
     float timeCounter;
-    float logoAlpha;
+    float timeVelocity;
 };
 
 #endif // __SCENELOGO_H__

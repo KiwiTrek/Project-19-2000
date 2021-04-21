@@ -5,6 +5,8 @@
 #include "Point.h"
 #include "Font.h"
 #include "SDL.h"
+#include <list>
+#include "Easing.h"
 
 class Render : public Module
 {
@@ -46,12 +48,15 @@ public:
 	bool DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool useCamera = true) const;
 	bool DrawCircle(int x1, int y1, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool useCamera = true) const;
 	bool DrawText(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint);
+	void CreateSpline(int* position, const int& finalPos, const float& time, const SplineType& type);	//Time in ms
 
 	void SetBackgroundColor(SDL_Color color);
 
 public:
 	// Debug drawing
 	bool debug;
+
+	std::list<SplineInfo*> splines;
 
 	SDL_Renderer* renderer;
 	SDL_Rect camera = { 0,0,0,0 };

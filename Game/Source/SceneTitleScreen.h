@@ -2,7 +2,6 @@
 #define __SCENETITLE_H__
 
 #include "Scene.h"
-
 #include "GuiButton.h"
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
@@ -35,6 +34,9 @@ private:
 
     SDL_Texture* nooseBG;
     SDL_Texture* titleCard;
+    SDL_Rect titleCardPos;
+    float titleAlpha;
+    bool onceFx;
 
     Animation noose;
 

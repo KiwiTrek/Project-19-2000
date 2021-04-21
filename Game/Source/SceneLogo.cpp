@@ -8,14 +8,15 @@
 
 #include "EntityManager.h"
 
-#define LOGO_FADE_SPEED 1.0f
+#define TIMER_SPEED 0.8f
 
 SceneLogo::SceneLogo()
 {
     state = 0;
     timeCounter = 0.0f;
-    logoAlpha = 0.0f;
+    timeVelocity = 0.0f;
     onceFx = true;
+    onceOut = true;
 }
 
 SceneLogo::~SceneLogo()
@@ -26,6 +27,10 @@ bool SceneLogo::Load()
 {
     logo = app->tex->Load("Assets/Textures/Logo.png");
     logoFx = app->audio->LoadFx("Assets/Audio/Fx/LogoFX.wav");
+
+    pos.x = -500;
+    pos.y = app->win->screenSurface->h / 2 - 250;
+
     return false;
 }
 
@@ -34,14 +39,15 @@ bool SceneLogo::Update(float dt)
     if (state == 0)
     {
         state = 1;
+        app->render->CreateSpline(&pos.x, app->win->screenSurface->w / 2 - 250, 1350, SplineType::BACK);
     }
     else if (state == 1)
     {
-        logoAlpha += (LOGO_FADE_SPEED * dt);
+        timeVelocity += (TIMER_SPEED * dt);
 
-        if (logoAlpha > 1.0f)
+        if (timeVelocity > 1.0f)
         {
-            logoAlpha = 1.0f;
+            timeVelocity = 1.0f;
             state = 2;
         }
     }
@@ -58,11 +64,17 @@ bool SceneLogo::Update(float dt)
     }
     else if (state == 3)
     {
-        logoAlpha -= (LOGO_FADE_SPEED * dt);
-
-        if (logoAlpha < 0.0f)
+        if (onceOut)
         {
-            logoAlpha = 0.0f;
+            onceOut = false;
+            app->render->CreateSpline(&pos.x, app->win->screenSurface->w, 1350, SplineType::BACK);
+        }
+
+        timeVelocity -= (TIMER_SPEED * dt);
+
+        if (timeVelocity < 0.0f)
+        {
+            timeVelocity = 0.0f;
             TransitionToScene(SceneType::TITLE_SCREEN);
         }
     }
@@ -73,8 +85,8 @@ bool SceneLogo::Update(float dt)
 bool SceneLogo::Draw()
 {
     app->render->background = { 255,255,255,255 };
-    app->render->DrawTexture(logo, app->win->screenSurface->w/2 - 250, app->win->screenSurface->h/2 - 250);
-    app->render->DrawRectangle(app->render->camera, 255, 255, 255, (uchar)(255 - (255 * logoAlpha)));
+    app->render->DrawTexture(logo, pos.x, pos.y);
+    //app->render->DrawRectangle(app->render->camera, 255, 255, 255, (uchar)(255 - (255 * logoAlpha)));
 
     return false;
 }

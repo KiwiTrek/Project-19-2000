@@ -13,6 +13,8 @@
 
 #include "SDL/include/SDL.h"
 
+#define TITLE_FADE_SPEED 1.5f
+
 
 SceneTitleScreen::SceneTitleScreen()
 {    
@@ -37,17 +39,19 @@ bool SceneTitleScreen::Load()
     app->render->camera.y = 0;
     noose.Reset();
 
-    app->audio->PlayFx(titleFx, 0);
-
     // GUI: Initialize required controls for the screen
     float tmpValue = 0;
 
     //MAIN MENU
     app->gui->Enable();
-    btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 300, 300, 60 }, "START", 40, this);
-    btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 400, 300, 60 }, "CONTINUE", 40, this);
-    btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 500, 300, 60 }, "OPTIONS", 40, this);
-    btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 600, 300, 60 }, "EXIT", 40, this);
+    btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -300, 300, 300, 60 }, "START", 40, this);
+    app->render->CreateSpline(&btnStart->bounds.x, 90, 2000, SplineType::QUART);
+    btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 400, 300, 60 }, "CONTINUE", 40, this);
+    app->render->CreateSpline(&btnContinue->bounds.x, 90, 2000, SplineType::QUART);
+    btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -300, 500, 300, 60 }, "OPTIONS", 40, this);
+    app->render->CreateSpline(&btnOptions->bounds.x, 90, 2000, SplineType::QUART);
+    btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -300, 600, 300, 60 }, "EXIT", 40, this);
+    app->render->CreateSpline(&btnExit->bounds.x, 90, 2000, SplineType::QUART);
     /*if (app->input->GetControllerName() != "unplugged") btnStart->state = GuiControlState::FOCUSED;*/
 
     //OPTIONS
@@ -93,6 +97,18 @@ bool SceneTitleScreen::Load()
     app->input->mouseMotionY = 0;
     app->scene->continueLoadRequest = false;
 
+    // Title Card easings
+    onceFx = true;
+    titleCardPos.x = 90;
+    uint tmpW;
+    uint tmpH;
+    app->tex->GetSize(titleCard, tmpW, tmpH);
+    titleCardPos.w = tmpW;
+    titleCardPos.h = tmpH;
+    titleCardPos.y = -titleCardPos.h;
+    titleAlpha = 0.0f;
+    app->render->CreateSpline(&titleCardPos.y,64,2000,SplineType::QUART);
+
     return false;
 }
 
@@ -101,6 +117,13 @@ bool SceneTitleScreen::Update(float dt)
 {
     if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
     noose.Update(dt);
+    titleAlpha += (TITLE_FADE_SPEED * dt);
+    if (titleAlpha >= 0.85f && onceFx)
+    {
+        onceFx = false;
+        app->audio->PlayFx(titleFx, 0);
+    }
+    if (titleAlpha > 1.0f) { titleAlpha = 1.0f; }
     
     // Logic for using Gamepad or mouse (GUI)
     ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
@@ -195,7 +218,8 @@ bool SceneTitleScreen::Draw()
 {
     app->render->background = { 0, 0, 0, 255 };
     app->render->DrawTexture(nooseBG, 810, 0,false,&noose.GetCurrentFrame());
-    app->render->DrawTexture(titleCard, 90, 64);
+    app->render->DrawTexture(titleCard, titleCardPos.x, titleCardPos.y);
+    app->render->DrawRectangle(titleCardPos, 0, 0, 0, (uchar)(255 - (255 * titleAlpha)));
 
     if ((flags & 1<<Flags::OPTIONS) == 0 && (flags & 1<<Flags::CONTROLS) == 0)
     {

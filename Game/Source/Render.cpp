@@ -74,11 +74,33 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
+	bool ret = true;
+
+	std::list<SplineInfo*>::iterator item = splines.begin();
+
+	for (; item != splines.end(); ++item) {
+
+		if (*item != nullptr) {
+
+			if (!(*item)->Update(dt)) {
+
+				delete(*item);
+				(*item) = nullptr;
+
+			}
+
+		}
+
+	}
+
+	splines.remove(nullptr);
+
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 	{
 		debug = !debug;
 	}
-	return true;
+
+	return ret;
 }
 
 bool Render::PostUpdate()
@@ -102,6 +124,21 @@ bool Render::PostUpdate()
 bool Render::CleanUp()
 {
 	LOG("Destroying SDL render");
+
+	std::list<SplineInfo*>::iterator item = splines.begin();
+
+	for (; item != splines.end(); ++item) {
+
+		if (*item != nullptr) {
+
+			delete(*item);
+			(*item) = nullptr;
+
+		}
+
+	}
+
+	splines.clear();
 
 	SDL_DestroyRenderer(renderer);
 
@@ -307,4 +344,15 @@ bool Render::DrawText(Font* font, const char* text, int x, int y, int size, int 
 	}
 
 	return ret;
+}
+
+void Render::CreateSpline(int* position, const int& finaPos, const float& time, const SplineType& type)
+{
+
+	SplineInfo* info = new SplineInfo(position, finaPos, time, type);
+
+	if (info != nullptr)
+		splines.push_back(info);
+	else
+		LOG("Error when creating the spline");
 }
