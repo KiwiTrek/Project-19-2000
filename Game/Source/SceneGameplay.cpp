@@ -621,7 +621,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 6: //OPTIONS
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::OPTIONS);
-
+		app->audio->PlayMusic("Assets/Audio/Music/Options.ogg", 0.0f);
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
@@ -656,7 +656,8 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 13: //BACK (OPTIONS BACK)
 		flags = ClearBit(flags, Flags::OPTIONS);
-
+		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;

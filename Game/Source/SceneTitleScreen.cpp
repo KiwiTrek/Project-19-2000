@@ -305,6 +305,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //OPTIONS
         flags = SetBit(flags, Flags::OPTIONS);
         changeMenu = true;
+        app->audio->PlayMusic("Assets/Audio/Music/Options.ogg", 0.0f);
         app->gui->ResetButtons();
         usingGamepad = true;
         break;
@@ -333,6 +334,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 10: //BACK
         flags = ClearBit(flags, Flags::OPTIONS);
+        app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
         changeMenu = true;
         app->gui->ResetButtons();
         usingGamepad = true;

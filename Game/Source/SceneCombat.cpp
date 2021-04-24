@@ -9,6 +9,7 @@
 #include "GuiManager.h"
 #include "SceneManager.h"
 #include "SceneGameplay.h"
+#include "Map.h"
 #include "Input.h"
 #include "Render.h"
 #include "Window.h"
@@ -855,6 +856,8 @@ bool SceneCombat::Finish()
 	{
 		SceneGameplay* s = (SceneGameplay*)app->scene->current;
 		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(s->btnInventory));
+		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
 	}
 	else
 	{
@@ -1265,6 +1268,7 @@ void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 	{
 		NextLine("A nightmare emerges...");
 		app->render->background = { 0,0,0,255 };
+		app->audio->PlayMusic("Assets/Audio/Music/Nightmare.ogg", 0.0f);
 		scripted = true;
 	}
 	else

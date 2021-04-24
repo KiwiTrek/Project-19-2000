@@ -213,6 +213,7 @@
     <ClInclude Include="Source\Easing.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -236,5 +237,11 @@
     <Filter Include="Entities">
       <UniqueIdentifier>{a0c54f9f-b544-4a8e-af47-587ea6ac8eb4}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Output\Assets\Textures\Icon.ico" />
   </ItemGroup>
 </Project>
