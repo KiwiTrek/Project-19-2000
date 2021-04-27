@@ -62,6 +62,9 @@ DialogSystem::DialogSystem()
 	callbacks[std::string("cat_finished")] = std::function<void()>(&CatFinished);
 	callbacks[std::string("superhero_finished")] = std::function<void()>(&SuperheroFinished);
 	callbacks[std::string("grandpa_finished")] = std::function<void()>(&GrandpaFinished);
+
+	timeStep = 0;
+	timeStepAnswers = 0;
 }
 
 DialogSystem::~DialogSystem()
@@ -69,6 +72,45 @@ DialogSystem::~DialogSystem()
 	nodeRoutes.clear();
 	callbacks.clear();
 	dialogues.clear();
+}
+
+void DialogSystem::DrawDialogAnimated(Font* dialogueFont)
+{
+
+	std::string text = ToUpperCase(currentDialog->attributes->at("value"));
+	int length = strlen(text.c_str());
+
+	if (timeStep >= length)
+	{
+		timeStep = length;
+	}
+	app->render->DrawTextAnimated(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, { 255,255,255,255 }, timeStep);
+
+	if (currentDialog->type == DialogNode::NodeType::OPTIONS)
+	{
+		std::vector<DialogNode*>::iterator i = currentDialog->children->begin();
+		int y = 0;
+		
+		for (i; i < currentDialog->children->end(); i++)
+		{
+			text = ToUpperCase((*i)->attributes->at("value"));
+
+			int length = strlen(text.c_str());
+
+			if (timeStepAnswers >= length)
+			{
+				timeStepAnswers = length;
+			}
+
+			app->render->DrawTextAnimated(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 82 + (30 * y), 30, 1, { 255,255,255,255 }, timeStepAnswers);
+			y++;
+		}
+		
+		SDL_Rect selectedRectangle = SDL_Rect({ 42, (app->render->camera.h / 3) * 2 + 94 + (30 * selectedOption), 6, 6 });
+		app->render->DrawRectangle(selectedRectangle, 250, 0, 0, 255, true, false);
+	}
+	timeStep++;
+	timeStepAnswers++;
 }
 
 void DialogSystem::DrawDialog(Font* dialogueFont)

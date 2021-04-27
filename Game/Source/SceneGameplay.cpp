@@ -426,7 +426,7 @@ bool SceneGameplay::Draw()
 		{
 			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &grandpaPortrait);
 		}
-		dialogSystem->DrawDialog(dialogueFont);
+		dialogSystem->DrawDialogAnimated(dialogueFont);
 	}
 
 	if (app->saveRequest == true)

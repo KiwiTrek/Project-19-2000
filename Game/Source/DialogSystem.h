@@ -18,6 +18,7 @@ public:
 	// Destructor
 	virtual ~DialogSystem();
 
+	void DrawDialogAnimated(Font* dialogueFont);
 	void DrawDialog(Font* dialogueFont);
 
 	bool LoadDialog(const char* filename);
@@ -37,6 +38,8 @@ public:
 	std::map<std::string, std::function<void()>> callbacks;
 
 	int selectedOption = 0;
+	float timeStep;
+	float timeStepAnswers;
 
 	std::string folder;
 	pugi::xml_document dialogFile;

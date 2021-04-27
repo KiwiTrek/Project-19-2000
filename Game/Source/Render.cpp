@@ -346,6 +346,29 @@ bool Render::DrawText(Font* font, const char* text, int x, int y, int size, int 
 	return ret;
 }
 
+bool Render::DrawTextAnimated(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint, int timeStep)
+{
+	bool ret = true;
+
+	int posX = x;
+
+	float scale = (float)size / font->GetCharRec(32).h;
+
+	SDL_SetTextureColorMod(font->GetTextureAtlas(), tint.r, tint.g, tint.b);
+
+	for (int i = 0; i < timeStep; i++)
+	{
+		SDL_Rect recGlyph = font->GetCharRec(text[i]);
+		SDL_Rect recDest = { posX, y, (scale * recGlyph.w), size };
+
+		SDL_RenderCopyEx(renderer, font->GetTextureAtlas(), &recGlyph, &recDest, 0.0, { 0 }, SDL_RendererFlip::SDL_FLIP_NONE);
+
+		posX += ((float)recGlyph.w * scale + spacing);
+	}
+
+	return ret;
+}
+
 void Render::CreateSpline(int* position, const int& finaPos, const float& time, const SplineType& type)
 {
 
