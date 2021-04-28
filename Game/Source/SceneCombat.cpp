@@ -17,6 +17,7 @@
 SceneCombat::SceneCombat()
 {
 	flags = 0;
+	white = { 255,255,255,255 };
 
 	characterFlags = 0;
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
@@ -41,12 +42,31 @@ bool SceneCombat::Load()
 	mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
 	mainChar.mp.Create("MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
 	mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
+	
+	mainChar.lvl.Create("LVL: %d", 1);
+	mainChar.xp.Create("XP: %d", 0);
+	mainChar.nextLvl.Create("Next Level: %d", 15);
+	mainChar.pAtk.Create("Physical Attack: %d", mainChar.character->stats.pAtk);
+	mainChar.mAtk.Create("Magic Attack: %d", mainChar.character->stats.mAtk);
+	mainChar.pDef.Create("Physical Defense: %d", mainChar.character->stats.pDef);
+	mainChar.mDef.Create("Magic Defense: %d", mainChar.character->stats.mDef);
+	mainChar.speed.Create("Speed: %d", mainChar.character->stats.speed);
 
 	grandpa.box = { 1280,0,204,190 };
 	grandpa.characterTex = { 73,252,68,100 };
 	grandpa.character = (CombatEntity*)app->entities->CreateEntity(grandpa.box.w + 36, app->render->camera.h - grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, Stats(25, 25, 0, 0, 100, 100, 25, 100, 100));
 	grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 	grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
+
+	grandpa.lvl.Create("LVL: %d", 1);
+	grandpa.xp.Create("XP: %d", 0);
+	grandpa.nextLvl.Create("Next Level: %d", 15);
+	grandpa.pAtk.Create("Physical Attack: %d", grandpa.character->stats.pAtk);
+	grandpa.mAtk.Create("Magic Attack: %d", grandpa.character->stats.mAtk);
+	grandpa.pDef.Create("Physical Defense: %d", grandpa.character->stats.pDef);
+	grandpa.mDef.Create("Magic Defense: %d", grandpa.character->stats.mDef);
+	grandpa.speed.Create("Speed: %d", grandpa.character->stats.speed);
+
 
 	//enemy1 = app->entities->CreateEntity(300, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
 	//enemy2 = app->entities->CreateEntity(700, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
@@ -721,9 +741,9 @@ bool SceneCombat::Draw(Font* dialogueFont)
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
 	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
 
-	app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52, 48, 2, { 255,255,255,255 });
-	app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 48, 48, 2, { 255,255,255,255 });
-	app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 96, 48, 2, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52, 48, 2, white);
+	app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 48, 48, 2, white);
+	app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 96, 48, 2, white);
 
 	//app->render->DrawRectangle({ 1280 / 2 - 64,720 / 2 - 64,128,128 }, 0, 255, 255, 255);
 
@@ -733,16 +753,16 @@ bool SceneCombat::Draw(Font* dialogueFont)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x, -app->render->camera.y + mainChar.character->entityRect.y, false, &mainChar.box);
 			app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x + 10, -app->render->camera.y + mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), false, &mainChar.characterTex);
-			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15,/* -app->render->camera.y +*/ mainChar.character->entityRect.y + 45, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 30, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 60, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15,/* -app->render->camera.y +*/ mainChar.character->entityRect.y + 45, 28, 1, white);
+			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 30, 28, 1, white);
+			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 60, 28, 1, white);
 		}
 		if (characterFlags >= 3)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x, -app->render->camera.y + grandpa.character->entityRect.y, false, &grandpa.box);
 			app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x + 10, -app->render->camera.y + grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2), false, &grandpa.characterTex);
-			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50 + 30, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50, 28, 1, white);
+			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50 + 30, 28, 1, white);
 		}
 		/*
 		if (characterFlags >= 7)
@@ -761,9 +781,9 @@ bool SceneCombat::Draw(Font* dialogueFont)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
 			app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
-			app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, { 255,255,255,255 });
-			if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, white);
+			app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, white);
+			if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, white);
 		}
 
 		btnCombatAttack->Draw(-app->render->camera.x, -app->render->camera.y);

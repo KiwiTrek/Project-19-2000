@@ -29,10 +29,10 @@ class GuiControl
 {
 public:
 	// Constructors
-	GuiControl(GuiControlType type, uint32 id) : type(type), id(id), state(GuiControlState::NORMAL)
+	GuiControl(GuiControlType type, uint32 id) : type(type), id(id), state(GuiControlState::NORMAL), white({ 255,255,255,255 }), black({0,0,0,255})
 	{}
 
-	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text)
+	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text), white({ 255,255,255,255 }), black({ 0,0,0,255 })
 	{
 		texture = NULL;
 		guiFont = nullptr;
@@ -99,6 +99,8 @@ public:
 
 	// Texture atlas reference
 	SDL_Texture* texture;
+	SDL_Color white;
+	SDL_Color black;
 
 	// Fonts
 	Font* guiFont;

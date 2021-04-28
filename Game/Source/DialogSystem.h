@@ -40,6 +40,7 @@ public:
 	int selectedOption = 0;
 	float timeStep;
 	float timeStepAnswers;
+	SDL_Color white;
 
 	std::string folder;
 	pugi::xml_document dialogFile;

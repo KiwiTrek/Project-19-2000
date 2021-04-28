@@ -19,6 +19,7 @@ SceneGameplay::SceneGameplay()
 {
 	//COMBAT
 	combatScene = new SceneCombat();
+	white = { 255,255,255,255 };
 }
 
 SceneGameplay::~SceneGameplay()
@@ -58,7 +59,10 @@ bool SceneGameplay::Load()
 	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 160, 200, 60 }, "SKILLS", 40, this);
 	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 240, 200, 60 }, "       SKILL TREE", 35, this);
 	btnEquipment = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 320, 200, 60 }, " EQUIPMENT", 35, this);
+
 	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 400, 200, 60 }, " STATS ", 40, this);
+	statFlags = 0;
+
 	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 90, 480, 200, 60 }, "OPTIONS", 35, this);
 	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 560, 200, 60 }, "          TITLE SCREEN", 35, this);
 
@@ -338,7 +342,28 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			}
 			else if ((flags & 1 << Flags::STATS) != 0)
 			{
-				// no buttons here? since its only the stats
+				statFlags = 0;
+				if (usingGamepad)
+				{}
+				else
+				{
+					int x, y;
+					app->input->GetMousePosition(x, y);
+					if (combatScene->characterFlags >= 2)
+					{
+						if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+						{
+							statFlags = SetBit(statFlags, (uint)EntityId::MC);
+						}
+					}
+					if (combatScene->characterFlags >= 6)
+					{
+						if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+						{
+							statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
+						}
+					}
+				}
 			}
 		}
 		else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
@@ -374,10 +399,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
 	{
 		// Logic to manage pause menu and menu flags bit
+		app->gui->ResetButtons();
 		if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
 		{
-			app->gui->ResetButtons();
 			flags = ToggleBit(flags, Flags::MENU);
+			if ((flags & 1 << Flags::MENU) == 0)
+			{
+				flags = 0;
+			}
 			app->entities->inPause = !app->entities->inPause;
 		}
 
@@ -448,7 +477,7 @@ bool SceneGameplay::Draw()
 		app->render->DrawTexture(dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogTextBox);
 		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &portraitBox);
 		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &hatsunePortrait);
-		app->render->DrawText(dialogueFont, savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, { 255,255,255,255 });
+		app->render->DrawText(dialogueFont, savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
 
 	return false;
@@ -466,6 +495,33 @@ bool SceneGameplay::DrawPauseMenu()
 		btnStats->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnOptions->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnTitleScreen->Draw(-app->render->camera.x, -app->render->camera.y);
+
+		// Character Boxes
+		if (combatScene->characterFlags >= 2)
+		{
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + 80, false, &menuCharacterBox);
+			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + 80 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.hp.GetString(), /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.mp.GetString(), /*-app->render->camera.x + */984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 30, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.stress.GetString(), /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 60, 28, 1, white);
+		}
+		if (combatScene->characterFlags >= 6)
+		{
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, false, &menuCharacterBox);
+			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + menuCharacterBox.h + 80 + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
+			app->render->DrawText(dialogueFont, combatScene->grandpa.hp.GetString(),/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->grandpa.mp.GetString(),/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20 + 30, 28, 1, white);
+		}
+		/*
+		if (characterFlags >= 7)
+		{
+			//3rd
+		}
+		if (characterFlags >= 15)
+		{
+			//4th
+		}
+		*/
 
 		if ((flags & 1 << Flags::INVENTORY) != 0)
 		{
@@ -486,34 +542,51 @@ bool SceneGameplay::DrawPauseMenu()
 		else if ((flags & 1 << Flags::STATS) != 0)
 		{
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
-		}
+			if (statFlags == 1 << (int)EntityId::MC)
+			{
+				app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + 80, menuCharacterBox.w, menuCharacterBox.h }, 255, 0, 0, 50, true);
+				
+				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 292 + 40, -app->render->camera.y + 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
+				app->render->DrawText(dialogueFont, "Main Character", 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.lvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.xp.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.lvl.Length()* 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.nextLvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.xp.Length() * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				
+				// XP Bar (?)
 
-		// Character Boxes
-		if (combatScene->characterFlags >= 2)
-		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + 80, false, &menuCharacterBox);
-			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + 80 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.hp.GetString(), /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, combatScene->mainChar.mp.GetString(), /*-app->render->camera.x + */984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 30, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, combatScene->mainChar.stress.GetString(), /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 60, 28, 1, { 255,255,255,255 });
+				app->render->DrawText(buttonFont, combatScene->mainChar.pAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.mAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.pDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.mDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.speed.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
+
+			}
+			else if (statFlags == 1 << (int)EntityId::VIOLENT)
+			{
+				app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, menuCharacterBox.w, menuCharacterBox.h }, 0, 255, 255, 50, true);
+
+				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 292 + 40, -app->render->camera.y + 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
+				app->render->DrawText(dialogueFont, "Grandpa", 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.lvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.xp.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.lvl.Length() * 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.xp.Length() * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+
+				// XP Bar (?)
+
+				app->render->DrawText(buttonFont, combatScene->grandpa.pAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.mAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.pDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.mDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.speed.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
+			}
+			else
+			{
+				SString tmp1 = "Select a character";
+				SString tmp2 = "to see its stats";
+				app->render->DrawText(dialogueFont, tmp1.GetString(), (app->render->camera.w / 2) - ((tmp1.Length() * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp2.GetString(), (app->render->camera.w / 2) - ((tmp2.Length() * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
+			}
 		}
-		if (combatScene->characterFlags >= 6)
-		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, false, &menuCharacterBox);
-			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + menuCharacterBox.h + 80 + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
-			app->render->DrawText(dialogueFont, combatScene->grandpa.hp.GetString(),/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20, 28, 1, { 255,255,255,255 });
-			app->render->DrawText(dialogueFont, combatScene->grandpa.mp.GetString(),/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20 + 30, 28, 1, { 255,255,255,255 });
-		}
-		/*
-		if (characterFlags >= 7)
-		{
-			//3rd
-		}
-		if (characterFlags >= 15)
-		{
-			//4th
-		}
-		*/
 	}
 	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
 	{
@@ -532,7 +605,8 @@ bool SceneGameplay::DrawPauseMenu()
 	{
 		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, 200);
 		SString titleControls = "Controls";
-		app->render->DrawText(buttonFont, titleControls.GetString(), /*-app->render->camera.x + */((-app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
+		app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, white);
+
 		btnKeySelect->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnKeyCancel->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnKeyMenu->Draw(-app->render->camera.x, -app->render->camera.y);

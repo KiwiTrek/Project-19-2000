@@ -173,7 +173,7 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 
 bool GuiSlider::Draw(int cPosX, int cPosY)
 {
-	app->render->DrawText(guiFont, text.GetString(), /*cPosX +*/ limits.x,/* cPosY +*/ limits.y - bounds.h, textSize, 2, { 255,255,255,255 });
+	app->render->DrawText(guiFont, text.GetString(), /*cPosX +*/ limits.x,/* cPosY +*/ limits.y - bounds.h, textSize, 2, white);
 
 	//SLIDER BAR
 	if (state != GuiControlState::DISABLED)

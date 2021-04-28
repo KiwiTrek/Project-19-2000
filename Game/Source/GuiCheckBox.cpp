@@ -114,7 +114,7 @@ bool GuiCheckBox::Update(float dt, int minId, int maxId)
 bool GuiCheckBox::Draw(int cPosX, int cPosY)
 {
 	// Draw the right button depending on state
-	app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x, /*cPosY + */bounds.y + (bounds.h / 8) - bounds.h, textSize, 2, { 255,255,255,255 });
+	app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x, /*cPosY + */bounds.y + (bounds.h / 8) - bounds.h, textSize, 2, white);
 
 	switch (state)
 	{

@@ -65,6 +65,7 @@ DialogSystem::DialogSystem()
 
 	timeStep = 0;
 	timeStepAnswers = 0;
+	white = { 255,255,255,255 };
 }
 
 DialogSystem::~DialogSystem()
@@ -84,7 +85,7 @@ void DialogSystem::DrawDialogAnimated(Font* dialogueFont)
 	{
 		timeStep = length;
 	}
-	app->render->DrawTextAnimated(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, { 255,255,255,255 }, timeStep);
+	app->render->DrawTextAnimated(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 2, white, timeStep);
 
 	if (currentDialog->type == DialogNode::NodeType::OPTIONS)
 	{
@@ -102,7 +103,7 @@ void DialogSystem::DrawDialogAnimated(Font* dialogueFont)
 				timeStepAnswers = length;
 			}
 
-			app->render->DrawTextAnimated(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 82 + (30 * y), 30, 1, { 255,255,255,255 }, timeStepAnswers);
+			app->render->DrawTextAnimated(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 82 + (30 * y), 30, 2, white, timeStepAnswers);
 			y++;
 		}
 		
@@ -124,7 +125,7 @@ void DialogSystem::DrawDialog(Font* dialogueFont)
 
 	// Write the dialog line.
 	//app->font->BlitText(10, (app->render->camera.h / 3) * 2 + 10, 0, text.c_str());
-	app->render->DrawText(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, { 255,255,255,255 });
+	app->render->DrawText(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 2, white);
 
 	// If the current node is a question, we should also draw the possible answers
 	if (currentDialog->type == DialogNode::NodeType::OPTIONS)
@@ -139,7 +140,7 @@ void DialogSystem::DrawDialog(Font* dialogueFont)
 			//text = (*i)->attributes->at("value");
 			// Draw them, increasing the y offset at every iteration.
 			// app->fonts->BlitText(30, (app->render->camera.h / 3) * 2 + 30 + (18 * y), 0, text.c_str());
-			app->render->DrawText(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 82 + (30 * y), 30, 1, { 255,255,255,255 });
+			app->render->DrawText(dialogueFont, text.c_str(), 60, (app->render->camera.h / 3) * 2 + 82 + (30 * y), 30, 2, white);
 			y++;
 		}
 		// Draw a small black rectangle next to the selected option.

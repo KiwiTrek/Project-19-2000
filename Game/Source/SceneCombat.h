@@ -20,6 +20,11 @@ struct  CombatCharacter
     SString hp;
     SString mp;
     SString stress;
+
+    SString lvl;
+    SString xp;
+    SString nextLvl;
+    SString pAtk, mAtk, pDef, mDef, speed;
 };
 
 
@@ -96,6 +101,7 @@ private:
     Entity* enemy2;
     Entity* enemy3;
 
+    SDL_Color white;
     int combatMenuFlags;
     GuiButton* btnCombatAttack;
     GuiButton* btnCombatSkills;

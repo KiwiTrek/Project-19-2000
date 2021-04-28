@@ -19,6 +19,7 @@
 SceneTitleScreen::SceneTitleScreen()
 {    
     for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
+    white = { 255,255,255,255 };
     flags = 0;
 }
 
@@ -232,7 +233,7 @@ bool SceneTitleScreen::Draw()
     {
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
         SString titleOptions = "Options";
-        app->render->DrawText(buttonFont, titleOptions.GetString(), /*app->render->camera.x + */((app->render->camera.w - (titleOptions.Length() * 24))/2), 100, 64, 2, { 255, 255, 255, 255 });
+        app->render->DrawText(buttonFont, titleOptions.GetString(), /*app->render->camera.x + */((app->render->camera.w - (titleOptions.Length() * 24))/2), 100, 64, 2, white);
 
         sldrVolume->Draw();
         sldrFx->Draw();
@@ -246,7 +247,7 @@ bool SceneTitleScreen::Draw()
     {
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
         SString titleControls = "Controls";
-        app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
+        app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, white);
 
         btnKeySelect->Draw();
         btnKeyCancel->Draw();

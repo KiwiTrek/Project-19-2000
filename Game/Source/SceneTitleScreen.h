@@ -35,6 +35,7 @@ private:
     SDL_Texture* nooseBG;
     SDL_Texture* titleCard;
     SDL_Rect titleCardPos;
+    SDL_Color white;
     float titleAlpha;
     bool onceFx;
 

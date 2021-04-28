@@ -58,6 +58,7 @@ public:
 
 private:
     SDL_Texture* textBox = nullptr;
+    SDL_Color white;
 
     //MENU
     SDL_Rect menuBox;
@@ -102,6 +103,7 @@ private:
 
     //STATE FLAGS
     int flags;
+    int statFlags;
 
     //DIALOG
     DialogSystem* dialogSystem = nullptr;
@@ -117,14 +119,6 @@ private:
     SString savingText;
     int savingCounter;
     bool savingBool;
-
-    //bool inOptions = false;  // Bool to know if the player is on the options
-    //bool inControls = false; // Bool to know if the player is on the controls
-    //bool inInventory = false;
-    //bool inSkills = false;
-    //bool inSkillTree = false;
-    //bool inEquipment = false;
-    //bool inStats = false;
 };
 
 #endif // __SCENEGAMEPLAY_H__
