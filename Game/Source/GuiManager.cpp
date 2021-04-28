@@ -7,6 +7,7 @@
 #include "GuiButton.h"
 #include "GuiCheckBox.h"
 #include "GuiSlider.h"
+#include "GuiImageButton.h"
 
 #include "Log.h"
 
@@ -55,7 +56,7 @@ bool GuiManager::Start()
 	return true;
 }
 
-GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits)
+GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits, const char* count, SDL_Texture* tex, SDL_Rect* sec)
 {
 	GuiControl* control = nullptr;
 
@@ -74,6 +75,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 	case GuiControlType::SLIDER:
 	{
 		control = new GuiSlider(id, bounds, widthInUnits, text);
+		break;
+	}
+	case GuiControlType::IMAGEBUTTON:
+	{
+		control = new GuiImageButton(id, bounds, text, count, tex, *sec);
 		break;
 	}
 	default: break;

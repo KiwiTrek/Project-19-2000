@@ -20,7 +20,7 @@ public:
 	// Blit
 	bool Draw(int cPosX = 0, int cPosY = 0);
 
-private:
+protected:
 	// GUI Button specific properties
 	SDL_Rect disabled;
 	SDL_Rect normal;

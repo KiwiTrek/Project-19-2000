@@ -27,6 +27,38 @@ struct  CombatCharacter
     SString pAtk, mAtk, pDef, mDef, speed;
 };
 
+class Item
+{
+public:
+    Item(SString name, Attack effect, int count) : name(name), effect(effect), count(count)
+    {}
+
+    void Use(CombatEntity* target)
+    {
+        switch (effect.type)
+        {
+        case AttackType::DAMAGE:
+            break;
+        case AttackType::BUFF:
+            break;
+        case AttackType::HEAL:
+            break;
+        case AttackType::TAUNT:
+            break;
+        default:
+            break;
+        }
+        count--;
+        if (count <= 0)
+        {
+            delete this;
+        }
+    }
+
+    SString name;
+    Attack effect;
+    int count;
+};
 
 class SceneCombat : public Scene
 {
@@ -83,6 +115,8 @@ public:
     CombatCharacter grandpa;
     //CombatCharacter childhood;
     //CombatCharacter extroverted;
+
+    List<Item*> items;
 
 private:
     List<CombatEntity*> turnOrder;

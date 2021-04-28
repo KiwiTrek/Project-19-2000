@@ -5,6 +5,7 @@
 #include "GuiButton.h"
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
+#include "GuiImageButton.h"
 #include "SString.h"
 
 class Entity;
@@ -94,6 +95,11 @@ private:
     GuiButton* btnPadDown;
     GuiButton* btnPadLeft;
     GuiButton* btnPadRight;
+
+    //ITEMS
+    GuiImageButton* btnItem1;
+    GuiImageButton* btnItem2;
+    GuiImageButton* btnItem3;
 
     //FONTS
     Font* dialogueFont = nullptr;

@@ -28,7 +28,7 @@ public:
 	bool CleanUp();
 
 	// Create/Destroy control
-	GuiControl* CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits = 0);
+	GuiControl* CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits = 0, const char* count = nullptr, SDL_Texture* tex = nullptr, SDL_Rect* sec = nullptr);
 	void DestroyGuiControl(GuiControl* entity);
 
 	void ResetButtons();

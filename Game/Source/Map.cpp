@@ -340,10 +340,11 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 		{
 			LOG("Stop5");
 			Properties::Property* prop = new Properties::Property();
-
+			LOG("Stop5.1");
 			prop->name = property.attribute("name").as_string();
+			LOG("Stop5.2");
 			prop->value = property.attribute("value").as_int();
-			LOG("Stop5.5");
+			LOG("Stop5.3");
 
 			properties.list.Add(prop);
 			LOG("Stop6");

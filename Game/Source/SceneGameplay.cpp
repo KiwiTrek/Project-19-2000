@@ -101,6 +101,32 @@ bool SceneGameplay::Load()
 	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 600, 300, 60 }, "RIGHT", 40, this);
 	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
 
+	//ITEMS
+	SDL_Rect sec = { 0,250,64,64 };
+	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 29, { 400,200,250,80 }, "ITEM1", 40, this, 0, "x0", dialogGui, &sec);
+	sec = { 75,250,64,64 };
+	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 30, { 400,300,250,80 }, "ITEM2", 40, this, 0, "x0", dialogGui, &sec);
+	sec = { 150,250,64,64 };
+	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 31, { 400,400,250,80 }, "ITEM3", 40, this, 0, "x0", dialogGui, &sec);
+
+	SString str = "item one";
+	Attack* eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	int c = 2;
+	Item* i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item two";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 1;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item three";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
 	app->map->Enable();
 	if (app->map->data.type == MapTypes::MAPTYPE_UNKNOWN) app->map->LoadNewMap("tutorial.tmx");
 	// Initialize player
@@ -324,6 +350,23 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			{
 				// arrow buttons maybe?
 				// buttons for each item i supose?
+				for (int i = 0; i < combatScene->items.Count(); i++)
+				{
+					switch (i)
+					{
+					case 0:
+						btnItem1->Update(dt);
+						break;
+					case 1:
+						btnItem2->Update(dt);
+						break;
+					case 2:
+						btnItem3->Update(dt);
+						break;
+					default:
+						break;
+					}
+				}
 			}
 			else if ((flags & 1 << Flags::SKILLS) != 0)
 			{
@@ -526,6 +569,23 @@ bool SceneGameplay::DrawPauseMenu()
 		if ((flags & 1 << Flags::INVENTORY) != 0)
 		{
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+			for (int i = 0; i < combatScene->items.Count(); i++)
+			{
+				switch (i)
+				{
+				case 0:
+					btnItem1->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 1:
+					btnItem2->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 2:
+					btnItem3->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 		else if ((flags & 1 << Flags::SKILLS) != 0)
 		{
@@ -771,6 +831,15 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		app->gui->ResetButtons();
 		usingGamepad = true;
 
+		break;
+	case 29:
+		LOG("USED ITEM 1");
+		break;
+	case 30:
+		LOG("USED ITEM 2");
+		break;
+	case 31:
+		LOG("USED ITEM 3");
 		break;
 	default:
 		break;

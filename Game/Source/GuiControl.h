@@ -14,6 +14,7 @@ enum class GuiControlType
 	BUTTON,
 	CHECKBOX,
 	SLIDER,
+	IMAGEBUTTON
 };
 
 enum class GuiControlState
