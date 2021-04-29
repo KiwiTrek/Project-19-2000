@@ -9,7 +9,6 @@ on:
       - master
     tags:
       -v0.*
-      -v1.*
 
 jobs:
   # This workflow contains a single job called "build"
@@ -29,6 +28,6 @@ jobs:
      - name: Create Release
        uses: ncipollo/release-action@v1
        with:
-        tag: v*
+        tag: v0.*
         artifacts: "beta.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
