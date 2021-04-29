@@ -1,0 +1,33 @@
+<quests>
+	<questGuideline
+		id = "(int)This is the id of the quest (unique)"
+		type = "(int)This is the quest type for the quest 1 (0 gather, 1 kill, 2 delivery, 3 dialogue)" 
+		title = "(string)This is a title for quest 1"
+		description = "(string)This is a description for quest 1"
+		objective = "(string)This is the objective for the quest 1"
+		quantity = "(int)This is the quantity of objectives for the quest 1"
+		demandingNPC = "(string)This is the name of the NPC that gave you the quest"
+		rewardingNPC = "(string)This is the name of the NPC that completes your quest"
+		rewardXP = "(int)This is the quantity of XP given"
+		rewardGold = "(int)This is the quantity of Gold given"
+		requiredId = "(int)This is the quest id if quest needs that one completed"
+		isCompleted = "(bool)This is a true / false if quest is completed"
+		status = "(int)This is a number to know the status of the quest (0 inactive, 1 active, 2 completed)"
+	/>
+	<quest
+		id = "1" 
+		type = "0"
+		title = "Collect 8 mushrooms:"
+		description = "Go to the forest close to the beach and gather 8 mushrooms from it."
+		objective = "mushroom"
+		quantity = "8"
+		demandingNPC = "None"
+		rewardingNPC = "None"
+		rewardXP = "100"
+		rewardGold = "100"
+		requiredId = "0"
+		isCompleted = "false"
+		status = "1"
+	/>
+
+</quests>

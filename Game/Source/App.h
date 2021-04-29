@@ -20,6 +20,7 @@ class Map;
 class EntityManager;
 class Collisions;
 class GuiManager;
+class QuestManager;
 
 class SceneManager;
 
@@ -103,6 +104,8 @@ public:
 	EntityManager* entities;
 	Collisions* collisions;
 	GuiManager* gui;
+
+	QuestManager* quests;
 
 	SceneManager* scene;
 

@@ -87,6 +87,9 @@
     <ClCompile Include="Source\GuiImageButton.cpp">
       <Filter>GuiControls</Filter>
     </ClCompile>
+    <ClCompile Include="Source\QuestManager.cpp">
+      <Filter>Quests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -220,6 +223,9 @@
     <ClInclude Include="Source\GuiImageButton.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
+    <ClInclude Include="Source\QuestManager.h">
+      <Filter>Quests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -242,6 +248,9 @@
     </Filter>
     <Filter Include="Entities">
       <UniqueIdentifier>{a0c54f9f-b544-4a8e-af47-587ea6ac8eb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quests">
+      <UniqueIdentifier>{6d33ad12-8b36-44c2-b9ba-57b25c410a42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "GuiManager.h"
 #include "DialogSystem.h"
+#include "QuestManager.h"
 
 #include "SceneManager.h"
 
@@ -35,6 +36,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	collisions = new Collisions();
 	gui = new GuiManager();
 
+	quests = new QuestManager();
+
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
 	AddModule(win);
@@ -48,6 +51,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(entities);
 	AddModule(collisions);
 	AddModule(gui);
+
+	AddModule(quests);
 
 	// Render last to swap buffer
 	AddModule(render);
