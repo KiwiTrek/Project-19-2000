@@ -8,14 +8,14 @@ on:
     branches:
       - master
     tags:
-      - v0.*
-      - v1.*
+      -v1.0
 
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # We are generating the zip excluding the gitignore (or any other file specified in the exclusions)
@@ -23,12 +23,12 @@ jobs:
      - name: Zip Generator
        uses: thedoctor0/zip-release@master
        with:
-        filename: 'release.zip'
+        filename: 'beta.zip'
         exclusions: '*.gitignore*'
       # Creates a release uploading the release.zip file. The github token is usually under secrets.GITHUB_TOKEN, however in the future this may be different.
      - name: Create Release
        uses: ncipollo/release-action@v1
        with:
-        tag: v0.*
+        tag: v1.0
         artifacts: "beta.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
