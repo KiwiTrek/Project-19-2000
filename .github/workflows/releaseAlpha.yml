@@ -17,7 +17,7 @@ jobs:
       # We are generating the zip excluding the gitignore (or any other file specified in the exclusions)
      - uses: actions/checkout@v2
      - name: Rename .exe
-       uses: tilon/file-changes-actions@v1.2.3
+       uses: trilom/file-changes-action@v1.2.3
        with:
          githubToken: ${{ secrets.GITHUB_TOKEN }}
          output: 'exe'
