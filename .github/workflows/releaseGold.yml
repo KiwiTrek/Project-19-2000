@@ -1,0 +1,35 @@
+# This is a basic workflow to generate a zip and a release using GitHub Actions
+
+name: Release Gold
+
+# When a new push with a tag is called, the event is triggered
+on:
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # We are generating the zip excluding the gitignore (or any other file specified in the exclusions)
+     - uses: actions/checkout@v2
+     # Rename .exe file
+     # - name: Rename .exe
+     - name: Zip Generator
+       uses: thedoctor0/zip-release@master
+       with:
+        filename: 'Bruhmentium_Inc.-Shattered_Dreams_v1.0.zip'
+        path: './Output ./LICENSE ./README.md'
+        exclusions: '*.gitignore*'
+      # Creates a release uploading the release.zip file. The github token is usually under secrets.GITHUB_TOKEN, however in the future this may be different.
+     - name: Create Release
+       uses: ncipollo/release-action@v1
+       with:
+        tag: v1.0
+        name: Shattered Dreams - v1.0
+        bodyFile: "./docs/body.md"
+        artifacts: "Bruhmentium_Inc.-Shattered_Dreams_v1.0.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
