@@ -20,6 +20,7 @@ jobs:
        uses: thedoctor0/zip-release@master
        with:
         filename: 'Bruhmentium_Inc.-Shattered_Dreams_v0.8.zip'
+        path: '.\Output'
         exclusions: '*.gitignore*'
       # Creates a release uploading the release.zip file. The github token is usually under secrets.GITHUB_TOKEN, however in the future this may be different.
      - name: Create Release
