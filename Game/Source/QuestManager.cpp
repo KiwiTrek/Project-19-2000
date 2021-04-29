@@ -28,7 +28,7 @@ QuestManager::~QuestManager()
 bool QuestManager::Start()
 {
 
-	/*font = new Font("Assets/Fonts/dungeon_font3.xml", app->tex);*/
+	// font = new Font("Assets/Fonts/dungeon_font3.xml", app->tex);
 
 	pugi::xml_node questNode;
 	pugi::xml_document questData;
@@ -120,16 +120,16 @@ bool QuestManager::DrawActiveQuests()
 		{
 		case 1: // new quest chain 1
 			// Title Drawing
-			app->render->DrawText(font, L->data->title.GetString(), 0, 60, 60, 0, { 255,255,255,255 });
+			// app->render->DrawText(font, L->data->title.GetString(), 0, 60, 60, 0, { 255,255,255,255 });
 
 			// Amount of mushrooms taken
 			//numToStr = to_string(app->player->mushroomCount); // to_string converts an int to string
 			strToConstChar = numToStr.c_str(); // c_str converts a string to const char*
-			app->render->DrawText(font, strToConstChar, 280, 63, 60, 0, { 255,255,255,200 });
+			// app->render->DrawText(font, strToConstChar, 280, 63, 60, 0, { 255,255,255,200 });
 
 			// Description Drawing if pressed L
 			if (app->input->GetKey(SDL_SCANCODE_L) == KEY_REPEAT)
-				app->render->DrawText(font, L->data->description.GetString(), 300, 70, 45, 0, { 200,200,200,155 });
+				// app->render->DrawText(font, L->data->description.GetString(), 300, 70, 45, 0, { 200,200,200,155 });
 
 			break;
 		default:

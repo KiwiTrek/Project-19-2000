@@ -63,7 +63,7 @@ public:
 	List<Quest*> questsActive;
 	List<Quest*> questsFinished;
 
-	Font* font;
+	// Font* font;
 
 	int debugId = 1;
 };
