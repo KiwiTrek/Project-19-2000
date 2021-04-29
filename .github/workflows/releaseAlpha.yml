@@ -16,6 +16,14 @@ jobs:
     steps:
       # We are generating the zip excluding the gitignore (or any other file specified in the exclusions)
      - uses: actions/checkout@v2
+     - name: Rename .exe
+       uses: tilon/file-changes-actions@v1.2.3
+       with:
+         githubToken: ${{ secrets.GITHUB_TOKEN }}
+         output: 'exe'
+         fileOutput: 'exe'
+         pushBefore: 'Game'
+         pushAfter: 'shattered_dreams'
      - name: Zip Generator
        uses: thedoctor0/zip-release@master
        with:
