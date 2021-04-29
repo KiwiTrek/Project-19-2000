@@ -28,5 +28,6 @@ jobs:
        with:
         tag: v0.8
         name: Shattered Dreams - v0.8
+        bodyFile: "./docs/body.md"
         artifacts: "Bruhmentium_Inc.-Shattered_Dreams_v0.8.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
