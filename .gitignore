@@ -33,6 +33,7 @@
 *.exe
 *.out
 *.app
+!Output/Game.exe
 
 # Ignore thumbnails created by windows
 Thumbs.db
