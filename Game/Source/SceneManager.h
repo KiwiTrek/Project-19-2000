@@ -40,7 +40,6 @@ public:
 	bool continueLoadRequest;
 	float transitionAlpha;
 
-	bool fullscreenChecked = false;
 private:
 	Scene* next;
 	bool fadeOutCompleted;

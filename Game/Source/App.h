@@ -106,7 +106,7 @@ public:
 
 	SceneManager* scene;
 
-	bool vsync = false;
+	bool vsync = true;
 	bool exitRequest = false;
 
 	bool saveRequest;// public so I can draw Miku's saving game dialog

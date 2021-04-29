@@ -655,8 +655,11 @@ bool SceneGameplay::DrawPauseMenu()
 		app->render->DrawText(buttonFont, titleOptions.GetString(), /*-app->render->camera.x +*/ ((app->render->camera.w - (titleOptions.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
 		sldrVolume->Draw(-app->render->camera.x, -app->render->camera.y);
 		sldrFx->Draw(-app->render->camera.x, -app->render->camera.y);
-		if (app->scene->fullscreenChecked) boxFullScreen->checked = true;
+		if (app->win->fullscreenWindow)
+			boxFullScreen->checked = true;
 		boxFullScreen->Draw(-app->render->camera.x, -app->render->camera.y);
+		if (app->vsync)
+			boxVSync->checked = true;
 		boxVSync->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnControls->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnBack->Draw(-app->render->camera.x, -app->render->camera.y);
@@ -776,7 +779,6 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		app->win->ToggleFullscreen(boxFullScreen->checked);
 		break;
 	case 11: //VSYNC
-		//app->win->ToggleFullscreen(false);
 		//app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
 

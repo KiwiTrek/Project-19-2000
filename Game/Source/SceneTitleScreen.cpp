@@ -237,8 +237,11 @@ bool SceneTitleScreen::Draw()
 
         sldrVolume->Draw();
         sldrFx->Draw();
-        if (app->scene->fullscreenChecked) boxFullScreen->checked = true;
+		if (app->win->fullscreenWindow)
+			boxFullScreen->checked = true;
         boxFullScreen->Draw();
+		if (app->vsync)
+			boxVSync->checked = true;
         boxVSync->Draw();
         btnControls->Draw();
         btnBack->Draw();
@@ -324,8 +327,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         app->win->ToggleFullscreen(boxFullScreen->checked);
         break;
     case 8: //VSYNC
-        //app->win->ToggleFullscreen(false);
-        //app->render->ToggleVsync(boxVSync->checked, (Module*)this);
+        app->render->ToggleVsync(boxVSync->checked, (Module*)this);
         break;
     case 9: //CONTROLS
         flags = SetBit(flags, Flags::CONTROLS);

@@ -211,7 +211,7 @@ void App::FinishUpdate()
 
 	// Framerate calculations------------------------------------------
 	// To know how many frames have passed in the last second
-	if (lastSecFrameTime.Read() > 1000)
+	if (lastSecFrameTime.Read() >= 1000)
 	{
 		lastSecFrameTime.Start();
 		prevLastSecFrameCount = lastSecFrameCount;

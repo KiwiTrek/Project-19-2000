@@ -300,7 +300,8 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 void Render::ToggleVsync(bool vsync, Module* restart)
 {
 	app->vsync = vsync;
-	SDL_DestroyRenderer(renderer);
+
+	//SDL_DestroyRenderer(renderer);
 	Uint32 flags = SDL_RENDERER_ACCELERATED;
 
 	if (vsync)
@@ -308,18 +309,18 @@ void Render::ToggleVsync(bool vsync, Module* restart)
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 	}
 
-	renderer = SDL_CreateRenderer(app->win->window, -1, flags);
-	if (renderer == NULL)
-	{
-		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
-	}
-	else
-	{
-		camera.w = app->win->screenSurface->w;
-		camera.h = app->win->screenSurface->h;
-		camera.x = 0;
-		camera.y = 0;
-	}
+	//renderer = SDL_CreateRenderer(app->win->window, -1, flags);
+	//if (renderer == NULL)
+	//{
+	//	LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
+	//}
+	//else
+	//{
+	//	camera.w = app->win->screenSurface->w;
+	//	camera.h = app->win->screenSurface->h;
+	//	camera.x = 0;
+	//	camera.y = 0;
+	//}
 }
 
 bool Render::DrawText(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint)
