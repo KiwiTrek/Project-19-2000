@@ -4,11 +4,11 @@ name: Release Generator
 
 # When a new push with a tag is called, the event is triggered
 on: 
-#  push:
-#    branches:
-#      - master
-#    tags:
-#      -v1.0
+  push:
+    branches:
+      - master
+    tags:
+      - 'v0.8'
   workflow_dispatch:
 
 jobs:
@@ -24,12 +24,13 @@ jobs:
      - name: Zip Generator
        uses: thedoctor0/zip-release@master
        with:
-        filename: 'beta.zip'
+        filename: 'Bruhmentium_Inc.-Shattered_Dreams_v0.8.zip'
         exclusions: '*.gitignore*'
       # Creates a release uploading the release.zip file. The github token is usually under secrets.GITHUB_TOKEN, however in the future this may be different.
      - name: Create Release
        uses: ncipollo/release-action@v1
        with:
-        tag: v1.0
-        artifacts: "beta.zip"
+        tag: v0.8
+        name: Shattered Dreams - v0.8
+        artifacts: "Bruhmentium_Inc.-Shattered_Dreams_v0.8.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
