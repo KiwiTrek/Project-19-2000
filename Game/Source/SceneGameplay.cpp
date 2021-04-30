@@ -40,6 +40,7 @@ bool SceneGameplay::Load()
 	savingCounter = 0;
 
 	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
+	itemsTex = app->tex->Load("Assets/Textures/GUI/Items.png");
 
 	dialogGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
 	dialogTextBox = { 0,0,1280,248 };
@@ -102,12 +103,30 @@ bool SceneGameplay::Load()
 	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
 
 	//ITEMS
-	SDL_Rect sec = { 0,250,64,64 };
-	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 29, { 400,200,250,80 }, "ITEM1", 40, this, 0, "x0", dialogGui, &sec);
-	sec = { 75,250,64,64 };
-	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 30, { 400,300,250,80 }, "ITEM2", 40, this, 0, "x0", dialogGui, &sec);
-	sec = { 150,250,64,64 };
-	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 31, { 400,400,250,80 }, "ITEM3", 40, this, 0, "x0", dialogGui, &sec);
+	SDL_Rect sec = { 0,0,32,32 };
+	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 29, { 330,120,300,60 }, "ITEM HEAL", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 32,0,32,32 };
+	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 30, { 330,200,300,60 }, "ITEM", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 64,0,32,32 };
+	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 31, { 330,280,300,60 }, "ITEMVERYLONG", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 96,0,32,32 };
+	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 32, { 330,360,300,60 }, "ITEMMMMMMMMM", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 128,0,32,32 };
+	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 33, { 330,440,300,60 }, "item", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 160,0,32,32 };
+	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 34, { 330,520,300,60 }, "FLASH BANG!", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 192,0,32,32 };
+	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 35, { 646,120,300,60 }, "POISON HEAL", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 224,0,32,32 };
+	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 36, { 646,200,300,60 }, "STRESS HEAL", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 256,0,32,32 };
+	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 37, { 646,280,300,60 }, "STUN HEAL", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 288,0,32,32 };
+	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 38, { 646,360,300,60 }, "MANA HEAL", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 0,32,32,32 };
+	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 39, { 646,440,300,60 }, "ELIXIR", 40, this, 0, "x0", itemsTex, &sec);
+	sec = { 32,32,32,32 };
+	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 40, { 646,520,300,60 }, "TACTICAL NUKE", 40, this, 0, "x0", itemsTex, &sec);
 
 	SString str = "item one";
 	Attack* eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
@@ -122,6 +141,60 @@ bool SceneGameplay::Load()
 	combatScene->items.Add(i);
 
 	str = "item three";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item four";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item five";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item six";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item seven";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item eight";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item nine";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item ten";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item eleven";
+	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	c = 3;
+	i = new Item(str, *eff, c);
+	combatScene->items.Add(i);
+
+	str = "item twelve";
 	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
 	c = 3;
 	i = new Item(str, *eff, c);
@@ -363,6 +436,33 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 2:
 						btnItem3->Update(dt);
 						break;
+					case 3:
+						btnItem4->Update(dt);
+						break;
+					case 4:
+						btnItem5->Update(dt);
+						break;
+					case 5:
+						btnItem6->Update(dt);
+						break;
+					case 6:
+						btnItem7->Update(dt);
+						break;
+					case 7:
+						btnItem8->Update(dt);
+						break;
+					case 8:
+						btnItem9->Update(dt);
+						break;
+					case 9:
+						btnItem10->Update(dt);
+						break;
+					case 10:
+						btnItem11->Update(dt);
+						break;
+					case 11:
+						btnItem12->Update(dt);
+						break;
 					default:
 						break;
 					}
@@ -581,6 +681,33 @@ bool SceneGameplay::DrawPauseMenu()
 					break;
 				case 2:
 					btnItem3->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 3:
+					btnItem4->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 4:
+					btnItem5->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 5:
+					btnItem6->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 6:
+					btnItem7->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 7:
+					btnItem8->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 8:
+					btnItem9->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 9:
+					btnItem10->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 10:
+					btnItem11->Draw(-app->render->camera.x, -app->render->camera.y);
+					break;
+				case 11:
+					btnItem12->Draw(-app->render->camera.x, -app->render->camera.y);
 					break;
 				default:
 					break;
@@ -842,6 +969,33 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 31:
 		LOG("USED ITEM 3");
+		break;
+	case 32:
+		LOG("USED ITEM 4");
+		break;
+	case 33:
+		LOG("USED ITEM 5");
+		break;
+	case 34:
+		LOG("USED ITEM 6");
+		break;
+	case 35:
+		LOG("USED ITEM 7");
+		break;
+	case 36:
+		LOG("USED ITEM 8");
+		break;
+	case 37:
+		LOG("USED ITEM 9");
+		break;
+	case 38:
+		LOG("USED ITEM 10");
+		break;
+	case 39:
+		LOG("USED ITEM 11");
+		break;
+	case 40:
+		LOG("USED ITEM 12");
 		break;
 	default:
 		break;

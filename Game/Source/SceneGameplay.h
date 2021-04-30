@@ -97,9 +97,19 @@ private:
     GuiButton* btnPadRight;
 
     //ITEMS
+    SDL_Texture* itemsTex;
     GuiImageButton* btnItem1;
     GuiImageButton* btnItem2;
     GuiImageButton* btnItem3;
+    GuiImageButton* btnItem4;
+    GuiImageButton* btnItem5;
+    GuiImageButton* btnItem6;
+    GuiImageButton* btnItem7;
+    GuiImageButton* btnItem8;
+    GuiImageButton* btnItem9;
+    GuiImageButton* btnItem10;
+    GuiImageButton* btnItem11;
+    GuiImageButton* btnItem12;
     // This line is added for the sake of commiting & testing
 
     //FONTS
