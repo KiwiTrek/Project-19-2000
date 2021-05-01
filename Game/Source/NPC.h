@@ -15,7 +15,7 @@ public:
 	};
 
 	// Constructor
-	Npc(int x, int y, NpcId id, Entity* player);
+	Npc(int x, int y, NpcId id, Entity* player, int interactFx);
 
 	// Called each loop iteration
 	bool Update(float dt);
@@ -32,6 +32,9 @@ private:
 	NpcId npcId = NpcId::NONE;
 	// Animations stuff
 	int animFlags;
+
+	int interactFx;
+
 	Collider* collision;
 
 	// Animation

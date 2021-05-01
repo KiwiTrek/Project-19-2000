@@ -14,7 +14,7 @@
 #include "Collisions.h"
 
 
-Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
+Player::Player(int x, int y, int footstepFx) : Entity(x, y, EntityType::PLAYER)
 {
 	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
@@ -56,31 +56,33 @@ Player::Player(int x, int y) : Entity(x, y, EntityType::PLAYER)
 	{
 		walkingDown.PushBack({ (entityRect.w * i) + (2 * (i + 1)),2,50,50 });
 	}
-	walkingDown.speed = 10.f;
+	walkingDown.speed = 5.f;
 	walkingDown.loop = true;
 
 	for (int i = 0; i < 4; i++)
 	{
 		walkingLeft.PushBack({ (entityRect.w * i) + (2 * (i+1)),54,50,50 });
 	}
-	walkingLeft.speed = 10.f;
+	walkingLeft.speed = 5.f;
 	walkingLeft.loop = true;
 
 	for (int i = 0; i < 4; i++)
 	{
 		walkingRight.PushBack({ (entityRect.w * i) + (2 * (i+1)),106,50,50 });
 	}
-	walkingRight.speed = 10.f;
+	walkingRight.speed = 5.f;
 	walkingRight.loop = true;
 
 	for (int i = 0; i < 4; i++)
 	{
 		walkingUp.PushBack({ (entityRect.w * i) + (2 * (i+1)),158,50,50 });
 	}
-	walkingUp.speed = 10.f;
+	walkingUp.speed = 5.f;
 	walkingUp.loop = true;
 
 	currentAnim = &idle;
+	this->footstepFx = footstepFx;
+	timerFootstep = 0.0f;
 
 	collider = app->collisions->AddCollider({ this->entityRect }, Collider::Type::PLAYER, (Module*)app->entities);
 }
@@ -95,10 +97,18 @@ bool Player::Update(float dt)
 		if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 		{
 			if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN && currentAnim == &idle)
+			{
 				app->SaveRequest();
-
+				app->audio->PlayFx(app->collisions->saveFx);
+			}
 			if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN && currentAnim == &idle)
 				app->LoadRequest();
+		}
+
+		if (timerFootstep >= 0.4f)
+		{
+			timerFootstep = 0;
+			app->audio->PlayFx(footstepFx);
 		}
 
 		if (app->input->CheckButton("select", KEY_DOWN))
@@ -124,6 +134,7 @@ bool Player::Update(float dt)
 				currentAnim = &walkingRight;
 				nextPos.x += 3;
 				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.x += 10;
+				timerFootstep += dt;
 			}
 			if (app->input->CheckButton("left", KEY_REPEAT))
 			{
@@ -133,6 +144,7 @@ bool Player::Update(float dt)
 				currentAnim = &walkingLeft;
 				nextPos.x -= 3;
 				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.x -= 10;
+				timerFootstep += dt;
 			}
 			if (app->input->CheckButton("down", KEY_REPEAT))
 			{
@@ -142,6 +154,7 @@ bool Player::Update(float dt)
 				currentAnim = &walkingDown;
 				nextPos.y += 3;
 				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.y += 10;
+				timerFootstep += dt;
 			}
 			if (app->input->CheckButton("up", KEY_REPEAT))
 			{
@@ -151,6 +164,7 @@ bool Player::Update(float dt)
 				currentAnim = &walkingUp;
 				nextPos.y -= 3;
 				if (godMode && app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) nextPos.y -= 10;
+				timerFootstep += dt;
 			}
 		}
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.5.0" orientation="orthogonal" renderorder="right-down" width="65" height="39" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="65" height="39" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
  <tileset firstgid="1" name="home_tileSet" tilewidth="64" tileheight="64" tilecount="448" columns="28">
   <image source="HomeTileSet.png" width="1792" height="1024"/>
   <wangsets>
-   <wangset name="Terrenos" type="corner" tile="-1">
-    <wangcolor name="House" color="#ff0000" tile="-1" probability="1"/>
-   </wangset>
+   <wangset name="Terrenos" tile="-1"/>
   </wangsets>
  </tileset>
  <tileset firstgid="449" name="meta_data" tilewidth="64" tileheight="64" tilecount="8" columns="4">
@@ -51,9 +49,7 @@
    </properties>
   </tile>
   <wangsets>
-   <wangset name="Terrenos" type="corner" tile="-1">
-    <wangcolor name="meta" color="#ff0000" tile="-1" probability="1"/>
-   </wangset>
+   <wangset name="Terrenos" tile="-1"/>
   </wangsets>
  </tileset>
  <layer id="4" name="Ground" width="65" height="39">
@@ -11016,7 +11012,7 @@
    <tile gid="449"/>
    <tile/>
    <tile/>
-   <tile gid="449"/>
+   <tile gid="455"/>
    <tile gid="449"/>
    <tile gid="449"/>
    <tile/>

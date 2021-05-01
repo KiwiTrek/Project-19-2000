@@ -88,6 +88,12 @@ bool EntityManager::Start()
 	tmp.Create("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
 	enemiesTex = app->tex->Load(tmp.GetString());
 
+	interactCat = app->audio->LoadFx("Assets/Audio/Fx/Cat.wav");
+	interactGrandpa = app->audio->LoadFx("Assets/Audio/Fx/Grandpa.wav");
+	interactHero = app->audio->LoadFx("Assets/Audio/Fx/Hero.wav");
+	interactShop = app->audio->LoadFx("Assets/Audio/Fx/Shop.wav");
+	footstepFx = app->audio->LoadFx("Assets/Audio/Fx/Footstep.wav");
+
 	doLogic = true;
 
 	ListItem<Entity*>* e = entities.start;
@@ -129,6 +135,12 @@ bool EntityManager::CleanUp()
 	app->tex->UnLoad(enemiesTex);
 	app->tex->UnLoad(NPCTex);
 
+	app->audio->UnloadFx(interactCat);
+	app->audio->UnloadFx(interactGrandpa);
+	app->audio->UnloadFx(interactHero);
+	app->audio->UnloadFx(interactShop);
+	app->audio->UnloadFx(footstepFx);
+
 	return true;
 }
 
@@ -141,7 +153,7 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 		// Create corresponding type entity
 	case EntityType::PLAYER:
 	{
-		ret = new Player(x, y);
+		ret = new Player(x, y, footstepFx);
 		break;
 	}
 	case EntityType::COMBAT_ENTITY:
@@ -151,10 +163,27 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 	}
 	case EntityType::NPC:
 	{
-		ret = new Npc(x, y, npcId, playerPointer);
+		switch (npcId)
+		{
+		case NpcId::NONE:
+			break;
+		case NpcId::HERO:
+			ret = new Npc(x, y, npcId, playerPointer, interactHero);
+			break;
+		case NpcId::GRANDPA:
+			ret = new Npc(x, y, npcId, playerPointer, interactGrandpa);
+			break;
+		case NpcId::CAT:
+			ret = new Npc(x, y, npcId, playerPointer, interactCat);
+			break;
+		case NpcId::STORE_GUY:
+			ret = new Npc(x, y, npcId, playerPointer, interactShop);
+			break;
+		default:
+			break;
+		}
 	}
 	}
-
 
 	// Adds the created entity to the list
 	if (ret != nullptr)

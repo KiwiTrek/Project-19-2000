@@ -75,6 +75,12 @@ public:
 	Collider* AddCollider(SDL_Rect rect, Collider::Type type, Module* listener = nullptr);
 	SDL_Rect ResolveCollisions(Collider* collider, iPoint nextFrame, float dt);
 
+	int saveFx;
+	int toiletFx;
+	int doorFx;
+	int tutorialWarpFx;
+	int wakingUpFx;
+
 private:
 	// All existing colliders in the scene
 	Collider* colliders[MAX_COLLIDERS] = { nullptr };

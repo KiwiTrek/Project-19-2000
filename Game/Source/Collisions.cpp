@@ -1,6 +1,7 @@
 #include "Collisions.h"
 
 #include "App.h"
+#include "Input.h"
 #include "Map.h"
 #include "Audio.h"
 #include <time.h>
@@ -148,6 +149,12 @@ bool Collisions::Start()
 {
 	onceNightmare = true;
 	saveOnce = false;
+	saveFx = app->audio->LoadFx("Assets/Audio/Fx/Save.wav");
+	toiletFx = app->audio->LoadFx("Assets/Audio/Fx/Toilet.wav");
+	tutorialWarpFx = app->audio->LoadFx("Assets/Audio/Fx/TutorialWarp.wav");
+	doorFx = app->audio->LoadFx("Assets/Audio/Fx/Door.wav");
+	wakingUpFx = app->audio->LoadFx("Assets/Audio/Fx/WakingUp.wav");
+
 	return true;
 }
 
@@ -217,6 +224,12 @@ bool Collisions::CleanUp()
 	{
 		RELEASE(colliders[i]);
 	}
+
+	app->audio->UnloadFx(saveFx);
+	app->audio->UnloadFx(toiletFx);
+	app->audio->UnloadFx(tutorialWarpFx);
+	app->audio->UnloadFx(doorFx);
+	app->audio->UnloadFx(wakingUpFx);
 
 	return true;
 }
@@ -288,6 +301,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 			{
 				if (app->map->data.name == "tutorial.tmx")
 				{
+					app->audio->PlayFx(tutorialWarpFx);
 					switch (tilePos.x)
 					{
 					case 15:
@@ -363,6 +377,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 								if (app->map->LoadNewMap("home.tmx"))
 								{
 									app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+									app->audio->PlayFx(wakingUpFx);
 									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 									{
 										SceneGameplay* s = (SceneGameplay*)app->scene->current;
@@ -414,11 +429,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					{
 					case 12:
 					{
+						app->audio->PlayFx(doorFx);
 						return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 23:
 					{
+						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 7:
@@ -451,6 +468,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 30:
 					{
+						app->audio->PlayFx(doorFx);
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -471,6 +489,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 32:
 					{
+						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 4:
@@ -486,16 +505,19 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 33:
 					{
+						app->audio->PlayFx(doorFx);
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 38:
 					{
+						app->audio->PlayFx(doorFx);
 						return { 32 * app->map->data.tileWidth, (17 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 39:
 					{
+						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 7:
@@ -520,6 +542,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 40:
 					{
+						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 34:
@@ -560,6 +583,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 52:
 					{
+						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 13:
@@ -640,6 +664,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				{
 					switch (tilePos.y)
 					{
+					case 12:
+					{
+						if (tilePos.x == 7 && app->input->CheckButton("select", KeyState::KEY_DOWN))
+						{
+							app->audio->PlayFx(toiletFx);
+						}
+					}
 					case 16:
 					{
 						switch (tilePos.x)
@@ -660,6 +691,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						case 39:
 							if (saveOnce == false)
 							{
+								app->audio->PlayFx(saveFx);
 								app->SaveRequest();
 								saveOnce = true;
 							}

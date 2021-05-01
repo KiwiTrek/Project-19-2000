@@ -16,7 +16,7 @@ public:
 	};
 
 	// Constructor
-	Player(int x, int y);
+	Player(int x, int y, int footstepFx);
 
 	// Called each loop iteration
 	bool Update(float dt);
@@ -34,6 +34,8 @@ private:
 
 	// Animations stuff
 	int animFlags;
+	float timerFootstep;
+	int footstepFx;
 
 	// Animation
 	Animation idle;

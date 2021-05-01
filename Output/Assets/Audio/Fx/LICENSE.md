@@ -1,4 +1,6 @@
-Button Click & Hover FX:
+SFX Licenses:
+Sound effects obtained from https://www.zapsplat.com
+
 ###############################################################################
 
 

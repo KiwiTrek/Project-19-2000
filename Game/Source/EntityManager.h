@@ -73,6 +73,13 @@ public:
 	SDL_Texture* NPCTex;
 	SDL_Texture* enemiesTex;
 
+	// sounds
+	int interactCat;
+	int interactGrandpa;
+	int interactHero;
+	int interactShop;
+	int footstepFx;
+
 	bool inPause = false;
 
 	// Some options for dialogs. I am sorry for doing it this way.

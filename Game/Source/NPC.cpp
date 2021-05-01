@@ -16,12 +16,14 @@
 #include "DialogSystem.h"
 
 
-Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::NPC)
+Npc::Npc(int x, int y, NpcId npcId, Entity* player, int interactFx) : Entity(x, y, EntityType::NPC)
 {
 	LOG("Init NPC");
 	this->npcId = npcId;
 	this->playerPtr = player;
 	this->collision = nullptr;
+	this->animFlags = 0;
+	this->interactFx = interactFx;
 
 	this->entityRect = { x, y,34,46 };
 
@@ -59,7 +61,7 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 	{
 		this->entityRect = { x, y,54,36 };
 
-		vibin.PushBack({ 0,48,54,36 });	
+		vibin.PushBack({ 0,48,54,36 });
 		vibin.PushBack({ 56,48,54,36 });
 
 		vibin.speed = 1.5f;
@@ -114,15 +116,11 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player) : Entity(x, y, EntityType::N
 	default:
 		break;
 	}
-
-	int flags = 1 << FlagsAnimation::DOWN;
-
 }
 
 
 bool Npc::Update(float dt)
 {
-
 	currentAnim->Update(dt);
 	
 	return true;
@@ -168,6 +166,7 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 	if (app->input->CheckButton("select", KeyState::KEY_DOWN))
 	{
 		LOG("Interaction");
+		if (app->entities->dialogCounter == 0) app->audio->PlayFx(interactFx);
 		switch (npcId)
 		{
 		case NpcId::HERO:
