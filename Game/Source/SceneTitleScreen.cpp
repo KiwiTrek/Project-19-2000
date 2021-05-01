@@ -35,7 +35,7 @@ bool SceneTitleScreen::Load()
     titleFx = app->audio->LoadFx("Assets/Audio/Fx/TitleFX.wav");
 
     app->audio->SetMusicVolume(app->audio->auxVolume);
-    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
+    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
     app->render->camera.x = 0;
     app->render->camera.y = 0;
     noose.Reset();
@@ -309,7 +309,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //OPTIONS
         flags = SetBit(flags, Flags::OPTIONS);
         changeMenu = true;
-        app->audio->PlayMusic("Assets/Audio/Music/Options.ogg", 0.0f);
+        app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
         app->gui->ResetButtons();
         usingGamepad = true;
         break;
@@ -337,7 +337,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 10: //BACK
         flags = ClearBit(flags, Flags::OPTIONS);
-        app->audio->PlayMusic("Assets/Audio/Music/Title.ogg", 0.0f);
+        app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
         changeMenu = true;
         app->gui->ResetButtons();
         usingGamepad = true;

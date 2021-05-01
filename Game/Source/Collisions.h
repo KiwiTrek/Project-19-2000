@@ -91,5 +91,6 @@ private:
 
 	bool onceNightmare;
 	bool saveOnce;
+	bool onceDoor;
 };
 #endif // !__COLLISIONS_H__

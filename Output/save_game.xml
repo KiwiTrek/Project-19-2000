@@ -4,7 +4,7 @@
 	<input />
 	<textures />
 	<audio>
-		<volume value="64" />
+		<volume value="0" />
 	</audio>
 	<map>
 		<data name="home.tmx" />
@@ -12,18 +12,19 @@
 	<scenemanager />
 	<entityManager>
 		<player>
-			<coordinates x="2496" y="1988" />
+			<coordinates x="2471" y="1089" />
 		</player>
 		<MC>
-			<stats pAtk="20" mAtk="0" pDef="10" mDef="10" hPoints="40" hPointsMax="100" speed="50" mPoints="100" mPointsMax="100" stress="30" stressMax="100" />
+			<stats pAtk="20" mAtk="0" pDef="10" mDef="10" hPoints="100" hPointsMax="100" speed="50" mPoints="100" mPointsMax="100" stress="0" stressMax="100" />
 		</MC>
 		<Grandpa>
 			<stats pAtk="25" mAtk="25" pDef="0" mDef="0" hPoints="100" hPointsMax="100" speed="25" mPoints="100" mPointsMax="100" />
 		</Grandpa>
 	</entityManager>
 	<collisions>
-		<flags nightmareBoss="false" />
+		<flags nightmareBoss="true" />
 	</collisions>
 	<guiManager />
+	<quests />
 	<renderer />
 </save_state>

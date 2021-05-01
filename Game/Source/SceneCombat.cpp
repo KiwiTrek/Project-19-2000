@@ -876,8 +876,8 @@ bool SceneCombat::Finish()
 	{
 		SceneGameplay* s = (SceneGameplay*)app->scene->current;
 		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(s->btnInventory));
-		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
-		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
+		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
 	}
 	else
 	{
@@ -1288,7 +1288,7 @@ void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 	{
 		NextLine("A nightmare emerges...");
 		app->render->background = { 0,0,0,255 };
-		app->audio->PlayMusic("Assets/Audio/Music/Nightmare.ogg", 0.0f);
+		app->audio->PlayMusic("Assets/Audio/Music/Nightmare.ogg");
 		scripted = true;
 	}
 	else

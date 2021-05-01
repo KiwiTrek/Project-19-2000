@@ -149,6 +149,7 @@ bool Collisions::Start()
 {
 	onceNightmare = true;
 	saveOnce = false;
+	onceDoor = false;
 	saveFx = app->audio->LoadFx("Assets/Audio/Fx/Save.wav");
 	toiletFx = app->audio->LoadFx("Assets/Audio/Fx/Toilet.wav");
 	tutorialWarpFx = app->audio->LoadFx("Assets/Audio/Fx/TutorialWarp.wav");
@@ -276,8 +277,8 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 	{
 		if (nextFrame.x < app->map->data.width * 64 && nextFrame.y < app->map->data.height * 64)
 		{
-			iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y };
-			iPoint tilePos = app->map->WorldToMap(nextFrame.x, nextFrame.y);
+			iPoint difference = { nextFrame.x - collider->rect.x,nextFrame.y - collider->rect.y};
+			iPoint tilePos = app->map->WorldToMap(nextFrame.x+3, nextFrame.y+1);
 
 			iPoint tileWorldPos = app->map->MapToWorld(tilePos.x, tilePos.y);
 			iPoint tilePosLowerRight = app->map->WorldToMap(nextFrame.x + collider->rect.w, nextFrame.y + collider->rect.h);
@@ -288,12 +289,29 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::SOLID)
 				&& collider->Intersects(tileRect))
 			{
-				if (difference.x > 0) nextFrame.x--;
-				else if (difference.x < 0) nextFrame.x++;
-				if (difference.y > 0) nextFrame.y--;
-				else if (difference.y < 0) nextFrame.y++;
-
-				if (difference != iPoint(0, 0)) return ResolveCollisions(collider, nextFrame, dt);
+				int changes = 0;
+				if (difference.x > 0)
+				{
+					changes++;
+					nextFrame.x--;
+				}
+				else if (difference.x < 0)
+				{
+					changes++;
+					nextFrame.x++;
+				}
+				if (difference.y > 0)
+				{
+					changes++;
+					nextFrame.y--;
+				}
+				else if (difference.y < 0)
+				{
+					changes++;
+					nextFrame.y++;
+				}
+				if (changes != 0) return ResolveCollisions(collider, nextFrame, dt);
+				//if (difference != iPoint(0, 0)) return ResolveCollisions(collider, nextFrame, dt);
 			}
 			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
 				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::DOOR)
@@ -301,7 +319,11 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 			{
 				if (app->map->data.name == "tutorial.tmx")
 				{
-					app->audio->PlayFx(tutorialWarpFx);
+					if (onceDoor)
+					{
+						app->audio->PlayFx(tutorialWarpFx);
+						onceDoor = false;
+					}
 					switch (tilePos.x)
 					{
 					case 15:
@@ -309,21 +331,27 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						switch (tilePos.y)
 						{
 						case 28:
+							onceDoor = true;
 							return { 15 * app->map->data.tileWidth, (39 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						case 38:
+							onceDoor = true;
 							return { 15 * app->map->data.tileWidth, (28 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 50:
+							onceDoor = true;
 							return { 15 * app->map->data.tileWidth, (64 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						case 63:
+							onceDoor = true;
 							return { 15 * app->map->data.tileWidth, (50 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 78:
+							onceDoor = true;
 							return { 15 * app->map->data.tileWidth, (88 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						case 87:
+							onceDoor = true;
 							return { 15 * app->map->data.tileWidth, (78 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -332,6 +360,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 21:
 					{
+						onceDoor = true;
 						return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -340,12 +369,15 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						switch (tilePos.y)
 						{
 						case 14:
+							onceDoor = true;
 							return { (20 * app->map->data.tileWidth) - 1, 26 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 36:
+							onceDoor = true;
 							return { 64 * app->map->data.tileWidth, (89 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 92:
+							onceDoor = true;
 							return { 64 * app->map->data.tileWidth, (10 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -368,6 +400,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						switch (tilePos.y)
 						{
 						case 9:
+							onceDoor = true;
 							return { 38 * app->map->data.tileWidth, (92 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 65:
@@ -376,7 +409,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							{
 								if (app->map->LoadNewMap("home.tmx"))
 								{
-									app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+									app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
 									app->audio->PlayFx(wakingUpFx);
 									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 									{
@@ -393,6 +426,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						case 82:
 							break;
 						case 90:
+							onceDoor = true;
 							return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -425,17 +459,21 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				}
 				else if (app->map->data.name == "home.tmx")
 				{
+					if (onceDoor)
+					{
+						app->audio->PlayFx(doorFx);
+						onceDoor = false;
+					}
 					switch (tilePos.x)
 					{
 					case 12:
 					{
-						app->audio->PlayFx(doorFx);
+						onceDoor = true;
 						return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 23:
 					{
-						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 7:
@@ -445,12 +483,15 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 							break;
 						case 13:
+							onceDoor = true;
 							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 14:
+							onceDoor = true;
 							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 36:
+							app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
 							return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -468,7 +509,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 30:
 					{
-						app->audio->PlayFx(doorFx);
+						onceDoor = true;
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -480,6 +521,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 							break;
 						case 18:
+							onceDoor = true;
 							return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -489,13 +531,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 32:
 					{
-						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 4:
 							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 							break;
 						case 18:
+							onceDoor = true;
 							return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -505,19 +547,18 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 33:
 					{
-						app->audio->PlayFx(doorFx);
+						onceDoor = true;
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 38:
 					{
-						app->audio->PlayFx(doorFx);
+						onceDoor = true;
 						return { 32 * app->map->data.tileWidth, (17 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 39:
 					{
-						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 7:
@@ -527,12 +568,15 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
 							break;
 						case 13:
+							onceDoor = true;
 							return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 14:
+							onceDoor = true;
 							return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 34:
+							app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
 							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -542,10 +586,10 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 40:
 					{
-						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 34:
+							app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
 							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -571,7 +615,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 										app->entities->DestroyEntity(s->shopDude);
 										app->entities->DestroyEntity(s->cat);
 									}
-									app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+									app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
 									return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 								}
 							}
@@ -583,13 +627,14 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 52:
 					{
-						app->audio->PlayFx(doorFx);
 						switch (tilePos.y)
 						{
 						case 13:
+							onceDoor = true;
 							return { (39 * app->map->data.tileWidth) - 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 14:
+							onceDoor = true;
 							return { (39 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -720,8 +765,40 @@ void Collider::SetPos(int x, int y, int w, int h)
 
 bool Collider::Intersects(const SDL_Rect& r) const
 {
-	return (rect.x < r.x + r.w
+	int res = 0;
+	if (rect.x < r.x + r.w
 		&& rect.x + rect.w > r.x
-		&& rect.y < r.y + r.h 
-		&& rect.h + rect.y > r.y);
+		&& rect.y < r.y + r.h
+		&& rect.h + rect.y > r.y)
+	{
+		res = 1;
+		//if (rect.x < r.x + r.w
+		//	&& rect.x + rect.w > r.x)
+		//{
+		//	if (abs((rect.x + rect.w) - r.x) + abs((rect.x + rect.w) - (r.x + r.w)) == r.w)
+		//	{
+		//		LOG("dreta");
+		//	}
+		//	else if (abs(rect.x - r.x) + abs(rect.x - (r.x + r.w)) == r.w)
+		//	{
+		//		LOG("esquerra");
+		//	}
+		//	//if (abs(rect.x - r.x) < abs((rect.x + rect.w) - (r.x + r.w)))
+		//	//{
+		//	//	LOG("ESQUERRA");
+		//	//}
+		//	//else
+		//	//{
+		//	//	LOG("DRETA");
+		//	//}
+		//}
+
+		//if (rect.y < r.y + r.h
+		//	&& rect.y + rect.h > r.y)
+		//{
+
+		//}
+	}
+
+	return res;
 }

@@ -663,11 +663,11 @@ bool Map::Load(pugi::xml_node& save)
 	{
 		if (data.name == "tutorial.tmx")
 		{
-			app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg", 0.0f);
+			app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
 		}
 		else if (data.name == "home.tmx")
 		{
-			app->audio->PlayMusic("Assets/Audio/Music/Home.ogg", 0.0f);
+			app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
 		}
 	}
 	return ret;
