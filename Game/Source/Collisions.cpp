@@ -357,6 +357,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						default:
 							break;
 						}
+						break;
 					}
 					case 21:
 					{
@@ -379,16 +380,6 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						case 92:
 							onceDoor = true;
 							return { 64 * app->map->data.tileWidth, (10 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
-							break;
-						default:
-							break;
-						}
-					}
-					case 63:
-					{
-						switch (tilePos.y)
-						{
-						case 82:
 							break;
 						default:
 							break;
@@ -423,8 +414,6 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 								}
 							}
 							break;
-						case 82:
-							break;
 						case 90:
 							onceDoor = true;
 							return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
@@ -432,26 +421,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						default:
 							break;
 						}
-					}
-					case 65:
-					{
-						switch (tilePos.y)
-						{
-						case 82:
-							break;
-						default:
-							break;
-						}
-					}
-					case 66:
-					{
-						switch (tilePos.y)
-						{
-						case 82:
-							break;
-						default:
-							break;
-						}
+						break;
 					}
 					default:
 						break;

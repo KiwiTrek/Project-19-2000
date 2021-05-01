@@ -9,7 +9,7 @@
 #include "SceneManager.h"
 
 
-GuiImageButton::GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, const char* count, SDL_Texture* tex, SDL_Rect sec) : GuiButton(id, bounds, text), count(count), tex(tex), sec(sec)
+GuiImageButton::GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, SDL_Texture* tex) : GuiButton(id, bounds, text), tex(tex)
 {
 	this->offsetText = this->text.Length() * 20;
 
@@ -26,6 +26,9 @@ GuiImageButton::GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, con
 
 	hoverPlay = true;
 	clickPlay = true;
+
+	count = nullptr;
+	sec = { 288,416,32,32 };
 }
 
 GuiImageButton::~GuiImageButton()
@@ -125,9 +128,15 @@ bool GuiImageButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::DISABLED:
 	{
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
-		app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 10 + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 0,0,0,255 });
-		app->render->DrawText(guiFont, count.GetString(), bounds.x - 4 + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 0,0,0,255 });
-		app->render->DrawTexture(tex, cPosX + bounds.x + 16, cPosY + bounds.y + (bounds.h / 2) - sec.h / 2, false, &sec);
+		if (text != nullptr)
+		{
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (textSize / 2) + (bounds.w - (text.Length() - 1) * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 0,0,0,255 });
+		}
+		if (count != nullptr)
+		{
+			app->render->DrawText(guiFont, count.GetString(), bounds.x + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 0,0,0,255 });
+		}
+		app->render->DrawTexture(tex, cPosX + bounds.x + 12, cPosY + bounds.y + (bounds.h / 2) - sec.h / 2, false, &sec);
 		if (app->render->debug)
 		{
 			app->render->DrawRectangle({ cPosX + bounds.x,cPosY + bounds.y ,bounds.w,bounds.h }, 100, 100, 100, 100);
@@ -137,8 +146,14 @@ bool GuiImageButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::NORMAL:
 	{
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
-		app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 10 + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
-		app->render->DrawText(guiFont, count.GetString(), bounds.x - 4 + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		if (text != nullptr)
+		{
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (textSize / 2) + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		}
+		if (count != nullptr)
+		{
+			app->render->DrawText(guiFont, count.GetString(), bounds.x - 4 + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		}
 		app->render->DrawTexture(tex, cPosX + bounds.x + 16, cPosY + bounds.y + (bounds.h / 2) - sec.h / 2, false, &sec);
 		if (app->render->debug)
 		{
@@ -149,8 +164,14 @@ bool GuiImageButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::FOCUSED:
 	{
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
-		app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 10 + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
-		app->render->DrawText(guiFont, count.GetString(), bounds.x + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		if (text != nullptr)
+		{
+			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (textSize / 2) + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		}
+		if (count != nullptr)
+		{
+			app->render->DrawText(guiFont, count.GetString(), bounds.x + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		}
 		app->render->DrawTexture(tex, cPosX + bounds.x + 12, cPosY + bounds.y + (bounds.h / 2) - sec.h / 2, false, &sec);
 		if (app->render->debug)
 		{
@@ -161,8 +182,14 @@ bool GuiImageButton::Draw(int cPosX, int cPosY)
 	case GuiControlState::PRESSED:
 	{
 		app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
-		app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 10 + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
-		app->render->DrawText(guiFont, count.GetString(), bounds.x + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		if (text != nullptr)
+		{
+		app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (textSize / 2) + (bounds.w - text.Length() * textSize / 2) / 2,/* cPosY +*/ bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		}
+		if (count != nullptr)
+		{
+			app->render->DrawText(guiFont, count.GetString(), bounds.x + (bounds.w - count.Length() * 20), bounds.y + (bounds.h / 2) - textSize / 2, textSize, 2, { 255,255,255,255 });
+		}
 		app->render->DrawTexture(tex, cPosX + bounds.x + 12, cPosY + bounds.y + (bounds.h / 2) - sec.h / 2, false, &sec);
 		if (app->render->debug)
 		{

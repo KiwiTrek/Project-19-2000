@@ -9,7 +9,7 @@ class GuiImageButton : public GuiButton
 {
 public:
 	// Constructor
-	GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, const char* count, SDL_Texture* tex, SDL_Rect sec);
+	GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, SDL_Texture* tex);
 
 	// Destructor
 	virtual ~GuiImageButton();
@@ -22,7 +22,7 @@ public:
 	// Blit
 	bool Draw(int cPosX = 0, int cPosY = 0);
 
-private:
+public:
 	// GUI Image Button specific properties
 	//SDL_Rect disabled;
 	//SDL_Rect normal;

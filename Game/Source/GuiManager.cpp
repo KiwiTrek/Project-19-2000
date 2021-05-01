@@ -56,7 +56,7 @@ bool GuiManager::Start()
 	return true;
 }
 
-GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits, const char* count, SDL_Texture* tex, SDL_Rect* sec)
+GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rect bounds, const char* text, int textSize, Scene* observer, int widthInUnits, SDL_Texture* tex)
 {
 	GuiControl* control = nullptr;
 
@@ -79,7 +79,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 	}
 	case GuiControlType::IMAGEBUTTON:
 	{
-		control = new GuiImageButton(id, bounds, text, count, tex, *sec);
+		control = new GuiImageButton(id, bounds, text, tex);
 		break;
 	}
 	default: break;

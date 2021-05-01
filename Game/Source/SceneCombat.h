@@ -7,6 +7,7 @@
 #include "GuiButton.h"
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
+#include "GuiManager.h"
 
 class Entity;
 class CombatEntity;
@@ -30,11 +31,14 @@ struct  CombatCharacter
 class Item
 {
 public:
-    Item(SString name, Attack effect, int count) : name(name), effect(effect), count(count)
-    {}
+    Item(/*SString name,*/ Attack effect, int count) : /*name(name),*/ effect(effect), count(count)
+    {
+        UpdateCountText();
+    }
 
     void Use(CombatEntity* target)
     {
+        LOG("ITEM USE %s", effect.attackName.GetString());
         switch (effect.type)
         {
         case AttackType::DAMAGE:
@@ -51,13 +55,52 @@ public:
         count--;
         if (count <= 0)
         {
-            delete this;
+            //app->gui->DestroyGuiControl(button);
+            //delete this;
+        }
+        else
+        {
+            UpdateCountText();
         }
     }
 
-    SString name;
+private:
+    void UpdateCountText()
+    {
+        switch (count)
+        {
+        case 1:
+            countText.Clear();
+            countText.Create("x1");
+            break;
+        case 2:
+            countText.Clear();
+            countText.Create("x2");
+            break;
+        case 3:
+            countText.Clear();
+            countText.Create("x3");
+            break;
+        case 4:
+            countText.Clear();
+            countText.Create("x4");
+            break;
+        case 5:
+            countText.Clear();
+            countText.Create("x5");
+            break;
+        default:
+            break;
+        }
+    }
+
+public:
+    //SString name;
     Attack effect;
+    SString countText;
     int count;
+    SDL_Rect texSec = { 288,416,32,32 };
+    GuiControl* button;
 };
 
 class SceneCombat : public Scene

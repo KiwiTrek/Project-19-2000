@@ -110,6 +110,7 @@ private:
     GuiImageButton* btnItem10;
     GuiImageButton* btnItem11;
     GuiImageButton* btnItem12;
+    int itemSelected;
     // This line is added for the sake of commiting & testing
 
     //FONTS
