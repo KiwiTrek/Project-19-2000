@@ -71,8 +71,8 @@ bool EntityManager::Start()
 	grandpaActive = false;
 
 	// Loading entities textures
-	//playerTex = app->tex->Load("Assets/Textures/playerTest.png");
-	//playerTex = app->tex->Load("Assets/Textures/Characters/MCSpriteSheet.png");
+	//playerTex = app->tex->Load("Textures/playerTest.png");
+	//playerTex = app->tex->Load("Textures/Characters/MCSpriteSheet.png");
 	SString tmp("%s%s", folderTexture.GetString(), "Characters/MCSpriteSheet.png");
 	playerTex = app->tex->Load(tmp.GetString());
 
@@ -88,11 +88,25 @@ bool EntityManager::Start()
 	tmp.Create("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
 	enemiesTex = app->tex->Load(tmp.GetString());
 
-	interactCat = app->audio->LoadFx("Assets/Audio/Fx/Cat.wav");
-	interactGrandpa = app->audio->LoadFx("Assets/Audio/Fx/Grandpa.wav");
-	interactHero = app->audio->LoadFx("Assets/Audio/Fx/Hero.wav");
-	interactShop = app->audio->LoadFx("Assets/Audio/Fx/Shop.wav");
-	footstepFx = app->audio->LoadFx("Assets/Audio/Fx/Footstep.wav");
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Cat.wav");
+	interactCat = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Grandpa.wav");
+	interactGrandpa = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Hero.wav");
+	interactHero = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Shop.wav");
+	interactShop = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Footstep.wav");
+	footstepFx = app->audio->LoadFx(tmp.GetString());
 
 	doLogic = true;
 

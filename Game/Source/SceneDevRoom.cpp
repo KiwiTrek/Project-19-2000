@@ -33,7 +33,7 @@ bool SceneDevRoom::Load()
 	// initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
-	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
+	dialogueFont = new Font("Fonts/DialogueFont.xml");
 
 	combatScene->Load();
 

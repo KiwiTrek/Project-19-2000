@@ -150,11 +150,11 @@ bool Collisions::Start()
 	onceNightmare = true;
 	saveOnce = false;
 	onceDoor = false;
-	saveFx = app->audio->LoadFx("Assets/Audio/Fx/Save.wav");
-	toiletFx = app->audio->LoadFx("Assets/Audio/Fx/Toilet.wav");
-	tutorialWarpFx = app->audio->LoadFx("Assets/Audio/Fx/TutorialWarp.wav");
-	doorFx = app->audio->LoadFx("Assets/Audio/Fx/Door.wav");
-	wakingUpFx = app->audio->LoadFx("Assets/Audio/Fx/WakingUp.wav");
+	saveFx = app->audio->LoadFx("Audio/Fx/Save.wav");
+	toiletFx = app->audio->LoadFx("Audio/Fx/Toilet.wav");
+	tutorialWarpFx = app->audio->LoadFx("Audio/Fx/TutorialWarp.wav");
+	doorFx = app->audio->LoadFx("Audio/Fx/Door.wav");
+	wakingUpFx = app->audio->LoadFx("Audio/Fx/WakingUp.wav");
 
 	return true;
 }
@@ -400,7 +400,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							{
 								if (app->map->LoadNewMap("home.tmx"))
 								{
-									app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
+									app->audio->PlayMusic("Audio/Music/Home.ogg");
 									app->audio->PlayFx(wakingUpFx);
 									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 									{
@@ -461,7 +461,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 36:
-							app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
+							app->audio->PlayMusic("Audio/Music/Home.ogg");
 							return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -546,7 +546,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 34:
-							app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
+							app->audio->PlayMusic("Audio/Music/Options.ogg");
 							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -559,7 +559,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						switch (tilePos.y)
 						{
 						case 34:
-							app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
+							app->audio->PlayMusic("Audio/Music/Options.ogg");
 							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -585,7 +585,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 										app->entities->DestroyEntity(s->shopDude);
 										app->entities->DestroyEntity(s->cat);
 									}
-									app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
+									app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 									return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 								}
 							}

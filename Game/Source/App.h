@@ -17,6 +17,7 @@ class Render;
 class Textures;
 class Audio;
 class Map;
+class AssetsManager;
 class EntityManager;
 class Collisions;
 class GuiManager;
@@ -98,6 +99,7 @@ public:
 	Window* win;
 	Input* input;
 	Render* render;
+	AssetsManager* assetsManager;
 	Textures* tex;
 	Audio* audio;
 	Map* map;

@@ -25,8 +25,8 @@ SceneLogo::~SceneLogo()
 
 bool SceneLogo::Load()
 {
-    logo = app->tex->Load("Assets/Textures/Logo.png");
-    logoFx = app->audio->LoadFx("Assets/Audio/Fx/LogoFX.wav");
+    logo = app->tex->Load("Textures/Logo.png");
+    logoFx = app->audio->LoadFx("Audio/Fx/LogoFX.wav");
 
     pos.x = -500;
     pos.y = app->win->screenSurface->h / 2 - 250;

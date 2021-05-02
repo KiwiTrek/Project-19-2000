@@ -29,13 +29,13 @@ SceneTitleScreen::~SceneTitleScreen()
 
 bool SceneTitleScreen::Load()
 {
-    nooseBG = app->tex->Load("Assets/Textures/NooseBG.png");
-    titleCard = app->tex->Load("Assets/Textures/TitleCard.png");
-    buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
-    titleFx = app->audio->LoadFx("Assets/Audio/Fx/TitleFX.wav");
+    nooseBG = app->tex->Load("Textures/NooseBG.png");
+    titleCard = app->tex->Load("Textures/TitleCard.png");
+    buttonFont = new Font("Fonts/ButtonFont.xml");
+    titleFx = app->audio->LoadFx("Audio/Fx/TitleFX.wav");
 
     app->audio->SetMusicVolume(app->audio->auxVolume);
-    app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
+    app->audio->PlayMusic("Audio/Music/Title.ogg");
     app->render->camera.x = 0;
     app->render->camera.y = 0;
     noose.Reset();
@@ -309,7 +309,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //OPTIONS
         flags = SetBit(flags, Flags::OPTIONS);
         changeMenu = true;
-        app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
+        app->audio->PlayMusic("Audio/Music/Options.ogg");
         app->gui->ResetButtons();
         usingGamepad = true;
         break;
@@ -337,7 +337,7 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 10: //BACK
         flags = ClearBit(flags, Flags::OPTIONS);
-        app->audio->PlayMusic("Assets/Audio/Music/Title.ogg");
+        app->audio->PlayMusic("Audio/Music/Title.ogg");
         changeMenu = true;
         app->gui->ResetButtons();
         usingGamepad = true;

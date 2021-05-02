@@ -28,7 +28,7 @@ QuestManager::~QuestManager()
 bool QuestManager::Start()
 {
 
-	// font = new Font("Assets/Fonts/dungeon_font3.xml", app->tex);
+	// font = new Font("Fonts/dungeon_font3.xml", app->tex);
 
 	pugi::xml_node questNode;
 	pugi::xml_document questData;

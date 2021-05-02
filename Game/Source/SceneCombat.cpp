@@ -30,8 +30,8 @@ SceneCombat::~SceneCombat()
 bool SceneCombat::Load()
 {
 	// COMBAT
-	combatGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
-	itemsTex = app->tex->Load("Assets/Textures/GUI/Items.png");
+	combatGui = app->tex->Load("Textures/GUI/combatGui.png");
+	itemsTex = app->tex->Load("Textures/GUI/Items.png");
 	scripted = false;
 
 	currentChar = nullptr;
@@ -141,6 +141,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	}
 	turnOrder.Clear();
 
+	app->audio->PlayMusic("Audio/Music/Battle.ogg");
 	SpawnEnemies(id1, id2, id3);
 
 	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
@@ -1139,8 +1140,8 @@ bool SceneCombat::Finish()
 	{
 		SceneGameplay* s = (SceneGameplay*)app->scene->current;
 		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(s->btnInventory));
-		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
-		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
+		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
 	}
 	else
 	{
@@ -1551,7 +1552,7 @@ void SceneCombat::SpawnEnemies(EntityId id1, EntityId id2, EntityId id3)
 	{
 		NextLine("A nightmare emerges...");
 		app->render->background = { 0,0,0,255 };
-		app->audio->PlayMusic("Assets/Audio/Music/Nightmare.ogg");
+		app->audio->PlayMusic("Audio/Music/Nightmare.ogg");
 		scripted = true;
 	}
 	else

@@ -59,13 +59,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PugiXml\src;$(ProjectDir)Source\External\Optick\include;$(ProjectDir)Source\External\SDL_mixer\include;$(ProjectDir)Source\External\SDL_image\include;$(ProjectDir)Source\External\SDL\include;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PugiXml\src;$(ProjectDir)Source\External\Optick\include;$(ProjectDir)Source\External\SDL_mixer\include;$(ProjectDir)Source\External\SDL_image\include;$(ProjectDir)Source\External\SDL\include;$(ProjectDir)Source\External;$(ProjectDir)Source\External\PhysFS\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib; SDL2_mixer.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Source\External\SDL\libx86;$(ProjectDir)Source\External\SDL_image\libx86;$(ProjectDir)Source\External\SDL_mixer\libx86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;physfs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Source\External\SDL\libx86;$(ProjectDir)Source\External\SDL_image\libx86;$(ProjectDir)Source\External\SDL_mixer\libx86;$(ProjectDir)Source\External\PhysFS\libx86</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(SolutionDir)Build\$(Configuration)\$(ProjectName).exe" "$(SolutionDir)Output\$(ProjectName).exe"</Command>
@@ -81,20 +81,21 @@
       <UseFullPaths>false</UseFullPaths>
       <ShowIncludes>false</ShowIncludes>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PugiXml\src;$(ProjectDir)Source\External\Optick\include;$(ProjectDir)Source\External\SDL_mixer\include;$(ProjectDir)Source\External\SDL_image\include;$(ProjectDir)Source\External\SDL\include;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PugiXml\src;$(ProjectDir)Source\External\Optick\include;$(ProjectDir)Source\External\SDL_mixer\include;$(ProjectDir)Source\External\SDL_image\include;$(ProjectDir)Source\External\SDL\include;$(ProjectDir)Source\External;$(ProjectDir)Source\External\PhysFS\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib; SDL2_mixer.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)Source\External\SDL\libx86;$(ProjectDir)Source\External\SDL_image\libx86;$(ProjectDir)Source\External\SDL_mixer\libx86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;physfs.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Source\External\SDL\libx86;$(ProjectDir)Source\External\SDL_image\libx86;$(ProjectDir)Source\External\SDL_mixer\libx86;$(ProjectDir)Source\External\PhysFS\libx86</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(SolutionDir)Build\$(Configuration)\$(ProjectName).exe" "$(SolutionDir)Output\$(ProjectName).exe"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AssetsManager.cpp" />
     <ClCompile Include="Source\Collisions.cpp" />
     <ClCompile Include="Source\CombatEntity.cpp" />
     <ClCompile Include="Source\DialogSystem.cpp" />
@@ -126,6 +127,7 @@
     <ClCompile Include="Source\Window.cpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Animation.h" />
+    <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Collisions.h" />
     <ClInclude Include="Source\CombatEntity.h" />

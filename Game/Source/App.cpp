@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Render.h"
+#include "AssetsManager.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "EntityManager.h"
@@ -25,6 +26,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 
 	win = new Window();
 	input = new Input();
+	assetsManager = new AssetsManager();
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
@@ -42,6 +44,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	// Reverse order of CleanUp
 	AddModule(win);
 	AddModule(input);
+	AddModule(assetsManager);
 	AddModule(tex);
 	AddModule(audio);
 	AddModule(map);

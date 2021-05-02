@@ -1,6 +1,7 @@
 #include "Font.h"
-
 #include "App.h"
+
+#include "AssetsManager.h"
 #include "Textures.h"
 
 #include "Log.h"
@@ -11,11 +12,15 @@ Font::Font(const char* rtpFontFile)
 {
 	fontLoaded = false;
 
+	char* buffer = nullptr;
 	pugi::xml_document xmlDocFontAtlas;
+	size_t size = app->assetsManager->LoadXML(rtpFontFile, &buffer);
+
+	pugi::xml_parse_result result = xmlDocFontAtlas.load_buffer(buffer, size);
+	RELEASE_ARRAY(buffer);
+
 	pugi::xml_node xmlNodeAtlas;
 	pugi::xml_node xmlNodeGlyph;
-
-	pugi::xml_parse_result result = xmlDocFontAtlas.load_file(rtpFontFile);
 
 	if (result == NULL) LOG("Could not load xml file: %s. pugi error: %s", rtpFontFile, result.description());
 	else xmlNodeAtlas = xmlDocFontAtlas.child("AtlasTexture");
@@ -26,7 +31,7 @@ Font::Font(const char* rtpFontFile)
 		//int atlasWidth = xmlNodeAtlas.attribute("width").as_int();
 		//int atlasHeight = xmlNodeAtlas.attribute("height").as_int();
 
-		texture = app->tex->Load(PATH("Assets/Fonts/", path));
+		texture = app->tex->Load(PATH("Fonts/", path));
 
 		charsCount = xmlNodeAtlas.attribute("spriteCount").as_int();
 		baseSize = xmlNodeAtlas.attribute("fontSize").as_int();

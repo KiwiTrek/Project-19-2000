@@ -6,6 +6,7 @@
 #include "SceneManager.h"
 #include "SceneGameplay.h"
 #include "Render.h"
+#include "AssetsManager.h"
 #include "Textures.h"
 #include "Map.h"
 
@@ -163,7 +164,12 @@ bool Map::LoadNewMap(const char* filename)
 	bool ret = true;
 
 	SString tmp("%s%s", folder.GetString(), filename);
-	pugi::xml_parse_result result = mapFile.load_file(tmp.GetString());
+
+	char* buffer = nullptr;
+	size_t size = app->assetsManager->LoadXML(tmp.GetString(), &buffer);
+
+	pugi::xml_parse_result result = mapFile.load_buffer(buffer, size);
+	RELEASE_ARRAY(buffer);
 
 	if (result == NULL)
 	{
@@ -663,11 +669,11 @@ bool Map::Load(pugi::xml_node& save)
 	{
 		if (data.name == "tutorial.tmx")
 		{
-			app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
+			app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 		}
 		else if (data.name == "home.tmx")
 		{
-			app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
+			app->audio->PlayMusic("Audio/Music/Home.ogg");
 		}
 	}
 	return ret;

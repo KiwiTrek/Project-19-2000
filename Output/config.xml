@@ -18,7 +18,7 @@
     <fullscreen_window value="false"/>
   </window>
   <map>
-    <folder>Assets/Maps/</folder>
+    <folder>Maps/</folder>
   </map>
   <input>
     <select keyId="29" padId="0">select</select>
@@ -30,13 +30,13 @@
     <right keyId="79" padId="14">right</right>
   </input>
   <guiManager>
-    <folderTexture>Assets/Textures/GUI/</folderTexture>
-    <folderAudio>Assets/Audio/Fx/</folderAudio>
-    <folderFonts>Assets/Fonts/</folderFonts>
+    <folderTexture>Textures/GUI/</folderTexture>
+    <folderAudio>Audio/Fx/</folderAudio>
+    <folderFonts>Fonts/</folderFonts>
   </guiManager>
   <entityManager>
-    <folderTexture>Assets/Textures/</folderTexture>
-    <folderAudioFx>Assets/Audio/Fx/</folderAudioFx>
-    <folderMap>Assets/Map/</folderMap>
+    <folderTexture>Textures/</folderTexture>
+    <folderAudioFx>Audio/Fx/</folderAudioFx>
+    <folderMap>Maps/</folderMap>
   </entityManager>
 </config>

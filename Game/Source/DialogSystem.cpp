@@ -7,6 +7,7 @@
 #include "Entity.h"
 
 #include "App.h"
+#include "AssetsManager.h"
 #include "Render.h"
 #include "Input.h"
 #include "Font.h"
@@ -52,10 +53,10 @@ std::string ToUpperCase(std::string input)
 
 DialogSystem::DialogSystem()
 {
-	LoadDialog("Assets/Dialog/Cat.xml");
-	LoadDialog("Assets/Dialog/ShopKeeper.xml");
-	LoadDialog("Assets/Dialog/Grandpa.xml");
-	LoadDialog("Assets/Dialog/Superhero.xml");
+	LoadDialog("Dialog/Cat.xml");
+	LoadDialog("Dialog/ShopKeeper.xml");
+	LoadDialog("Dialog/Grandpa.xml");
+	LoadDialog("Dialog/Superhero.xml");
 
 	// Register a callback functions
 	callbacks[std::string("shopkeeper_finished")] = std::function<void()>(&ShopKeeperFinished);
@@ -154,10 +155,12 @@ bool DialogSystem::LoadDialog(const char* filename)
 	bool ret = true;
 
 	// Get the file path.
-	std::string path = folder + filename;   // CHNGE NAMES: NormalDialogs and CombatDialogs
+	char* buffer = nullptr;
+	size_t size = app->assetsManager->LoadXML(filename, &buffer);
 
 	// Load the file.
-	pugi::xml_parse_result result = dialogFile.load_file(path.c_str());
+	pugi::xml_parse_result result = dialogFile.load_buffer(buffer, size);
+	RELEASE_ARRAY(buffer);
 
 	if (result == NULL) {
 		LOG("Could not load map xml file %s. pugi error: %s", filename, result.description());

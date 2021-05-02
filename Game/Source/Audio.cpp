@@ -1,6 +1,7 @@
 #include "App.h"
 
 #include "Audio.h"
+#include "AssetsManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -128,7 +129,8 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		Mix_FreeMusic(music);
 	}
 
-	music = Mix_LoadMUS(path);
+	SDL_RWops* rw = app->assetsManager->LoadAsset(path);
+	music = Mix_LoadMUS_RW(rw, 0);
 
 	if (music == NULL)
 	{
@@ -155,6 +157,8 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		}
 	}
 
+	//SDL_RWclose(rw);
+
 	LOG("Successfully playing %s", path);
 	return true;
 }
@@ -173,7 +177,8 @@ uint Audio::LoadFx(const char* path)
 		return 0;
 	}
 
-	Mix_Chunk* chunk = Mix_LoadWAV(path);
+	SDL_RWops* rw = app->assetsManager->LoadAsset(path);
+	Mix_Chunk* chunk = Mix_LoadWAV_RW(rw, 0);
 
 	if (chunk == NULL)
 	{
@@ -185,6 +190,7 @@ uint Audio::LoadFx(const char* path)
 		ret = fx.Count();
 	}
 
+	SDL_RWclose(rw);
 	return ret;
 }
 

@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Render.h"
 #include "Textures.h"
+#include "AssetsManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -64,7 +65,9 @@ bool Textures::CleanUp()
 SDL_Texture* const Textures::Load(const char* path)
 {
 	SDL_Texture* texture = NULL;
-	SDL_Surface* surface = IMG_Load(path);
+
+	SDL_RWops* rw = app->assetsManager->LoadAsset(path);
+	SDL_Surface* surface = IMG_Load_RW(rw, 0);
 
 	if(surface == NULL)
 	{
@@ -75,6 +78,8 @@ SDL_Texture* const Textures::Load(const char* path)
 		texture = LoadSurface(surface);
 		SDL_FreeSurface(surface);
 	}
+
+	SDL_RWclose(rw);
 
 	return texture;
 }

@@ -32,17 +32,17 @@ bool SceneGameplay::Load()
 
 	dialogSystem = new DialogSystem();
 
-	dialogueFont = new Font("Assets/Fonts/DialogueFont.xml");
-	buttonFont = new Font("Assets/Fonts/ButtonFont.xml");
+	dialogueFont = new Font("Fonts/DialogueFont.xml");
+	buttonFont = new Font("Fonts/ButtonFont.xml");
 	// Saving dialog thingies
 	savingText = { "Game saved succsessfully." };
 	savingBool = false;
 	savingCounter = 0;
 
-	textBox = app->tex->Load("Assets/Textures/GUI/textBox.png");
-	itemsTex = app->tex->Load("Assets/Textures/GUI/Items.png");
+	textBox = app->tex->Load("Textures/GUI/textBox.png");
+	itemsTex = app->tex->Load("Textures/GUI/Items.png");
 
-	dialogGui = app->tex->Load("Assets/Textures/GUI/combatGui.png");
+	dialogGui = app->tex->Load("Textures/GUI/combatGui.png");
 	dialogTextBox = { 0,0,1280,248 };
 	portraitBox = { 1276,0,208,190 };
 	shopKeeperPortrait = { 0,355,72,93 };
@@ -217,7 +217,7 @@ bool SceneGameplay::Load()
 	app->render->camera.x = 0;
 	app->render->camera.y = 0;
 
-	app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
+	app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 
 	// Used for the Gamepad GUI control
 	app->scene->currentButton = app->gui->controls.start;
@@ -998,7 +998,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 6: //OPTIONS
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::OPTIONS);
-		app->audio->PlayMusic("Assets/Audio/Music/Options.ogg");
+		app->audio->PlayMusic("Audio/Music/Options.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
@@ -1032,8 +1032,8 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 13: //BACK (OPTIONS BACK)
 		flags = ClearBit(flags, Flags::OPTIONS);
-		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Assets/Audio/Music/Tutorial.ogg");
-		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Assets/Audio/Music/Home.ogg");
+		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
