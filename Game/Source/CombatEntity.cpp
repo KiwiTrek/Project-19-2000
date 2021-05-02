@@ -30,9 +30,22 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	{
 		name = "MC";
 
-		SString tmpS = "Strike";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
+		SString tmpS = "Smack";
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk/3);
 		this->attackPool.Add(tmpA);
+
+		tmpS = "Confort";
+		tmpA = new Attack(tmpS, AttackType::HEAL, TargetType::ONE, 0);
+		this->attackPool.Add(tmpA);
+
+		tmpS = "Slap";
+		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
+		this->attackPool.Add(tmpA);
+
+		tmpS = "Encourage";
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, stats.pAtk, stats.mAtk);
+		this->attackPool.Add(tmpA);
+
 		break;
 	}
 	case EntityId::VIOLENT:
@@ -40,7 +53,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		name = "Grandpa";
 
 		SString tmpS = "Smite foes";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk);
 		this->attackPool.Add(tmpA);
 		break;
 	}

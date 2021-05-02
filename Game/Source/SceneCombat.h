@@ -118,6 +118,7 @@ public:
 
     bool Update(float dt);
     void Damage(int index, CombatEntity* target, bool isMagic = false);
+    void Heal(int p, CombatEntity* target);
     void SelectTarget();
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);

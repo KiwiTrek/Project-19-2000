@@ -325,15 +325,31 @@ bool SceneCombat::Update(float dt)
 								case 0: //attack
 									Damage(0, target);
 									break;
-									//case 1: //skill 1
-									//	LOG("skill 1");
-									//	break;
-									//case 2: //skill 2
-									//	LOG("skill 2");
-									//	break;
-									//case 3: //skill 3
-									//	LOG("skill 3");
-									//	break;
+									case 1: //skill 1
+									{
+										LOG("skill 1");
+										srand(time(NULL));
+										int s = rand() % 10 + 11;
+										Heal(s, target);
+										break;
+									}
+									case 2: //skill 2
+									{
+										LOG("skill 2");
+										Damage(2, target);
+										break;
+									}
+									case 3: //skill 3
+									{
+										LOG("skill 3");
+										SString s = "25 buff";
+										Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.mAtk);
+										a->turns = 3;
+										target->attackPool.Add(a);
+										target->stats.pAtk += a->stat1 * 25 / 100;
+										target->stats.mAtk += a->stat2 * 25 / 100;
+										break;
+									}
 									//case 4: //skill 4
 									//	LOG("skill 4");
 									//	break;
@@ -343,6 +359,7 @@ bool SceneCombat::Update(float dt)
 									//case 6: //skill 6
 									//	LOG("skill 6");
 									//	break;
+										
 								default:
 									break;
 								}
@@ -623,7 +640,7 @@ bool SceneCombat::Update(float dt)
 							LOG("mc has been stunned and debuffed!");
 							NextLine("You have been stunned and debuffed!");
 							mainChar.character->isStunned = true;
-							SString s = "10% debuff";
+							SString s = "10 debuff";
 							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
 							a->turns = 1;
 							mainChar.character->attackPool.Add(a);
@@ -637,7 +654,7 @@ bool SceneCombat::Update(float dt)
 							LOG("grandpa has been stunned and debuffed!");
 							NextLine("Grandpa have been stunned and debuffed!");
 							grandpa.character->isStunned = true;
-							SString s = "10% debuff";
+							SString s = "10 debuff";
 							Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
 							a->turns = 1;
 							grandpa.character->attackPool.Add(a);
@@ -1225,7 +1242,7 @@ void SceneCombat::TickDownBuffs()
 			a->data->turns--;
 			if (a->data->turns == 0)
 			{
-				if (a->data->attackName == "10% debuff")
+				if (a->data->attackName == "10 debuff")
 				{
 					currentChar->character->stats.pDef += a->data->stat1 / 10;
 					currentChar->character->stats.mDef += a->data->stat2 / 10;
@@ -1239,6 +1256,11 @@ void SceneCombat::TickDownBuffs()
 				{
 					currentChar->character->stats.pDef -= a->data->stat1 / 10;
 					currentChar->character->stats.mDef -= a->data->stat2 / 10;
+				}
+				else if (a->data->attackName == "25 buff")
+				{
+					currentChar->character->stats.pAtk -= a->data->stat1 * 25 / 100;
+					currentChar->character->stats.mAtk -= a->data->stat2 * 25 / 100;
 				}
 			}
 		}
@@ -1309,6 +1331,43 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 			NextLine("God Mode active. No damage recieved.");
 		}
 	}
+}
+
+
+void SceneCombat::Heal(int p, CombatEntity* target)
+{
+	ListItem<Entity*>* e = app->entities->entities.start;
+	Player* player = nullptr;
+	while (e != nullptr)
+	{
+		if (e->data->type == EntityType::PLAYER) break;
+		e = e->next;
+	}
+	if (e != nullptr)
+	{
+		player = (Player*)e->data;
+	}
+
+	if (player != nullptr)
+	{
+		//dialogue that X character does Y attack to Z enemy
+		LOG("%s Heals to %s!", currentEntity->data->name.GetString(), target->name.GetString());
+		char tmp[75];
+		sprintf(tmp, "%s Heals %s!", currentEntity->data->name.GetString(), target->name.GetString());
+		NextLine(tmp);
+
+		int heal = 0;
+
+		heal = p * target->stats.hPointsMax; //(currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
+		
+
+		if (heal <= 0)
+			heal = 0;
+		target->stats.hPoints += heal;
+		if (target->stats.hPoints >= target->stats.hPointsMax)
+			target->stats.hPoints = target->stats.hPointsMax;
+	}
+	
 }
 
 void SceneCombat::VictoryCondition()
@@ -1635,43 +1694,39 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		//attackSelected = 1;
-		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		attackSelected = 1;
 		break;
 	case 35: //SKILL 2
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		//attackSelected = 2;
-		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		attackSelected = 2;
 		break;
 	case 36: //SKILL 3
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		//attackSelected = 3;
-		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		attackSelected = 3;
 		break;
 	case 37: //SKILL 4
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		//attackSelected = 4;
-		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		attackSelected = 4;
 		break;
 	case 38: //SKILL 5
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		//attackSelected = 5;
-		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		attackSelected = 5;
+
 		break;
 	case 39: //SKILL 6
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
-		//attackSelected = 6;
-		finishedAction = true; //Reminder de quitarlo cuando tengamos skills
+		attackSelected = 6;
+	
 		break;
 	case 40: //ITEM 1
 		app->gui->ResetButtons();
