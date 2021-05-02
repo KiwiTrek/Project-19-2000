@@ -8,6 +8,7 @@
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
 #include "GuiManager.h"
+#include "GuiImageButton.h"
 
 class Entity;
 class CombatEntity;
@@ -53,15 +54,7 @@ public:
             break;
         }
         count--;
-        if (count <= 0)
-        {
-            //app->gui->DestroyGuiControl(button);
-            //delete this;
-        }
-        else
-        {
-            UpdateCountText();
-        }
+        UpdateCountText();
     }
 
 private:
@@ -95,7 +88,6 @@ private:
     }
 
 public:
-    //SString name;
     Attack effect;
     SString countText;
     int count;
@@ -191,12 +183,26 @@ private:
     GuiButton* btnCombatSkill4;
     GuiButton* btnCombatSkill5;
     GuiButton* btnCombatSkill6;
-    GuiButton* btnCombatItem1;
-    GuiButton* btnCombatItem2;
-    GuiButton* btnCombatItem3;
-    GuiButton* btnCombatItem4;
-    GuiButton* btnCombatItem5;
-    GuiButton* btnCombatItem6;
+
+    SDL_Texture* itemsTex;
+    GuiImageButton* btnCombatItem1;
+    GuiImageButton* btnCombatItem2;
+    GuiImageButton* btnCombatItem3;
+    GuiImageButton* btnCombatItem4;
+    GuiImageButton* btnCombatItem5;
+    GuiImageButton* btnCombatItem6;
+    GuiImageButton* btnCombatItem7;
+    GuiImageButton* btnCombatItem8;
+    GuiImageButton* btnCombatItem9;
+    GuiImageButton* btnCombatItem10;
+    GuiImageButton* btnCombatItem11;
+    GuiImageButton* btnCombatItem12;
+    GuiButton* btnLeftArrow;
+    GuiButton* btnRightArrow;
+    int itemSelected;
+    bool pageOne;
+    bool targetItem;
+
 
     SString firstLine;
     SString secondLine;

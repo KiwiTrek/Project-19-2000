@@ -173,7 +173,7 @@ bool SceneGameplay::Load()
 	//i->texSec = { 224,0,32,32 };
 	//combatScene->items.Add(i);
 
-	str = "Item";
+	str = "Item 2";
 	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
 	c = 3;
 	i = new Item(*eff, c);
@@ -566,8 +566,6 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					default:
 						break;
 					}
-
-
 				}
 			}
 			else if ((flags & 1 << Flags::SKILLS) != 0)
