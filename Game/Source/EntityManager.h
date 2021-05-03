@@ -42,7 +42,7 @@ public:
 	bool CleanUp();
 
 	// Create/Destroy entity
-	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId = NpcId::NONE, Entity* playerPointer = nullptr/*, EnemyType eType = EnemyType::NO_TYPE*/);
+	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId = NpcId::NONE, Entity* playerPointer = nullptr, ItemId itemId = ItemId::NONE, int count = 0);
 	void DestroyEntity(Entity* entity);
 
 	// Calls Update for every entity
@@ -72,6 +72,7 @@ public:
 	SDL_Texture* grandpaTex;
 	SDL_Texture* NPCTex;
 	SDL_Texture* enemiesTex;
+	SDL_Texture* itemAtlas;
 
 	// sounds
 	int interactCat;

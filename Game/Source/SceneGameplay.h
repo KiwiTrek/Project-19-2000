@@ -97,7 +97,6 @@ private:
     GuiButton* btnPadRight;
 
     //ITEMS
-    SDL_Texture* itemsTex;
     GuiImageButton* btnItem1;
     GuiImageButton* btnItem2;
     GuiImageButton* btnItem3;

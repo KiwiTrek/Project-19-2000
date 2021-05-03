@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "DialogSystem.h"
 #include "DialogUtils.h"
+#include "Item.h"
 
 SceneGameplay::SceneGameplay()
 {
@@ -40,7 +41,6 @@ bool SceneGameplay::Load()
 	savingCounter = 0;
 
 	textBox = app->tex->Load("Textures/GUI/textBox.png");
-	itemsTex = app->tex->Load("Textures/GUI/Items.png");
 
 	dialogGui = app->tex->Load("Textures/GUI/combatGui.png");
 	dialogTextBox = { 0,0,1280,248 };
@@ -104,24 +104,35 @@ bool SceneGameplay::Load()
 
 	//ITEMS
 	itemSelected = 0;
-	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 29, { 330,120,300,60 }, "item one", 40, this, 0, itemsTex);
-	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 30, { 646,120,300,60 }, "item two", 40, this, 0, itemsTex);
-	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 31, { 330,200,300,60 }, "item three", 40, this, 0, itemsTex);
-	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 32, { 646,200,300,60 }, "item four", 40, this, 0, itemsTex);
-	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 33, { 330,280,300,60 }, "item five", 40, this, 0, itemsTex);
-	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 34, { 646,280,300,60 }, "item six", 40, this, 0, itemsTex);
-	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 35, { 330,360,300,60 }, "item seven", 40, this, 0, itemsTex);
-	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 36, { 646,360,300,60 }, "item eight", 40, this, 0, itemsTex);
-	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 37, { 330,440,300,60 }, "item nine", 40, this, 0, itemsTex);
-	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 38, { 646,440,300,60 }, "item ten", 40, this, 0, itemsTex);
-	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 39, { 330,520,300,60 }, "item eleven", 40, this, 0, itemsTex);
-	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 40, { 646,520,300,60 }, "item twelve", 40, this, 0, itemsTex);
+	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 29, { 330,120,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
+	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 30, { 646,120,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
+	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 31, { 330,200,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
+	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 32, { 646,200,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
+	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 33, { 330,280,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
+	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 34, { 646,280,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
+	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 35, { 330,360,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
+	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 36, { 646,360,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
+	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 37, { 330,440,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
+	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 38, { 646,440,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
+	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 39, { 330,520,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
+	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 40, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
+
+
+	app->entities->CreateEntity(14*64, 89*64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 2);
+
 
 	SString str = "Item Heal";
 	Attack* eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
 	int c = 2;
 	Item* i = new Item(*eff, c);
 	i->texSec = { 0,0,32,32 };
+	combatScene->items.Add(i);
+
+	str = "HP Potion";
+	eff = new Attack(str, AttackType::HEAL, TargetType::ONE, 0);
+	c = 1;
+	i = new Item(*eff, c);
+	i->texSec = { 5 * 32,8 * 32,32,32 };
 	combatScene->items.Add(i);
 
 	str = "Poison Heal";

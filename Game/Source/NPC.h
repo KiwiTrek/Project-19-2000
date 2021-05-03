@@ -25,8 +25,6 @@ public:
 
 	void OnCollision(Collider* c1, Collider* c2);
 
-	int id;
-
 private:
 
 	NpcId npcId = NpcId::NONE;

@@ -12,6 +12,7 @@
 
 class Entity;
 class CombatEntity;
+class Item;
 
 struct  CombatCharacter
 {
@@ -27,72 +28,6 @@ struct  CombatCharacter
     SString xp;
     SString nextLvl;
     SString pAtk, mAtk, pDef, mDef, speed;
-};
-
-class Item
-{
-public:
-    Item(/*SString name,*/ Attack effect, int count) : /*name(name),*/ effect(effect), count(count)
-    {
-        UpdateCountText();
-    }
-
-    void Use(CombatEntity* target)
-    {
-        LOG("ITEM USE %s", effect.attackName.GetString());
-        switch (effect.type)
-        {
-        case AttackType::DAMAGE:
-            break;
-        case AttackType::BUFF:
-            break;
-        case AttackType::HEAL:
-            break;
-        case AttackType::TAUNT:
-            break;
-        default:
-            break;
-        }
-        count--;
-        UpdateCountText();
-    }
-
-private:
-    void UpdateCountText()
-    {
-        switch (count)
-        {
-        case 1:
-            countText.Clear();
-            countText.Create("x1");
-            break;
-        case 2:
-            countText.Clear();
-            countText.Create("x2");
-            break;
-        case 3:
-            countText.Clear();
-            countText.Create("x3");
-            break;
-        case 4:
-            countText.Clear();
-            countText.Create("x4");
-            break;
-        case 5:
-            countText.Clear();
-            countText.Create("x5");
-            break;
-        default:
-            break;
-        }
-    }
-
-public:
-    Attack effect;
-    SString countText;
-    int count;
-    SDL_Rect texSec = { 288,416,32,32 };
-    GuiControl* button;
 };
 
 class SceneCombat : public Scene
@@ -185,7 +120,6 @@ private:
     GuiButton* btnCombatSkill5;
     GuiButton* btnCombatSkill6;
 
-    SDL_Texture* itemsTex;
     GuiImageButton* btnCombatItem1;
     GuiImageButton* btnCombatItem2;
     GuiImageButton* btnCombatItem3;

@@ -17,6 +17,7 @@ enum class EntityType
 	PLAYER,
 	COMBAT_ENTITY,
 	NPC,
+	ITEM,
 	UNKNOWN
 };
 
@@ -40,7 +41,19 @@ enum class NpcId
 	HERO,
 	GRANDPA,
 	CAT,
-	STORE_GUY,
+	STORE_GUY
+};
+
+enum class ItemId
+{
+	NONE,
+	HP_POTION,
+	MANA_POTION,
+	ELIXIR,
+	GRANDMA_STEW,
+	BOTTLEED_SMITE,
+	HAPPILLS,
+	STAT_BUFFER
 };
 
 //enum EnemyType
@@ -86,6 +99,9 @@ public:
 	{
 		turns = 0;
 	}
+
+	Attack()
+	{}
 
 public:
 	SString attackName;

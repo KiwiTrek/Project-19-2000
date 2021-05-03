@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "CombatEntity.h"
 #include "NPC.h"
+#include "Item.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -89,6 +90,10 @@ bool EntityManager::Start()
 	enemiesTex = app->tex->Load(tmp.GetString());
 
 	tmp.Clear();
+	tmp.Create("%s%s", folderTexture.GetString(), "GUI/Items.png");
+	itemAtlas = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
 	tmp.Create("%s%s", folderAudioFx.GetString(), "Cat.wav");
 	interactCat = app->audio->LoadFx(tmp.GetString());
 
@@ -148,6 +153,7 @@ bool EntityManager::CleanUp()
 	app->tex->UnLoad(grandpaTex);
 	app->tex->UnLoad(enemiesTex);
 	app->tex->UnLoad(NPCTex);
+	app->tex->UnLoad(itemAtlas);
 
 	app->audio->UnloadFx(interactCat);
 	app->audio->UnloadFx(interactGrandpa);
@@ -158,7 +164,7 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer/* EnemyType eType*/)
+Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer, ItemId itemId, int count)
 {
 	Entity* ret = nullptr;
 
@@ -197,6 +203,9 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 			break;
 		}
 	}
+	case EntityType::ITEM:
+		ret = new ItemEntity(x, y, itemId, count);
+		break;
 	}
 
 	// Adds the created entity to the list
