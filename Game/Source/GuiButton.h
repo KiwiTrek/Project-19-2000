@@ -32,6 +32,16 @@ protected:
 	SDL_Rect focusedSmall;
 	SDL_Rect pressedSmall;
 
+	SDL_Rect disabledLeft;
+	SDL_Rect normalLeft;
+	SDL_Rect focusedLeft;
+	SDL_Rect pressedLeft;
+
+	SDL_Rect disabledRight;
+	SDL_Rect normalRight;
+	SDL_Rect focusedRight;
+	SDL_Rect pressedRight;
+
 	bool hoverPlay;
 	bool clickPlay;
 };
