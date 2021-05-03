@@ -100,6 +100,7 @@ private:
     bool scripted;
     int attackSelected;
     bool once;
+    bool wait;
 
     CombatCharacter* currentChar;
     Entity* enemy1;
