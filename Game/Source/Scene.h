@@ -9,10 +9,11 @@ class Font;
 
 enum SceneType
 {
-	LOGO,
-	TITLE_SCREEN,
-	GAMEPLAY,
-    DEV_ROOM
+    LOGO,
+    TITLE_SCREEN,
+    GAMEPLAY,
+    DEV_ROOM,
+    ENDING
 };
 
 enum CombatStateType

@@ -20,7 +20,7 @@ ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, Entity
 	pendingToDelete = false;
 
 	Attack a;
-	SDL_Rect sec;
+	SDL_Rect sec = { 0,0,0,0 };
 	switch (itemId)
 	{
 	case ItemId::HP_POTION:

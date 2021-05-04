@@ -364,7 +364,7 @@ bool SceneGameplay::Update(float dt)
 		//Update normal scene
 	}
 
-	if (combatScene->heDed) TransitionToScene(SceneType::TITLE_SCREEN);
+	if (combatScene->heDed) TransitionToScene(SceneType::ENDING);
 
 	return true;
 }

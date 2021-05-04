@@ -19,6 +19,7 @@ using namespace std;
 QuestManager::QuestManager() : Module()
 {
 	name.Create("quests");
+	active = false;
 }
 
 QuestManager::~QuestManager()
@@ -190,7 +191,7 @@ bool QuestManager::CheckQuestsLogic()
 						(inactiveQuestsList->data->requiredId[i + 3] == finishedIds[j + 3]))
 					{
 						questsActive.Add(inactiveQuestsList->data);
-						questsInactive.Del(inactiveQuestsList);
+						if (questsInactive.At(questsInactive.Find(inactiveQuestsList->data)) != nullptr) questsInactive.Del(inactiveQuestsList);
 						inactiveQuestsList->data->status = 1;
 					}
 				}
