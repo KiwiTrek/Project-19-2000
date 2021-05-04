@@ -28,7 +28,8 @@ public:
 	SString rewardingNPC; // Name of rewarding NPC
 	int rewardXP; // Quantity of XP rewarded
 	int rewardGold; // Quantity of Gold rewarded
-	int requiredId; // For a quest chain if it requires another quest ID completed before
+	string requiredIdString; // For a quest chain if it requires another quest ID completed before
+	int requiredId[4] = { 0 };
 	bool isCompleted; // true --> Quest completed // false --> Quest not completed
 	int status; // 0 inactive, 1 active, 2 completed
 };
@@ -56,7 +57,10 @@ public:
 
 	bool DrawActiveQuests();
 
-public:
+	void StringToIntArray(Quest* quest, string requiredIdString);
+
+private:
+	
 
 	List<Quest*> questsList;
 	List<Quest*> questsInactive;

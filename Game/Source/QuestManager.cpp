@@ -55,7 +55,7 @@ bool QuestManager::Start()
 		quest->rewardingNPC = questNode.attribute("rewardingNPC").as_string();
 		quest->rewardXP = questNode.attribute("rewardXP").as_int();
 		quest->rewardGold = questNode.attribute("rewardGold").as_int();
-		quest->requiredId = questNode.attribute("requiredId").as_int();
+		quest->requiredIdString = questNode.attribute("requiredId").as_string();
 		quest->isCompleted = questNode.attribute("isCompleted").as_bool();
 		quest->status = questNode.attribute("status").as_int();
 
@@ -76,6 +76,7 @@ bool QuestManager::Start()
 		// List with all quests
 		questsList.Add(quest);
 
+		StringToIntArray(quest, quest->requiredIdString);
 
 		questNode = questNode.next_sibling("quest");
 	}
@@ -102,7 +103,7 @@ bool QuestManager::CleanUp()
 	questsInactive.Clear();
 	questsActive.Clear();
 	questsFinished.Clear();
-
+	
 	return true;
 }
 
@@ -161,7 +162,7 @@ bool QuestManager::CheckQuestsLogic()
 		activeQuestsList = activeQuestsList->next;
 	}
 
-	// Checks the inactive list, and the finished list. If id's match, moves the quest from the inactive list to the active list
+	// Chain quests logic (now works for multiple quest requirements)
 	ListItem<Quest*>* inactiveQuestsList = questsInactive.start;
 	while (inactiveQuestsList != NULL)
 	{
@@ -170,11 +171,14 @@ bool QuestManager::CheckQuestsLogic()
 			ListItem<Quest*>* L2 = questsFinished.start;
 			while (L2 != NULL)
 			{
-				if (inactiveQuestsList->data->requiredId == L2->data->id)
+				for (int i = 0; i < inactiveQuestsList->data->requiredIdString.length(); ++i)
 				{
-					questsActive.Add(inactiveQuestsList->data);
-					questsInactive.Del(inactiveQuestsList);
-					inactiveQuestsList->data->status = 1;
+					if (inactiveQuestsList->data->requiredId[i] == L2->data->id)
+					{
+						questsActive.Add(inactiveQuestsList->data);
+						questsInactive.Del(inactiveQuestsList);
+						inactiveQuestsList->data->status = 1;
+					}
 				}
 				L2 = L2->next;
 			}
@@ -183,24 +187,6 @@ bool QuestManager::CheckQuestsLogic()
 		inactiveQuestsList = inactiveQuestsList->next;
 	}
 
-	// This is a complex hardcoding way to handle multiple quest requirements
-	// Montu: I have to think of a more automatised way to handle several requirements
-
-	//if (app->player->chopTreeCount == 10 && app->player->turtleKilled)
-	//{
-	//	ListItem<Quest*>* chainQuestLookingList = questsInactive.start;
-	//	while (chainQuestLookingList != NULL)
-	//	{
-	//		if (chainQuestLookingList->data->id == 5)
-	//		{
-	//			questsActive.Add(chainQuestLookingList->data);
-	//			questsInactive.Del(chainQuestLookingList);
-	//			chainQuestLookingList->data->status = 1;
-	//		}
-	//		chainQuestLookingList = chainQuestLookingList->next;
-	//	}
-	//}
-
 	return true;
 }
 
@@ -208,7 +194,7 @@ bool QuestManager::CheckObjectivesCompletion()
 {
 	// Debug: Complete quest id by id. From the id 1 (debugId = 1) to the last one
 	// Montu: I would like to implement a diferent debug completion. Something like DebugCompleteQuest(id) -->
-	// --> which will complete the quest of the selected if if its in the active list
+	// --> which will complete the quest of the selected id if its in the active list
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 	{
 		/*ListItem<Entity*>* L;*/
@@ -236,8 +222,8 @@ bool QuestManager::CheckObjectivesCompletion()
 	// This is the Objectives Completion Conditions. For each quest, an if with the conditions with a call -->
 	// --> to the function CompleteQuest(id)
 
-	//if (app->player->mushroomCount == 8)
-	//	CompleteQuest(1);
+	//if (completion condition of quest with id == is completed (app->player->mushroomCount == 8))
+	//	CompleteQuest(id of the quest completed);
 
 	return true;
 }
@@ -256,4 +242,22 @@ bool QuestManager::CompleteQuest(int id)
 		L = L->next;
 	}
 	return true;
+}
+
+void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
+{
+	int stringLength = quest->requiredIdString.length();
+	int j = 0;
+	for (int i = 0; quest->requiredIdString[i] != '\0'; ++i)
+	{
+		if (quest->requiredIdString[i] == ',')
+			continue;
+		if (quest->requiredIdString[i] == ' ')
+			j++;
+		else
+		{
+			quest->requiredId[j] = quest->requiredId[j] * 10 + (quest->requiredIdString[i] - 48);
+			j++;
+		}
+	}
 }
