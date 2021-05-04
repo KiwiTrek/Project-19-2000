@@ -60,7 +60,7 @@ public:
 	void StringToIntArray(Quest* quest, string requiredIdString);
 
 private:
-	
+	int totalQuests = 0;
 
 	List<Quest*> questsList;
 	List<Quest*> questsInactive;

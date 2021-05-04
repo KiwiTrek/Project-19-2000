@@ -76,6 +76,8 @@ bool QuestManager::Start()
 		// List with all quests
 		questsList.Add(quest);
 
+		totalQuests += 1;
+
 		StringToIntArray(quest, quest->requiredIdString);
 
 		questNode = questNode.next_sibling("quest");
@@ -162,25 +164,36 @@ bool QuestManager::CheckQuestsLogic()
 		activeQuestsList = activeQuestsList->next;
 	}
 
+	
 	// Chain quests logic (now works for multiple quest requirements)
 	ListItem<Quest*>* inactiveQuestsList = questsInactive.start;
 	while (inactiveQuestsList != NULL)
 	{
 		if (inactiveQuestsList->data->requiredId != 0)
 		{
+			int finishedIds[10] = { 0 };
+			int x = 0;
 			ListItem<Quest*>* L2 = questsFinished.start;
 			while (L2 != NULL)
 			{
-				for (int i = 0; i < inactiveQuestsList->data->requiredIdString.length(); ++i)
+				finishedIds[x] = L2->data->id;
+				x++;
+				L2 = L2->next;
+			}
+			for (int i = 0; inactiveQuestsList->data->requiredId[i] != '\0'; ++i)
+			{
+				for (int j = 0; finishedIds[j] != '\0'; ++j)
 				{
-					if (inactiveQuestsList->data->requiredId[i] == L2->data->id)
+					if ((inactiveQuestsList->data->requiredId[i] == finishedIds[j]) && inactiveQuestsList->data->requiredId[i] != 0 && 
+						(inactiveQuestsList->data->requiredId[i + 1] == finishedIds[j + 1]) && 
+						(inactiveQuestsList->data->requiredId[i + 2] == finishedIds[j + 2]) &&
+						(inactiveQuestsList->data->requiredId[i + 3] == finishedIds[j + 3]))
 					{
 						questsActive.Add(inactiveQuestsList->data);
 						questsInactive.Del(inactiveQuestsList);
 						inactiveQuestsList->data->status = 1;
 					}
 				}
-				L2 = L2->next;
 			}
 		}
 

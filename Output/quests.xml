@@ -100,8 +100,8 @@
 		rewardingNPC = "None"
 		rewardXP = "0"
 		rewardGold = "0"
-		requiredId = "0"
-		isCompleted = "true"
+		requiredId = "3"
+		isCompleted = "false"
 		status = "2"
 	/>
 </quests>
