@@ -13,7 +13,6 @@
 ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, EntityType::ITEM)
 {
 	LOG("Init Item");
-	this->itemId = id;
 	this->entityRect = { x, y,32,32 };
 	collider = app->collisions->AddCollider(entityRect, Collider::Type::INTERACTABLE, (Module*)app->entities);
 
@@ -21,41 +20,41 @@ ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, Entity
 
 	Attack a;
 	SDL_Rect sec = { 0,0,0,0 };
-	switch (itemId)
+	switch (id)
 	{
 	case ItemId::HP_POTION:
-		a = Attack("HP Potion", AttackType::HEAL, TargetType::ONE, 0);
+		a = Attack("HP Potion", AttackType::HEAL, TargetType::ONE);
 		sec = { 5 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::MANA_POTION:
-		a = Attack("Mana Potion", AttackType::BUFF, TargetType::ONE, 0);
+		a = Attack("Mana Potion", AttackType::BUFF, TargetType::ONE);
 		sec = { 8 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::ELIXIR:
-		a = Attack("Elixir", AttackType::BUFF, TargetType::ONE, 0);
+		a = Attack("Elixir", AttackType::BUFF, TargetType::ONE);
 		sec = { 9 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::GRANDMA_STEW:
-		a = Attack("Grandma's Stew", AttackType::BUFF, TargetType::ONE, 0);
+		a = Attack("Grandma's Stew", AttackType::BUFF, TargetType::ONE);
 		sec = { 8 * 32,7 * 32,32,32 };
 		break;
 	case ItemId::BOTTLEED_SMITE:
-		a = Attack("Smite In A Bottle", AttackType::DAMAGE, TargetType::ONE, 30);
+		a = Attack("Smite In A Bottle", AttackType::DAMAGE, TargetType::ONE);
 		sec = { 6 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::HAPPILLS:
-		a = Attack("Happills", AttackType::BUFF, TargetType::ONE, 0);
+		a = Attack("Happills", AttackType::BUFF, TargetType::ONE);
 		sec = { 4 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::STAT_BUFFER:
-		a = Attack("Stat Buffer", AttackType::BUFF, TargetType::ONE, 0);
+		a = Attack("Stat Buffer", AttackType::BUFF, TargetType::ONE);
 		sec = { 7 * 32,8 * 32,32,32 };
 		break;
 	default:
 		break;
 	}
 
-	item = Item(a, count);
+	item = Item(id, a, count);
 	item.UpdateCountText();
 	item.texSec = sec;
 }
@@ -85,7 +84,7 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 		SceneGameplay* gameplay = (SceneGameplay*)app->scene->current;
 		for (int i = 0; i < gameplay->combatScene->items.Count(); i++)
 		{
-			if (item.effect.attackName == gameplay->combatScene->items.At(i)->data->effect.attackName)
+			if (item.id == gameplay->combatScene->items.At(i)->data->id)
 			{
 				LOG("OLD ITEM");
 				gameplay->combatScene->items.At(i)->data->count += item.count;
@@ -101,4 +100,65 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 
 		pendingToDelete = true;
 	}
+}
+
+Item::Item(ItemId id, Attack effect, int count) : id(id), effect(effect), count(count)
+{
+	UpdateCountText();
+}
+
+Item::Item()
+{}
+
+void Item::Use(CombatEntity* target)
+{
+	LOG("ITEM USE %s", effect.attackName.GetString());
+	switch (id)
+	{
+	case ItemId::HP_POTION:
+		target->stats.hPoints += 30;
+		if (target->stats.hPoints >= target->stats.hPointsMax) target->stats.hPoints = target->stats.hPointsMax;
+		break;
+	case ItemId::MANA_POTION:
+		target->stats.mPoints += 30;
+		if (target->stats.mPoints >= target->stats.mPointsMax) target->stats.mPoints = target->stats.mPointsMax;
+		break;
+	case ItemId::ELIXIR:
+		target->stats.hPoints += 25;
+		if (target->stats.hPoints >= target->stats.hPointsMax) target->stats.hPoints = target->stats.hPointsMax;
+		target->stats.mPoints += 25;
+		if (target->stats.mPoints >= target->stats.mPointsMax) target->stats.mPoints = target->stats.mPointsMax;
+		break;
+	case ItemId::GRANDMA_STEW:
+		// Clears status poison
+		break;
+	case ItemId::BOTTLEED_SMITE:
+		target->stats.hPoints -= 30;
+		if (target->stats.hPoints <= 0) target->stats.hPoints = 0;
+		break;
+	case ItemId::HAPPILLS:
+		target->stats.stress -= 30;
+		if (target->stats.stress <= 0) target->stats.stress = 0;
+		break;
+	case ItemId::STAT_BUFFER:
+		// Should increase a stat, the thing is: how do we determine which stat?
+		break;
+	default:
+		break;
+	}
+	count--;
+	UpdateCountText();
+	if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+	{
+		SceneGameplay* s = (SceneGameplay*)app->scene->current;
+		s->combatScene->mainChar.hp.Create("HP: %d/%d", s->combatScene->mainChar.character->stats.hPoints, s->combatScene->mainChar.character->stats.hPointsMax);
+		s->combatScene->grandpa.hp.Create("HP: %d/%d", s->combatScene->grandpa.character->stats.hPoints, s->combatScene->grandpa.character->stats.hPointsMax);
+		//Should add the rest of the characters
+	}
+}
+
+void Item::UpdateCountText()
+{
+	countText.Clear();
+	countText.Create("x%d", count);
 }

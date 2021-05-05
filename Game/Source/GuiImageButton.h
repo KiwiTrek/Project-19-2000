@@ -2,6 +2,7 @@
 #define __GUIIMAGEBUTTON_H__
 
 #include "GuiButton.h"
+#include "Item.h"
 
 struct SDL_Texture;
 
@@ -39,6 +40,7 @@ public:
 	SString count;
 	SDL_Texture* tex;
 	SDL_Rect sec;
+	ItemId itemId;
 };
 
 #endif // __GUIIMAGEBUTTON_H__

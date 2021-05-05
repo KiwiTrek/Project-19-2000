@@ -118,64 +118,78 @@ bool SceneGameplay::Load()
 	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 40, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
 
-	app->entities->CreateEntity(14*64, 89*64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 2);
+	app->entities->CreateEntity(14 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
+	app->entities->CreateEntity(33 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::GRANDMA_STEW, 1);
+	app->entities->CreateEntity(36 * 64, 69 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 2);
+	app->entities->CreateEntity(37 * 64, 59 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::BOTTLEED_SMITE, 1);
+	app->entities->CreateEntity(13 * 64, 72 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HAPPILLS, 2);
+	app->entities->CreateEntity(15 * 64, 43 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 1);
+	app->entities->CreateEntity(15 * 64, 41 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::MANA_POTION, 3);
+	app->entities->CreateEntity(11 * 64, 25 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 5);
+	app->entities->CreateEntity(42 * 64, 91 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HAPPILLS, 3);
+	app->entities->CreateEntity(63 * 64, 86 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::BOTTLEED_SMITE, 2);
+	app->entities->CreateEntity(65 * 64, 86 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::STAT_BUFFER, 2);
+	app->entities->CreateEntity(59 * 64, 76 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
+	app->entities->CreateEntity(59 * 64, 80 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::GRANDMA_STEW, 2);
+	app->entities->CreateEntity(69 * 64, 76 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::STAT_BUFFER, 3);
+	app->entities->CreateEntity(69 * 64, 80 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::MANA_POTION, 3);
 
 
-	SString str = "Item Heal";
-	Attack* eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	int c = 2;
-	Item* i = new Item(*eff, c);
-	i->texSec = { 0,0,32,32 };
-	combatScene->items.Add(i);
+	//SString str = "Item Heal";
+	//Attack* eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//int c = 2;
+	//Item* i = new Item(*eff, c);
+	//i->texSec = { 0,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "HP Potion";
-	eff = new Attack(str, AttackType::HEAL, TargetType::ONE, 0);
-	c = 1;
-	i = new Item(*eff, c);
-	i->texSec = { 5 * 32,8 * 32,32,32 };
-	combatScene->items.Add(i);
+	//str = "HP Potion";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::ONE, 0);
+	//c = 1;
+	//i = new Item(*eff, c);
+	//i->texSec = { 5 * 32,8 * 32,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Poison Heal";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 1;
-	i = new Item(*eff, c);
-	i->texSec = { 32,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Poison Heal";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 1;
+	//i = new Item(*eff, c);
+	//i->texSec = { 32,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Item";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 64,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Item";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 64,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Stress Heal";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 96,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Stress Heal";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 96,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Itemverylong";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 128,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Itemverylong";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 128,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Stun Heal";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 160,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Stun Heal";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 160,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Itemmmmmmmmm";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 192,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Itemmmmmmmmm";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 192,0,32,32 };
+	//combatScene->items.Add(i);
 
 	//str = "Mana Heal";
 	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
@@ -184,26 +198,26 @@ bool SceneGameplay::Load()
 	//i->texSec = { 224,0,32,32 };
 	//combatScene->items.Add(i);
 
-	str = "Item 2";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 256,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Item 2";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 256,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Elixir";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 288,0,32,32 };
-	combatScene->items.Add(i);
+	//str = "Elixir";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 288,0,32,32 };
+	//combatScene->items.Add(i);
 
-	str = "Flash Bang!";
-	eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
-	c = 3;
-	i = new Item(*eff, c);
-	i->texSec = { 0,32,32,32 };
-	combatScene->items.Add(i);
+	//str = "Flash Bang!";
+	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
+	//c = 3;
+	//i = new Item(*eff, c);
+	//i->texSec = { 0,32,32,32 };
+	//combatScene->items.Add(i);
 
 	//str = "Tactical Nuke";
 	//eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);
@@ -491,6 +505,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					switch (i)
 					{
 					case 0:
+						btnItem1->itemId = combatScene->items.At(i)->data->id;
 						btnItem1->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem1->count = combatScene->items.At(i)->data->countText;
 						btnItem1->sec = combatScene->items.At(i)->data->texSec;
@@ -498,6 +513,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem1->Update(dt);
 						break;
 					case 1:
+						btnItem2->itemId = combatScene->items.At(i)->data->id;
 						btnItem2->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem2->count = combatScene->items.At(i)->data->countText;
 						btnItem2->sec = combatScene->items.At(i)->data->texSec;
@@ -505,6 +521,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem2->Update(dt);
 						break;
 					case 2:
+						btnItem3->itemId = combatScene->items.At(i)->data->id;
 						btnItem3->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem3->count = combatScene->items.At(i)->data->countText;
 						btnItem3->sec = combatScene->items.At(i)->data->texSec;
@@ -512,6 +529,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem3->Update(dt);
 						break;
 					case 3:
+						btnItem4->itemId = combatScene->items.At(i)->data->id;
 						btnItem4->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem4->count = combatScene->items.At(i)->data->countText;
 						btnItem4->sec = combatScene->items.At(i)->data->texSec;
@@ -519,6 +537,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem4->Update(dt);
 						break;
 					case 4:
+						btnItem5->itemId = combatScene->items.At(i)->data->id;
 						btnItem5->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem5->count = combatScene->items.At(i)->data->countText;
 						btnItem5->sec = combatScene->items.At(i)->data->texSec;
@@ -526,6 +545,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem5->Update(dt);
 						break;
 					case 5:
+						btnItem6->itemId = combatScene->items.At(i)->data->id;
 						btnItem6->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem6->count = combatScene->items.At(i)->data->countText;
 						btnItem6->sec = combatScene->items.At(i)->data->texSec;
@@ -533,6 +553,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem6->Update(dt);
 						break;
 					case 6:
+						btnItem7->itemId = combatScene->items.At(i)->data->id;
 						btnItem7->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem7->count = combatScene->items.At(i)->data->countText;
 						btnItem7->sec = combatScene->items.At(i)->data->texSec;
@@ -540,6 +561,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem7->Update(dt);
 						break;
 					case 7:
+						btnItem8->itemId = combatScene->items.At(i)->data->id;
 						btnItem8->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem8->count = combatScene->items.At(i)->data->countText;
 						btnItem8->sec = combatScene->items.At(i)->data->texSec;
@@ -547,6 +569,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem8->Update(dt);
 						break;
 					case 8:
+						btnItem9->itemId = combatScene->items.At(i)->data->id;
 						btnItem9->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem9->count = combatScene->items.At(i)->data->countText;
 						btnItem9->sec = combatScene->items.At(i)->data->texSec;
@@ -554,6 +577,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem9->Update(dt);
 						break;
 					case 9:
+						btnItem10->itemId = combatScene->items.At(i)->data->id;
 						btnItem10->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem10->count = combatScene->items.At(i)->data->countText;
 						btnItem10->sec = combatScene->items.At(i)->data->texSec;
@@ -561,6 +585,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem10->Update(dt);
 						break;
 					case 10:
+						btnItem11->itemId = combatScene->items.At(i)->data->id;
 						btnItem11->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem11->count = combatScene->items.At(i)->data->countText;
 						btnItem11->sec = combatScene->items.At(i)->data->texSec;
@@ -568,6 +593,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 						btnItem11->Update(dt);
 						break;
 					case 11:
+						btnItem12->itemId = combatScene->items.At(i)->data->id;
 						btnItem12->text = combatScene->items.At(i)->data->effect.attackName;
 						btnItem12->count = combatScene->items.At(i)->data->countText;
 						btnItem12->sec = combatScene->items.At(i)->data->texSec;
@@ -1013,7 +1039,6 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
-
 		break;
 	case 7: //TITLE SCREEN
 		app->entities->inPause = false;
@@ -1032,11 +1057,8 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 11: //VSYNC
 		//app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
-
-	//CONTROLS
 	case 12: //CONTROLS
 		flags = SetBit(flags, Flags::CONTROLS);
-
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
@@ -1079,89 +1101,88 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 28: //BACK 2 (CONTROLS BACK)
 		flags = ClearBit(flags, Flags::CONTROLS);
-
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
 		break;
-	case 29:
+	case 29: //ITEM 1
 		app->gui->ResetButtons();
 		btnItem1->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem1->text.GetString());
 		itemSelected = 1;
 		break;
-	case 30:
+	case 30: //ITEM 2
 		app->gui->ResetButtons();
 		btnItem2->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem2->text.GetString());
 		itemSelected = 2;
 		break;
-	case 31:
+	case 31: //ITEM 3
 		app->gui->ResetButtons();
 		btnItem3->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem3->text.GetString());
 		itemSelected = 3;
 		break;
-	case 32:
+	case 32: //ITEM 4
 		app->gui->ResetButtons();
 		btnItem4->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem4->text.GetString());
 		itemSelected = 4;
 		break;
-	case 33:
+	case 33: //ITEM 5
 		app->gui->ResetButtons();
 		btnItem5->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem5->text.GetString());
 		itemSelected = 5;
 		break;
-	case 34:
+	case 34: //ITEM 6
 		app->gui->ResetButtons();
 		btnItem6->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem6->text.GetString());
 		itemSelected = 6;
 		break;
-	case 35:
+	case 35: //ITEM 7
 		app->gui->ResetButtons();
 		btnItem7->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem7->text.GetString());
 		itemSelected = 7;
 		break;
-	case 36:
+	case 36: //ITEM 8
 		app->gui->ResetButtons();
 		btnItem8->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem8->text.GetString());
 		itemSelected = 8;
 		break;
-	case 37:
+	case 37: //ITEM 9
 		app->gui->ResetButtons();
 		btnItem9->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem9->text.GetString());
 		itemSelected = 9;
 		break;
-	case 38:
+	case 38: //ITEM 10
 		app->gui->ResetButtons();
 		btnItem10->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem10->text.GetString());
 		itemSelected = 10;
 		break;
-	case 39:
+	case 39: //ITEM 11
 		app->gui->ResetButtons();
 		btnItem11->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem11->text.GetString());
 		itemSelected = 11;
 		break;
-	case 40:
+	case 40: //ITEM 12
 		app->gui->ResetButtons();
 		btnItem12->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;

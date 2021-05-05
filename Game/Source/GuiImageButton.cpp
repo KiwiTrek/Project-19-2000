@@ -27,6 +27,7 @@ GuiImageButton::GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, SDL
 	hoverPlay = true;
 	clickPlay = true;
 
+	itemId = ItemId::NONE;
 	count = nullptr;
 	sec = { 288,416,32,32 };
 }

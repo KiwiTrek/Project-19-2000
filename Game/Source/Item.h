@@ -2,70 +2,23 @@
 #define __ITEM_H__
 
 #include "Entity.h"
+#include "CombatEntity.h"
 
 class CombatEntity;
 
 class Item
 {
 public:
-    Item(Attack effect, int count) : effect(effect), count(count)
-    {
-        UpdateCountText();
-    }
+    Item(ItemId id, Attack effect, int count);
 
-    Item()
-    {}
+    Item();
 
-    void Use(CombatEntity* target)
-    {
-        LOG("ITEM USE %s", effect.attackName.GetString());
-        switch (effect.type)
-        {
-        case AttackType::DAMAGE:
-            break;
-        case AttackType::BUFF:
-            break;
-        case AttackType::HEAL:
-            break;
-        case AttackType::TAUNT:
-            break;
-        default:
-            break;
-        }
-        count--;
-        UpdateCountText();
-    }
+    void Use(CombatEntity* target);
 
-    void UpdateCountText()
-    {
-        switch (count)
-        {
-        case 1:
-            countText.Clear();
-            countText.Create("x1");
-            break;
-        case 2:
-            countText.Clear();
-            countText.Create("x2");
-            break;
-        case 3:
-            countText.Clear();
-            countText.Create("x3");
-            break;
-        case 4:
-            countText.Clear();
-            countText.Create("x4");
-            break;
-        case 5:
-            countText.Clear();
-            countText.Create("x5");
-            break;
-        default:
-            break;
-        }
-    }
+    void UpdateCountText();
 
 public:
+    ItemId id;
     Attack effect;
     SString countText;
     int count;
@@ -89,7 +42,6 @@ public:
 
 private:
 
-	ItemId itemId = ItemId::NONE;
     Item item;
 };
 

@@ -95,7 +95,7 @@ enum class TargetType
 class Attack
 {
 public:
-	Attack(SString name, AttackType type, TargetType target, int stat1, int stat2 = 0) : attackName(name), type(type), target(target), stat1(stat1), stat2(stat2)
+	Attack(SString name, AttackType type, TargetType target, int stat1 = 0, int stat2 = 0) : attackName(name), type(type), target(target), stat1(stat1), stat2(stat2)
 	{
 		turns = 0;
 	}

@@ -34,7 +34,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk/3);
 		this->attackPool.Add(tmpA);
 
-		tmpS = "Confort";
+		tmpS = "Comfort";
 		tmpA = new Attack(tmpS, AttackType::HEAL, TargetType::ONE, 0);
 		this->attackPool.Add(tmpA);
 
@@ -103,11 +103,11 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		this->attackPool.Add(tmpA);
 
 		tmpS = "Close your eyes";
-		tmpA = new Attack(tmpS, AttackType::TAUNT, TargetType::SELF, 0);
+		tmpA = new Attack(tmpS, AttackType::TAUNT, TargetType::SELF);
 		this->attackPool.Add(tmpA);
 
 		tmpS = "Grasp of depression";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, 0);
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE);
 		this->attackPool.Add(tmpA);
 		break;
 	}
