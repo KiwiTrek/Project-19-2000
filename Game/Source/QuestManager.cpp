@@ -89,7 +89,9 @@ bool QuestManager::Start()
 bool QuestManager::Update(float dt)
 {
 	CheckQuestsLogic();
+	CheckChainQuestsLogic();
 	CheckObjectivesCompletion();
+	DebugQuests();
 
 	return true;
 }
@@ -107,6 +109,84 @@ bool QuestManager::CleanUp()
 	questsActive.Clear();
 	questsFinished.Clear();
 	
+	return true;
+}
+
+// Passes a completed quest from the active list to the finished list and gives rewards
+bool QuestManager::CheckQuestsLogic()
+{
+
+	ListItem<Quest*>* activeQuestsList = questsActive.start;
+	while (activeQuestsList != nullptr)
+	{
+		if (activeQuestsList->data->isCompleted == true)
+		{
+			activeQuestsList->data->status = 2;
+			questsActive.Del(activeQuestsList);
+			questsFinished.Add(activeQuestsList->data);
+			//app->player->RewardXP(activeQuestsList->data->rewardXP);
+			//app->player->RewardGold(activeQuestsList->data->rewardGold);
+		}
+
+		activeQuestsList = activeQuestsList->next;
+	}
+
+	
+	return true;
+}
+
+// Chain quests logic (now works for multiple quest requirements)
+bool QuestManager::CheckChainQuestsLogic()
+{
+	ListItem<Quest*>* inactiveQuestsList = questsInactive.start;
+	while (inactiveQuestsList != NULL)
+	{
+		int requiredIdCount = CountRequiredIds(inactiveQuestsList->data->requiredId);
+		int count = 0;
+		for (int i = 0; (/*inactiveQuestsList->data->requiredId[i] != 0 ||*/ i < 4); ++i)
+		{
+			ListItem<Quest*>* finishedList = questsFinished.start;
+			while (finishedList != NULL)
+			{
+				if ((inactiveQuestsList->data->requiredId[i] == finishedList->data->id) && (inactiveQuestsList->data->requiredId[i] != 0))
+				{
+					count++;
+				}
+				finishedList = finishedList->next;
+			}
+		}
+
+		if (count == requiredIdCount)
+		{
+			questsActive.Add(inactiveQuestsList->data);
+			if (questsInactive.At(questsInactive.Find(inactiveQuestsList->data)) != nullptr) questsInactive.Del(inactiveQuestsList);
+			inactiveQuestsList->data->status = 1;
+		}
+
+		inactiveQuestsList = inactiveQuestsList->next;
+	}
+
+	return true;
+}
+
+bool QuestManager::CheckObjectivesCompletion()
+{
+	// This is the Objectives Completion Conditions. For each quest, an if with the conditions with a call -->
+	// --> to the function CompleteQuest(id)
+
+	//if (completion condition of quest with id == is completed (app->player->mushroomCount == 8))
+	//	CompleteQuest(id of the quest completed);
+
+	return true;
+}
+
+// This debug function complete the first active quest in the list by pressing F7
+bool QuestManager::DebugQuests()
+{
+	ListItem<Quest*>* activeList = questsActive.start;
+	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN)
+		CompleteQuest(activeList->data->id);
+
 	return true;
 }
 
@@ -135,110 +215,13 @@ bool QuestManager::DrawActiveQuests()
 			if (app->input->GetKey(SDL_SCANCODE_L) == KEY_REPEAT)
 				// app->render->DrawText(font, L->data->description.GetString(), 300, 70, 45, 0, { 200,200,200,155 });
 
-			break;
+				break;
 		default:
 			break;
 		}
 
 		L = L->next;
 	}
-	return true;
-}
-
-bool QuestManager::CheckQuestsLogic()
-{
-
-	// Passes a completed quest from the active list to the finished list
-	// Give rewards
-	ListItem<Quest*>* activeQuestsList = questsActive.start;
-	while (activeQuestsList != nullptr)
-	{
-		if (activeQuestsList->data->isCompleted == true)
-		{
-			activeQuestsList->data->status = 2;
-			questsActive.Del(activeQuestsList);
-			questsFinished.Add(activeQuestsList->data);
-			//app->player->RewardXP(activeQuestsList->data->rewardXP);
-			//app->player->RewardGold(activeQuestsList->data->rewardGold);
-		}
-
-		activeQuestsList = activeQuestsList->next;
-	}
-
-	
-	// Chain quests logic (now works for multiple quest requirements)
-	ListItem<Quest*>* inactiveQuestsList = questsInactive.start;
-	while (inactiveQuestsList != NULL)
-	{
-		if (inactiveQuestsList->data->requiredId != 0)
-		{
-			int finishedIds[10] = { 0 };
-			int x = 0;
-			ListItem<Quest*>* L2 = questsFinished.start;
-			while (L2 != NULL)
-			{
-				finishedIds[x] = L2->data->id;
-				x++;
-				L2 = L2->next;
-			}
-			for (int i = 0; inactiveQuestsList->data->requiredId[i] != '\0'; ++i)
-			{
-				for (int j = 0; finishedIds[j] != '\0'; ++j)
-				{
-					if ((inactiveQuestsList->data->requiredId[i] == finishedIds[j]) && inactiveQuestsList->data->requiredId[i] != 0 && 
-						(inactiveQuestsList->data->requiredId[i + 1] == finishedIds[j + 1]) && 
-						(inactiveQuestsList->data->requiredId[i + 2] == finishedIds[j + 2]) &&
-						(inactiveQuestsList->data->requiredId[i + 3] == finishedIds[j + 3]))
-					{
-						questsActive.Add(inactiveQuestsList->data);
-						if (questsInactive.At(questsInactive.Find(inactiveQuestsList->data)) != nullptr) questsInactive.Del(inactiveQuestsList);
-						inactiveQuestsList->data->status = 1;
-					}
-				}
-			}
-		}
-
-		inactiveQuestsList = inactiveQuestsList->next;
-	}
-
-	return true;
-}
-
-bool QuestManager::CheckObjectivesCompletion()
-{
-	// Debug: Complete quest id by id. From the id 1 (debugId = 1) to the last one
-	// Montu: I would like to implement a diferent debug completion. Something like DebugCompleteQuest(id) -->
-	// --> which will complete the quest of the selected id if its in the active list
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-	{
-		/*ListItem<Entity*>* L;*/
-		switch (debugId)
-		{
-		case 1: // Quest 1
-
-			//app->player->mushroomCount = 8;
-			//L = app->entities->entities.start;
-			//while (L != NULL)
-			//{
-			//	if (L->data->entityType == EntityType::ITEM_MUSHROOM)
-			//		app->entities->entities.Del(L);
-			//	L = L->next;
-			//}
-			++debugId;
-
-			break;
-		default:
-			break;
-		}
-
-	}
-
-	// This is the Objectives Completion Conditions. For each quest, an if with the conditions with a call -->
-	// --> to the function CompleteQuest(id)
-
-	//if (completion condition of quest with id == is completed (app->player->mushroomCount == 8))
-	//	CompleteQuest(id of the quest completed);
-
 	return true;
 }
 
@@ -258,6 +241,7 @@ bool QuestManager::CompleteQuest(int id)
 	return true;
 }
 
+// This function converts the xml string data "requiredIdString", and modifies the Quest data "required Id", that it's an int array
 void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
 {
 	int stringLength = quest->requiredIdString.length();
@@ -274,4 +258,16 @@ void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
 			j++;
 		}
 	}
+}
+
+// This function counts how many numeros different to 0 are in an array. Serves for counting the total ids required for a quest
+int QuestManager::CountRequiredIds(int requiredIds[])
+{
+	int count = 0;
+	for (int i = 0; requiredIds[i] != NULL; ++i)
+	{
+		if (requiredIds[i] != 0)
+			count++;
+	}
+	return count;
 }

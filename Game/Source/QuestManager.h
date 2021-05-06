@@ -51,13 +51,16 @@ public:
 	bool CleanUp();
 
 	bool CheckQuestsLogic();
+	bool CheckChainQuestsLogic();
 	bool CheckObjectivesCompletion();
+	bool DebugQuests();
 
 	bool CompleteQuest(int id);
 
 	bool DrawActiveQuests();
 
 	void StringToIntArray(Quest* quest, string requiredIdString);
+	int CountRequiredIds(int requiredIds[]);
 
 private:
 	int totalQuests = 0;
