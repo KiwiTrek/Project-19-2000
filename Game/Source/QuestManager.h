@@ -70,7 +70,11 @@ private:
 	List<Quest*> questsActive;
 	List<Quest*> questsFinished;
 
-	// Font* font;
+	Font* font;
+
+
+
+	bool drawQuests = false;
 
 	int debugId = 1;
 };

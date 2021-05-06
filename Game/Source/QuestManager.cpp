@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Font.h"
+#include "Textures.h"
 
 #include "External/PugiXml/src/pugixml.hpp"
 #include "SDL/include/SDL_scancode.h"
@@ -29,7 +30,7 @@ QuestManager::~QuestManager()
 bool QuestManager::Start()
 {
 
-	// font = new Font("Fonts/dungeon_font3.xml", app->tex);
+	font = new Font("Fonts/DialogueFont.xml");
 
 	pugi::xml_node questNode;
 	pugi::xml_document questData;
@@ -190,37 +191,43 @@ bool QuestManager::DebugQuests()
 	return true;
 }
 
-// This is the drawing quest on UI function. Looks at the active quests list and hardcodes the position of the text
-// Montu: I am sure theres an improvement on drawing quests. Something like drawing a list not -->
-// --> hardcoding every single quest and position of the text blitted
+// This is the drawing quest on UI function. Looks at the active quests list and draws them with the respective offsets
 bool QuestManager::DrawActiveQuests()
 {
-	string numToStr;
-	const char* strToConstChar;
-	ListItem<Quest*>* L = questsActive.start;
-	while (L != NULL)
+
+	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		drawQuests = !drawQuests;
+
+	if (drawQuests)
 	{
-		switch (L->data->id)
+		int offsetY = 30;
+		int offsetX = 30;
+		SString auxDescription;
+		const char* cutText = "...";
+		ListItem<Quest*>* activeQuestList = questsActive.start;
+		while (activeQuestList != NULL)
 		{
-		case 1: // new quest chain 1
-			// Title Drawing
-			// app->render->DrawText(font, L->data->title.GetString(), 0, 60, 60, 0, { 255,255,255,255 });
+			// Cutting description text
+			auxDescription = activeQuestList->data->description.GetString();
+			if (auxDescription.GetCapacity() >= 10)
+			{
+				auxDescription.Cut(10);
+				auxDescription += cutText;
+			}
 
-			// Amount of mushrooms taken
-			//numToStr = to_string(app->player->mushroomCount); // to_string converts an int to string
-			strToConstChar = numToStr.c_str(); // c_str converts a string to const char*
-			// app->render->DrawText(font, strToConstChar, 280, 63, 60, 0, { 255,255,255,200 });
+			// Draw back square
 
-			// Description Drawing if pressed L
-			if (app->input->GetKey(SDL_SCANCODE_L) == KEY_REPEAT)
-				// app->render->DrawText(font, L->data->description.GetString(), 300, 70, 45, 0, { 200,200,200,155 });
 
-				break;
-		default:
-			break;
+			// Draw title
+			app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 40, 2, { 255,255,255,255 });
+			offsetY += 35; // Offset the description from the title
+			offsetX += 15; // Offset the description from the title
+			app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 40, 2, { 255,255,255,255 });
+			offsetY += 60; // Offset the quest from the last one
+			offsetX -= 15; // Offset the descripton from the title
+
+			activeQuestList = activeQuestList->next;
 		}
-
-		L = L->next;
 	}
 	return true;
 }
