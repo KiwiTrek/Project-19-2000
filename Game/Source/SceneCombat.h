@@ -139,10 +139,23 @@ private:
     bool pageOne;
     bool targetItem;
 
-
     SString firstLine;
     SString secondLine;
     SString thirdLine;
+
+    int smackFx;
+    int slapFx;
+    int confortFx;
+    int smiteFx;
+    int magicBlowFx;
+    int strongerFx;
+    int bladesFx;
+    int stressFx;
+    int badDreamFx;
+    int closeEyesFx;
+    int deadFx;
+    int graspFx;
+    int itemFx;
 };
 
 #endif // __SCENECOMBAT_H__

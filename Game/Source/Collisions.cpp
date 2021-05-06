@@ -150,6 +150,7 @@ bool Collisions::Start()
 	onceNightmare = true;
 	saveOnce = false;
 	onceDoor = false;
+
 	saveFx = app->audio->LoadFx("Audio/Fx/Save.wav");
 	toiletFx = app->audio->LoadFx("Audio/Fx/Toilet.wav");
 	tutorialWarpFx = app->audio->LoadFx("Audio/Fx/TutorialWarp.wav");

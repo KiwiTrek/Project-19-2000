@@ -43,6 +43,8 @@ public:
 private:
 
     Item item;
+    int itemCollectedFx;
+
 };
 
 #endif // !__ITEM_H__

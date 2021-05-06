@@ -106,6 +106,19 @@ bool SceneCombat::Load()
 
 	LOG("%d", characterFlags);
 
+    smackFx = app->audio->LoadFx("Audio/Fx/Smack.wav");
+    slapFx = app->audio->LoadFx("Audio/Fx/Slap.wav");
+    confortFx = app->audio->LoadFx("Audio/Fx/Confort.wav");
+    smiteFx = app->audio->LoadFx("Audio/Fx/Smite.wav");
+    magicBlowFx = app->audio->LoadFx("Audio/Fx/MagicBlow.wav");
+    strongerFx = app->audio->LoadFx("Audio/Fx/Stronger.wav");
+    bladesFx = app->audio->LoadFx("Audio/Fx/Blades.wav");
+    stressFx = app->audio->LoadFx("Audio/Fx/Stress.wav");
+    badDreamFx = app->audio->LoadFx("Audio/Fx/BadDream.wav");
+    closeEyesFx = app->audio->LoadFx("Audio/Fx/CloseEyes.wav");
+    deadFx = app->audio->LoadFx("Audio/Fx/Dead.wav");
+    graspFx = app->audio->LoadFx("Audio/Fx/Grasp.wav");
+
 	heDed = false;
 
 	return false;
@@ -247,6 +260,7 @@ bool SceneCombat::Update(float dt)
 					char tmp[50];
 					sprintf(tmp, "%s is dead!", currentEntity->data->name.GetString());
 					NextLine(tmp);
+                    app->audio->PlayFx(deadFx);
 					wait = true;
 
 					ListItem<CombatEntity*>* eNext = currentEntity->next;
@@ -303,6 +317,7 @@ bool SceneCombat::Update(float dt)
 								char tmp[50];
 								sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
 								NextLine(tmp);
+                                app->audio->PlayFx(app->scene->itemFx);
 								if (items.At(itemSelected - 1)->data->count == 0)
 								{
 									items.Del(items.At(itemSelected - 1));
@@ -343,6 +358,7 @@ bool SceneCombat::Update(float dt)
 										{
 										case 0: //attack
 											Damage(0, target);
+                                            app->audio->PlayFx(smackFx);
 											break;
 										case 1: //skill 1
 										{
@@ -350,12 +366,14 @@ bool SceneCombat::Update(float dt)
 											srand(time(NULL));
 											int s = rand() % 10 + 11;
 											Heal(s, target);
+                                            app->audio->PlayFx(confortFx);
 											break;
 										}
 										case 2: //skill 2
 										{
 											LOG("skill 2");
 											Damage(2, target);
+                                            app->audio->PlayFx(slapFx);
 											break;
 										}
 										case 3: //skill 3
@@ -370,6 +388,7 @@ bool SceneCombat::Update(float dt)
 											target->attackPool.Add(a);
 											target->stats.pAtk += a->stat1 * 25 / 100;
 											target->stats.mAtk += a->stat2 * 25 / 100;
+                                            app->audio->PlayFx(confortFx);
 											break;
 										}
 										//case 4: //skill 4
@@ -450,9 +469,11 @@ bool SceneCombat::Update(float dt)
 										switch (attackSelected)
 										{
 										case 0: //attack
+                                            app->audio->PlayFx(smackFx);
 											Damage(0, target);
 											break;
 											//case 1: //skill 1
+                                            //  app->audio->PlayFx(smiteFx);
 											//	LOG("skill 1");
 											//	break;
 											//case 2: //skill 2
@@ -542,7 +563,8 @@ bool SceneCombat::Update(float dt)
 								mainChar.character->stats.stress += 10;
 								if (mainChar.character->stats.stress >= mainChar.character->stats.stressMax) mainChar.character->stats.stress = mainChar.character->stats.stressMax;
 								mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
-							}
+                                app->audio->PlayFx(stressFx);
+                            }
 							else //Magical blow
 							{
 								int t = EnemyTarget();
@@ -562,6 +584,7 @@ bool SceneCombat::Update(float dt)
 								default:
 									break;
 								}
+                                app->audio->PlayFx(magicBlowFx);
 							}
 							finishedAction = true;
 							wait = true;
@@ -579,6 +602,8 @@ bool SceneCombat::Update(float dt)
 								currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
 								currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
 								currentEntity->data->attackPool.At(0)->data->turns = 2;
+                                app->audio->PlayFx(strongerFx);
+                                
 							}
 							else //Fury of blades
 							{
@@ -589,6 +614,7 @@ bool SceneCombat::Update(float dt)
 								//dialogue that X enemy does Y attack to all characters
 								LOG("Furious Shadow attack to all!\n");
 								NextLine("Furious Shadow attack to all!");
+                                app->audio->PlayFx(bladesFx);
 							}
 							finishedAction = true;
 							wait = true;
@@ -618,6 +644,7 @@ bool SceneCombat::Update(float dt)
 								default:
 									break;
 								}
+                                app->audio->PlayFx(badDreamFx);
 							}
 							else if (p >= 30) //Nightmarish
 							{
@@ -627,6 +654,7 @@ bool SceneCombat::Update(float dt)
 								currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
 								currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
 								currentEntity->data->attackPool.At(0)->data->turns = 2;
+                                app->audio->PlayFx(strongerFx);
 							}
 							else if (p >= 5) //Close your eyes
 							{
@@ -654,6 +682,7 @@ bool SceneCombat::Update(float dt)
 								default:
 									break;
 								}
+                                app->audio->PlayFx(closeEyesFx);
 							}
 							else //Grasp of depression
 							{
@@ -695,6 +724,7 @@ bool SceneCombat::Update(float dt)
 								default:
 									break;
 								}
+                                app->audio->PlayFx(graspFx);
 							}
 
 							finishedAction = true;
@@ -1182,6 +1212,20 @@ bool SceneCombat::Unload()
 	grandpa.stress.Clear();
 
 	if (combatGui != nullptr) app->tex->UnLoad(combatGui);
+    
+    app->audio->UnloadFx(smackFx);
+    app->audio->UnloadFx(slapFx);
+    app->audio->UnloadFx(confortFx);
+    app->audio->UnloadFx(smiteFx);
+    app->audio->UnloadFx(magicBlowFx);
+    app->audio->UnloadFx(strongerFx);
+    app->audio->UnloadFx(bladesFx);
+    app->audio->UnloadFx(stressFx);
+    app->audio->UnloadFx(badDreamFx);
+    app->audio->UnloadFx(closeEyesFx);
+    app->audio->UnloadFx(deadFx);
+    app->audio->UnloadFx(graspFx);
+
 	return true;
 }
 

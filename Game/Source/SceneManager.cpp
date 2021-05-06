@@ -49,11 +49,15 @@ bool SceneManager::Start()
 {
 	current = new SceneLogo();
 	current->Load();
+
 	next = nullptr;
 
 	onTransition = false;
 	fadeOutCompleted = false;
 	continueLoadRequest = false;
+
+    itemFx = app->audio->LoadFx("Audio/Fx/Item.wav");
+    itemCollectedFx = app->audio->LoadFx("Audio/Fx/ItemCollected.wav");
 
 	transitionAlpha = 0.0f;;
 
@@ -179,6 +183,9 @@ bool SceneManager::CleanUp()
 
 	current->Unload();
 	next = nullptr;
+
+    app->audio->UnloadFx(itemFx);
+    app->audio->UnloadFx(itemCollectedFx);
 
 	return true;
 }

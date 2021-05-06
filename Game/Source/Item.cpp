@@ -78,6 +78,7 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 {
 	if (app->input->CheckButton("select", KeyState::KEY_DOWN) && app->scene->current->currentScene == SceneType::GAMEPLAY)
 	{
+        app->audio->PlayFx(app->scene->itemCollectedFx);
 		LOG("You picked up %s item.", item.effect.attackName.GetString());
 
 		bool added = false;
@@ -155,6 +156,7 @@ void Item::Use(CombatEntity* target)
 		s->combatScene->grandpa.hp.Create("HP: %d/%d", s->combatScene->grandpa.character->stats.hPoints, s->combatScene->grandpa.character->stats.hPointsMax);
 		//Should add the rest of the characters
 	}
+    app->audio->PlayFx(app->scene->itemFx);
 }
 
 void Item::UpdateCountText()
