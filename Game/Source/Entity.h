@@ -54,7 +54,8 @@ enum class ItemId
 	GRANDMA_STEW,
 	BOTTLEED_SMITE,
 	HAPPILLS,
-	STAT_BUFFER
+	PHYS_BUFFER,
+	MAGIC_BUFFER
 };
 
 enum class PuzzleId

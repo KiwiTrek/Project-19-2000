@@ -13,7 +13,7 @@
 ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, EntityType::ITEM)
 {
 	LOG("Init Item");
-	this->entityRect = { x, y,32,32 };
+	this->entityRect = { x + 16, y + 16,32,32 };
 	collider = app->collisions->AddCollider(entityRect, Collider::Type::INTERACTABLE, (Module*)app->entities);
 
 	pendingToDelete = false;
@@ -46,8 +46,12 @@ ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, Entity
 		a = Attack("Happills", AttackType::BUFF, TargetType::ONE);
 		sec = { 4 * 32,8 * 32,32,32 };
 		break;
-	case ItemId::STAT_BUFFER:
-		a = Attack("Stat Buffer", AttackType::BUFF, TargetType::ONE);
+	case ItemId::PHYS_BUFFER:
+		a = Attack("Phys Buffer", AttackType::BUFF, TargetType::ONE);
+		sec = { 3 * 32,7 * 32,32,32 };
+		break;
+	case ItemId::MAGIC_BUFFER:
+		a = Attack("Magic Buffer", AttackType::BUFF, TargetType::ONE);
 		sec = { 7 * 32,8 * 32,32,32 };
 		break;
 	default:
@@ -141,9 +145,26 @@ void Item::Use(CombatEntity* target)
 		target->stats.stress -= 30;
 		if (target->stats.stress <= 0) target->stats.stress = 0;
 		break;
-	case ItemId::STAT_BUFFER:
-		// Should increase a stat, the thing is: how do we determine which stat?
+	case ItemId::PHYS_BUFFER:
+	{
+		SString s = "5 buff";
+		Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.pDef);
+		a->turns = 2;
+		target->attackPool.Add(a);
+		target->stats.pAtk += (a->stat1 * 5) / 100;
+		target->stats.pDef += (a->stat2 * 5) / 100;
 		break;
+	}
+	case ItemId::MAGIC_BUFFER:
+	{
+		SString s = "5 buff";
+		Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.mAtk, target->stats.mDef);
+		a->turns = 2;
+		target->attackPool.Add(a);
+		target->stats.mAtk += (a->stat1 * 5) / 100;
+		target->stats.mDef += (a->stat2 * 5) / 100;
+		break;
+	}
 	default:
 		break;
 	}

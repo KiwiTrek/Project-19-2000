@@ -1309,6 +1309,11 @@ void SceneCombat::TickDownBuffs()
 					currentChar->character->stats.pAtk -= a->data->stat1 * 25 / 100;
 					currentChar->character->stats.mAtk -= a->data->stat2 * 25 / 100;
 				}
+				else if (a->data->attackName == "5 buff")
+				{
+					currentChar->character->stats.pAtk -= (a->data->stat1 * 5) / 100;
+					currentChar->character->stats.mAtk -= (a->data->stat2 * 5) / 100;
+				}
 			}
 		}
 		if (a->next != nullptr) a = a->next;
