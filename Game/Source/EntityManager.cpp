@@ -16,6 +16,7 @@
 #include "CombatEntity.h"
 #include "NPC.h"
 #include "Item.h"
+#include "PuzzlePieces.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -88,6 +89,10 @@ bool EntityManager::Start()
 	tmp.Clear();
 	tmp.Create("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
 	enemiesTex = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderMap.GetString(), "tutorial_tileset.png");
+	puzzleTex = app->tex->Load(tmp.GetString());
 
 	tmp.Clear();
 	tmp.Create("%s%s", folderTexture.GetString(), "GUI/Items.png");
@@ -164,7 +169,7 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer, ItemId itemId, int count)
+Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer, ItemId itemId, int count, PuzzleId puzzleId)
 {
 	Entity* ret = nullptr;
 
@@ -206,6 +211,10 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 	case EntityType::ITEM:
 		ret = new ItemEntity(x, y, itemId, count);
 		break;
+	case EntityType::PUZZLE_PIECE:
+	{
+		ret = new PuzzlePieces(x, y, puzzleId);
+	}
 	}
 
 	// Adds the created entity to the list

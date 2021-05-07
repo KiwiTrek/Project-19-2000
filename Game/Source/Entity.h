@@ -18,6 +18,7 @@ enum class EntityType
 	COMBAT_ENTITY,
 	NPC,
 	ITEM,
+	PUZZLE_PIECE,
 	UNKNOWN
 };
 
@@ -54,6 +55,15 @@ enum class ItemId
 	BOTTLEED_SMITE,
 	HAPPILLS,
 	STAT_BUFFER
+};
+
+enum class PuzzleId
+{
+	NONE,
+	ROCK,
+	SLIDING_ROCK,
+	BUTTON,
+	BOX
 };
 
 //enum EnemyType

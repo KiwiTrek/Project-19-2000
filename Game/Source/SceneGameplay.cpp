@@ -15,6 +15,7 @@
 #include "DialogSystem.h"
 #include "DialogUtils.h"
 #include "Item.h"
+#include "PuzzlePieces.h"
 
 SceneGameplay::SceneGameplay()
 {
@@ -133,6 +134,9 @@ bool SceneGameplay::Load()
 	app->entities->CreateEntity(69 * 64, 76 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::STAT_BUFFER, 3);
 	app->entities->CreateEntity(69 * 64, 80 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::MANA_POTION, 3);
 
+
+	//Puzzle buttons
+	buttonOne = (PuzzlePieces*)app->entities->CreateEntity(13 * 64, 41 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::NONE, 0, PuzzleId::BUTTON);
 
 	//SString str = "Item Heal";
 	//Attack* eff = new Attack(str, AttackType::HEAL, TargetType::SELF, 30);

@@ -11,6 +11,7 @@
 class Entity;
 class SceneCombat;
 class DialogSystem;
+class PuzzlePieces;
 
 class SceneGameplay : public Scene
 {
@@ -111,6 +112,12 @@ private:
     GuiImageButton* btnItem12;
     int itemSelected;
     // This line is added for the sake of commiting & testing
+
+    //Puzzle Buttons
+    PuzzlePieces* buttonOne;
+    PuzzlePieces* buttonTwo;
+    PuzzlePieces* buttonThree;
+    PuzzlePieces* buttonFour;
 
     //FONTS
     Font* dialogueFont = nullptr;

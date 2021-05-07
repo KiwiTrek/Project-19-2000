@@ -42,7 +42,7 @@ public:
 	bool CleanUp();
 
 	// Create/Destroy entity
-	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId = NpcId::NONE, Entity* playerPointer = nullptr, ItemId itemId = ItemId::NONE, int count = 0);
+	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId = NpcId::NONE, Entity* playerPointer = nullptr, ItemId itemId = ItemId::NONE, int count = 0, PuzzleId puzzleId= PuzzleId::NONE);
 	void DestroyEntity(Entity* entity);
 
 	// Calls Update for every entity
@@ -73,6 +73,7 @@ public:
 	SDL_Texture* NPCTex;
 	SDL_Texture* enemiesTex;
 	SDL_Texture* itemAtlas;
+	SDL_Texture* puzzleTex;
 
 	// sounds
 	int interactCat;
@@ -105,7 +106,6 @@ public:
 	bool grandpaActive;
 
 	int dialogCounter;
-
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__
