@@ -16,10 +16,11 @@
 #include "DialogSystem.h"
 
 
-PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id) : Entity(x, y, EntityType::PUZZLE_PIECE)
+PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x, y, EntityType::PUZZLE_PIECE)
 {
 	LOG("Init PuzzlePieces");
 	this->puzzleId = id;
+	this->playerPtr = player;
 
 	this->entityRect = { x, y,34,46 };
 
@@ -30,7 +31,20 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id) : Entity(x, y, EntityType:
 
 	pendingToDelete = false;
 
-	collider = app->collisions->AddCollider({ x - 2,y - 2,36,56 }, Collider::Type::PUZZLE, (Module*)app->entities);
+	switch (puzzleId)
+	{
+	case PuzzleId::ROCK:
+	{
+		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::PUZZLE, (Module*)app->entities);
+		break;
+	}
+	case PuzzleId::SLIDING_ROCK:
+	{
+		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::PUZZLE, (Module*)app->entities);
+		break;
+	}
+	}
+	
 }
 
 
@@ -50,6 +64,7 @@ bool PuzzlePieces::Draw()
 	case PuzzleId::SLIDING_ROCK:
 		{
 			app->render->DrawTexture(app->entities->puzzleTex, entityRect.x, entityRect.y, false, &slidingRock);
+			break;
 		}
 		case PuzzleId::BUTTON:
 		{
@@ -61,9 +76,14 @@ bool PuzzlePieces::Draw()
 			{
 				app->render->DrawTexture(app->entities->puzzleTex, entityRect.x, entityRect.y, false, &buttonPressed);
 			}
+			break;
 		}
 	default:
 		break;
+	}
+	if (app->render->debug)
+	{
+		if (collider != nullptr) app->render->DrawRectangle(collider->rect, 0, 0, 150, 100);
 	}
 
 	return true;
@@ -71,5 +91,24 @@ bool PuzzlePieces::Draw()
 
 void PuzzlePieces::OnCollision(Collider* c1, Collider* c2)
 {
+	switch (puzzleId)
+	{
+	case PuzzleId::ROCK:
+		
+		break;
+	case PuzzleId::SLIDING_ROCK:
+	{
+		if (this->collider->rect.y + this->collider->rect.h > playerPtr->entityRect.y)
+		{
+			//this->collider->rect.x += 64;
+		}
+		if (this->collider->rect.y < playerPtr->entityRect.y + playerPtr->entityRect.h)
+		{
 
+		}
+		break;
+	}
+	default:
+		break;
+	}
 }

@@ -207,13 +207,17 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 		default:
 			break;
 		}
+		break;
 	}
 	case EntityType::ITEM:
+	{
 		ret = new ItemEntity(x, y, itemId, count);
 		break;
+	}	
 	case EntityType::PUZZLE_PIECE:
 	{
-		ret = new PuzzlePieces(x, y, puzzleId);
+		ret = new PuzzlePieces(x, y, puzzleId, playerPointer);
+		break;
 	}
 	}
 

@@ -2,6 +2,7 @@
 <save_state>
 	<window />
 	<input />
+	<assetsManager />
 	<textures />
 	<audio>
 		<volume value="0" />

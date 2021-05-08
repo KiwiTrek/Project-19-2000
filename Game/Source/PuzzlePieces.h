@@ -7,7 +7,7 @@ class PuzzlePieces : public Entity
 {
 public:
 	// Constructor
-	PuzzlePieces(int x, int y, PuzzleId id);
+	PuzzlePieces(int x, int y, PuzzleId id, Entity* player);
 
 	// Called each loop iteration
 	bool Update(float dt);
