@@ -58,6 +58,7 @@ public:
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
+    void StressPower();
     void NextLine(const char* line);
 
     bool Draw(Font* dialogueFont);
@@ -70,7 +71,6 @@ public:
 
     // Declare on mouse click event
     bool OnGuiMouseClickEvent(GuiControl* control);
-
 
 public:
     //STATE FLAGS
@@ -101,6 +101,9 @@ private:
     int attackSelected;
     bool once;
     bool wait;
+
+    bool changedStress;
+    int pastStress;
 
     CombatCharacter* currentChar;
     Entity* enemy1;

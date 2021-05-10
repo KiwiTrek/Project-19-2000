@@ -22,8 +22,8 @@ public:
 
 	List<Attack*> attackPool;
 	SString name;
-	bool isStunned;
-	bool isTaunted;
+	int isStunned;
+	int isTaunted;
 	CombatEntity* tauntedBy;
 
 private:
