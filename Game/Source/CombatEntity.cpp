@@ -160,5 +160,5 @@ void CombatEntity::CalculatePrecision(int& i)
 {
 	srand(time(NULL));
 	int p = rand() % 20 - 9;
-	i += (i * p);
+	i += (i * p)/100;
 }

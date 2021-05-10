@@ -120,6 +120,8 @@ bool SceneCombat::Load()
     graspFx = app->audio->LoadFx("Audio/Fx/Grasp.wav");
 
 	heDed = false;
+	pastStress = -1;
+	stressStatus = StressStatus::UNDER;
 
 	return false;
 }
@@ -141,8 +143,6 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	pageOne = true;
 	targetItem = false;
 	wait = false;
-	pastStress = -1;
-	changedStress = false;
 
 	firstLine.Clear();
 	secondLine.Clear();
@@ -195,217 +195,318 @@ bool SceneCombat::Update(float dt)
 			itemSelected = 0;
 		}
 	}
-	//LOG("%d", app->entities->entities.Count());
-	switch (combatState)
-	{
-	case COMBAT_START:
-	{
-		//CHECK WHO IS FIRST
-		ListItem<Entity*>* e = app->entities->entities.start;
 
-		while (e != nullptr)
+	//WAIT FOR PLAYER INPUT
+	if (wait)
+	{
+		if (app->input->CheckButton("select", KEY_DOWN))
 		{
-			//ADDS THEM TO THE LIST
-			if (e->data->type == EntityType::COMBAT_ENTITY)
-			{
-				CombatEntity* cEntity = (CombatEntity*)e->data;
-				if (cEntity->stats.hPoints > 0)
-				{
-					turnOrder.Add(cEntity);
-				}
-			}
-			e = e->next;
+			wait = false;
 		}
-
-		SortSpeed(false);
-		combatState = CombatStateType::COMBAT_MIDGAME;
 	}
-	break;
-	case COMBAT_MIDGAME:
+	else
 	{
-		if (currentEntity == nullptr)
+		switch (combatState)
 		{
-			SortSpeed(false);
-			currentEntity = turnOrder.start;
-			if (IsCharacter(currentEntity->data))
+		case COMBAT_START:
+		{
+			//CHECK WHO IS FIRST
+			ListItem<Entity*>* e = app->entities->entities.start;
+
+			while (e != nullptr)
 			{
-				switch (currentEntity->data->id)
+				//ADDS THEM TO THE LIST
+				if (e->data->type == EntityType::COMBAT_ENTITY)
 				{
-				case EntityId::MC:
-					currentChar = &mainChar;
-					break;
-				case EntityId::VIOLENT:
-					currentChar = &grandpa;
-					break;
-				default:
-					break;
+					CombatEntity* cEntity = (CombatEntity*)e->data;
+					if (cEntity->stats.hPoints > 0)
+					{
+						turnOrder.Add(cEntity);
+					}
 				}
+				e = e->next;
 			}
+
+			SortSpeed(false);
+			combatState = CombatStateType::COMBAT_MIDGAME;
 		}
-		else
+		break;
+		case COMBAT_MIDGAME:
 		{
-			//WAIT FOR PLAYER INPUT
-			if (wait)
+			if (currentEntity == nullptr)
 			{
-				if (app->input->CheckButton("select", KEY_DOWN))
+				SortSpeed(false);
+				currentEntity = turnOrder.start;
+				if (IsCharacter(currentEntity->data))
 				{
-					wait = false;
+					switch (currentEntity->data->id)
+					{
+					case EntityId::MC:
+						currentChar = &mainChar;
+						break;
+					case EntityId::VIOLENT:
+						currentChar = &grandpa;
+						break;
+					default:
+						break;
+					}
 				}
 			}
 			else
 			{
-				if (currentEntity->data->stats.hPoints == 0)
+				ListItem<CombatEntity*>* e = turnOrder.start;
+				while (e != nullptr)
 				{
-					//ListItem<CombatEntity*>* e = currentEntity;
-					//currentEntity = currentEntity->next;
-					LOG("%s is dead!", currentEntity->data->name.GetString());
-					char tmp[50];
-					sprintf(tmp, "%s is dead!", currentEntity->data->name.GetString());
-					NextLine(tmp);
-                    app->audio->PlayFx(deadFx);
-					wait = true;
-
-					ListItem<CombatEntity*>* eNext = currentEntity->next;
-					if (!IsCharacter(currentEntity->data)) app->entities->DestroyEntity(currentEntity->data);
-					turnOrder.Del(currentEntity);
-					currentEntity = eNext;
-					currentChar = nullptr;
-					characterSelected = false;
-					if (currentEntity == nullptr)
+					ListItem<CombatEntity*>* eNext = e->next;
+					if (e->data->stats.hPoints <= 0)
 					{
+						LOG("%s is dead!", e->data->name.GetString());
+						char tmp[50];
+						sprintf(tmp, "%s is dead!", e->data->name.GetString());
+						NextLine(tmp);
+						app->audio->PlayFx(deadFx);
+						wait = true;
+						currentChar = nullptr;
+						characterSelected = false;
+
+						if (!IsCharacter(e->data)) app->entities->DestroyEntity(e->data);
+						turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
 						SortSpeed(false);
-						currentEntity = turnOrder.start;
+						if (currentEntity == nullptr)
+						{
+							currentEntity = eNext;
+						}
 					}
+					e = eNext;
 				}
-				else
+
+				VictoryCondition();
+				DefeatCondition();
+
+				if (combatState != CombatStateType::COMBAT_END)
 				{
 					if (!hasTicked)
 					{
-						VictoryCondition();
-						DefeatCondition();
 						StressPower();
 						TickDownBuffs();
 						hasTicked = true;
 					}
 
-					if (!wait)
+					if (IsCharacter(currentEntity->data))													// CHARACTER
 					{
-						if (IsCharacter(currentEntity->data))													// CHARACTER
+						if (once) //i think we should use the flags menu to turn this true only when there are no "main buttons" selected
 						{
-							if (once) //i think we should use the flags menu to turn this true only when there are no "main buttons" selected
-							{
-								once = false;
-								characterSelected = true;						//should delete eventually
-								changeMenu = true;
+							once = false;
+							characterSelected = true;						//should delete eventually
+							changeMenu = true;
 
-								if (currentEntity->data->id == EntityId::MC) NextLine("It's your turn!");
-								else
-								{
-									char tmp[50];
-									sprintf(tmp, "It's %s's turn!", currentEntity->data->name.GetString());
-									NextLine(tmp);
-								}
+							if (currentEntity->data->id == EntityId::MC) NextLine("It's your turn!");
+							else
+							{
+								char tmp[50];
+								sprintf(tmp, "It's %s's turn!", currentEntity->data->name.GetString());
+								NextLine(tmp);
 							}
+						}
 
-							//player should decide what to do here based on the buttons (guiclickevent)
-							//LOG("%s's turn!\n", currentEntity->data->name.GetString());
+						//player should decide what to do here based on the buttons (guiclickevent)
+						//LOG("%s's turn!\n", currentEntity->data->name.GetString());
 
-							//Item logic
-							if (itemSelected != 0)
+						//Item logic
+						if (itemSelected != 0)
+						{
+							if (target == nullptr)
+								SelectTarget();
+							else
 							{
-								if (target == nullptr)
-									SelectTarget();
-								else
+								app->gui->ResetButtons();
+								items.At(itemSelected - 1)->data->Use(target);
+								char tmp[50];
+								sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
+								NextLine(tmp);
+								app->audio->PlayFx(app->scene->itemFx);
+								if (items.At(itemSelected - 1)->data->count == 0)
 								{
-									app->gui->ResetButtons();
-									items.At(itemSelected - 1)->data->Use(target);
-									char tmp[50];
-									sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
-									NextLine(tmp);
-									app->audio->PlayFx(app->scene->itemFx);
-									if (items.At(itemSelected - 1)->data->count == 0)
-									{
-										items.Del(items.At(itemSelected - 1));
-									}
-									itemSelected = 0;
-									target = nullptr;
-									targetItem = false;
-									finishedAction = true;
-									wait = true;
+									items.Del(items.At(itemSelected - 1));
 								}
+								itemSelected = 0;
+								target = nullptr;
+								targetItem = false;
+								finishedAction = true;
+								wait = true;
 							}
+						}
 
-							switch (currentEntity->data->id)
+						switch (currentEntity->data->id)
+						{
+						case EntityId::MC:
+							currentChar = &mainChar;
+
+							if (currentEntity->data->isStunned != 0)
 							{
-							case EntityId::MC:
-								currentChar = &mainChar;
-
-								if (currentEntity->data->isStunned != 0)
+								finishedAction = true;
+								char tmp[75];
+								sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
+								NextLine(tmp);
+							}
+							else
+							{
+								if (currentEntity->data->isTaunted != 0)
 								{
-									finishedAction = true;
+									if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
+									target = currentEntity->data->tauntedBy;
+									attackSelected = 0;
 									char tmp[75];
-									sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
+									sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
 									NextLine(tmp);
+								}
+
+								if (attackSelected == -1)
+								{
+								}
+								else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
+								{
+									targetAttack = true;
+									if (target == nullptr)
+										SelectTarget();
+									else
+									{
+										switch (attackSelected)
+										{
+										case 0: //attack
+											Damage(0, target, false);
+											app->audio->PlayFx(smackFx);
+											break;
+										case 1: //skill 1
+										{
+											LOG("skill 1");
+											srand(time(NULL));
+											int s = rand() % 10 + 11;
+											Heal(s, target);
+											app->audio->PlayFx(confortFx);
+											break;
+										}
+										case 2: //skill 2
+										{
+											LOG("skill 2");
+											Damage(2, target, false);
+											app->audio->PlayFx(slapFx);
+											break;
+										}
+										case 3: //skill 3
+										{
+											LOG("%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
+											char tmp[75];
+											sprintf(tmp, "%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
+											NextLine(tmp);
+											SString s = "25 buff";
+											Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.mAtk);
+											a->turns = 3;
+											target->attackPool.Add(a);
+											target->stats.pAtk += a->stat1 * 25 / 100;
+											target->stats.mAtk += a->stat2 * 25 / 100;
+											app->audio->PlayFx(confortFx);
+											break;
+										}
+										//case 4: //skill 4
+										//	LOG("skill 4");
+										//	break;
+										//case 5: //skill 5
+										//	LOG("skill 5");
+										//	break;
+										//case 6: //skill 6
+										//	LOG("skill 6");
+										//	break;
+
+										default:
+											break;
+										}
+										attackSelected = -1;
+										target = nullptr;
+										targetAttack = false;
+										finishedAction = true;
+										wait = true;
+									}
 								}
 								else
 								{
-									if (currentEntity->data->isTaunted != 0)
+									switch (attackSelected)
 									{
-										if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
-										target = currentEntity->data->tauntedBy;
-										attackSelected = 0;
-										char tmp[75];
-										sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
-										NextLine(tmp);
+									case 1: //skill 1
+										LOG("skill 1");
+										break;
+									case 2: //skill 2
+										LOG("skill 2");
+										break;
+									case 3: //skill 3
+										LOG("skill 3");
+										break;
+									case 4: //skill 4
+										LOG("skill 4");
+										break;
+									case 5: //skill 5
+										LOG("skill 5");
+										break;
+									case 6: //skill 6
+										LOG("skill 6");
+										break;
+									default:
+										break;
 									}
+									attackSelected = -1;
+									finishedAction = true;
+								}
+							}
+							break;
+						case EntityId::VIOLENT:
+							currentChar = &grandpa;
 
-									if (attackSelected == -1)
+							if (currentEntity->data->isStunned != 0)
+							{
+								finishedAction = true;
+								char tmp[75];
+								sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
+								NextLine(tmp);
+							}
+							else
+							{
+								if (currentEntity->data->isTaunted != 0)
+								{
+									if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
+									target = currentEntity->data->tauntedBy;
+									attackSelected = 0;
+									char tmp[75];
+									sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
+									NextLine(tmp);
+								}
+
+								if (attackSelected == -1)
+								{
+								}
+								else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
+								{
+									targetAttack = true;
+									if (target == nullptr)
+										SelectTarget();
+									else
 									{
-									}
-									else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
-									{
-										targetAttack = true;
-										if (target == nullptr)
-											SelectTarget();
-										else
+										switch (attackSelected)
 										{
-											switch (attackSelected)
-											{
-											case 0: //attack
-												Damage(0, target);
-												app->audio->PlayFx(smackFx);
-												break;
-											case 1: //skill 1
-											{
-												LOG("skill 1");
-												srand(time(NULL));
-												int s = rand() % 10 + 11;
-												Heal(s, target);
-												app->audio->PlayFx(confortFx);
-												break;
-											}
-											case 2: //skill 2
-											{
-												LOG("skill 2");
-												Damage(2, target);
-												app->audio->PlayFx(slapFx);
-												break;
-											}
-											case 3: //skill 3
-											{
-												LOG("%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
-												char tmp[75];
-												sprintf(tmp, "%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
-												NextLine(tmp);
-												SString s = "25 buff";
-												Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.mAtk);
-												a->turns = 3;
-												target->attackPool.Add(a);
-												target->stats.pAtk += a->stat1 * 25 / 100;
-												target->stats.mAtk += a->stat2 * 25 / 100;
-												app->audio->PlayFx(confortFx);
-												break;
-											}
+										case 0: //attack
+											LOG("%d", grandpa.character->attackPool.At(0)->data->stat1);
+											app->audio->PlayFx(smackFx);
+											Damage(0, target, true);
+											break;
+											//case 1: //skill 1
+											//  app->audio->PlayFx(smiteFx);
+											//	LOG("skill 1");
+											//	break;
+											//case 2: //skill 2
+											//	LOG("skill 2");
+											//	break;
+											//case 3: //skill 3
+											//	LOG("skill 3");
+											//	break;
 											//case 4: //skill 4
 											//	LOG("skill 4");
 											//	break;
@@ -415,369 +516,269 @@ bool SceneCombat::Update(float dt)
 											//case 6: //skill 6
 											//	LOG("skill 6");
 											//	break;
-
-											default:
-												break;
-											}
-											attackSelected = -1;
-											target = nullptr;
-											targetAttack = false;
-											finishedAction = true;
-											wait = true;
-										}
-									}
-									else
-									{
-										switch (attackSelected)
-										{
-										case 1: //skill 1
-											LOG("skill 1");
-											break;
-										case 2: //skill 2
-											LOG("skill 2");
-											break;
-										case 3: //skill 3
-											LOG("skill 3");
-											break;
-										case 4: //skill 4
-											LOG("skill 4");
-											break;
-										case 5: //skill 5
-											LOG("skill 5");
-											break;
-										case 6: //skill 6
-											LOG("skill 6");
-											break;
 										default:
 											break;
 										}
 										attackSelected = -1;
+										target = nullptr;
+										targetAttack = false;
 										finishedAction = true;
+										wait = true;
 									}
-								}
-								break;
-							case EntityId::VIOLENT:
-								currentChar = &grandpa;
-
-								if (currentEntity->data->isStunned != 0)
-								{
-									finishedAction = true;
-									char tmp[75];
-									sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
-									NextLine(tmp);
 								}
 								else
 								{
-									if (currentEntity->data->isTaunted != 0)
+									switch (attackSelected)
 									{
-										if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
-										target = currentEntity->data->tauntedBy;
-										attackSelected = 0;
-										char tmp[75];
-										sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
-										NextLine(tmp);
-									}
-
-									if (attackSelected == -1)
-									{
-									}
-									else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
-									{
-										targetAttack = true;
-										if (target == nullptr)
-											SelectTarget();
-										else
-										{
-											switch (attackSelected)
-											{
-											case 0: //attack
-												app->audio->PlayFx(smackFx);
-												Damage(0, target);
-												break;
-												//case 1: //skill 1
-												//  app->audio->PlayFx(smiteFx);
-												//	LOG("skill 1");
-												//	break;
-												//case 2: //skill 2
-												//	LOG("skill 2");
-												//	break;
-												//case 3: //skill 3
-												//	LOG("skill 3");
-												//	break;
-												//case 4: //skill 4
-												//	LOG("skill 4");
-												//	break;
-												//case 5: //skill 5
-												//	LOG("skill 5");
-												//	break;
-												//case 6: //skill 6
-												//	LOG("skill 6");
-												//	break;
-											default:
-												break;
-											}
-											attackSelected = -1;
-											target = nullptr;
-											targetAttack = false;
-											finishedAction = true;
-											wait = true;
-										}
-									}
-									else
-									{
-										switch (attackSelected)
-										{
-										case 1: //skill 1
-											LOG("skill 1");
-											break;
-										case 2: //skill 2
-											LOG("skill 2");
-											break;
-										case 3: //skill 3
-											LOG("skill 3");
-											break;
-										case 4: //skill 4
-											LOG("skill 4");
-											break;
-										case 5: //skill 5
-											LOG("skill 5");
-											break;
-										case 6: //skill 6
-											LOG("skill 6");
-											break;
-										default:
-											break;
-										}
-										attackSelected = -1;
-										finishedAction = true;
-									}
-								}
-								break;
-							case EntityId::STUBBORN:
-								finishedAction = true;
-								break;
-							case EntityId::KIND:
-								finishedAction = true;
-								break;
-							default:
-								break;
-							}
-						}
-						else																					// ENEMY
-						{
-							//ENEMY ATTACK PATTERN?
-							switch (currentEntity->data->id)
-							{
-							case EntityId::STRESSING_SHADOW:
-							{
-								srand(time(NULL));
-								int p = rand() % 10 + 1;
-								if (p >= 6) //Stressing attack
-								{
-									//dialogue that X enemy does Y attack to MC
-									LOG("%s does stress attack!", currentEntity->data->name.GetString());
-									char tmp[75];
-									sprintf(tmp, "%s does stress attack!", currentEntity->data->name.GetString());
-									NextLine(tmp);
-									mainChar.character->stats.stress += 10;
-									if (mainChar.character->stats.stress >= mainChar.character->stats.stressMax) mainChar.character->stats.stress = mainChar.character->stats.stressMax;
-									mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
-									app->audio->PlayFx(stressFx);
-								}
-								else //Magical blow
-								{
-									int t = EnemyTarget();
-									switch (t)
-									{
-									case 1: //MC
-										Damage(0, mainChar.character, true);
+									case 1: //skill 1
+										LOG("skill 1");
 										break;
-									case 2: //GRANDPA
-										Damage(0, grandpa.character, true);
-										grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+									case 2: //skill 2
+										LOG("skill 2");
 										break;
-									case 3:
+									case 3: //skill 3
+										LOG("skill 3");
 										break;
-									case 4:
+									case 4: //skill 4
+										LOG("skill 4");
+										break;
+									case 5: //skill 5
+										LOG("skill 5");
+										break;
+									case 6: //skill 6
+										LOG("skill 6");
 										break;
 									default:
 										break;
 									}
-									app->audio->PlayFx(magicBlowFx);
+									attackSelected = -1;
+									finishedAction = true;
 								}
-								finishedAction = true;
-								wait = true;
-								break;
 							}
-							case EntityId::FURIOUS_SHADOW:
-							{
-								srand(time(NULL));
-								int p = rand() % 10 + 1;
-								if (p >= 5) //Getting stronger
-								{
-									//dialogue that X enemy does Y attack
-									LOG("Furious Shadow got stronger!");
-									NextLine("Furious Shadow got stronger!");
-									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
-									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
-									currentEntity->data->attackPool.At(0)->data->turns = 2;
-									app->audio->PlayFx(strongerFx);
-
-								}
-								else //Fury of blades
-								{
-									Damage(1, mainChar.character);
-									mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
-									Damage(1, grandpa.character);
-									grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
-									//dialogue that X enemy does Y attack to all characters
-									LOG("Furious Shadow attack to all!\n");
-									NextLine("Furious Shadow attack to all!");
-									app->audio->PlayFx(bladesFx);
-								}
-								finishedAction = true;
-								wait = true;
-								break;
-							}
-							case EntityId::NIGHTMARE:
-							{
-								srand(time(NULL));
-								int p = rand() % 100 + 1;
-								if (p >= 60) //Bad dream
-								{
-									int t = EnemyTarget();
-									switch (t)
-									{
-									case 1: //MC
-										Damage(0, mainChar.character);
-										mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
-										break;
-									case 2: //GRANDPA
-										Damage(0, grandpa.character);
-										grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
-										break;
-									case 3:
-										break;
-									case 4:
-										break;
-									default:
-										break;
-									}
-									app->audio->PlayFx(badDreamFx);
-								}
-								else if (p >= 30) //Nightmarish
-								{
-									//dialogue that X enemy does Y attack
-									LOG("Nightmarish got stronger!");
-									NextLine("Nightmarish got stronger!");
-									currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
-									currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
-									currentEntity->data->attackPool.At(0)->data->turns = 2;
-									app->audio->PlayFx(strongerFx);
-								}
-								else if (p >= 5) //Close your eyes
-								{
-									int t = EnemyTarget();
-									switch (t)
-									{
-									case 1: //MC
-										//dialogue that X enemy does Y attack to Z character
-										LOG("Nightmarish used Close Your Eyes on You!");
-										NextLine("Nightmarish used Close Your Eyes on You!");
-										mainChar.character->isTaunted = 1;
-										mainChar.character->tauntedBy = currentEntity->data;
-										break;
-									case 2: //GRANDPA
-										//dialogue that X enemy does Y attack to Z character
-										LOG("Nightmarish used Close Your Eyes on Grandpa!");
-										NextLine("Nightmarish used Close Your Eyes on Grandpa!");
-										grandpa.character->isTaunted = 1;
-										grandpa.character->tauntedBy = currentEntity->data;
-										break;
-									case 3:
-										break;
-									case 4:
-										break;
-									default:
-										break;
-									}
-									app->audio->PlayFx(closeEyesFx);
-								}
-								else //Grasp of depression
-								{
-									int t = EnemyTarget();
-									switch (t)
-									{
-									case 1: //MC
-									{
-										//dialogue that X enemy does Y attack to Z character
-										LOG("Nightmarish used Grasp of Depression on You!");
-										NextLine("Nightmarish used Grasp of Depression on You!");
-										mainChar.character->isStunned = 1;
-										SString s = "10 debuff";
-										Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
-										a->turns = 1;
-										mainChar.character->attackPool.Add(a);
-										mainChar.character->stats.pDef -= a->stat1 / 10;
-										mainChar.character->stats.mDef -= a->stat2 / 10;
-										break;
-									}
-									case 2: //GRANDPA
-									{
-										//dialogue that X enemy does Y attack to Z character
-										LOG("Nightmarish used Grasp of Depression on Grandpa!");
-										NextLine("Nightmarish used Grasp of Depression on Grandpa!");
-										grandpa.character->isStunned = 1;
-										SString s = "10 debuff";
-										Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
-										a->turns = 1;
-										grandpa.character->attackPool.Add(a);
-										grandpa.character->stats.pDef -= a->stat1 / 10;
-										grandpa.character->stats.mDef -= a->stat2 / 10;
-										break;
-									}
-									case 3:
-										break;
-									case 4:
-										break;
-									default:
-										break;
-									}
-									app->audio->PlayFx(graspFx);
-								}
-
-								finishedAction = true;
-								wait = true;
-								break;
-							}
-							default:
-								break;
-							}
+							break;
+						case EntityId::STUBBORN:
+							finishedAction = true;
+							break;
+						case EntityId::KIND:
+							finishedAction = true;
+							break;
+						default:
+							break;
 						}
 					}
-				}
+					else																					// ENEMY
+					{
+						//ENEMY ATTACK PATTERN?
+						switch (currentEntity->data->id)
+						{
+						case EntityId::STRESSING_SHADOW:
+						{
+							srand(time(NULL));
+							int p = rand() % 10 + 1;
+							if (p >= 6) //Stressing attack
+							{
+								//dialogue that X enemy does Y attack to MC
+								LOG("%s does stress attack!", currentEntity->data->name.GetString());
+								char tmp[75];
+								sprintf(tmp, "%s does stress attack!", currentEntity->data->name.GetString());
+								NextLine(tmp);
+								mainChar.character->stats.stress += 10;
+								if (mainChar.character->stats.stress >= mainChar.character->stats.stressMax) mainChar.character->stats.stress = mainChar.character->stats.stressMax;
+								mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
+								app->audio->PlayFx(stressFx);
+							}
+							else //Magical blow
+							{
+								int t = EnemyTarget();
+								switch (t)
+								{
+								case 1: //MC
+									Damage(0, mainChar.character, true);
+									break;
+								case 2: //GRANDPA
+									Damage(0, grandpa.character, true);
+									grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+									break;
+								case 3:
+									break;
+								case 4:
+									break;
+								default:
+									break;
+								}
+								app->audio->PlayFx(magicBlowFx);
+							}
+							finishedAction = true;
+							wait = true;
+							break;
+						}
+						case EntityId::FURIOUS_SHADOW:
+						{
+							srand(time(NULL));
+							int p = rand() % 10 + 1;
+							if (p >= 5) //Getting stronger
+							{
+								//dialogue that X enemy does Y attack
+								LOG("Furious Shadow got stronger!");
+								NextLine("Furious Shadow got stronger!");
+								currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
+								currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
+								currentEntity->data->attackPool.At(0)->data->turns = 2;
+								app->audio->PlayFx(strongerFx);
 
-				if (finishedAction)
-				{
-					LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
-					finishedAction = false;
-					hasTicked = false;
-					once = true;
-					currentEntity = currentEntity->next;
+							}
+							else //Fury of blades
+							{
+								Damage(1, mainChar.character, false);
+								mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
+								Damage(1, grandpa.character, false);
+								grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+								//dialogue that X enemy does Y attack to all characters
+								LOG("Furious Shadow attack to all!\n");
+								NextLine("Furious Shadow attack to all!");
+								app->audio->PlayFx(bladesFx);
+							}
+							finishedAction = true;
+							wait = true;
+							break;
+						}
+						case EntityId::NIGHTMARE:
+						{
+							srand(time(NULL));
+							int p = rand() % 100 + 1;
+							if (p >= 60) //Bad dream
+							{
+								int t = EnemyTarget();
+								switch (t)
+								{
+								case 1: //MC
+									Damage(0, mainChar.character, false);
+									mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
+									break;
+								case 2: //GRANDPA
+									Damage(0, grandpa.character, false);
+									grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+									break;
+								case 3:
+									break;
+								case 4:
+									break;
+								default:
+									break;
+								}
+								app->audio->PlayFx(badDreamFx);
+							}
+							else if (p >= 30) //Nightmarish
+							{
+								//dialogue that X enemy does Y attack
+								LOG("Nightmarish got stronger!");
+								NextLine("Nightmarish got stronger!");
+								currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
+								currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
+								currentEntity->data->attackPool.At(0)->data->turns = 2;
+								app->audio->PlayFx(strongerFx);
+							}
+							else if (p >= 5) //Close your eyes
+							{
+								int t = EnemyTarget();
+								switch (t)
+								{
+								case 1: //MC
+									//dialogue that X enemy does Y attack to Z character
+									LOG("Nightmarish used Close Your Eyes on You!");
+									NextLine("Nightmarish used Close Your Eyes on You!");
+									mainChar.character->isTaunted = 1;
+									mainChar.character->tauntedBy = currentEntity->data;
+									break;
+								case 2: //GRANDPA
+									//dialogue that X enemy does Y attack to Z character
+									LOG("Nightmarish used Close Your Eyes on Grandpa!");
+									NextLine("Nightmarish used Close Your Eyes on Grandpa!");
+									grandpa.character->isTaunted = 1;
+									grandpa.character->tauntedBy = currentEntity->data;
+									break;
+								case 3:
+									break;
+								case 4:
+									break;
+								default:
+									break;
+								}
+								app->audio->PlayFx(closeEyesFx);
+							}
+							else //Grasp of depression
+							{
+								int t = EnemyTarget();
+								switch (t)
+								{
+								case 1: //MC
+								{
+									//dialogue that X enemy does Y attack to Z character
+									LOG("Nightmarish used Grasp of Depression on You!");
+									NextLine("Nightmarish used Grasp of Depression on You!");
+									mainChar.character->isStunned = 1;
+									SString s = "10 debuff";
+									Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
+									a->turns = 1;
+									mainChar.character->attackPool.Add(a);
+									mainChar.character->stats.pDef -= a->stat1 / 10;
+									mainChar.character->stats.mDef -= a->stat2 / 10;
+									break;
+								}
+								case 2: //GRANDPA
+								{
+									//dialogue that X enemy does Y attack to Z character
+									LOG("Nightmarish used Grasp of Depression on Grandpa!");
+									NextLine("Nightmarish used Grasp of Depression on Grandpa!");
+									grandpa.character->isStunned = 1;
+									SString s = "10 debuff";
+									Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
+									a->turns = 1;
+									grandpa.character->attackPool.Add(a);
+									grandpa.character->stats.pDef -= a->stat1 / 10;
+									grandpa.character->stats.mDef -= a->stat2 / 10;
+									break;
+								}
+								case 3:
+									break;
+								case 4:
+									break;
+								default:
+									break;
+								}
+								app->audio->PlayFx(graspFx);
+							}
+
+							finishedAction = true;
+							wait = true;
+							break;
+						}
+						default:
+							break;
+						}
+					}
+
+					if (finishedAction)
+					{
+						LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
+						finishedAction = false;
+						hasTicked = false;
+						once = true;
+						currentEntity = currentEntity->next;
+					}
 				}
 			}
 		}
-	}
-	break;
-	case COMBAT_END:
-	{
-		Finish();
 		break;
+		case COMBAT_END:
+		{
+			Finish();
+			break;
+		}
+		default:
+			break;
+		}
 	}
-	default:
-		break;
-	}
-
 
 	// Logic for using Gamepad or mouse (GUI)
 	ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
@@ -1204,8 +1205,6 @@ bool SceneCombat::Finish()
 	targetItem = false;
 	once = true;
 	scripted = false;
-	pastStress = -1;
-	changedStress = false;
 	app->scene->current->combatCooldown = 1.0f;
 	app->scene->current->combat = false;
 	if (app->scene->current->currentScene == SceneType::GAMEPLAY)
@@ -1367,9 +1366,16 @@ void SceneCombat::Damage(int index, CombatEntity* target, bool isMagic)
 		NextLine(tmp);
 		int attack = 0;
 		if (!isMagic)
+		{
 			attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.pDef);
+			LOG("%d = %d - %d", attack, currentEntity->data->attackPool.At(index)->data->stat1, target->stats.pDef);
+		}
 		else
+		{
 			attack = (currentEntity->data->attackPool.At(index)->data->stat1 - target->stats.mDef);
+			LOG("%d = %d - %d", attack, currentEntity->data->attackPool.At(index)->data->stat1, target->stats.mDef);
+
+		}
 
 		if (attack <= 0)
 			attack = 0;
@@ -1506,31 +1512,88 @@ void SceneCombat::StressPower()
 		mainChar.character->stats.stress -= mainChar.character->stats.stressMax;
 		mainChar.character->isStunned = 2;
 	}
+	StressStatus pastStressStatus = stressStatus;
 	if (pastStress != mainChar.character->stats.stress)
 	{
-		changedStress = true;
-	}
-	else
-	{
-		changedStress = false;
+		if (mainChar.character->stats.stress < 50)
+		{
+			stressStatus = StressStatus::UNDER;
+		}
+		else if (mainChar.character->stats.stress == 50)
+		{
+			stressStatus = StressStatus::BALANCE;
+		}
+		else
+		{
+			stressStatus = StressStatus::OVER;
+		}
 	}
 	pastStress = mainChar.character->stats.stress;
 
-	if (changedStress)
+	if (pastStressStatus != stressStatus)
 	{
-		if (mainChar.character->stats.stress <= 50)
+		switch (stressStatus)
 		{
+		case StressStatus::UNDER:
 			mainChar.character->stats.pDef += 15;
 			mainChar.character->stats.mDef += 15;
 			mainChar.character->stats.pAtk -= 10;
 			mainChar.character->stats.mAtk -= 10;
-		}
-		if (mainChar.character->stats.stress >= 50)
-		{
-			mainChar.character->stats.pAtk += 15;
-			mainChar.character->stats.mAtk += 15;
+			if (pastStressStatus == StressStatus::BALANCE)
+			{
+				mainChar.character->stats.pDef -= 10;
+				mainChar.character->stats.mDef -= 10;
+				mainChar.character->stats.pAtk -= 10;
+				mainChar.character->stats.mAtk -= 10;
+			}
+			else if(pastStressStatus == StressStatus::OVER)
+			{
+				mainChar.character->stats.pDef += 10;
+				mainChar.character->stats.mDef += 10;
+				mainChar.character->stats.pAtk -= 15;
+				mainChar.character->stats.mAtk -= 15;
+			}
+			break;
+		case StressStatus::BALANCE:
+			mainChar.character->stats.pDef += 10;
+			mainChar.character->stats.mDef += 10;
+			mainChar.character->stats.pAtk += 10;
+			mainChar.character->stats.mAtk += 10;
+			if (pastStressStatus == StressStatus::UNDER)
+			{
+				mainChar.character->stats.pDef -= 15;
+				mainChar.character->stats.mDef -= 15;
+				mainChar.character->stats.pAtk += 10;
+				mainChar.character->stats.mAtk += 10;
+			}
+			else if (pastStressStatus == StressStatus::OVER)
+			{
+				mainChar.character->stats.pDef += 10;
+				mainChar.character->stats.mDef += 10;
+				mainChar.character->stats.pAtk -= 15;
+				mainChar.character->stats.mAtk -= 15;
+			}
+			break;
+		case StressStatus::OVER:
 			mainChar.character->stats.pDef -= 10;
 			mainChar.character->stats.mDef -= 10;
+			mainChar.character->stats.pAtk += 15;
+			mainChar.character->stats.mAtk += 15;
+			if (pastStressStatus == StressStatus::UNDER)
+			{
+				mainChar.character->stats.pDef -= 15;
+				mainChar.character->stats.mDef -= 15;
+				mainChar.character->stats.pAtk += 10;
+				mainChar.character->stats.mAtk += 10;
+			}
+			else if (pastStressStatus == StressStatus::BALANCE)
+			{
+				mainChar.character->stats.pDef -= 10;
+				mainChar.character->stats.mDef -= 10;
+				mainChar.character->stats.pAtk -= 10;
+				mainChar.character->stats.mAtk -= 10;
+			}
+			break;
 		}
 	}
 }

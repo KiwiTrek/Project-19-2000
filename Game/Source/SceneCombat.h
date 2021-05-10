@@ -30,6 +30,13 @@ struct  CombatCharacter
     SString pAtk, mAtk, pDef, mDef, speed;
 };
 
+enum class StressStatus
+{
+    UNDER,
+    BALANCE,
+    OVER
+};
+
 class SceneCombat : public Scene
 {
 public:
@@ -52,7 +59,7 @@ public:
     bool SortSpeed(bool isSorted);
 
     bool Update(float dt);
-    void Damage(int index, CombatEntity* target, bool isMagic = false);
+    void Damage(int index, CombatEntity* target, bool isMagic);
     void Heal(int p, CombatEntity* target);
     void SelectTarget();
     int EnemyTarget();
@@ -102,7 +109,7 @@ private:
     bool once;
     bool wait;
 
-    bool changedStress;
+    StressStatus stressStatus;
     int pastStress;
 
     CombatCharacter* currentChar;
