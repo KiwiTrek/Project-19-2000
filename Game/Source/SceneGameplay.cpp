@@ -33,24 +33,10 @@ bool SceneGameplay::Load()
 	app->entities->Enable();
 
 	dialogSystem = new DialogSystem();
+	dtSave = 0.0f;
 
 	dialogueFont = new Font("Fonts/DialogueFont.xml");
 	buttonFont = new Font("Fonts/ButtonFont.xml");
-	// Saving dialog thingies
-	savingText = { "Game saved succsessfully." };
-	savingBool = false;
-	savingCounter = 0;
-
-	textBox = app->tex->Load("Textures/GUI/textBox.png");
-
-	dialogGui = app->tex->Load("Textures/GUI/combatGui.png");
-	dialogTextBox = { 0,0,1280,248 };
-	portraitBox = { 1276,0,208,190 };
-	shopKeeperPortrait = { 0,355,72,93 };
-	catPortrait = { 78,391,78,52 };
-	superheroPortrait = { 1324,351,72,95 };
-	grandpaPortrait = { 74,248,68,100 };
-	hatsunePortrait = { 1400,346,84,100 };
 
 	float tmpValue = 0;
 	//MENU
@@ -278,101 +264,9 @@ bool SceneGameplay::Load()
 
 bool SceneGameplay::Update(float dt)
 {
-	// STARTING DIALOG STUFF
-	if (app->entities->dialogCounter > 0 && dialogSystem->currentDialog == nullptr)
-	{
-		app->entities->dialogCounter++;
-		if (app->entities->dialogCounter >= 3)
-		{
-			app->entities->dialogCounter = 0;
+	dtSave = dt;
+	UpdateDialogue(dt);
 
-			app->entities->shopkeeperFinishedTalk = false;
-			app->entities->shopkeeperActive = false;
-
-			app->entities->catFinishedTalk = false;
-			app->entities->catActive = false;
-
-			app->entities->superheroFinishedTalk = false;
-			app->entities->superheroActive = false;
-
-			app->entities->grandpaFinishedTalk = false;
-			app->entities->grandpaActive = false;
-		}
-	}
-
-	// So player doesnt move while in dialog
-	Player* tmp = (Player*)player;
-
-	if (dialogSystem->currentDialog != nullptr)
-	{
-		tmp->inDialog = true;
-	}
-	else
-	{
-		tmp->inDialog = false;
-	}
-
-	// The key to skip to the next dialog line.
-	if (app->input->CheckButton("select", KEY_DOWN) && dialogSystem->currentDialog != nullptr) {
-		if (app->entities->shopkeeperFinishedTalkRequest == true)
-		{
-			app->entities->shopkeeperFinishedTalk = false;
-		}
-		else if (app->entities->catFinishedTalkRequest == true)
-		{
-			app->entities->catFinishedTalk = false;
-		}
-		else if (app->entities->superheroFinishedTalkRequest == true)
-		{
-			app->entities->superheroFinishedTalk = false;
-		}
-		else if (app->entities->grandpaFinishedTalkRequest == true)
-		{
-			app->entities->grandpaFinishedTalk = false;
-		}
-		dialogSystem->NextDialog();
-	}
-
-	if (app->entities->talkingToGrandpa == true && dialogSystem->currentDialog == nullptr)
-	{
-		dialogSystem->StartDialog("1");
-		app->entities->talkingToGrandpa = false;
-	}
-
-	if (app->entities->talkingToShopkeeper == true && dialogSystem->currentDialog == nullptr)
-	{
-		dialogSystem->StartDialog("2");
-		app->entities->talkingToShopkeeper = false;
-	}
-
-	if (app->entities->talkingToCat == true && dialogSystem->currentDialog == nullptr)
-	{
-		dialogSystem->StartDialog("3");
-		app->entities->talkingToCat = false;
-	}
-
-	if (app->entities->talkingToSuperhero == true && dialogSystem->currentDialog == nullptr)
-	{
-		dialogSystem->StartDialog("4");
-		app->entities->talkingToSuperhero = false;
-	}
-
-	// Select the next option.
-	if (dialogSystem->currentDialog != nullptr && app->input->CheckButton("down", KEY_DOWN)) {
-		dialogSystem->selectedOption += 1;
-		if (dialogSystem->selectedOption == dialogSystem->currentDialog->children->size())
-			dialogSystem->selectedOption = dialogSystem->currentDialog->children->size() - 1;
-	}
-
-	// Select the previous option.
-	if (dialogSystem->currentDialog != nullptr && app->input->CheckButton("up", KEY_DOWN)) {
-		dialogSystem->selectedOption -= 1;
-		if (dialogSystem->selectedOption < 0) dialogSystem->selectedOption = 0;
-	}
-
-	// END OF DIALOG STUFF
-
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 	{
 		combat = true;
@@ -399,6 +293,110 @@ bool SceneGameplay::Update(float dt)
 
 	return true;
 }
+
+bool SceneGameplay::UpdateDialogue(float dt)
+{
+	// STARTING DIALOG STUFF
+	if (app->entities->dialogCounter > 0.0f && dialogSystem->currentDialog == nullptr)
+	{
+		app->entities->dialogCounter += dt;
+		if (app->entities->dialogCounter >= 1.0f)
+		{
+			app->entities->dialogCounter = 0.0f;
+
+			app->entities->flagsShopkeeper = 0;
+			app->entities->flagsCat = 0;
+			app->entities->flagsSuperhero = 0;
+			app->entities->flagsGrandpa = 0;
+		}
+	}
+
+	// So player doesnt move while in dialog
+	Player* tmp = (Player*)player;
+
+	if (dialogSystem->currentDialog != nullptr)
+	{
+		tmp->inDialog = true;
+	}
+	else
+	{
+		tmp->inDialog = false;
+	}
+
+	// The key to skip to the next dialog line.
+	if (app->input->CheckButton("select", KEY_DOWN) && dialogSystem->currentDialog != nullptr) {
+		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0)
+		{
+			app->entities->flagsShopkeeper = ClearBit(app->entities->flagsShopkeeper, DialogueFlags::FINISHED_TALK);
+		}
+		else if ((app->entities->flagsCat & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0)
+		{
+			app->entities->flagsCat = ClearBit(app->entities->flagsCat, DialogueFlags::FINISHED_TALK);
+		}
+		else if ((app->entities->flagsSuperhero & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0)
+		{
+			app->entities->flagsSuperhero = ClearBit(app->entities->flagsSuperhero, DialogueFlags::FINISHED_TALK);
+		}
+		else if ((app->entities->flagsGrandpa & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0)
+		{
+			app->entities->flagsGrandpa = ClearBit(app->entities->flagsGrandpa, DialogueFlags::FINISHED_TALK);
+		}
+		dialogSystem->NextDialog();
+	}
+
+	if (dialogSystem->currentDialog == nullptr)
+	{
+		if ((app->entities->flagsGrandpa & 1 << (int)DialogueFlags::TALKING_TO) != 0)
+		{
+			dialogSystem->StartDialog("1");
+			app->entities->flagsGrandpa = ClearBit(app->entities->flagsGrandpa, DialogueFlags::TALKING_TO);
+		}
+
+		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::TALKING_TO) != 0)
+		{
+			dialogSystem->StartDialog("2");
+			app->entities->flagsShopkeeper = ClearBit(app->entities->flagsShopkeeper, DialogueFlags::TALKING_TO);
+		}
+
+		if ((app->entities->flagsCat & 1 << (int)DialogueFlags::TALKING_TO) != 0)
+		{
+			dialogSystem->StartDialog("3");
+			app->entities->flagsCat = ClearBit(app->entities->flagsCat, DialogueFlags::TALKING_TO);
+		}
+
+		if ((app->entities->flagsSuperhero & 1 << (int)DialogueFlags::TALKING_TO) != 0)
+		{
+			dialogSystem->StartDialog("4");
+			app->entities->flagsSuperhero = ClearBit(app->entities->flagsSuperhero, DialogueFlags::TALKING_TO);
+		}
+	}
+	else
+	{
+		// Select the next option.
+		if (app->input->CheckButton("down", KEY_DOWN)) {
+			dialogSystem->selectedOption += 1;
+			if (dialogSystem->selectedOption == dialogSystem->currentDialog->children->size())
+				dialogSystem->selectedOption = dialogSystem->currentDialog->children->size() - 1;
+		}
+
+		// Select the previous option.
+		if (app->input->CheckButton("up", KEY_DOWN)) {
+			dialogSystem->selectedOption -= 1;
+			if (dialogSystem->selectedOption < 0) dialogSystem->selectedOption = 0;
+		}
+	}
+
+	// END OF DIALOG STUFF
+
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		combat = true;
+		enteringCombat = true;
+	}
+
+	return true;
+}
+
 
 bool SceneGameplay::UpdatePauseMenu(float dt)
 {
@@ -733,47 +731,47 @@ bool SceneGameplay::Draw()
 
 	if (dialogSystem->currentDialog != nullptr)
 	{
-		app->render->DrawTexture(dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogTextBox);
-		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &portraitBox);
-		if (app->entities->shopkeeperFinishedTalk == false && app->entities->shopkeeperActive == true)
+		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
+		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &dialogSystem->portraitBox);
+		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::ACTIVE) != 0)
 		{
-			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &shopKeeperPortrait);
+			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->shopKeeperPortrait);
 		}
-		if (app->entities->catFinishedTalk == false && app->entities->catActive == true)
+		if ((app->entities->flagsCat & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsCat & 1 << (int)DialogueFlags::ACTIVE) != 0)
 		{
-			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 580, false, &catPortrait);
+			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 580, false, &dialogSystem->catPortrait);
 		}
-		if (app->entities->superheroFinishedTalk == false && app->entities->superheroActive == true)
+		if ((app->entities->flagsSuperhero & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsSuperhero & 1 << (int)DialogueFlags::ACTIVE) != 0)
 		{
-			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &superheroPortrait);
+			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->superheroPortrait);
 		}
-		if (app->entities->grandpaFinishedTalk == false && app->entities->grandpaActive == true)
+		if ((app->entities->flagsGrandpa & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsGrandpa & 1 << (int)DialogueFlags::ACTIVE) != 0)
 		{
-			app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &grandpaPortrait);
+			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->grandpaPortrait);
 		}
 		dialogSystem->DrawDialogAnimated(dialogueFont);
 	}
 
 	if (app->saveRequest == true)
 	{
-		savingBool = true;
+		dialogSystem->savingBool = true;
 	}
-	if (savingBool == true)
+	if (dialogSystem->savingBool == true)
 	{
-		savingCounter++;
+		dialogSystem->savingCounter += dtSave;
 	}
-	if (savingCounter >= 120)
+	if (dialogSystem->savingCounter >= 2.0f)
 	{
-		savingBool = false;
-		savingCounter = 0;
+		dialogSystem->savingBool = false;
+		dialogSystem->savingCounter = 0.0f;
 	}
 
-	if (savingBool == true)
+	if (dialogSystem->savingBool == true)
 	{
-		app->render->DrawTexture(dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogTextBox);
-		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &portraitBox);
-		app->render->DrawTexture(dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &hatsunePortrait);
-		app->render->DrawText(dialogueFont, savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
+		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
+		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &dialogSystem->portraitBox);
+		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->hatsunePortrait);
+		app->render->DrawText(dialogueFont, dialogSystem->savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
 
 	return false;
@@ -1001,8 +999,6 @@ bool SceneGameplay::Unload()
 	RELEASE(buttonFont);
 	RELEASE(dialogueFont);
 	app->tex->UnLoad(textBox);
-	app->tex->UnLoad(dialogGui);
-	savingText.Clear();
 
 	app->gui->Disable();
 	app->scene->currentButton = nullptr;

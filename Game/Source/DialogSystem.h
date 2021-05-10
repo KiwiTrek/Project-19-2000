@@ -29,7 +29,8 @@ public:
 
 	DialogNode* ParseDialogXML(pugi::xml_node dialogRoot);
 
-	DialogNode* currentDialog = nullptr;
+public:
+	DialogNode* currentDialog;
 
 	std::map<std::string, DialogNode*> dialogues;
 
@@ -44,6 +45,19 @@ public:
 
 	std::string folder;
 	pugi::xml_document dialogFile;
+
+	SDL_Texture* dialogGui;
+	SDL_Rect dialogTextBox;
+	SDL_Rect portraitBox;
+	SDL_Rect shopKeeperPortrait;
+	SDL_Rect catPortrait;
+	SDL_Rect grandpaPortrait;
+	SDL_Rect superheroPortrait;
+	SDL_Rect hatsunePortrait;
+
+	SString savingText;
+	float savingCounter;
+	bool savingBool;
 
 };
 

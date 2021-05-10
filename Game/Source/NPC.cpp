@@ -131,7 +131,7 @@ bool Npc::Draw()
 	switch (npcId)
 	{
 	case NpcId::HERO:
-		if (app->entities->grandpaActive == false)
+		if ((app->entities->flagsGrandpa & 1 << (int)DialogueFlags::ACTIVE) == 0)
 		{
 			app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
 		}
@@ -140,7 +140,7 @@ bool Npc::Draw()
 		app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
 		break;
 	case NpcId::CAT:
-		if (app->entities->superheroActive == false)
+		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::ACTIVE) == 0)
 		{
 		app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
 		}
@@ -166,7 +166,7 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 	if (app->input->CheckButton("select", KeyState::KEY_DOWN))
 	{
 		LOG("Interaction");
-		if (app->entities->dialogCounter == 0) app->audio->PlayFx(interactFx);
+		if (app->entities->dialogCounter == 0.0f) app->audio->PlayFx(interactFx);
 		switch (npcId)
 		{
 		case NpcId::HERO:
@@ -191,11 +191,11 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 				}
 			}
 			LOG("Interaction super hero");
-			app->entities->superheroActive = true;
-			if (app->entities->dialogCounter == 0)
+			app->entities->flagsSuperhero = SetBit(app->entities->flagsSuperhero, DialogueFlags::ACTIVE);
+			if (app->entities->dialogCounter == 0.0f)
 			{
-				app->entities->talkingToSuperhero = true;
-				app->entities->dialogCounter = 1;
+				app->entities->flagsSuperhero = SetBit(app->entities->flagsSuperhero, DialogueFlags::TALKING_TO);
+				app->entities->dialogCounter = 0.5f;
 			}
 			break;
 		}
@@ -221,23 +221,23 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 				}
 			}
 
-			LOG("Interaction super hero");
-			app->entities->grandpaActive = true;
-			if (app->entities->dialogCounter == 0)
+			LOG("Interaction Grandpa");
+			app->entities->flagsGrandpa = SetBit(app->entities->flagsGrandpa, DialogueFlags::ACTIVE);
+			if (app->entities->dialogCounter == 0.0f)
 			{
-				app->entities->talkingToGrandpa = true;
-				app->entities->dialogCounter = 1;
+				app->entities->flagsGrandpa = SetBit(app->entities->flagsGrandpa, DialogueFlags::TALKING_TO);
+				app->entities->dialogCounter = 0.5f;
 			}
 			break;
 		}
 			case NpcId::STORE_GUY:
 		{
 			LOG("Interaction ShopKeeper");
-			app->entities->shopkeeperActive = true;
-			if (app->entities->dialogCounter == 0)
+			app->entities->flagsShopkeeper = SetBit(app->entities->flagsShopkeeper, DialogueFlags::ACTIVE);
+			if (app->entities->dialogCounter == 0.0f)
 			{
-				app->entities->talkingToShopkeeper = true;
-				app->entities->dialogCounter = 1;
+				app->entities->flagsShopkeeper = SetBit(app->entities->flagsShopkeeper, DialogueFlags::TALKING_TO);
+				app->entities->dialogCounter = 0.5f;
 			}
 			break;
 		}
@@ -245,11 +245,11 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 		case NpcId::CAT:
 		{
 			LOG("Interaction Kitty");
-			app->entities->catActive = true;
-			if (app->entities->dialogCounter == 0)
+			app->entities->flagsCat = SetBit(app->entities->flagsCat, DialogueFlags::ACTIVE);
+			if (app->entities->dialogCounter == 0.0f)
 			{
-				app->entities->talkingToCat = true;
-				app->entities->dialogCounter = 1;
+				app->entities->flagsCat = SetBit(app->entities->flagsCat, DialogueFlags::TALKING_TO);
+				app->entities->dialogCounter = 0.5f;
 			}
 			break;
 		}

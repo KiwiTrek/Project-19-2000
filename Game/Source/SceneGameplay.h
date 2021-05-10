@@ -34,6 +34,7 @@ public:
     bool Load();
 
     bool Update(float dt);
+    bool UpdateDialogue(float dt);
     bool UpdatePauseMenu(float dt);
 
     bool Draw();
@@ -131,18 +132,7 @@ private:
 
     //DIALOG
     DialogSystem* dialogSystem = nullptr;
-    SDL_Texture* dialogGui;
-    SDL_Rect dialogTextBox;
-    SDL_Rect portraitBox;
-    SDL_Rect shopKeeperPortrait;
-    SDL_Rect catPortrait;
-    SDL_Rect grandpaPortrait;
-    SDL_Rect superheroPortrait;
-    SDL_Rect hatsunePortrait;
-
-    SString savingText;
-    int savingCounter;
-    bool savingBool;
+    float dtSave;
 };
 
 #endif // __SCENEGAMEPLAY_H__

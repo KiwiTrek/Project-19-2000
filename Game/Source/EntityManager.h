@@ -13,6 +13,14 @@
 
 class Entity;
 
+enum DialogueFlags
+{
+	TALKING_TO,
+	FINISHED_TALK,
+	FINISHED_TALK_REQUEST,
+	ACTIVE
+};
+
 class EntityManager : public Module
 {
 public:
@@ -85,27 +93,31 @@ public:
 	bool inPause = false;
 
 	// Some options for dialogs. I am sorry for doing it this way.
-	bool talkingToShopkeeper;
+	/*bool talkingToShopkeeper;
 	bool shopkeeperFinishedTalk;
 	bool shopkeeperFinishedTalkRequest;
-	bool shopkeeperActive;
+	bool shopkeeperActive;*/
+	int flagsShopkeeper;
 
-	bool talkingToCat;
+	/*bool talkingToCat;
 	bool catFinishedTalk;
 	bool catFinishedTalkRequest;
-	bool catActive;
+	bool catActive;*/
+	int flagsCat;
 
-	bool talkingToSuperhero;
+	/*bool talkingToSuperhero;
 	bool superheroFinishedTalk;
 	bool superheroFinishedTalkRequest;
-	bool superheroActive;
+	bool superheroActive;*/
+	int flagsSuperhero;
 
-	bool talkingToGrandpa;
+	/*bool talkingToGrandpa;
 	bool grandpaFinishedTalk;
 	bool grandpaFinishedTalkRequest;
-	bool grandpaActive;
+	bool grandpaActive;*/
+	int flagsGrandpa;
 
-	int dialogCounter;
+	float dialogCounter;
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__

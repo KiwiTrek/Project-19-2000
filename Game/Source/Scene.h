@@ -12,7 +12,6 @@ enum SceneType
     LOGO,
     TITLE_SCREEN,
     GAMEPLAY,
-    DEV_ROOM,
     ENDING
 };
 

@@ -50,27 +50,31 @@ bool EntityManager::Awake(pugi::xml_node& config)
 bool EntityManager::Start()
 {
 	// Initializing dialogue bools
-	dialogCounter = 0;
+	dialogCounter = 0.0f;
 
-	talkingToShopkeeper = false;
+	/*talkingToShopkeeper = false;
 	shopkeeperFinishedTalk = false;
 	shopkeeperFinishedTalkRequest = false;
-	shopkeeperActive = false;
+	shopkeeperActive = false;*/
+	flagsShopkeeper = 0;
 
-	talkingToCat = false;
+	/*talkingToCat = false;
 	catFinishedTalk = false;
 	catFinishedTalkRequest = false;
-	catActive = false;
+	catActive = false;*/
+	flagsCat = 0;
 
-	talkingToSuperhero = false;
+	/*talkingToSuperhero = false;
 	superheroFinishedTalk = false;
 	superheroFinishedTalkRequest = false;
-	superheroActive = false;
+	superheroActive = false;*/
+	flagsSuperhero = 0;
 
-	talkingToGrandpa = false;
+	/*talkingToGrandpa = false;
 	grandpaFinishedTalk = false;
 	grandpaFinishedTalkRequest = false;
-	grandpaActive = false;
+	grandpaActive = false;*/
+	flagsGrandpa = 0;
 
 	// Loading entities textures
 	//playerTex = app->tex->Load("Textures/playerTest.png");

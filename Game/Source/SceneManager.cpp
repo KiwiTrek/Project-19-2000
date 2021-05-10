@@ -11,7 +11,6 @@
 #include "SceneLogo.h"
 #include "SceneTitleScreen.h"
 #include "SceneGameplay.h"
-#include "SceneDevRoom.h"
 #include "SceneEnding.h"
 
 #include "Defs.h"
@@ -157,10 +156,6 @@ bool SceneManager::PostUpdate()
 		case SceneType::GAMEPLAY:
 			next = new SceneGameplay();
 			next->currentScene = SceneType::GAMEPLAY;
-			break;
-		case SceneType::DEV_ROOM:
-			next = new SceneDevRoom();
-			next->currentScene = SceneType::DEV_ROOM;
 			break;
 		case SceneType::ENDING:
 			next = new SceneEnding();

@@ -1,7 +1,6 @@
 #include "DialogSystem.h"
 #include "DialogUtils.h"
 #include "SceneCombat.h"
-#include "SceneDevRoom.h"
 #include "SceneManager.h"
 #include "EntityManager.h"
 #include "Entity.h"
@@ -10,6 +9,7 @@
 #include "AssetsManager.h"
 #include "Render.h"
 #include "Input.h"
+#include "Textures.h"
 #include "Font.h"
 #include "Player.h"
 
@@ -19,19 +19,19 @@
 
 void ShopKeeperFinished()
 {
-	app->entities->shopkeeperFinishedTalkRequest = true;
+	app->entities->flagsShopkeeper = SetBit(app->entities->flagsShopkeeper, DialogueFlags::FINISHED_TALK_REQUEST);
 }
 void CatFinished()
 {
-	app->entities->catFinishedTalkRequest = true;
+	app->entities->flagsCat = SetBit(app->entities->flagsCat, DialogueFlags::FINISHED_TALK_REQUEST);
 }
 void SuperheroFinished()
 {
-	app->entities->superheroFinishedTalkRequest = true;
+	app->entities->flagsSuperhero = SetBit(app->entities->flagsSuperhero, DialogueFlags::FINISHED_TALK_REQUEST);
 }
 void GrandpaFinished()
 {
-	app->entities->grandpaFinishedTalkRequest = true;
+	app->entities->flagsGrandpa = SetBit(app->entities->flagsGrandpa, DialogueFlags::FINISHED_TALK_REQUEST);
 }
 
 std::string ToUpperCase(std::string input)
@@ -67,6 +67,21 @@ DialogSystem::DialogSystem()
 	timeStep = 0;
 	timeStepAnswers = 0;
 	white = { 255,255,255,255 };
+
+	currentDialog = nullptr;
+	dialogGui = app->tex->Load("Textures/GUI/combatGui.png");
+	dialogTextBox = { 0,0,1280,248 };
+	portraitBox = { 1276,0,208,190 };
+	shopKeeperPortrait = { 0,355,72,93 };
+	catPortrait = { 78,391,78,52 };
+	superheroPortrait = { 1324,351,72,95 };
+	grandpaPortrait = { 74,248,68,100 };
+	hatsunePortrait = { 1400,346,84,100 };
+
+	// Saving dialog thingies
+	savingText = { "Game saved succsessfully." };
+	savingBool = false;
+	savingCounter = 0.0f;
 }
 
 DialogSystem::~DialogSystem()
@@ -74,6 +89,9 @@ DialogSystem::~DialogSystem()
 	nodeRoutes.clear();
 	callbacks.clear();
 	dialogues.clear();
+
+	app->tex->UnLoad(dialogGui);
+	savingText.Clear();
 }
 
 void DialogSystem::DrawDialogAnimated(Font* dialogueFont)

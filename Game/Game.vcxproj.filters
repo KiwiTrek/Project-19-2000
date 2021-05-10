@@ -66,9 +66,6 @@
     <ClCompile Include="Source\Font.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneDevRoom.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\CombatEntity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -203,9 +200,6 @@
     </ClInclude>
     <ClInclude Include="Source\Font.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneDevRoom.h">
-      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\CombatEntity.h">
       <Filter>Entities</Filter>

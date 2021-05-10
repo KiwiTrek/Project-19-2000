@@ -116,7 +116,6 @@ bool SceneTitleScreen::Load()
 
 bool SceneTitleScreen::Update(float dt)
 {
-    if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) TransitionToScene(SceneType::DEV_ROOM);
     noose.Update(dt);
     titleAlpha += (TITLE_FADE_SPEED * dt);
     if (titleAlpha >= 0.85f && onceFx)

@@ -7,7 +7,6 @@
 #include <time.h>
 #include "SceneManager.h"
 #include "SceneGameplay.h"
-#include "SceneDevRoom.h"
 #include "SceneCombat.h"
 #include "EntityManager.h"
 #include "NPC.h" 
@@ -658,11 +657,6 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 								{
 									SceneGameplay* g = (SceneGameplay*)app->scene->current;
 									g->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
-								}
-								else if (app->scene->current->currentScene == SceneType::DEV_ROOM)
-								{
-									SceneDevRoom* d = (SceneDevRoom*)app->scene->current;
-									d->combatScene->Start(EntityId::STRESSING_SHADOW, EntityId::NIGHTMARE, EntityId::STRESSING_SHADOW);
 								}
 							}
 						}
