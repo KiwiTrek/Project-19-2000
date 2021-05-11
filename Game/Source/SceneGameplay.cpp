@@ -16,6 +16,7 @@
 #include "DialogUtils.h"
 #include "Item.h"
 #include "PuzzlePieces.h"
+#include "QuestManager.h"
 
 SceneGameplay::SceneGameplay()
 {
@@ -290,6 +291,15 @@ bool SceneGameplay::Update(float dt)
 	}
 
 	if (combatScene->heDed) TransitionToScene(SceneType::ENDING);
+
+	// Make quests draw only while on gameplay not start menu
+	if ((flags & 1 << Flags::MENU) == 0)
+	{
+		if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		{
+			app->quests->drawQuests = !app->quests->drawQuests;
+		}
+	}
 
 	return true;
 }

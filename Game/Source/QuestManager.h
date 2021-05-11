@@ -62,6 +62,9 @@ public:
 	void StringToIntArray(Quest* quest, string requiredIdString);
 	int CountRequiredIds(int requiredIds[]);
 
+public:
+	bool drawQuests = false;
+
 private:
 	int totalQuests = 0;
 
@@ -71,10 +74,6 @@ private:
 	List<Quest*> questsFinished;
 
 	Font* font;
-
-
-
-	bool drawQuests = false;
 
 	int debugId = 1;
 };

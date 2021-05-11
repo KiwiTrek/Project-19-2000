@@ -194,10 +194,6 @@ bool QuestManager::DebugQuests()
 // This is the drawing quest on UI function. Looks at the active quests list and draws them with the respective offsets
 bool QuestManager::DrawActiveQuests()
 {
-
-	if (app->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		drawQuests = !drawQuests;
-
 	if (drawQuests)
 	{
 		int offsetY = 30;
@@ -209,9 +205,9 @@ bool QuestManager::DrawActiveQuests()
 		{
 			// Cutting description text
 			auxDescription = activeQuestList->data->description.GetString();
-			if (auxDescription.GetCapacity() >= 10)
+			if (activeQuestList->data->description.Length() >= 45)
 			{
-				auxDescription.Cut(10);
+				auxDescription.Cut(45);
 				auxDescription += cutText;
 			}
 
@@ -219,10 +215,10 @@ bool QuestManager::DrawActiveQuests()
 
 
 			// Draw title
-			app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 40, 2, { 255,255,255,255 });
-			offsetY += 35; // Offset the description from the title
+			app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 40, 2, { 250,250,250,255 });
+			offsetY += 37; // Offset the description from the title
 			offsetX += 15; // Offset the description from the title
-			app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 40, 2, { 255,255,255,255 });
+			app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 27, 2, { 200,200,200,255 });
 			offsetY += 60; // Offset the quest from the last one
 			offsetX -= 15; // Offset the descripton from the title
 
@@ -267,7 +263,7 @@ void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
 	}
 }
 
-// This function counts how many numeros different to 0 are in an array. Serves for counting the total ids required for a quest
+// This function counts how many numbers different to 0 are in an integer array. Serves for counting the total ids required for a quest
 int QuestManager::CountRequiredIds(int requiredIds[])
 {
 	int count = 0;

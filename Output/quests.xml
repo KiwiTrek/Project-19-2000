@@ -18,7 +18,7 @@
 		id = "1" 
 		type = "0"
 		title = "Test 1"
-		description = "Test 1 description"
+		description = "Tres tristes tigres comen trigo en un trigal. Esto es solo testing xd"
 		objective = "test1"
 		quantity = "0"
 		demandingNPC = "None"
