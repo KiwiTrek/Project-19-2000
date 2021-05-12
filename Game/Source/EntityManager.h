@@ -94,32 +94,16 @@ public:
 
 	bool inPause = false;
 
-	// Some options for dialogs. I am sorry for doing it this way.
-	/*bool talkingToShopkeeper;
-	bool shopkeeperFinishedTalk;
-	bool shopkeeperFinishedTalkRequest;
-	bool shopkeeperActive;*/
+	// Some options for dialogs.
+
 	int flagsShopkeeper;
-
-	/*bool talkingToCat;
-	bool catFinishedTalk;
-	bool catFinishedTalkRequest;
-	bool catActive;*/
 	int flagsCat;
-
-	/*bool talkingToSuperhero;
-	bool superheroFinishedTalk;
-	bool superheroFinishedTalkRequest;
-	bool superheroActive;*/
 	int flagsSuperhero;
-
-	/*bool talkingToGrandpa;
-	bool grandpaFinishedTalk;
-	bool grandpaFinishedTalkRequest;
-	bool grandpaActive;*/
 	int flagsGrandpa;
 
+	bool takingItem = false;
 	float dialogCounter;
+	SString itemPasser;
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__

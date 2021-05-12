@@ -85,6 +85,11 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
         app->audio->PlayFx(app->entities->itemCollectedFx);
 		LOG("You picked up %s item.", item.effect.attackName.GetString());
 
+		app->entities->takingItem = true;
+		SString start = ("You just picked ");
+		start += item.effect.attackName.GetString();
+		app->entities->itemPasser = start.GetString();
+
 		bool added = false;
 		SceneGameplay* gameplay = (SceneGameplay*)app->scene->current;
 		for (int i = 0; i < gameplay->combatScene->items.Count(); i++)

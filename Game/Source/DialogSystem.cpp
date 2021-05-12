@@ -82,6 +82,8 @@ DialogSystem::DialogSystem()
 	savingText = { "Game saved succsessfully." };
 	savingBool = false;
 	savingCounter = 0.0f;
+
+	itemCounter = 0.0f;
 }
 
 DialogSystem::~DialogSystem()
@@ -187,8 +189,6 @@ bool DialogSystem::LoadDialog(const char* filename)
 
 	if (ret == true) {
 
-		/* Start TODO 1 */
-
 		// Get the dialog root.
 		pugi::xml_node dialogRoot = dialogFile.child("dialog");
 		std::string id = dialogRoot.attribute("id").as_string();
@@ -196,8 +196,6 @@ bool DialogSystem::LoadDialog(const char* filename)
 		DialogNode* dialog = ParseDialogXML(dialogRoot);
 		// Insert the dialog into the dictionary.
 		dialogues.insert(std::make_pair(id, dialog));
-
-		/* End TODO 1 */
 	}
 
 	return ret;
@@ -214,8 +212,6 @@ void DialogSystem::StartDialog(const char* id)
 
 void DialogSystem::NextDialog()
 {
-	/* Start TODO 4 */
-
 	// If we have reached the end, currentDialog will be nullptr.
 	if (currentDialog == nullptr)
 	{
@@ -258,14 +254,11 @@ void DialogSystem::NextDialog()
 		currentDialog = nodeRoutes.at(route);
 	}
 
-	/* End TODO 4 */
 }
 
 DialogNode* DialogSystem::ParseDialogXML(pugi::xml_node currentNode)
 {
 	DialogNode* dialogNode = new DialogNode();
-
-	/* Start TODO 2 */
 
 	// We set the type variable acording to the XML node name. 
 	std::string type = currentNode.name();
@@ -287,8 +280,7 @@ DialogNode* DialogSystem::ParseDialogXML(pugi::xml_node currentNode)
 		dialogNode->type = DialogNode::NodeType::GOTO;
 	}
 	else
-		return nullptr;
-
+	return nullptr;
 
 	Attributes* attributes = new Attributes();
 
@@ -323,8 +315,6 @@ DialogNode* DialogSystem::ParseDialogXML(pugi::xml_node currentNode)
 			dialogNode->AddChild(child);
 		}
 	}
-
-	/* End TODO 2 */
 
 	return dialogNode;
 }

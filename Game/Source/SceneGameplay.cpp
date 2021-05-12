@@ -35,6 +35,7 @@ bool SceneGameplay::Load()
 
 	dialogSystem = new DialogSystem();
 	dtSave = 0.0f;
+	dtItem = 0.0f;
 
 	dialogueFont = new Font("Fonts/DialogueFont.xml");
 	buttonFont = new Font("Fonts/ButtonFont.xml");
@@ -179,6 +180,7 @@ bool SceneGameplay::Load()
 bool SceneGameplay::Update(float dt)
 {
 	dtSave = dt;
+	dtItem = dt;
 	UpdateDialogue(dt);
 
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
@@ -809,7 +811,7 @@ bool SceneGameplay::Draw()
 		{
 			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->grandpaPortrait);
 		}
-		dialogSystem->DrawDialogAnimated(dialogueFont);
+		dialogSystem->DrawDialog(dialogueFont);
 	}
 
 	if (app->saveRequest == true)
@@ -832,6 +834,25 @@ bool SceneGameplay::Draw()
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &dialogSystem->portraitBox);
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->hatsunePortrait);
 		app->render->DrawText(dialogueFont, dialogSystem->savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
+	}
+
+	// Textbox when taking an item
+
+	if (app->entities->takingItem == true)
+	{
+		dialogSystem->itemCounter += dtItem;
+	}
+
+	if (dialogSystem->itemCounter >= 1.0f)
+	{
+		app->entities->takingItem = false;
+		dialogSystem->itemCounter = 0.0f;
+	}
+
+	if (app->entities->takingItem == true)
+	{
+		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
+		app->render->DrawText(dialogueFont, app->entities->itemPasser.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
 
 	return false;

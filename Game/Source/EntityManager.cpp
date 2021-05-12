@@ -52,33 +52,13 @@ bool EntityManager::Start()
 	// Initializing dialogue bools
 	dialogCounter = 0.0f;
 
-	/*talkingToShopkeeper = false;
-	shopkeeperFinishedTalk = false;
-	shopkeeperFinishedTalkRequest = false;
-	shopkeeperActive = false;*/
 	flagsShopkeeper = 0;
-
-	/*talkingToCat = false;
-	catFinishedTalk = false;
-	catFinishedTalkRequest = false;
-	catActive = false;*/
 	flagsCat = 0;
-
-	/*talkingToSuperhero = false;
-	superheroFinishedTalk = false;
-	superheroFinishedTalkRequest = false;
-	superheroActive = false;*/
 	flagsSuperhero = 0;
-
-	/*talkingToGrandpa = false;
-	grandpaFinishedTalk = false;
-	grandpaFinishedTalkRequest = false;
-	grandpaActive = false;*/
 	flagsGrandpa = 0;
 
 	// Loading entities textures
-	//playerTex = app->tex->Load("Textures/playerTest.png");
-	//playerTex = app->tex->Load("Textures/Characters/MCSpriteSheet.png");
+
 	SString tmp("%s%s", folderTexture.GetString(), "Characters/MCSpriteSheet.png");
 	playerTex = app->tex->Load(tmp.GetString());
 
@@ -174,6 +154,8 @@ bool EntityManager::CleanUp()
 	app->audio->UnloadFx(footstepFx);
 	app->audio->UnloadFx(itemFx);
 	app->audio->UnloadFx(itemCollectedFx);
+
+	itemPasser.Clear();
 
 	return true;
 }

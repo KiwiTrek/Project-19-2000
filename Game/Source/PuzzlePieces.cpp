@@ -44,7 +44,7 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x
 		break;
 	}
 	}
-	
+
 }
 
 

@@ -55,9 +55,11 @@ public:
 	SDL_Rect superheroPortrait;
 	SDL_Rect hatsunePortrait;
 
+
 	SString savingText;
 	float savingCounter;
-	bool savingBool;
+	bool savingBool = false;
+	float itemCounter;
 
 };
 

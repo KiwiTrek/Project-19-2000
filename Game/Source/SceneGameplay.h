@@ -135,6 +135,7 @@ private:
     //DIALOG
     DialogSystem* dialogSystem = nullptr;
     float dtSave;
+    float dtItem;
 };
 
 #endif // __SCENEGAMEPLAY_H__
