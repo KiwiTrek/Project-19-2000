@@ -1,21 +1,4 @@
 #include "QuestManager.h"
-#include "Log.h"
-#include "App.h"
-#include "Module.h"
-#include "List.h"
-#include "Input.h"
-#include "Render.h"
-#include "Font.h"
-#include "Textures.h"
-
-#include "External/PugiXml/src/pugixml.hpp"
-#include "SDL/include/SDL_scancode.h"
-
-
-
-#include <string>
-#include <iostream>
-using namespace std;
 
 QuestManager::QuestManager() : Module()
 {
@@ -31,6 +14,8 @@ bool QuestManager::Start()
 {
 
 	font = new Font("Fonts/DialogueFont.xml");
+	bookTex = app->tex->Load("Textures/scrollQuest.png");
+	bookBox = { 0,0,1280,720 };
 
 	pugi::xml_node questNode;
 	pugi::xml_document questData;
@@ -48,13 +33,13 @@ bool QuestManager::Start()
 		Quest* quest = new Quest();
 
 		quest->id = questNode.attribute("id").as_int();
-		quest->type = questNode.attribute("type").as_int();
+		//quest->type = questNode.attribute("type").as_int();
 		quest->title = questNode.attribute("title").as_string();
 		quest->description = questNode.attribute("description").as_string();
-		quest->objective = questNode.attribute("objective").as_string();
-		quest->quantity = questNode.attribute("quantity").as_int();
-		quest->demandingNPC = questNode.attribute("demandingNPC").as_string();
-		quest->rewardingNPC = questNode.attribute("rewardingNPC").as_string();
+		//quest->objective = questNode.attribute("objective").as_string();
+		//quest->quantity = questNode.attribute("quantity").as_int();
+		//quest->demandingNPC = questNode.attribute("demandingNPC").as_string();
+		//quest->rewardingNPC = questNode.attribute("rewardingNPC").as_string();
 		quest->rewardXP = questNode.attribute("rewardXP").as_int();
 		quest->rewardGold = questNode.attribute("rewardGold").as_int();
 		quest->requiredIdString = questNode.attribute("requiredId").as_string();
@@ -84,13 +69,17 @@ bool QuestManager::Start()
 
 		questNode = questNode.next_sibling("quest");
 	}
+
+	tpFlags = 0;
+
 	return true;
 }
 
 bool QuestManager::Update(float dt)
 {
+	FinishedQuestLogic();
+	ChainQuestsLogic();
 	CheckQuestsLogic();
-	CheckChainQuestsLogic();
 	CheckObjectivesCompletion();
 	DebugQuests();
 
@@ -114,9 +103,8 @@ bool QuestManager::CleanUp()
 }
 
 // Passes a completed quest from the active list to the finished list and gives rewards
-bool QuestManager::CheckQuestsLogic()
+bool QuestManager::FinishedQuestLogic()
 {
-
 	ListItem<Quest*>* activeQuestsList = questsActive.start;
 	while (activeQuestsList != nullptr)
 	{
@@ -132,40 +120,106 @@ bool QuestManager::CheckQuestsLogic()
 		activeQuestsList = activeQuestsList->next;
 	}
 
-	
 	return true;
 }
 
 // Chain quests logic (now works for multiple quest requirements)
-bool QuestManager::CheckChainQuestsLogic()
+bool QuestManager::ChainQuestsLogic()
 {
 	ListItem<Quest*>* inactiveQuestsList = questsInactive.start;
 	while (inactiveQuestsList != NULL)
 	{
 		int requiredIdCount = CountRequiredIds(inactiveQuestsList->data->requiredId);
 		int count = 0;
-		for (int i = 0; (/*inactiveQuestsList->data->requiredId[i] != 0 ||*/ i < 4); ++i)
+		if (requiredIdCount != 0)
 		{
-			ListItem<Quest*>* finishedList = questsFinished.start;
-			while (finishedList != NULL)
+
+			for (int i = 0; (/*inactiveQuestsList->data->requiredId[i] != 0 ||*/ i < 4); ++i)
 			{
-				if ((inactiveQuestsList->data->requiredId[i] == finishedList->data->id) && (inactiveQuestsList->data->requiredId[i] != 0))
+				ListItem<Quest*>* finishedList = questsFinished.start;
+				while (finishedList != NULL)
 				{
-					count++;
+					if ((inactiveQuestsList->data->requiredId[i] == finishedList->data->id) /*&& (inactiveQuestsList->data->requiredId[i] != 0)*/)
+					{
+						count++;
+					}
+					finishedList = finishedList->next;
 				}
-				finishedList = finishedList->next;
+			}
+
+			if (count == requiredIdCount)
+			{
+				questsActive.Add(inactiveQuestsList->data);
+				if (questsInactive.At(questsInactive.Find(inactiveQuestsList->data)) != nullptr) questsInactive.Del(inactiveQuestsList);
+				inactiveQuestsList->data->status = 1;
 			}
 		}
-
-		if (count == requiredIdCount)
-		{
-			questsActive.Add(inactiveQuestsList->data);
-			if (questsInactive.At(questsInactive.Find(inactiveQuestsList->data)) != nullptr) questsInactive.Del(inactiveQuestsList);
-			inactiveQuestsList->data->status = 1;
-		}
-
 		inactiveQuestsList = inactiveQuestsList->next;
 	}
+
+	return true;
+}
+
+// This function manages the logic for every quest. For appearing and completion
+bool QuestManager::CheckQuestsLogic()
+{
+	/*
+
+	Quest 7:
+		Appear: Tp to bedroom
+		Complete: Opened diary bool
+	Quest 8: (interact with residents in the living room)
+		Appear: Complete quest 7
+		Complete: interaction count == 3
+	Quest 9: (visit the shop)
+		Appear: Complete quest 7
+		Complete: Talk to the shopkeeper
+	Quest 10: (visit the bathroom)
+		Appear: Complete quest 7
+		Complete: Tp to bathroom
+	Quest 11: (visit the kitchen)
+		Appear: Complete quest 7
+		Complete: Tp to kitchen
+	*/
+
+	// Quest 1:
+	if ((tpFlags & 1 << TpFlags::GRANDPA) != 0)
+		AppearQuest(1);
+	if (((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0) && ((tpFlags & 1 << TpFlags::SMALL_PUZZLE) != 0))
+		CompleteQuest(1);
+
+	// Quest 2:
+	// It appears when completing quest 1
+	if (/* Finsh puzzle condition && */((tpFlags & 1 << TpFlags::FIGHT) != 0))
+		CompleteQuest(2);
+
+	// Quest 3:
+	// It appears when completing quest 2
+	if (/* Finish first fight condition && */((tpFlags & 1 << TpFlags::BIG_PUZZLE) != 0))
+		CompleteQuest(3);
+
+	// Quest 4:
+	// It appears when completing quest 3
+	if (/* Finish big puzzle condition && */((tpFlags & 1 << TpFlags::LABYRINTH) != 0))
+		CompleteQuest(4);
+
+	// Quest 5:
+	// It appears when completing quest 4
+	if (/* Labyrinth sensor achieved */ 1)
+		CompleteQuest(5);
+
+	// Quest 6:
+	if ((tpFlags & 1 << TpFlags::BOSS_FIGHT) != 0)
+		AppearQuest(6);
+	if (/* Finish boss fight condition */ 1)
+		CompleteQuest(6);
+
+	// Quest 7:
+	if ((tpFlags & 1 << TpFlags::BEDROOM) != 0)
+		AppearQuest(7);
+	if (/* Opened diary condition */ 1)
+		CompleteQuest(7);
+
 
 	return true;
 }
@@ -196,8 +250,11 @@ bool QuestManager::DrawActiveQuests()
 {
 	if (drawQuests)
 	{
-		int offsetY = 30;
-		int offsetX = 30;
+		// Draw back square
+		app->render->DrawTexture(bookTex, -app->render->camera.x, -app->render->camera.y, false, &bookBox);
+
+		int offsetY = 70;
+		int offsetX = 45;
 		SString auxDescription;
 		const char* cutText = "...";
 		ListItem<Quest*>* activeQuestList = questsActive.start;
@@ -211,15 +268,12 @@ bool QuestManager::DrawActiveQuests()
 				auxDescription += cutText;
 			}
 
-			// Draw back square
-
-
 			// Draw title
-			app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 40, 2, { 250,250,250,255 });
+			app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 35, 2, { 0,0,0,255 });
 			offsetY += 37; // Offset the description from the title
 			offsetX += 15; // Offset the description from the title
-			app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 27, 2, { 200,200,200,255 });
-			offsetY += 60; // Offset the quest from the last one
+			app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 22, 2, { 80,80,80,255 });
+			offsetY += 40; // Offset the quest from the last one
 			offsetX -= 15; // Offset the descripton from the title
 
 			activeQuestList = activeQuestList->next;
@@ -238,8 +292,28 @@ bool QuestManager::CompleteQuest(int id)
 		if (id == L->data->id)
 		{
 			L->data->isCompleted = true;
+			return true;
 		}
 		L = L->next;
+	}
+	return true;
+}
+
+// This function looks at the complete quest list and looks if the id passed as an argument matches -->
+// --> with the quest id. If true puts that quest boolean isCompleted = true
+bool QuestManager::AppearQuest(int id)
+{
+	ListItem<Quest*>* inactiveL = questsInactive.start;
+	while (inactiveL != nullptr)
+	{
+		if (id == inactiveL->data->id)
+		{
+			inactiveL->data->status = 1;
+			questsActive.Add(inactiveL->data);
+			if (questsInactive.At(questsInactive.Find(inactiveL->data)) != nullptr) questsInactive.Del(inactiveL);
+		}
+
+		inactiveL = inactiveL->next;
 	}
 	return true;
 }

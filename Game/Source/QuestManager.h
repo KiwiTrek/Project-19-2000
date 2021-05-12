@@ -5,9 +5,20 @@
 #include "List.h"
 #include "SString.h"
 #include "App.h"
+#include "Log.h"
+#include "Input.h"
+#include "Render.h"
+#include "Font.h"
+#include "Textures.h"
+#include "Defs.h"
+#include "Log.h"
+#include "EntityManager.h"
+
 #include "External/PugiXml/src/pugixml.hpp"
+#include "SDL/include/SDL_scancode.h"
 
 #include <string>
+#include <iostream>
 using namespace std;
 
 class Font;
@@ -19,13 +30,13 @@ public:
 	~Quest() {};
 public:
 	int id; // Quest ID (unique for each quest)
-	int type; // Quest type: 0 --> gather 1 --> kill 2 --> delivery 3 --> dialogue
+	//int type; // Quest type: 0 --> gather 1 --> kill 2 --> delivery 3 --> dialogue
 	SString title; // Quest title
 	SString description; // Quest description
-	SString objective; // Object gathered or monster killer or NPC talked
-	int quantity; // Amount of objective required for the quest
-	SString demandingNPC; // Name of NPC quest giver
-	SString rewardingNPC; // Name of rewarding NPC
+	//SString objective; // Object gathered or monster killer or NPC talked
+	//int quantity; // Amount of objective required for the quest
+	//SString demandingNPC; // Name of NPC quest giver
+	//SString rewardingNPC; // Name of rewarding NPC
 	int rewardXP; // Quantity of XP rewarded
 	int rewardGold; // Quantity of Gold rewarded
 	string requiredIdString; // For a quest chain if it requires another quest ID completed before
@@ -50,12 +61,14 @@ public:
 
 	bool CleanUp();
 
+	bool FinishedQuestLogic();
+	bool ChainQuestsLogic();
 	bool CheckQuestsLogic();
-	bool CheckChainQuestsLogic();
 	bool CheckObjectivesCompletion();
 	bool DebugQuests();
 
 	bool CompleteQuest(int id);
+	bool AppearQuest(int id);
 
 	bool DrawActiveQuests();
 
@@ -63,7 +76,24 @@ public:
 	int CountRequiredIds(int requiredIds[]);
 
 public:
+	enum TpFlags
+	{
+		GRANDPA, // 0
+		SMALL_PUZZLE,
+		FIGHT,
+		BIG_PUZZLE,
+		LABYRINTH,
+		BOSS_FIGHT, // 5 
+		BEDROOM,
+		SHOP,
+		LIVING_ROOM,
+		BATHROOM,
+		KITCHEN // 10
+	};
+
 	bool drawQuests = false;
+
+	unsigned char tpFlags;
 
 private:
 	int totalQuests = 0;
@@ -74,8 +104,12 @@ private:
 	List<Quest*> questsFinished;
 
 	Font* font;
+	SDL_Texture *bookTex;
+	SDL_Rect bookBox;
 
 	int debugId = 1;
+
+
 };
 
 

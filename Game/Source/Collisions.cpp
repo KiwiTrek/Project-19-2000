@@ -10,6 +10,7 @@
 #include "SceneCombat.h"
 #include "EntityManager.h"
 #include "NPC.h" 
+#include "QuestManager.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -336,6 +337,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							break;
 						case 38:
 							onceDoor = true;
+							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::FIGHT) | 1;
 							return { 15 * app->map->data.tileWidth, (28 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 50:
@@ -344,6 +346,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							break;
 						case 63:
 							onceDoor = true;
+							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::SMALL_PUZZLE) | 1;
 							return { 15 * app->map->data.tileWidth, (50 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 78:
@@ -352,6 +355,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							break;
 						case 87:
 							onceDoor = true;
+							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::GRANDPA) | 1;
 							return { 15 * app->map->data.tileWidth, (78 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -362,6 +366,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					case 21:
 					{
 						onceDoor = true;
+						app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::BIG_PUZZLE) | 1;
 						return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -392,10 +397,12 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						{
 						case 9:
 							onceDoor = true;
+							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::LABYRINTH) | 1;
 							return { 38 * app->map->data.tileWidth, (92 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 65:
 							app->map->CleanUp();
+							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::BEDROOM) | 1;
 							if (app->map->data.type == MapTypes::MAPTYPE_UNKNOWN)
 							{
 								if (app->map->LoadNewMap("home.tmx"))
