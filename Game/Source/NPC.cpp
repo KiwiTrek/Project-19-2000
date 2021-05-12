@@ -140,7 +140,7 @@ bool Npc::Draw()
 		app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
 		break;
 	case NpcId::CAT:
-		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::ACTIVE) == 0)
+		if ((app->entities->flagsSuperhero & 1 << (int)DialogueFlags::ACTIVE) == 0)
 		{
 		app->render->DrawTexture(app->entities->NPCTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
 		}

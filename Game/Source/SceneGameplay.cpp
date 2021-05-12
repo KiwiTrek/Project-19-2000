@@ -310,7 +310,7 @@ bool SceneGameplay::UpdateDialogue(float dt)
 	if (app->entities->dialogCounter > 0.0f && dialogSystem->currentDialog == nullptr)
 	{
 		app->entities->dialogCounter += dt;
-		if (app->entities->dialogCounter >= 1.0f)
+		if (app->entities->dialogCounter >= 0.545f)
 		{
 			app->entities->dialogCounter = 0.0f;
 
@@ -770,7 +770,7 @@ bool SceneGameplay::Draw()
 	{
 		dialogSystem->savingCounter += dtSave;
 	}
-	if (dialogSystem->savingCounter >= 2.0f)
+	if (dialogSystem->savingCounter >= 1.5f)
 	{
 		dialogSystem->savingBool = false;
 		dialogSystem->savingCounter = 0.0f;
