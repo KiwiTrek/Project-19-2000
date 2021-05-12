@@ -20,6 +20,13 @@ SceneCombat::SceneCombat()
 	flags = 0;
 	white = { 255,255,255,255 };
 
+	for (int i = 0; i != 27; ++i)
+	{
+		transition.PushBack({ 600 * i, 0, 600, 338 });
+	}
+	transition.loop = false;
+	transition.speed = 10.0f;
+
 	characterFlags = 0;
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
 	characterFlags = SetBit(characterFlags, (uint)EntityId::VIOLENT);
@@ -32,6 +39,8 @@ bool SceneCombat::Load()
 {
 	// COMBAT
 	combatGui = app->tex->Load("Textures/GUI/combatGui.png");
+	transitionTx = app->tex->Load("Textures/BattleTransition.png");
+	waitForTransition = TransitionStatus::NONE;
 	scripted = false;
 
 	currentChar = nullptr;
@@ -142,11 +151,16 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	itemSelected = 0;
 	pageOne = true;
 	targetItem = false;
+
 	wait = false;
+	waitForTransition = TransitionStatus::SCENE;
 
 	firstLine.Clear();
 	secondLine.Clear();
 	thirdLine.Clear();
+	arrowCombat = { 1280,192,50,50 };
+	blink = false;
+	blinkTimer = 0.0f;
 
 	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
@@ -174,339 +188,252 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 
 bool SceneCombat::Update(float dt)
 {
-	if (app->input->CheckButton("cancel", KEY_DOWN))
+	if (waitForTransition == TransitionStatus::SCENE || waitForTransition == TransitionStatus::BATTLE)
 	{
-		characterSelected = true;
-		targetAttack = false;
-		targetItem = false;
-		combatMenuFlags = 0;
-		changeMenu = true;
-		app->gui->ResetButtons();
-
-		if (attackSelected != -1)
-		{
-			attackSelected = -1;
-		}
-		if (itemSelected != 0)
-		{
-			btnCombatItems->state = GuiControlState::DISABLED;
-			btnLeftArrow->state = GuiControlState::DISABLED;
-			combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
-			itemSelected = 0;
-		}
+		UpdateTransition(dt);
 	}
-
-	//WAIT FOR PLAYER INPUT
-	if (wait)
+	else if (waitForTransition == TransitionStatus::END)
 	{
-		if (app->input->CheckButton("select", KEY_DOWN))
+		if (app->input->CheckButton("cancel", KEY_DOWN))
 		{
-			wait = false;
-		}
-	}
-	else
-	{
-		switch (combatState)
-		{
-		case COMBAT_START:
-		{
-			//CHECK WHO IS FIRST
-			ListItem<Entity*>* e = app->entities->entities.start;
+			characterSelected = true;
+			targetAttack = false;
+			targetItem = false;
+			combatMenuFlags = 0;
+			changeMenu = true;
+			app->gui->ResetButtons();
 
-			while (e != nullptr)
+			if (attackSelected != -1)
 			{
-				//ADDS THEM TO THE LIST
-				if (e->data->type == EntityType::COMBAT_ENTITY)
-				{
-					CombatEntity* cEntity = (CombatEntity*)e->data;
-					if (cEntity->stats.hPoints > 0)
-					{
-						turnOrder.Add(cEntity);
-					}
-				}
-				e = e->next;
+				attackSelected = -1;
 			}
-
-			SortSpeed(false);
-			combatState = CombatStateType::COMBAT_MIDGAME;
+			if (itemSelected != 0)
+			{
+				btnCombatItems->state = GuiControlState::DISABLED;
+				btnLeftArrow->state = GuiControlState::DISABLED;
+				combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
+				itemSelected = 0;
+			}
 		}
-		break;
-		case COMBAT_MIDGAME:
+
+		//WAIT FOR PLAYER INPUT
+		if (wait)
 		{
-			if (currentEntity == nullptr)
+			if (app->input->CheckButton("select", KEY_DOWN))
 			{
-				SortSpeed(false);
-				currentEntity = turnOrder.start;
-				if (IsCharacter(currentEntity->data))
-				{
-					switch (currentEntity->data->id)
-					{
-					case EntityId::MC:
-						currentChar = &mainChar;
-						break;
-					case EntityId::VIOLENT:
-						currentChar = &grandpa;
-						break;
-					default:
-						break;
-					}
-				}
+				wait = false;
 			}
-			else
+			blinkTimer += dt;
+			if (blinkTimer >= 0.5f)
 			{
-				ListItem<CombatEntity*>* e = turnOrder.start;
+				blinkTimer = 0.0f;
+				blink = !blink;
+			}
+		}
+		else
+		{
+			switch (combatState)
+			{
+			case COMBAT_START:
+			{
+				//CHECK WHO IS FIRST
+				ListItem<Entity*>* e = app->entities->entities.start;
+
 				while (e != nullptr)
 				{
-					ListItem<CombatEntity*>* eNext = e->next;
-					if (e->data->stats.hPoints <= 0)
+					//ADDS THEM TO THE LIST
+					if (e->data->type == EntityType::COMBAT_ENTITY)
 					{
-						LOG("%s is dead!", e->data->name.GetString());
-						char tmp[50];
-						sprintf(tmp, "%s is dead!", e->data->name.GetString());
-						NextLine(tmp);
-						app->audio->PlayFx(deadFx);
-						wait = true;
-						currentChar = nullptr;
-						characterSelected = false;
-
-						if (!IsCharacter(e->data)) app->entities->DestroyEntity(e->data);
-						turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
-						SortSpeed(false);
-						if (currentEntity == nullptr)
+						CombatEntity* cEntity = (CombatEntity*)e->data;
+						if (cEntity->stats.hPoints > 0)
 						{
-							currentEntity = eNext;
+							turnOrder.Add(cEntity);
 						}
 					}
-					e = eNext;
+					e = e->next;
 				}
 
-				VictoryCondition();
-				DefeatCondition();
-
-				if (combatState != CombatStateType::COMBAT_END)
+				SortSpeed(false);
+				combatState = CombatStateType::COMBAT_MIDGAME;
+			}
+			break;
+			case COMBAT_MIDGAME:
+			{
+				if (currentEntity == nullptr)
 				{
-					if (!hasTicked)
+					SortSpeed(false);
+					currentEntity = turnOrder.start;
+					if (IsCharacter(currentEntity->data))
 					{
-						StressPower();
-						TickDownBuffs();
-						hasTicked = true;
-					}
-
-					if (IsCharacter(currentEntity->data))													// CHARACTER
-					{
-						if (once) //i think we should use the flags menu to turn this true only when there are no "main buttons" selected
-						{
-							once = false;
-							characterSelected = true;						//should delete eventually
-							changeMenu = true;
-
-							if (currentEntity->data->id == EntityId::MC) NextLine("It's your turn!");
-							else
-							{
-								char tmp[50];
-								sprintf(tmp, "It's %s's turn!", currentEntity->data->name.GetString());
-								NextLine(tmp);
-							}
-						}
-
-						//player should decide what to do here based on the buttons (guiclickevent)
-						//LOG("%s's turn!\n", currentEntity->data->name.GetString());
-
-						//Item logic
-						if (itemSelected != 0)
-						{
-							if (target == nullptr)
-								SelectTarget();
-							else
-							{
-								app->gui->ResetButtons();
-								items.At(itemSelected - 1)->data->Use(target);
-								char tmp[50];
-								sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
-								NextLine(tmp);
-								app->audio->PlayFx(app->scene->itemFx);
-								if (items.At(itemSelected - 1)->data->count == 0)
-								{
-									items.Del(items.At(itemSelected - 1));
-								}
-								itemSelected = 0;
-								target = nullptr;
-								targetItem = false;
-								finishedAction = true;
-								wait = true;
-							}
-						}
-
 						switch (currentEntity->data->id)
 						{
 						case EntityId::MC:
 							currentChar = &mainChar;
-
-							if (currentEntity->data->isStunned != 0)
-							{
-								finishedAction = true;
-								char tmp[75];
-								sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
-								NextLine(tmp);
-							}
-							else
-							{
-								if (currentEntity->data->isTaunted != 0)
-								{
-									if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
-									target = currentEntity->data->tauntedBy;
-									attackSelected = 0;
-									char tmp[75];
-									sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
-									NextLine(tmp);
-								}
-
-								if (attackSelected == -1)
-								{
-								}
-								else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
-								{
-									targetAttack = true;
-									if (target == nullptr)
-										SelectTarget();
-									else
-									{
-										switch (attackSelected)
-										{
-										case 0: //attack
-											Damage(0, target, false);
-											app->audio->PlayFx(smackFx);
-											break;
-										case 1: //skill 1
-										{
-											LOG("skill 1");
-											srand(time(NULL));
-											int s = rand() % 10 + 11;
-											Heal(s, target);
-											app->audio->PlayFx(confortFx);
-											break;
-										}
-										case 2: //skill 2
-										{
-											LOG("skill 2");
-											Damage(2, target, false);
-											app->audio->PlayFx(slapFx);
-											break;
-										}
-										case 3: //skill 3
-										{
-											LOG("%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
-											char tmp[75];
-											sprintf(tmp, "%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
-											NextLine(tmp);
-											SString s = "25 buff";
-											Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.mAtk);
-											a->turns = 3;
-											target->attackPool.Add(a);
-											target->stats.pAtk += a->stat1 * 25 / 100;
-											target->stats.mAtk += a->stat2 * 25 / 100;
-											app->audio->PlayFx(confortFx);
-											break;
-										}
-										//case 4: //skill 4
-										//	LOG("skill 4");
-										//	break;
-										//case 5: //skill 5
-										//	LOG("skill 5");
-										//	break;
-										//case 6: //skill 6
-										//	LOG("skill 6");
-										//	break;
-
-										default:
-											break;
-										}
-										attackSelected = -1;
-										target = nullptr;
-										targetAttack = false;
-										finishedAction = true;
-										wait = true;
-									}
-								}
-								else
-								{
-									switch (attackSelected)
-									{
-									case 1: //skill 1
-										LOG("skill 1");
-										break;
-									case 2: //skill 2
-										LOG("skill 2");
-										break;
-									case 3: //skill 3
-										LOG("skill 3");
-										break;
-									case 4: //skill 4
-										LOG("skill 4");
-										break;
-									case 5: //skill 5
-										LOG("skill 5");
-										break;
-									case 6: //skill 6
-										LOG("skill 6");
-										break;
-									default:
-										break;
-									}
-									attackSelected = -1;
-									finishedAction = true;
-								}
-							}
 							break;
 						case EntityId::VIOLENT:
 							currentChar = &grandpa;
+							break;
+						default:
+							break;
+						}
+					}
+				}
+				else
+				{
+					ListItem<CombatEntity*>* e = turnOrder.start;
+					while (e != nullptr)
+					{
+						ListItem<CombatEntity*>* eNext = e->next;
+						if (e->data->stats.hPoints <= 0)
+						{
+							LOG("%s is dead!", e->data->name.GetString());
+							char tmp[50];
+							sprintf(tmp, "%s is dead!", e->data->name.GetString());
+							NextLine(tmp);
+							app->audio->PlayFx(deadFx);
+							wait = true;
+							currentChar = nullptr;
+							characterSelected = false;
 
-							if (currentEntity->data->isStunned != 0)
+							if (!IsCharacter(e->data)) app->entities->DestroyEntity(e->data);
+							turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
+							SortSpeed(false);
+							if (currentEntity == nullptr)
 							{
-								finishedAction = true;
-								char tmp[75];
-								sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
-								NextLine(tmp);
+								currentEntity = eNext;
 							}
-							else
+						}
+						e = eNext;
+					}
+
+					VictoryCondition();
+					DefeatCondition();
+
+					if (combatState != CombatStateType::COMBAT_END)
+					{
+						if (!hasTicked)
+						{
+							StressPower();
+							TickDownBuffs();
+							hasTicked = true;
+						}
+
+						if (IsCharacter(currentEntity->data))													// CHARACTER
+						{
+							if (once) //i think we should use the flags menu to turn this true only when there are no "main buttons" selected
 							{
-								if (currentEntity->data->isTaunted != 0)
+								once = false;
+								characterSelected = true;						//should delete eventually
+								changeMenu = true;
+
+								if (currentEntity->data->id == EntityId::MC) NextLine("It's your turn!");
+								else
 								{
-									if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
-									target = currentEntity->data->tauntedBy;
-									attackSelected = 0;
-									char tmp[75];
-									sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
+									char tmp[50];
+									sprintf(tmp, "It's %s's turn!", currentEntity->data->name.GetString());
 									NextLine(tmp);
 								}
+							}
 
-								if (attackSelected == -1)
+							//player should decide what to do here based on the buttons (guiclickevent)
+							//LOG("%s's turn!\n", currentEntity->data->name.GetString());
+
+							//Item logic
+							if (itemSelected != 0)
+							{
+								if (target == nullptr)
+									SelectTarget();
+								else
 								{
-								}
-								else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
-								{
-									targetAttack = true;
-									if (target == nullptr)
-										SelectTarget();
-									else
+									app->gui->ResetButtons();
+									items.At(itemSelected - 1)->data->Use(target);
+									char tmp[50];
+									sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
+									NextLine(tmp);
+									app->audio->PlayFx(app->entities->itemFx);
+									if (items.At(itemSelected - 1)->data->count == 0)
 									{
-										switch (attackSelected)
+										items.Del(items.At(itemSelected - 1));
+									}
+									itemSelected = 0;
+									target = nullptr;
+									targetItem = false;
+									finishedAction = true;
+									wait = true;
+								}
+							}
+
+							switch (currentEntity->data->id)
+							{
+							case EntityId::MC:
+								currentChar = &mainChar;
+
+								if (currentEntity->data->isStunned != 0)
+								{
+									finishedAction = true;
+									char tmp[75];
+									sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
+									NextLine(tmp);
+								}
+								else
+								{
+									if (currentEntity->data->isTaunted != 0)
+									{
+										if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
+										target = currentEntity->data->tauntedBy;
+										attackSelected = 0;
+										char tmp[75];
+										sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
+										NextLine(tmp);
+									}
+
+									if (attackSelected == -1)
+									{
+									}
+									else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
+									{
+										targetAttack = true;
+										if (target == nullptr)
+											SelectTarget();
+										else
 										{
-										case 0: //attack
-											LOG("%d", grandpa.character->attackPool.At(0)->data->stat1);
-											app->audio->PlayFx(smackFx);
-											Damage(0, target, true);
-											break;
-											//case 1: //skill 1
-											//  app->audio->PlayFx(smiteFx);
-											//	LOG("skill 1");
-											//	break;
-											//case 2: //skill 2
-											//	LOG("skill 2");
-											//	break;
-											//case 3: //skill 3
-											//	LOG("skill 3");
-											//	break;
+											switch (attackSelected)
+											{
+											case 0: //attack
+												Damage(0, target, false);
+												app->audio->PlayFx(smackFx);
+												break;
+											case 1: //skill 1
+											{
+												LOG("skill 1");
+												srand(time(NULL));
+												int s = rand() % 10 + 11;
+												Heal(s, target);
+												app->audio->PlayFx(confortFx);
+												break;
+											}
+											case 2: //skill 2
+											{
+												LOG("skill 2");
+												Damage(2, target, false);
+												app->audio->PlayFx(slapFx);
+												break;
+											}
+											case 3: //skill 3
+											{
+												LOG("%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
+												char tmp[75];
+												sprintf(tmp, "%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
+												NextLine(tmp);
+												SString s = "25 buff";
+												Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.mAtk);
+												a->turns = 3;
+												target->attackPool.Add(a);
+												target->stats.pAtk += a->stat1 * 25 / 100;
+												target->stats.mAtk += a->stat2 * 25 / 100;
+												app->audio->PlayFx(confortFx);
+												break;
+											}
 											//case 4: //skill 4
 											//	LOG("skill 4");
 											//	break;
@@ -516,359 +443,701 @@ bool SceneCombat::Update(float dt)
 											//case 6: //skill 6
 											//	LOG("skill 6");
 											//	break;
+
+											default:
+												break;
+											}
+											attackSelected = -1;
+											target = nullptr;
+											targetAttack = false;
+											finishedAction = true;
+											wait = true;
+										}
+									}
+									else
+									{
+										switch (attackSelected)
+										{
+										case 1: //skill 1
+											LOG("skill 1");
+											break;
+										case 2: //skill 2
+											LOG("skill 2");
+											break;
+										case 3: //skill 3
+											LOG("skill 3");
+											break;
+										case 4: //skill 4
+											LOG("skill 4");
+											break;
+										case 5: //skill 5
+											LOG("skill 5");
+											break;
+										case 6: //skill 6
+											LOG("skill 6");
+											break;
 										default:
 											break;
 										}
 										attackSelected = -1;
-										target = nullptr;
-										targetAttack = false;
 										finishedAction = true;
-										wait = true;
 									}
+								}
+								break;
+							case EntityId::VIOLENT:
+								currentChar = &grandpa;
+
+								if (currentEntity->data->isStunned != 0)
+								{
+									finishedAction = true;
+									char tmp[75];
+									sprintf(tmp, "%s is stunned and can't move!", currentEntity->data->name.GetString());
+									NextLine(tmp);
 								}
 								else
 								{
-									switch (attackSelected)
+									if (currentEntity->data->isTaunted != 0)
 									{
-									case 1: //skill 1
-										LOG("skill 1");
+										if (currentEntity->data->isTaunted == 1) currentEntity->data->isTaunted = 0;
+										target = currentEntity->data->tauntedBy;
+										attackSelected = 0;
+										char tmp[75];
+										sprintf(tmp, "%s is taunted by %s!", currentEntity->data->name.GetString(), target->name.GetString());
+										NextLine(tmp);
+									}
+
+									if (attackSelected == -1)
+									{
+									}
+									else if (currentEntity->data->attackPool.At(attackSelected)->data->target == TargetType::ONE)
+									{
+										targetAttack = true;
+										if (target == nullptr)
+											SelectTarget();
+										else
+										{
+											switch (attackSelected)
+											{
+											case 0: //attack
+												LOG("%d", grandpa.character->attackPool.At(0)->data->stat1);
+												app->audio->PlayFx(smackFx);
+												Damage(0, target, true);
+												break;
+												//case 1: //skill 1
+												//  app->audio->PlayFx(smiteFx);
+												//	LOG("skill 1");
+												//	break;
+												//case 2: //skill 2
+												//	LOG("skill 2");
+												//	break;
+												//case 3: //skill 3
+												//	LOG("skill 3");
+												//	break;
+												//case 4: //skill 4
+												//	LOG("skill 4");
+												//	break;
+												//case 5: //skill 5
+												//	LOG("skill 5");
+												//	break;
+												//case 6: //skill 6
+												//	LOG("skill 6");
+												//	break;
+											default:
+												break;
+											}
+											attackSelected = -1;
+											target = nullptr;
+											targetAttack = false;
+											finishedAction = true;
+											wait = true;
+										}
+									}
+									else
+									{
+										switch (attackSelected)
+										{
+										case 1: //skill 1
+											LOG("skill 1");
+											break;
+										case 2: //skill 2
+											LOG("skill 2");
+											break;
+										case 3: //skill 3
+											LOG("skill 3");
+											break;
+										case 4: //skill 4
+											LOG("skill 4");
+											break;
+										case 5: //skill 5
+											LOG("skill 5");
+											break;
+										case 6: //skill 6
+											LOG("skill 6");
+											break;
+										default:
+											break;
+										}
+										attackSelected = -1;
+										finishedAction = true;
+									}
+								}
+								break;
+							case EntityId::STUBBORN:
+								finishedAction = true;
+								break;
+							case EntityId::KIND:
+								finishedAction = true;
+								break;
+							default:
+								break;
+							}
+						}
+						else																					// ENEMY
+						{
+							//ENEMY ATTACK PATTERN?
+							switch (currentEntity->data->id)
+							{
+							case EntityId::STRESSING_SHADOW:
+							{
+								srand(time(NULL));
+								int p = rand() % 10 + 1;
+								if (p >= 6) //Stressing attack
+								{
+									//dialogue that X enemy does Y attack to MC
+									LOG("%s does stress attack!", currentEntity->data->name.GetString());
+									char tmp[75];
+									sprintf(tmp, "%s does stress attack!", currentEntity->data->name.GetString());
+									NextLine(tmp);
+									mainChar.character->stats.stress += 10;
+									if (mainChar.character->stats.stress >= mainChar.character->stats.stressMax) mainChar.character->stats.stress = mainChar.character->stats.stressMax;
+									mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
+									app->audio->PlayFx(stressFx);
+								}
+								else //Magical blow
+								{
+									int t = EnemyTarget();
+									switch (t)
+									{
+									case 1: //MC
+										Damage(0, mainChar.character, true);
 										break;
-									case 2: //skill 2
-										LOG("skill 2");
+									case 2: //GRANDPA
+										Damage(0, grandpa.character, true);
+										grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 										break;
-									case 3: //skill 3
-										LOG("skill 3");
+									case 3:
 										break;
-									case 4: //skill 4
-										LOG("skill 4");
-										break;
-									case 5: //skill 5
-										LOG("skill 5");
-										break;
-									case 6: //skill 6
-										LOG("skill 6");
+									case 4:
 										break;
 									default:
 										break;
 									}
-									attackSelected = -1;
-									finishedAction = true;
+									app->audio->PlayFx(magicBlowFx);
 								}
+								finishedAction = true;
+								wait = true;
+								break;
 							}
-							break;
-						case EntityId::STUBBORN:
-							finishedAction = true;
-							break;
-						case EntityId::KIND:
-							finishedAction = true;
-							break;
-						default:
-							break;
-						}
-					}
-					else																					// ENEMY
-					{
-						//ENEMY ATTACK PATTERN?
-						switch (currentEntity->data->id)
-						{
-						case EntityId::STRESSING_SHADOW:
-						{
-							srand(time(NULL));
-							int p = rand() % 10 + 1;
-							if (p >= 6) //Stressing attack
+							case EntityId::FURIOUS_SHADOW:
 							{
-								//dialogue that X enemy does Y attack to MC
-								LOG("%s does stress attack!", currentEntity->data->name.GetString());
-								char tmp[75];
-								sprintf(tmp, "%s does stress attack!", currentEntity->data->name.GetString());
-								NextLine(tmp);
-								mainChar.character->stats.stress += 10;
-								if (mainChar.character->stats.stress >= mainChar.character->stats.stressMax) mainChar.character->stats.stress = mainChar.character->stats.stressMax;
-								mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
-								app->audio->PlayFx(stressFx);
-							}
-							else //Magical blow
-							{
-								int t = EnemyTarget();
-								switch (t)
+								srand(time(NULL));
+								int p = rand() % 10 + 1;
+								if (p >= 5) //Getting stronger
 								{
-								case 1: //MC
-									Damage(0, mainChar.character, true);
-									break;
-								case 2: //GRANDPA
-									Damage(0, grandpa.character, true);
-									grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
-									break;
-								case 3:
-									break;
-								case 4:
-									break;
-								default:
-									break;
-								}
-								app->audio->PlayFx(magicBlowFx);
-							}
-							finishedAction = true;
-							wait = true;
-							break;
-						}
-						case EntityId::FURIOUS_SHADOW:
-						{
-							srand(time(NULL));
-							int p = rand() % 10 + 1;
-							if (p >= 5) //Getting stronger
-							{
-								//dialogue that X enemy does Y attack
-								LOG("Furious Shadow got stronger!");
-								NextLine("Furious Shadow got stronger!");
-								currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
-								currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
-								currentEntity->data->attackPool.At(0)->data->turns = 2;
-								app->audio->PlayFx(strongerFx);
+									//dialogue that X enemy does Y attack
+									LOG("Furious Shadow got stronger!");
+									NextLine("Furious Shadow got stronger!");
+									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
+									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
+									currentEntity->data->attackPool.At(0)->data->turns = 2;
+									app->audio->PlayFx(strongerFx);
 
-							}
-							else //Fury of blades
-							{
-								Damage(1, mainChar.character, false);
-								mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
-								Damage(1, grandpa.character, false);
-								grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
-								//dialogue that X enemy does Y attack to all characters
-								LOG("Furious Shadow attack to all!\n");
-								NextLine("Furious Shadow attack to all!");
-								app->audio->PlayFx(bladesFx);
-							}
-							finishedAction = true;
-							wait = true;
-							break;
-						}
-						case EntityId::NIGHTMARE:
-						{
-							srand(time(NULL));
-							int p = rand() % 100 + 1;
-							if (p >= 60) //Bad dream
-							{
-								int t = EnemyTarget();
-								switch (t)
+								}
+								else //Fury of blades
 								{
-								case 1: //MC
-									Damage(0, mainChar.character, false);
+									Damage(1, mainChar.character, false);
 									mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
-									break;
-								case 2: //GRANDPA
-									Damage(0, grandpa.character, false);
+									Damage(1, grandpa.character, false);
 									grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
-									break;
-								case 3:
-									break;
-								case 4:
-									break;
-								default:
-									break;
+									//dialogue that X enemy does Y attack to all characters
+									LOG("Furious Shadow attack to all!\n");
+									NextLine("Furious Shadow attack to all!");
+									app->audio->PlayFx(bladesFx);
 								}
-								app->audio->PlayFx(badDreamFx);
+								finishedAction = true;
+								wait = true;
+								break;
 							}
-							else if (p >= 30) //Nightmarish
+							case EntityId::NIGHTMARE:
 							{
-								//dialogue that X enemy does Y attack
-								LOG("Nightmarish got stronger!");
-								NextLine("Nightmarish got stronger!");
-								currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
-								currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
-								currentEntity->data->attackPool.At(0)->data->turns = 2;
-								app->audio->PlayFx(strongerFx);
-							}
-							else if (p >= 5) //Close your eyes
-							{
-								int t = EnemyTarget();
-								switch (t)
+								srand(time(NULL));
+								int p = rand() % 100 + 1;
+								if (p >= 60) //Bad dream
 								{
-								case 1: //MC
-									//dialogue that X enemy does Y attack to Z character
-									LOG("Nightmarish used Close Your Eyes on You!");
-									NextLine("Nightmarish used Close Your Eyes on You!");
-									mainChar.character->isTaunted = 1;
-									mainChar.character->tauntedBy = currentEntity->data;
-									break;
-								case 2: //GRANDPA
-									//dialogue that X enemy does Y attack to Z character
-									LOG("Nightmarish used Close Your Eyes on Grandpa!");
-									NextLine("Nightmarish used Close Your Eyes on Grandpa!");
-									grandpa.character->isTaunted = 1;
-									grandpa.character->tauntedBy = currentEntity->data;
-									break;
-								case 3:
-									break;
-								case 4:
-									break;
-								default:
-									break;
+									int t = EnemyTarget();
+									switch (t)
+									{
+									case 1: //MC
+										Damage(0, mainChar.character, false);
+										mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
+										break;
+									case 2: //GRANDPA
+										Damage(0, grandpa.character, false);
+										grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+										break;
+									case 3:
+										break;
+									case 4:
+										break;
+									default:
+										break;
+									}
+									app->audio->PlayFx(badDreamFx);
 								}
-								app->audio->PlayFx(closeEyesFx);
-							}
-							else //Grasp of depression
-							{
-								int t = EnemyTarget();
-								switch (t)
+								else if (p >= 30) //Nightmarish
 								{
-								case 1: //MC
+									//dialogue that X enemy does Y attack
+									LOG("Nightmarish got stronger!");
+									NextLine("Nightmarish got stronger!");
+									currentEntity->data->stats.pDef += ((currentEntity->data->stats.pDef * 10) / 100);
+									currentEntity->data->stats.mDef += ((currentEntity->data->stats.mDef * 10) / 100);
+									currentEntity->data->attackPool.At(0)->data->turns = 2;
+									app->audio->PlayFx(strongerFx);
+								}
+								else if (p >= 5) //Close your eyes
 								{
-									//dialogue that X enemy does Y attack to Z character
-									LOG("Nightmarish used Grasp of Depression on You!");
-									NextLine("Nightmarish used Grasp of Depression on You!");
-									mainChar.character->isStunned = 1;
-									SString s = "10 debuff";
-									Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
-									a->turns = 1;
-									mainChar.character->attackPool.Add(a);
-									mainChar.character->stats.pDef -= a->stat1 / 10;
-									mainChar.character->stats.mDef -= a->stat2 / 10;
-									break;
+									int t = EnemyTarget();
+									switch (t)
+									{
+									case 1: //MC
+										//dialogue that X enemy does Y attack to Z character
+										LOG("Nightmarish used Close Your Eyes on You!");
+										NextLine("Nightmarish used Close Your Eyes on You!");
+										mainChar.character->isTaunted = 1;
+										mainChar.character->tauntedBy = currentEntity->data;
+										break;
+									case 2: //GRANDPA
+										//dialogue that X enemy does Y attack to Z character
+										LOG("Nightmarish used Close Your Eyes on Grandpa!");
+										NextLine("Nightmarish used Close Your Eyes on Grandpa!");
+										grandpa.character->isTaunted = 1;
+										grandpa.character->tauntedBy = currentEntity->data;
+										break;
+									case 3:
+										break;
+									case 4:
+										break;
+									default:
+										break;
+									}
+									app->audio->PlayFx(closeEyesFx);
 								}
-								case 2: //GRANDPA
+								else //Grasp of depression
 								{
-									//dialogue that X enemy does Y attack to Z character
-									LOG("Nightmarish used Grasp of Depression on Grandpa!");
-									NextLine("Nightmarish used Grasp of Depression on Grandpa!");
-									grandpa.character->isStunned = 1;
-									SString s = "10 debuff";
-									Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
-									a->turns = 1;
-									grandpa.character->attackPool.Add(a);
-									grandpa.character->stats.pDef -= a->stat1 / 10;
-									grandpa.character->stats.mDef -= a->stat2 / 10;
-									break;
+									int t = EnemyTarget();
+									switch (t)
+									{
+									case 1: //MC
+									{
+										//dialogue that X enemy does Y attack to Z character
+										LOG("Nightmarish used Grasp of Depression on You!");
+										NextLine("Nightmarish used Grasp of Depression on You!");
+										mainChar.character->isStunned = 1;
+										SString s = "10 debuff";
+										Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, mainChar.character->stats.pDef, mainChar.character->stats.mDef);
+										a->turns = 1;
+										mainChar.character->attackPool.Add(a);
+										mainChar.character->stats.pDef -= a->stat1 / 10;
+										mainChar.character->stats.mDef -= a->stat2 / 10;
+										break;
+									}
+									case 2: //GRANDPA
+									{
+										//dialogue that X enemy does Y attack to Z character
+										LOG("Nightmarish used Grasp of Depression on Grandpa!");
+										NextLine("Nightmarish used Grasp of Depression on Grandpa!");
+										grandpa.character->isStunned = 1;
+										SString s = "10 debuff";
+										Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, grandpa.character->stats.pDef, grandpa.character->stats.mDef);
+										a->turns = 1;
+										grandpa.character->attackPool.Add(a);
+										grandpa.character->stats.pDef -= a->stat1 / 10;
+										grandpa.character->stats.mDef -= a->stat2 / 10;
+										break;
+									}
+									case 3:
+										break;
+									case 4:
+										break;
+									default:
+										break;
+									}
+									app->audio->PlayFx(graspFx);
 								}
-								case 3:
-									break;
-								case 4:
-									break;
-								default:
-									break;
-								}
-								app->audio->PlayFx(graspFx);
-							}
 
-							finishedAction = true;
-							wait = true;
-							break;
+								finishedAction = true;
+								wait = true;
+								break;
+							}
+							default:
+								break;
+							}
 						}
+
+						if (finishedAction)
+						{
+							LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
+							finishedAction = false;
+							hasTicked = false;
+							once = true;
+							currentEntity = currentEntity->next;
+						}
+					}
+				}
+			}
+			break;
+			case COMBAT_END:
+			{
+				Finish();
+				break;
+			}
+			default:
+				break;
+			}
+		}
+
+		// Logic for using Gamepad or mouse (GUI)
+		ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
+		while (gamepadControls->next != nullptr)
+		{
+			if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
+			{
+				usingGamepad = true;
+				break;
+			}
+			gamepadControls = gamepadControls->next;
+		}
+		int tmpX = 0, tmpY = 0;
+		app->input->GetMouseMotion(tmpX, tmpY);
+		if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
+			usingGamepad = false;
+
+		// Calls update with gamepad parameters (GUI)
+		if (usingGamepad)
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+				changeMenu = false;
+			}
+			if (characterSelected)
+			{
+				app->scene->currentButton->data->Update(dt, 29, 33);
+				if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+				{
+					if (changeMenu)
+					{
+						app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatSkill1));
+						changeMenu = false;
+					}
+					else
+					{
+						app->scene->currentButton->data->Update(dt, 34, 39);
+						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
+						{
+							app->gui->ResetButtons();
+							app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+							combatMenuFlags = 0;
+							changeMenu = true;
+						}
+					}
+				}
+				else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+				{
+					if (changeMenu)
+					{
+						app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatItem1));
+						changeMenu = false;
+					}
+					else
+					{
+						app->scene->currentButton->data->Update(dt, 40, 45);
+						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
+						{
+							app->gui->ResetButtons();
+							app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+							changeMenu = true;
+							combatMenuFlags = 0;
+						}
+					}
+				}
+			}
+		}
+		// Calls update for mouse parameters (GUI)
+		else
+		{
+			if (characterSelected)
+			{
+				btnCombatAttack->Update(dt);
+				btnCombatSkills->Update(dt);
+				btnCombatItems->Update(dt);
+				btnCombatSpecial->Update(dt);
+				btnCombatFlee->Update(dt);
+
+				if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+				{
+					btnCombatSkill1->Update(dt);
+					btnCombatSkill2->Update(dt);
+					btnCombatSkill3->Update(dt);
+					btnCombatSkill4->Update(dt);
+					btnCombatSkill5->Update(dt);
+					btnCombatSkill6->Update(dt);
+				}
+				else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+				{
+					int i = 0;
+					int maxItems = -1;
+					if (pageOne)
+					{
+						i = 0;
+						if (items.Count() > 6)
+							maxItems = 6;
+						else
+							maxItems = items.Count();
+					}
+					else
+					{
+						i = 6;
+						maxItems = items.Count();
+					}
+					for (i; i < maxItems; i++)
+					{
+						switch (i)
+						{
+						case 0:
+							btnCombatItem1->itemId = items.At(i)->data->id;
+							btnCombatItem1->text = items.At(i)->data->effect.attackName;
+							btnCombatItem1->count = items.At(i)->data->countText;
+							btnCombatItem1->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem1;
+							btnCombatItem1->Update(dt);
+							break;
+						case 1:
+							btnCombatItem2->itemId = items.At(i)->data->id;
+							btnCombatItem2->text = items.At(i)->data->effect.attackName;
+							btnCombatItem2->count = items.At(i)->data->countText;
+							btnCombatItem2->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem2;
+							btnCombatItem2->Update(dt);
+							break;
+						case 2:
+							btnCombatItem3->itemId = items.At(i)->data->id;
+							btnCombatItem3->text = items.At(i)->data->effect.attackName;
+							btnCombatItem3->count = items.At(i)->data->countText;
+							btnCombatItem3->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem3;
+							btnCombatItem3->Update(dt);
+							break;
+						case 3:
+							btnCombatItem4->itemId = items.At(i)->data->id;
+							btnCombatItem4->text = items.At(i)->data->effect.attackName;
+							btnCombatItem4->count = items.At(i)->data->countText;
+							btnCombatItem4->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem4;
+							btnCombatItem4->Update(dt);
+							break;
+						case 4:
+							btnCombatItem5->itemId = items.At(i)->data->id;
+							btnCombatItem5->text = items.At(i)->data->effect.attackName;
+							btnCombatItem5->count = items.At(i)->data->countText;
+							btnCombatItem5->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem5;
+							btnCombatItem5->Update(dt);
+							break;
+						case 5:
+							btnCombatItem6->itemId = items.At(i)->data->id;
+							btnCombatItem6->text = items.At(i)->data->effect.attackName;
+							btnCombatItem6->count = items.At(i)->data->countText;
+							btnCombatItem6->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem6;
+							btnCombatItem6->Update(dt);
+							break;
+						case 6:
+							btnCombatItem7->itemId = items.At(i)->data->id;
+							btnCombatItem7->text = items.At(i)->data->effect.attackName;
+							btnCombatItem7->count = items.At(i)->data->countText;
+							btnCombatItem7->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem7;
+							btnCombatItem7->Update(dt);
+							break;
+						case 7:
+							btnCombatItem8->itemId = items.At(i)->data->id;
+							btnCombatItem8->text = items.At(i)->data->effect.attackName;
+							btnCombatItem8->count = items.At(i)->data->countText;
+							btnCombatItem8->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem8;
+							btnCombatItem8->Update(dt);
+							break;
+						case 8:
+							btnCombatItem9->itemId = items.At(i)->data->id;
+							btnCombatItem9->text = items.At(i)->data->effect.attackName;
+							btnCombatItem9->count = items.At(i)->data->countText;
+							btnCombatItem9->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem9;
+							btnCombatItem9->Update(dt);
+							break;
+						case 9:
+							btnCombatItem10->itemId = items.At(i)->data->id;
+							btnCombatItem10->text = items.At(i)->data->effect.attackName;
+							btnCombatItem10->count = items.At(i)->data->countText;
+							btnCombatItem10->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem10;
+							btnCombatItem10->Update(dt);
+							break;
+						case 10:
+							btnCombatItem11->itemId = items.At(i)->data->id;
+							btnCombatItem11->text = items.At(i)->data->effect.attackName;
+							btnCombatItem11->count = items.At(i)->data->countText;
+							btnCombatItem11->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem11;
+							btnCombatItem11->Update(dt);
+							break;
+						case 11:
+							btnCombatItem12->itemId = items.At(i)->data->id;
+							btnCombatItem12->text = items.At(i)->data->effect.attackName;
+							btnCombatItem12->count = items.At(i)->data->countText;
+							btnCombatItem12->sec = items.At(i)->data->texSec;
+							items.At(i)->data->button = btnCombatItem12;
+							btnCombatItem12->Update(dt);
+							break;
 						default:
 							break;
 						}
 					}
-
-					if (finishedAction)
+					if (items.Count() <= 6)
 					{
-						LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
-						finishedAction = false;
-						hasTicked = false;
-						once = true;
-						currentEntity = currentEntity->next;
+						btnLeftArrow->Update(dt);
+						btnRightArrow->Update(dt);
 					}
 				}
 			}
 		}
-		break;
-		case COMBAT_END:
+	}
+
+
+	return true;
+}
+
+bool SceneCombat::UpdateTransition(float dt)
+{
+	transition.Update(dt);
+	if (transition.currentFrame >= 23)
+	{
+		waitForTransition = TransitionStatus::BATTLE;
+	}
+	if (transition.HasFinished())
+	{
+		waitForTransition = TransitionStatus::END;
+	}
+	return true;
+}
+
+bool SceneCombat::Draw(Font* dialogueFont)
+{
+	if (waitForTransition == TransitionStatus::BATTLE || waitForTransition == TransitionStatus::END)
+	{
+		app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
+		app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
+
+		if (!characterSelected)
 		{
-			Finish();
-			break;
+			if (characterFlags >= 1)
+			{
+				app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x, -app->render->camera.y + mainChar.character->entityRect.y, false, &mainChar.box);
+				app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x + 10, -app->render->camera.y + mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), false, &mainChar.characterTex);
+				app->render->DrawText(dialogueFont, mainChar.hp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15,/* -app->render->camera.y +*/ mainChar.character->entityRect.y + 45, 28, 1, white);
+				app->render->DrawText(dialogueFont, mainChar.mp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 30, 28, 1, white);
+				app->render->DrawText(dialogueFont, mainChar.stress.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 60, 28, 1, white);
+			}
+			if (characterFlags >= 3)
+			{
+				app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x, -app->render->camera.y + grandpa.character->entityRect.y, false, &grandpa.box);
+				app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x + 10, -app->render->camera.y + grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2), false, &grandpa.characterTex);
+				app->render->DrawText(dialogueFont, grandpa.hp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50, 28, 1, white);
+				app->render->DrawText(dialogueFont, grandpa.mp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50 + 30, 28, 1, white);
+			}
+			/*
+			if (characterFlags >= 7)
+			{
+				//3rd
+			}
+			if (characterFlags >= 15)
+			{
+				//4th
+			}
+			*/
 		}
-		default:
-			break;
+		else
+		{
+			if (currentChar != nullptr)
+			{
+				app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
+				app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
+				app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, white);
+				app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, white);
+				if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, white);
+			}
 		}
 	}
 
-	// Logic for using Gamepad or mouse (GUI)
-	ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
-	while (gamepadControls->next != nullptr)
+	if (waitForTransition == TransitionStatus::END)
 	{
-		if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
+		app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ +44, /*-app->render->camera.y*/ +52, 48, 2, white);
+		app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ +44, /*-app->render->camera.y*/ +52 + 48, 48, 2, white);
+		app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ +44, /*-app->render->camera.y*/ +52 + 96, 48, 2, white);
+		if (wait && !blink)
 		{
-			usingGamepad = true;
-			break;
+			app->render->DrawTexture(combatGui, -app->render->camera.x + combatTextBox.w - (arrowCombat.w / 2) - arrowCombat.w - 20, -app->render->camera.y + combatTextBox.h - arrowCombat.h - (arrowCombat.h / 2) - 10, false, &arrowCombat);
 		}
-		gamepadControls = gamepadControls->next;
-	}
-	int tmpX = 0, tmpY = 0;
-	app->input->GetMouseMotion(tmpX, tmpY);
-	if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
-		usingGamepad = false;
 
-	// Calls update with gamepad parameters (GUI)
-	if (usingGamepad)
-	{
-		if (changeMenu)
-		{
-			app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
-			changeMenu = false;
-		}
 		if (characterSelected)
 		{
-			app->scene->currentButton->data->Update(dt, 29, 33);
-			if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
-			{
-				if (changeMenu)
-				{
-					app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatSkill1));
-					changeMenu = false;
-				}
-				else
-				{
-					app->scene->currentButton->data->Update(dt, 34, 39);
-					if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
-					{
-						app->gui->ResetButtons();
-						app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
-						combatMenuFlags = 0;
-						changeMenu = true;
-					}
-				}
-			}
-			else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
-			{
-				if (changeMenu)
-				{
-					app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatItem1));
-					changeMenu = false;
-				}
-				else
-				{
-					app->scene->currentButton->data->Update(dt, 40, 45);
-					if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
-					{
-						app->gui->ResetButtons();
-						app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
-						changeMenu = true;
-						combatMenuFlags = 0;
-					}
-				}
-			}
-		}
-	}
-	// Calls update for mouse parameters (GUI)
-	else
-	{
-		if (characterSelected)
-		{
-			btnCombatAttack->Update(dt);
-			btnCombatSkills->Update(dt);
-			btnCombatItems->Update(dt);
-			btnCombatSpecial->Update(dt);
-			btnCombatFlee->Update(dt);
+			btnCombatAttack->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSkills->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatItems->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatSpecial->Draw(-app->render->camera.x, -app->render->camera.y);
+			btnCombatFlee->Draw(-app->render->camera.x, -app->render->camera.y);
 
 			if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
 			{
-				btnCombatSkill1->Update(dt);
-				btnCombatSkill2->Update(dt);
-				btnCombatSkill3->Update(dt);
-				btnCombatSkill4->Update(dt);
-				btnCombatSkill5->Update(dt);
-				btnCombatSkill6->Update(dt);
+				btnCombatSkill1->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnCombatSkill2->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnCombatSkill3->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnCombatSkill4->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnCombatSkill5->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnCombatSkill6->Draw(-app->render->camera.x, -app->render->camera.y);
 			}
 			else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
 			{
+				//if (pageOne)
+				//{
+				//	btnCombatItem1->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem2->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem3->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem4->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem5->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem6->Draw(-app->render->camera.x, -app->render->camera.y);
+				//}
+				//else
+				//{
+				//	btnCombatItem7->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem8->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem9->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem10->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem11->Draw(-app->render->camera.x, -app->render->camera.y);
+				//	btnCombatItem12->Draw(-app->render->camera.x, -app->render->camera.y);
+				//}
+
 				int i = 0;
 				int maxItems = -1;
 				if (pageOne)
@@ -889,280 +1158,76 @@ bool SceneCombat::Update(float dt)
 					switch (i)
 					{
 					case 0:
-						btnCombatItem1->itemId = items.At(i)->data->id;
-						btnCombatItem1->text = items.At(i)->data->effect.attackName;
-						btnCombatItem1->count = items.At(i)->data->countText;
-						btnCombatItem1->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem1;
-						btnCombatItem1->Update(dt);
+						btnCombatItem1->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 1:
-						btnCombatItem2->itemId = items.At(i)->data->id;
-						btnCombatItem2->text = items.At(i)->data->effect.attackName;
-						btnCombatItem2->count = items.At(i)->data->countText;
-						btnCombatItem2->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem2;
-						btnCombatItem2->Update(dt);
+						btnCombatItem2->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 2:
-						btnCombatItem3->itemId = items.At(i)->data->id;
-						btnCombatItem3->text = items.At(i)->data->effect.attackName;
-						btnCombatItem3->count = items.At(i)->data->countText;
-						btnCombatItem3->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem3;
-						btnCombatItem3->Update(dt);
+						btnCombatItem3->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 3:
-						btnCombatItem4->itemId = items.At(i)->data->id;
-						btnCombatItem4->text = items.At(i)->data->effect.attackName;
-						btnCombatItem4->count = items.At(i)->data->countText;
-						btnCombatItem4->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem4;
-						btnCombatItem4->Update(dt);
+						btnCombatItem4->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 4:
-						btnCombatItem5->itemId = items.At(i)->data->id;
-						btnCombatItem5->text = items.At(i)->data->effect.attackName;
-						btnCombatItem5->count = items.At(i)->data->countText;
-						btnCombatItem5->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem5;
-						btnCombatItem5->Update(dt);
+						btnCombatItem5->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 5:
-						btnCombatItem6->itemId = items.At(i)->data->id;
-						btnCombatItem6->text = items.At(i)->data->effect.attackName;
-						btnCombatItem6->count = items.At(i)->data->countText;
-						btnCombatItem6->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem6;
-						btnCombatItem6->Update(dt);
+						btnCombatItem6->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 6:
-						btnCombatItem7->itemId = items.At(i)->data->id;
-						btnCombatItem7->text = items.At(i)->data->effect.attackName;
-						btnCombatItem7->count = items.At(i)->data->countText;
-						btnCombatItem7->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem7;
-						btnCombatItem7->Update(dt);
+						btnCombatItem7->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 7:
-						btnCombatItem8->itemId = items.At(i)->data->id;
-						btnCombatItem8->text = items.At(i)->data->effect.attackName;
-						btnCombatItem8->count = items.At(i)->data->countText;
-						btnCombatItem8->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem8;
-						btnCombatItem8->Update(dt);
+						btnCombatItem8->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 8:
-						btnCombatItem9->itemId = items.At(i)->data->id;
-						btnCombatItem9->text = items.At(i)->data->effect.attackName;
-						btnCombatItem9->count = items.At(i)->data->countText;
-						btnCombatItem9->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem9;
-						btnCombatItem9->Update(dt);
+						btnCombatItem9->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 9:
-						btnCombatItem10->itemId = items.At(i)->data->id;
-						btnCombatItem10->text = items.At(i)->data->effect.attackName;
-						btnCombatItem10->count = items.At(i)->data->countText;
-						btnCombatItem10->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem10;
-						btnCombatItem10->Update(dt);
+						btnCombatItem10->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 10:
-						btnCombatItem11->itemId = items.At(i)->data->id;
-						btnCombatItem11->text = items.At(i)->data->effect.attackName;
-						btnCombatItem11->count = items.At(i)->data->countText;
-						btnCombatItem11->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem11;
-						btnCombatItem11->Update(dt);
+						btnCombatItem11->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					case 11:
-						btnCombatItem12->itemId = items.At(i)->data->id;
-						btnCombatItem12->text = items.At(i)->data->effect.attackName;
-						btnCombatItem12->count = items.At(i)->data->countText;
-						btnCombatItem12->sec = items.At(i)->data->texSec;
-						items.At(i)->data->button = btnCombatItem12;
-						btnCombatItem12->Update(dt);
+						btnCombatItem12->Draw(-app->render->camera.x, -app->render->camera.y);
 						break;
 					default:
 						break;
 					}
 				}
-				btnLeftArrow->Update(dt);
-				btnRightArrow->Update(dt);
-			}
-		}
-	}
-
-
-	return true;
-}
-
-bool SceneCombat::Draw(Font* dialogueFont)
-{
-	//switch (ZONE)
-	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y, false, &combatTextBox);
-	app->render->DrawTexture(combatGui, -app->render->camera.x, -app->render->camera.y + app->render->camera.h - combatTextBox.h, false, &combatTextBox);
-
-	app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52, 48, 2, white);
-	app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 48, 48, 2, white);
-	app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ + 44, /*-app->render->camera.y*/ + 52 + 96, 48, 2, white);
-
-	if (!characterSelected)
-	{
-		if (characterFlags >= 1)
-		{
-			app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x, -app->render->camera.y + mainChar.character->entityRect.y, false, &mainChar.box);
-			app->render->DrawTexture(combatGui, -app->render->camera.x + mainChar.character->entityRect.x + 10, -app->render->camera.y + mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), false, &mainChar.characterTex);
-			app->render->DrawText(dialogueFont, mainChar.hp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15,/* -app->render->camera.y +*/ mainChar.character->entityRect.y + 45, 28, 1, white);
-			app->render->DrawText(dialogueFont, mainChar.mp.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 30, 28, 1, white);
-			app->render->DrawText(dialogueFont, mainChar.stress.GetString(), /*-app->render->camera.x +*/ mainChar.character->entityRect.x + mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ mainChar.character->entityRect.y + 45 + 60, 28, 1, white);
-		}
-		if (characterFlags >= 3)
-		{
-			app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x, -app->render->camera.y + grandpa.character->entityRect.y, false, &grandpa.box);
-			app->render->DrawTexture(combatGui, -app->render->camera.x + grandpa.character->entityRect.x + 10, -app->render->camera.y + grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2), false, &grandpa.characterTex);
-			app->render->DrawText(dialogueFont, grandpa.hp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50, 28, 1, white);
-			app->render->DrawText(dialogueFont, grandpa.mp.GetString(), /*-app->render->camera.x +*/ grandpa.character->entityRect.x + grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ grandpa.character->entityRect.y + 50 + 30, 28, 1, white);
-		}
-		/*
-		if (characterFlags >= 7)
-		{
-			//3rd
-		}
-		if (characterFlags >= 15)
-		{
-			//4th
-		}
-		*/
-	}
-	else
-	{
-		if (currentChar != nullptr)
-		{
-			app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
-			app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
-			app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, white);
-			app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, white);
-			if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, white);
-		}
-
-		btnCombatAttack->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnCombatSkills->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnCombatItems->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnCombatSpecial->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnCombatFlee->Draw(-app->render->camera.x, -app->render->camera.y);
-
-		if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
-		{
-			btnCombatSkill1->Draw(-app->render->camera.x, -app->render->camera.y);
-			btnCombatSkill2->Draw(-app->render->camera.x, -app->render->camera.y);
-			btnCombatSkill3->Draw(-app->render->camera.x, -app->render->camera.y);
-			btnCombatSkill4->Draw(-app->render->camera.x, -app->render->camera.y);
-			btnCombatSkill5->Draw(-app->render->camera.x, -app->render->camera.y);
-			btnCombatSkill6->Draw(-app->render->camera.x, -app->render->camera.y);
-		}
-		else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
-		{
-			//if (pageOne)
-			//{
-			//	btnCombatItem1->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem2->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem3->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem4->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem5->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem6->Draw(-app->render->camera.x, -app->render->camera.y);
-			//}
-			//else
-			//{
-			//	btnCombatItem7->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem8->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem9->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem10->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem11->Draw(-app->render->camera.x, -app->render->camera.y);
-			//	btnCombatItem12->Draw(-app->render->camera.x, -app->render->camera.y);
-			//}
-
-			int i = 0;
-			int maxItems = -1;
-			if (pageOne)
-			{
-				i = 0;
-				if (items.Count() > 6)
-					maxItems = 6;
-				else
-					maxItems = items.Count();
-			}
-			else
-			{
-				i = 6;
-				maxItems = items.Count();
-			}
-			for (i; i < maxItems; i++)
-			{
-				switch (i)
+				if (items.Count() <= 6)
 				{
-				case 0:
-					btnCombatItem1->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 1:
-					btnCombatItem2->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 2:
-					btnCombatItem3->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 3:
-					btnCombatItem4->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 4:
-					btnCombatItem5->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 5:
-					btnCombatItem6->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 6:
-					btnCombatItem7->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 7:
-					btnCombatItem8->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 8:
-					btnCombatItem9->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 9:
-					btnCombatItem10->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 10:
-					btnCombatItem11->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				case 11:
-					btnCombatItem12->Draw(-app->render->camera.x, -app->render->camera.y);
-					break;
-				default:
-					break;
+					btnLeftArrow->Draw(-app->render->camera.x, -app->render->camera.y);
+					btnRightArrow->Draw(-app->render->camera.x, -app->render->camera.y);
 				}
 			}
-			btnLeftArrow->Draw(-app->render->camera.x, -app->render->camera.y);
-			btnRightArrow->Draw(-app->render->camera.x, -app->render->camera.y);
-		}
-		else if ((combatMenuFlags & 1 << Flags::SPECIAL) != 0)
-		{
+			else if ((combatMenuFlags & 1 << Flags::SPECIAL) != 0)
+			{
 
+			}
+
+		}
+
+		if (targetAttack || targetItem) //add more as we go
+		{
+			int x, y;
+			app->input->GetMousePosition(x, y);
+			ListItem<CombatEntity*>* e = turnOrder.start;
+			while (e != nullptr)
+			{
+				if (e->data->collider->Intersects({ x, y, 1, 1 }))
+					app->render->DrawRectangle({ -app->render->camera.x + e->data->collider->rect.x, -app->render->camera.y + e->data->collider->rect.y,e->data->collider->rect.w,e->data->collider->rect.h }, 255, 255, 255, 150, false);
+
+				e = e->next;
+			}
 		}
 	}
 
-	if (targetAttack || targetItem) //add more as we go
+	if (waitForTransition != TransitionStatus::END)
 	{
-		int x, y;
-		app->input->GetMousePosition(x, y);
-		ListItem<CombatEntity*>* e = turnOrder.start;
-		while (e != nullptr)
-		{
-			if (e->data->collider->Intersects({ x, y, 1, 1 }))
-				app->render->DrawRectangle({ -app->render->camera.x + e->data->collider->rect.x, -app->render->camera.y + e->data->collider->rect.y,e->data->collider->rect.w,e->data->collider->rect.h }, 255, 255, 255, 150, false);
-
-			e = e->next;
-		}
+		app->render->DrawTexture(transitionTx, -app->render->camera.x, -app->render->camera.y, true, &transition.GetCurrentFrame());
 	}
 
 	return true;
@@ -1187,6 +1252,9 @@ bool SceneCombat::Finish()
 	firstLine.Clear();
 	secondLine.Clear();
 	thirdLine.Clear();
+
+	transition.Reset();
+	waitForTransition = TransitionStatus::NONE; // TEMPORAL
 
 	enemy1 = nullptr;
 	enemy2 = nullptr;
@@ -1233,6 +1301,7 @@ bool SceneCombat::Unload()
 	grandpa.stress.Clear();
 
 	if (combatGui != nullptr) app->tex->UnLoad(combatGui);
+	if (transitionTx != nullptr) app->tex->UnLoad(transitionTx);
     
     app->audio->UnloadFx(smackFx);
     app->audio->UnloadFx(slapFx);

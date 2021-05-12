@@ -2,6 +2,7 @@
 #define __SCENECOMBAT_H__
 
 #include "Scene.h"
+#include "Animation.h"
 #include "Entity.h"
 #include "List.h"
 #include "GuiButton.h"
@@ -37,6 +38,14 @@ enum class StressStatus
     OVER
 };
 
+enum class TransitionStatus
+{
+    NONE,
+    SCENE,
+    BATTLE,
+    END
+};
+
 class SceneCombat : public Scene
 {
 public:
@@ -69,6 +78,7 @@ public:
     void NextLine(const char* line);
 
     bool Draw(Font* dialogueFont);
+    bool UpdateTransition(float dt);
 
     bool Finish();
     void VictoryCondition();
@@ -96,6 +106,8 @@ public:
 
     List<Item*> items;
 
+    TransitionStatus waitForTransition;
+
 private:
     List<CombatEntity*> turnOrder;
     ListItem<CombatEntity*>* currentEntity;
@@ -108,6 +120,9 @@ private:
     int attackSelected;
     bool once;
     bool wait;
+
+    SDL_Texture* transitionTx;
+    Animation transition;
 
     StressStatus stressStatus;
     int pastStress;
@@ -152,6 +167,9 @@ private:
     SString firstLine;
     SString secondLine;
     SString thirdLine;
+    SDL_Rect arrowCombat;
+    bool blink;
+    float blinkTimer;
 
     int smackFx;
     int slapFx;

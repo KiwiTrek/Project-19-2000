@@ -85,6 +85,7 @@ private:
     GuiButton* btnKeySelect;
     GuiButton* btnKeyCancel;
     GuiButton* btnKeyMenu;
+    GuiButton* btnKeyQuest;
     GuiButton* btnKeyUp;
     GuiButton* btnKeyDown;
     GuiButton* btnKeyLeft;
@@ -93,6 +94,7 @@ private:
     GuiButton* btnPadSelect;
     GuiButton* btnPadCancel;
     GuiButton* btnPadMenu;
+    GuiButton* btnPadQuest;
     GuiButton* btnPadUp;
     GuiButton* btnPadDown;
     GuiButton* btnPadLeft;

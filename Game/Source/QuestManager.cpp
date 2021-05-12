@@ -14,7 +14,7 @@ bool QuestManager::Start()
 {
 
 	font = new Font("Fonts/DialogueFont.xml");
-	bookTex = app->tex->Load("Textures/scrollQuest.png");
+	bookTex = app->tex->Load("Textures/ScrollQuest.png");
 	bookBox = { 0,0,1280,720 };
 
 	pugi::xml_node questNode;

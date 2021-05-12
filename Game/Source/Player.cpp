@@ -24,7 +24,7 @@ Player::Player(int x, int y, int footstepFx) : Entity(x, y, EntityType::PLAYER)
 	}
 	else
 	{
-		spawnPos = { 320,320 };
+		spawnPos = { 960,5760 };
 	}
 
 	LOG("Init Player");
@@ -119,6 +119,9 @@ bool Player::Update(float dt)
 
 		if ((app->input->CheckButton("menu", KEY_DOWN) || app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN))
 			LOG("Pressing Menu");
+
+		if (app->input->CheckButton("quest", KEY_DOWN))
+			LOG("Pressing Quest Log");
 		
 		animFlags = ClearBit(animFlags, FlagsAnimation::WALKING);
 		currentAnim->Update(dt);

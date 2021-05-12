@@ -75,20 +75,24 @@ bool SceneTitleScreen::Load()
     
     //CONTROLS
     btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 180, 120, 300, 60 }, "SELECT", 40, this);
-    btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 200, 300, 60 }, "CANCEL", 40, this);
-    btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 180, 280, 300, 60 }, "MENU", 40, this);
-    btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 360, 300, 60 }, "UP", 40, this);
-    btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 440, 300, 60 }, "DOWN", 40, this);
-    btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 520, 300, 60 }, "LEFT", 40, this);
-    btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 600, 300, 60 }, "RIGHT", 40, this);
-    btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 800, 120, 300, 60 }, "SELECT", 40, this);
-    btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 800, 200, 300, 60 }, "CANCEL", 40, this);
-    btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 800, 280, 300, 60 }, "MENU", 40, this);
-    btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 360, 300, 60 }, "UP", 40, this);
-    btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 440, 300, 60 }, "DOWN", 40, this);
-    btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 520, 300, 60 }, "LEFT", 40, this);
-    btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 600, 300, 60 }, "RIGHT", 40, this);
-    btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
+    btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 188, 300, 60 }, "CANCEL", 40, this);
+    btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 180, 256, 300, 60 }, "MENU", 40, this);
+    btnKeyQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 324, 300, 60 }, "QUEST", 40, this);
+    btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 392, 300, 60 }, "UP", 40, this);
+    btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 460, 300, 60 }, "DOWN", 40, this);
+    btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 528, 300, 60 }, "LEFT", 40, this);
+    btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 180, 596, 300, 60 }, "RIGHT", 40, this);
+
+    btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 800, 120, 300, 60 }, "SELECT", 40, this);
+    btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 800, 188, 300, 60 }, "CANCEL", 40, this);
+    btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 256, 300, 60 }, "MENU", 40, this);
+    btnPadQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 324, 300, 60 }, "QUEST", 40, this);
+    btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 392, 300, 60 }, "UP", 40, this);
+    btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 460, 300, 60 }, "DOWN", 40, this);
+    btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 528, 300, 60 }, "LEFT", 40, this);
+    btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 596, 300, 60 }, "RIGHT", 40, this);
+
+    btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
 
     // Used for the Gamepad GUI control
     app->scene->currentButton = app->gui->controls.start;
@@ -160,6 +164,14 @@ bool SceneTitleScreen::Update(float dt)
                 changeMenu = false;
             }
             app->scene->currentButton->data->Update(dt, 5, 10);
+            if (app->input->CheckButton("cancel",KEY_DOWN))
+            {
+                flags = ClearBit(flags, Flags::OPTIONS);
+                app->audio->PlayMusic("Audio/Music/Title.ogg");
+                changeMenu = true;
+                app->gui->ResetButtons();
+                usingGamepad = true;
+            }
         }
         else
         {
@@ -168,7 +180,14 @@ bool SceneTitleScreen::Update(float dt)
                 app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnKeySelect));
                 changeMenu = false;
             }
-            app->scene->currentButton->data->Update(dt, 11, 25);
+            app->scene->currentButton->data->Update(dt, 11, 27);
+            if (app->input->CheckButton("cancel", KEY_DOWN))
+            {
+                flags = ClearBit(flags, Flags::CONTROLS);
+                changeMenu = true;
+                app->gui->ResetButtons();
+                usingGamepad = true;
+            }
         }
     }
     // Calls update for mouse parameters (GUI)
@@ -195,6 +214,7 @@ bool SceneTitleScreen::Update(float dt)
             btnKeySelect->Update(dt);
             btnKeyCancel->Update(dt);
             btnKeyMenu->Update(dt);
+            btnKeyQuest->Update(dt);
             btnKeyUp->Update(dt);
             btnKeyDown->Update(dt);
             btnKeyLeft->Update(dt);
@@ -203,6 +223,7 @@ bool SceneTitleScreen::Update(float dt)
             btnPadSelect->Update(dt);
             btnPadCancel->Update(dt);
             btnPadMenu->Update(dt);
+            btnPadQuest->Update(dt);
             btnPadUp->Update(dt);
             btnPadDown->Update(dt);
             btnPadLeft->Update(dt);
@@ -254,6 +275,7 @@ bool SceneTitleScreen::Draw()
         btnKeySelect->Draw();
         btnKeyCancel->Draw();
         btnKeyMenu->Draw();
+        btnKeyQuest->Draw();
         btnKeyUp->Draw();
         btnKeyDown->Draw();
         btnKeyLeft->Draw();
@@ -262,6 +284,7 @@ bool SceneTitleScreen::Draw()
         btnPadSelect->Draw();
         btnPadCancel->Draw();
         btnPadMenu->Draw();
+        btnPadQuest->Draw();
         btnPadUp->Draw();
         btnPadDown->Draw();
         btnPadLeft->Draw();
@@ -279,11 +302,7 @@ bool SceneTitleScreen::Unload()
 {
     app->tex->UnLoad(nooseBG);
     app->tex->UnLoad(titleCard);
-    if (titleFx != -1)
-    {
-        app->audio->UnloadFx(titleFx);
-        titleFx = -1;
-    }
+    app->audio->UnloadFx(titleFx);
     app->gui->Disable();
     RELEASE(buttonFont);
     app->scene->currentButton = nullptr;
@@ -347,29 +366,33 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 13: //KEY MENU
         break;
-    case 14: //KEY UP
+    case 14: //KEY QUEST
         break;
-    case 15: //KEY DOWN
+    case 15: //KEY UP
         break;
-    case 16: //KEY LEFT
+    case 16: //KEY DOWN
         break;
-    case 17: //KEY RIGHT
+    case 17: //KEY LEFT
         break;
-    case 18: //PAD SELECT
+    case 18: //KEY RIGHT
         break;
-    case 19: //PAD CANCEL
+    case 19: //PAD SELECT
         break;
-    case 20: //PAD MENU
+    case 20: //PAD CANCEL
         break;
-    case 21: //PAD UP
+    case 21: //PAD MENU
         break;
-    case 22: //PAD DOWN
+    case 22: //PAD QUEST
         break;
-    case 23: //PAD LEFT
+    case 23: //PAD UP
         break;
-    case 24: //PAD RIGHT
+    case 24: //PAD DOWN
         break;
-    case 25: //BACK 2
+    case 25: //PAD LEFT
+        break;
+    case 26: //PAD RIGHT
+        break;
+    case 27: //BACK 2
         flags = ClearBit(flags, Flags::CONTROLS);
         changeMenu = true;
         app->gui->ResetButtons();

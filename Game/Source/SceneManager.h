@@ -40,9 +40,6 @@ public:
 	bool continueLoadRequest;
 	float transitionAlpha;
 
-    int itemFx;
-    int itemCollectedFx;
-
 private:
 	Scene* next;
 	bool fadeOutCompleted;

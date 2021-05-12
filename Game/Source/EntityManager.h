@@ -89,6 +89,8 @@ public:
 	int interactHero;
 	int interactShop;
 	int footstepFx;
+	int itemFx;
+	int itemCollectedFx;
 
 	bool inPause = false;
 

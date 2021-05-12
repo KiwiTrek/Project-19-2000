@@ -122,6 +122,9 @@ bool EntityManager::Start()
 	tmp.Create("%s%s", folderAudioFx.GetString(), "Footstep.wav");
 	footstepFx = app->audio->LoadFx(tmp.GetString());
 
+	itemFx = app->audio->LoadFx("Audio/Fx/Item.wav");
+	itemCollectedFx = app->audio->LoadFx("Audio/Fx/ItemCollected.wav");
+
 	doLogic = true;
 
 	ListItem<Entity*>* e = entities.start;
@@ -169,6 +172,8 @@ bool EntityManager::CleanUp()
 	app->audio->UnloadFx(interactHero);
 	app->audio->UnloadFx(interactShop);
 	app->audio->UnloadFx(footstepFx);
+	app->audio->UnloadFx(itemFx);
+	app->audio->UnloadFx(itemCollectedFx);
 
 	return true;
 }
@@ -247,7 +252,14 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 		ListItem<Entity*>* e = entities.start;
 		while (e != nullptr)
 		{
-			e->data->Update(dt);
+			if (app->map->data.name == "home.tmx")
+			{
+				if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE) e->data->Update(dt); //Should also not draw spikes, just overall entities
+			}
+			else
+			{
+				e->data->Update(dt);
+			}
 			e = e->next;
 		}
 	}
@@ -257,40 +269,49 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 
 bool EntityManager::PostUpdate()
 {
-	if(!app->scene->current->combat)
+	ListItem<Entity*>* e = entities.start;
+	Entity* p = nullptr;
+	while (e != nullptr)
 	{
-		ListItem<Entity*>* e = entities.start;
-		Entity* p = nullptr;
-		while (e != nullptr)
+		if (e->data->pendingToDelete == true)
 		{
-			if (e->data->pendingToDelete == true)
+			DestroyEntity(e->data);
+		}
+		else
+		{
+			if (app->scene->current->combat)
 			{
-				DestroyEntity(e->data);
+				SceneGameplay* s = nullptr;
+				SceneCombat* cbt = nullptr;
+				if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+				{
+					s = (SceneGameplay*)app->scene->current;
+					cbt = s->combatScene;
+				}
+
+				if (cbt->waitForTransition == TransitionStatus::END)
+				{
+					if (e->data->type == EntityType::COMBAT_ENTITY)
+					{
+						e->data->Draw();
+					}
+				}
 			}
 			else
 			{
 				if (e->data->type == EntityType::PLAYER) p = e->data;
-				e->data->Draw();
+				if (app->map->data.name == "home.tmx")
+				{
+					if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE) e->data->Draw(); //Should also not draw spikes, just overall entities
+				}
+				else
+				{
+					e->data->Draw();
+				}
+				if (p != nullptr) p->Draw();
 			}
-			e = e->next;
 		}
-		p->Draw();
-	}
-	else
-	{
-		ListItem<Entity*>* e = entities.start;
-		while (e != nullptr)
-		{
-			if (e->data->pendingToDelete == true)
-			{
-				DestroyEntity(e->data);
-			}
-			else if (e->data->type == EntityType::COMBAT_ENTITY)
-			{
-				e->data->Draw();
-			}
-			e = e->next;
-		}
+		e = e->next;
 	}
 	return true;
 }

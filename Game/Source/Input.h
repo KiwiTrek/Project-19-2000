@@ -70,7 +70,7 @@ struct GamePad
 	float l2_dz, r2_dz, l_dz, r_dz;
 
 	//Controller data
-	bool enabled;
+	bool enabled = false;
 	int index;
 	_SDL_GameController* controller;
 	_SDL_Haptic* haptic;

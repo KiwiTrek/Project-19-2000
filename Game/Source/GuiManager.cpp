@@ -113,7 +113,7 @@ void GuiManager::ResetButtons()
 	while (currentControlList->next != nullptr)
 	{
 		currentControlList->data->state = GuiControlState::NORMAL;
-		currentControlList = currentControlList->next;
+		if (currentControlList->next != nullptr) currentControlList = currentControlList->next;
 	}
 }
 

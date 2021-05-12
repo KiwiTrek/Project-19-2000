@@ -55,10 +55,7 @@ bool SceneManager::Start()
 	fadeOutCompleted = false;
 	continueLoadRequest = false;
 
-    itemFx = app->audio->LoadFx("Audio/Fx/Item.wav");
-    itemCollectedFx = app->audio->LoadFx("Audio/Fx/ItemCollected.wav");
-
-	transitionAlpha = 0.0f;;
+	transitionAlpha = 0.0f;
 
 	return true;
 }
@@ -178,9 +175,6 @@ bool SceneManager::CleanUp()
 
 	current->Unload();
 	next = nullptr;
-
-    app->audio->UnloadFx(itemFx);
-    app->audio->UnloadFx(itemCollectedFx);
 
 	return true;
 }
