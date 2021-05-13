@@ -80,7 +80,6 @@ bool QuestManager::Update(float dt)
 	FinishedQuestLogic();
 	ChainQuestsLogic();
 	CheckQuestsLogic();
-	CheckObjectivesCompletion();
 	DebugQuests();
 
 	return true;
@@ -163,74 +162,64 @@ bool QuestManager::ChainQuestsLogic()
 // This function manages the logic for every quest. For appearing and completion
 bool QuestManager::CheckQuestsLogic()
 {
-	/*
-
-	Quest 7:
-		Appear: Tp to bedroom
-		Complete: Opened diary bool
-	Quest 8: (interact with residents in the living room)
-		Appear: Complete quest 7
-		Complete: interaction count == 3
-	Quest 9: (visit the shop)
-		Appear: Complete quest 7
-		Complete: Talk to the shopkeeper
-	Quest 10: (visit the bathroom)
-		Appear: Complete quest 7
-		Complete: Tp to bathroom
-	Quest 11: (visit the kitchen)
-		Appear: Complete quest 7
-		Complete: Tp to kitchen
-	*/
-
-	// Quest 1:
-	if ((tpFlags & 1 << TpFlags::GRANDPA) != 0)
+	// Quest 1: Grandpa talk
+	if ((tpFlags & TpFlags::GRANDPA) != 0)
 		AppearQuest(1);
-	if (((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0) && ((tpFlags & 1 << TpFlags::SMALL_PUZZLE) != 0))
+	if (/*(app->entities->flagsGrandpa & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && */((tpFlags & TpFlags::SMALL_PUZZLE) != 0))
 		CompleteQuest(1);
 
-	// Quest 2:
+	// Quest 2: Small puzzle
 	// It appears when completing quest 1
-	if (/* Finsh puzzle condition && */((tpFlags & 1 << TpFlags::FIGHT) != 0))
+	if (/* Finsh small puzzle condition && */((tpFlags & TpFlags::FIGHT) != 0))
 		CompleteQuest(2);
 
-	// Quest 3:
+	// Quest 3: Fight
 	// It appears when completing quest 2
-	if (/* Finish first fight condition && */((tpFlags & 1 << TpFlags::BIG_PUZZLE) != 0))
+	if (firstCombatWon)
 		CompleteQuest(3);
 
-	// Quest 4:
-	// It appears when completing quest 3
-	if (/* Finish big puzzle condition && */((tpFlags & 1 << TpFlags::LABYRINTH) != 0))
+	// Quest 4: Big puzzle
+	if (((tpFlags & TpFlags::BIG_PUZZLE) != 0))
+		AppearQuest(4);
+	if (/* Finish big puzzle condition && */((tpFlags & TpFlags::LABYRINTH) != 0))
 		CompleteQuest(4);
 
-	// Quest 5:
+	// Quest 5: Labyrinth
 	// It appears when completing quest 4
-	if (/* Labyrinth sensor achieved */ 1)
+	if (escapedLabyrinth)
 		CompleteQuest(5);
 
-	// Quest 6:
-	if ((tpFlags & 1 << TpFlags::BOSS_FIGHT) != 0)
+	// Quest 6: Boss fight
+	if (escapedLabyrinth && ((tpFlags & TpFlags::BOSS_FIGHT) != 0))
 		AppearQuest(6);
-	if (/* Finish boss fight condition */ 1)
+	if (firstBossDefeated)
 		CompleteQuest(6);
 
-	// Quest 7:
-	if ((tpFlags & 1 << TpFlags::BEDROOM) != 0)
+	// Quest 7: Diary
+	if (((tpFlags & TpFlags::BEDROOM) != 0))
 		AppearQuest(7);
-	if (/* Opened diary condition */ 1)
+	if (/* Opened diary condition */ 0)
 		CompleteQuest(7);
 
+	// Quest 8: Shop visit
+	// It appears when completing quest 7
+	if (((tpFlags & TpFlags::SHOP) != 0))
+		CompleteQuest(8);
 
-	return true;
-}
+	// Quest 9: Save game
+	// It appears when completing quest 7
+	if (app->saveRequest == true)
+		CompleteQuest(9);
 
-bool QuestManager::CheckObjectivesCompletion()
-{
-	// This is the Objectives Completion Conditions. For each quest, an if with the conditions with a call -->
-	// --> to the function CompleteQuest(id)
+	// Quest 10: Talk to residents
+	// It appears when completing quest 7
+	if (/* has talked to cat && has talked to strange man*/ 0)
+		CompleteQuest(10);
 
-	//if (completion condition of quest with id == is completed (app->player->mushroomCount == 8))
-	//	CompleteQuest(id of the quest completed);
+	// Quest 11: Talk to grandpa
+	// It appears when completing quest 8, 9, 10
+	if (/* has talked to grandpa */ 0)
+		CompleteQuest(11);
 
 	return true;
 }
@@ -240,7 +229,10 @@ bool QuestManager::DebugQuests()
 {
 	ListItem<Quest*>* activeList = questsActive.start;
 	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN)
-		CompleteQuest(activeList->data->id);
+	{
+		if (activeList != nullptr) CompleteQuest(activeList->data->id);
+	}
+
 
 	return true;
 }
@@ -318,6 +310,20 @@ bool QuestManager::AppearQuest(int id)
 	return true;
 }
 
+// This function checks with the id passed if the quest is completed or not
+bool QuestManager::CheckQuestCompleted(int id)
+{
+	ListItem<Quest*>* finishedL = questsFinished.start;
+	while (finishedL != nullptr)
+	{
+		if (finishedL->data->id == id)
+			return true;
+
+		finishedL = finishedL->next;
+	}
+	return false;
+}
+
 // This function converts the xml string data "requiredIdString", and modifies the Quest data "required Id", that it's an int array
 void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
 {
@@ -332,7 +338,15 @@ void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
 		else
 		{
 			quest->requiredId[j] = quest->requiredId[j] * 10 + (quest->requiredIdString[i] - 48);
-			j++;
+			if (j != 0)
+			{
+				if (quest->requiredIdString[i + 1] != ',' && quest->requiredIdString[i + 1] != ' ');
+				else
+					j++;
+			}
+			else
+				j++;
+			
 		}
 	}
 }

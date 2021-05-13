@@ -214,13 +214,15 @@ bool SceneGameplay::Update(float dt)
 	if (combatScene->heDed) TransitionToScene(SceneType::ENDING);
 
 	// Make quests draw only while on gameplay not start menu
-	if ((flags & 1 << Flags::MENU) == 0)
+	if ((flags & 1 << Flags::MENU) == 0 || !combat)
 	{
 		if (app->input->CheckButton("quest", KEY_DOWN))
 		{
 			app->quests->drawQuests = !app->quests->drawQuests;
 		}
 	}
+	if (combat || (flags & 1 << Flags::MENU) != 0)
+		app->quests->drawQuests = false;
 
 	return true;
 }

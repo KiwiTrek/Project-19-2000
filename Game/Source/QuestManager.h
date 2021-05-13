@@ -64,11 +64,11 @@ public:
 	bool FinishedQuestLogic();
 	bool ChainQuestsLogic();
 	bool CheckQuestsLogic();
-	bool CheckObjectivesCompletion();
 	bool DebugQuests();
 
 	bool CompleteQuest(int id);
 	bool AppearQuest(int id);
+	bool CheckQuestCompleted(int id);
 
 	bool DrawActiveQuests();
 
@@ -78,22 +78,26 @@ public:
 public:
 	enum TpFlags
 	{
-		GRANDPA, // 0
-		SMALL_PUZZLE,
-		FIGHT,
-		BIG_PUZZLE,
-		LABYRINTH,
-		BOSS_FIGHT, // 5 
-		BEDROOM,
-		SHOP,
-		LIVING_ROOM,
-		BATHROOM,
-		KITCHEN // 10
+		GRANDPA = 1,
+		SMALL_PUZZLE = 2,
+		FIGHT = 4,
+		BIG_PUZZLE = 8,
+		LABYRINTH = 16,
+		BOSS_FIGHT = 32,
+		BEDROOM = 64,
+		SHOP = 128,
+		MAIN_LOBBY = 256,
+		BATHROOM = 512,
+		KITCHEN = 1024
 	};
 
 	bool drawQuests = false;
 
-	unsigned char tpFlags;
+	unsigned int tpFlags = 0;
+
+	bool firstCombatWon = false;
+	bool escapedLabyrinth = false;
+	bool firstBossDefeated = false;
 
 private:
 	int totalQuests = 0;

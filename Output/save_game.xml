@@ -5,7 +5,7 @@
 	<assetsManager />
 	<textures />
 	<audio>
-		<volume value="0" />
+		<volume value="64" />
 	</audio>
 	<map>
 		<data name="home.tmx" />
@@ -13,7 +13,7 @@
 	<scenemanager />
 	<entityManager>
 		<player>
-			<coordinates x="2471" y="1089" />
+			<coordinates x="2450" y="1087" />
 		</player>
 		<MC>
 			<stats pAtk="20" mAtk="0" pDef="10" mDef="10" hPoints="100" hPointsMax="100" speed="50" mPoints="100" mPointsMax="100" stress="0" stressMax="100" />

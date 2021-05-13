@@ -27,7 +27,7 @@
 	<quest
 		id = "2" 
 		title = "Complete your first puzzle"
-		description = "Explore and discover the new room in order to escape successfully."
+		description = "Manage your knowledge and skills and escape from the puzzle."
 		rewardXP = "0"
 		rewardGold = "0"
 		requiredId = "1"
@@ -36,8 +36,8 @@
 	/>
 	<quest
 		id = "3" 
-		title = "Fight off the nightmarish monsters"
-		description = "With the new abilities gained, go ahead and defeat your firsts enemies."
+		title = "Win your first fight"
+		description = "Now you will have to continue and fight off with several monsters."
 		rewardXP = "0"
 		rewardGold = "0"
 		requiredId = "2"
@@ -46,11 +46,11 @@
 	/>
 	<quest
 		id = "4" 
-		title = "Survive the bigger challenge"
-		description = "With the new abilities gained, go ahead and defeat your firsts enemies."
+		title = "Survive the bigger puzzle"
+		description = "Now you will have to complete a bigger puzzle, now with monsters in between, take care!"
 		rewardXP = "0"
 		rewardGold = "0"
-		requiredId = "3"
+		requiredId = "0"
 		isCompleted = "false"
 		status = "0"
 	/>
@@ -66,18 +66,18 @@
 	/> 
 	<quest
 		id = "6" 
-		title = "Fight the biggest nightmare"
-		description = "When you thought you were already free from danger... Something appeared from the dark..."
+		title = "Defeat the Nigthmare boss"
+		description = "A huge monster rose from darkness... It also brought some of its friends. Kill it!"
 		rewardXP = "0"
 		rewardGold = "0"
-		requiredId = "5"
+		requiredId = "0"
 		isCompleted = "false"
 		status = "0"
 	/> 
 	<quest
 		id = "7" 
 		title = "Look into your diary"
-		description = "Try to find out what happened."
+		description = "As you wake up, go to the table and look up your tasklist on your diary."
 		rewardXP = "0"
 		rewardGold = "0"
 		requiredId = "0"
@@ -86,8 +86,8 @@
 	/> 
 	<quest
 		id = "8" 
-		title = ""
-		description = ""
+		title = "Visit the shop"
+		description = "Go to your computer in your room and look up on the internet."
 		rewardXP = "0"
 		rewardGold = "0"
 		requiredId = "7"
@@ -96,8 +96,8 @@
 	/> 
 	<quest
 		id = "9" 
-		title = ""
-		description = ""
+		title = "Save the game"
+		description = "You feel admired by the statue in the main lobby. It reminds you of the past..."
 		rewardXP = "0"
 		rewardGold = "0"
 		requiredId = "7"
@@ -106,8 +106,8 @@
 	/> 
 	<quest
 		id = "10" 
-		title = ""
-		description = ""
+		title = "Interact with residents"
+		description = "After your nigthmarish sleep, you ask yourself who that people may be."
 		rewardXP = "0"
 		rewardGold = "0"
 		requiredId = "7"
@@ -116,11 +116,11 @@
 	/> 
 	<quest
 		id = "11" 
-		title = ""
-		description = ""
+		title = "Talk with grandpa"
+		description = "When already explored the house and residents, you ask yourself where are you..."
 		rewardXP = "0"
 		rewardGold = "0"
-		requiredId = "7"
+		requiredId = "8,9,10,0"
 		isCompleted = "false"
 		status = "0"
 	/> 

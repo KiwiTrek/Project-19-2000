@@ -14,6 +14,7 @@
 #include "Render.h"
 #include "Window.h"
 #include "Item.h"
+#include "QuestManager.h"
 
 SceneCombat::SceneCombat()
 {
@@ -802,6 +803,13 @@ bool SceneCombat::Update(float dt)
 			break;
 			case COMBAT_END:
 			{
+				if (!heDed)
+					app->quests->firstCombatWon = true;
+				if (enemy1 != nullptr) enemiesCount++;
+				if (enemy2 != nullptr) enemiesCount++;
+				if (enemy3 != nullptr) enemiesCount++;
+				if (enemiesCount == 3 && !heDed && (enemy1->id == EntityId::NIGHTMARE || enemy2->id == EntityId::NIGHTMARE || enemy3->id == EntityId::NIGHTMARE))
+					app->quests->firstBossDefeated = true;
 				Finish();
 				break;
 			}

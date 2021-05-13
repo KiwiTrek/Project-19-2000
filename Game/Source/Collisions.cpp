@@ -333,29 +333,53 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						{
 						case 28:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::SMALL_PUZZLE) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::SMALL_PUZZLE;
+							}
 							return { 15 * app->map->data.tileWidth, (39 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						case 38:
 							onceDoor = true;
-							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::FIGHT) | 1;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::FIGHT) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::FIGHT;
+							}
+								
 							return { 15 * app->map->data.tileWidth, (28 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 50:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::GRANDPA) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::GRANDPA;
+							}
 							return { 15 * app->map->data.tileWidth, (64 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						case 63:
 							onceDoor = true;
-							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::SMALL_PUZZLE) | 1;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::SMALL_PUZZLE) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::SMALL_PUZZLE;
+							}
 							return { 15 * app->map->data.tileWidth, (50 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 78:
 							onceDoor = true;
+							app->quests->tpFlags = 0;
 							return { 15 * app->map->data.tileWidth, (88 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						case 87:
 							onceDoor = true;
-							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::GRANDPA) | 1;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::GRANDPA) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::GRANDPA;
+							}
 							return { 15 * app->map->data.tileWidth, (78 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -365,9 +389,20 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 					case 21:
 					{
-						onceDoor = true;
-						app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::BIG_PUZZLE) | 1;
-						return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+						switch (tilePos.y)
+						{
+						case 26:
+							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BIG_PUZZLE) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BIG_PUZZLE;
+							}
+							return { (39 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						default:
+							break;
+						}
 						break;
 					}
 					case 38:
@@ -376,14 +411,29 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						{
 						case 14:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::FIGHT) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::FIGHT;
+							}
 							return { (20 * app->map->data.tileWidth) - 1, 26 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 36:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BOSS_FIGHT) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BOSS_FIGHT;
+							}
 							return { 64 * app->map->data.tileWidth, (89 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 92:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BIG_PUZZLE) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BIG_PUZZLE;
+							}
 							return { 64 * app->map->data.tileWidth, (10 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -397,12 +447,20 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						{
 						case 9:
 							onceDoor = true;
-							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::LABYRINTH) | 1;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::LABYRINTH) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::LABYRINTH;
+							}
 							return { 38 * app->map->data.tileWidth, (92 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						case 65:
 							app->map->CleanUp();
-							app->quests->tpFlags = (app->quests->tpFlags << QuestManager::TpFlags::BEDROOM) | 1;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BEDROOM) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BEDROOM;
+							}
 							if (app->map->data.type == MapTypes::MAPTYPE_UNKNOWN)
 							{
 								if (app->map->LoadNewMap("home.tmx"))
@@ -421,8 +479,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 								}
 							}
 							break;
-						case 90:
+						case 89:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::LABYRINTH) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::LABYRINTH;
+							}
 							return { 38 * app->map->data.tileWidth, (37 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -446,6 +509,11 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					case 12:
 					{
 						onceDoor = true;
+						if ((app->quests->tpFlags & QuestManager::TpFlags::MAIN_LOBBY) == 0)
+						{
+							app->quests->tpFlags = 0;
+							app->quests->tpFlags |= QuestManager::TpFlags::MAIN_LOBBY;
+						}
 						return { (24 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -461,14 +529,29 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							break;
 						case 13:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BATHROOM) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BATHROOM;
+							}
 							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 14:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BATHROOM) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BATHROOM;
+							}
 							return { (11 * app->map->data.tileWidth) - 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						case 36:
 							app->audio->PlayMusic("Audio/Music/Home.ogg");
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BEDROOM) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BEDROOM;
+							}
 							return { 39 * app->map->data.tileWidth, 32 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -487,6 +570,11 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					case 30:
 					{
 						onceDoor = true;
+						if ((app->quests->tpFlags & QuestManager::TpFlags::BEDROOM) == 0)
+						{
+							app->quests->tpFlags = 0;
+							app->quests->tpFlags |= QuestManager::TpFlags::BEDROOM;
+						}
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -499,6 +587,11 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							break;
 						case 18:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BEDROOM) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BEDROOM;
+							}
 							return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -515,6 +608,11 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 							break;
 						case 18:
 							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::BEDROOM) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::BEDROOM;
+							}
 							return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -525,12 +623,22 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					case 33:
 					{
 						onceDoor = true;
+						if ((app->quests->tpFlags & QuestManager::TpFlags::BEDROOM) == 0)
+						{
+							app->quests->tpFlags = 0;
+							app->quests->tpFlags |= QuestManager::TpFlags::BEDROOM;
+						}
 						return { 38 * app->map->data.tileWidth, (29 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 						break;
 					}
 					case 38:
 					{
 						onceDoor = true;
+						if ((app->quests->tpFlags & QuestManager::TpFlags::MAIN_LOBBY) == 0)
+						{
+							app->quests->tpFlags = 0;
+							app->quests->tpFlags |= QuestManager::TpFlags::MAIN_LOBBY;
+						}
 						return { 32 * app->map->data.tileWidth, (17 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 						break;
 					}
@@ -538,22 +646,13 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					{
 						switch (tilePos.y)
 						{
-						case 7:
-							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-							break;
-						case 8:
-							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
-							break;
-						case 13:
-							onceDoor = true;
-							return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-							break;
-						case 14:
-							onceDoor = true;
-							return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
-							break;
 						case 34:
 							app->audio->PlayMusic("Audio/Music/Options.ogg");
+							if ((app->quests->tpFlags & QuestManager::TpFlags::SHOP) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::SHOP;
+							}
 							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -565,8 +664,37 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					{
 						switch (tilePos.y)
 						{
+						case 7:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 8:
+							return { nextFrame.x, nextFrame.y,collider->rect.w, collider->rect.h };
+							break;
+						case 13:
+							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::KITCHEN) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::KITCHEN;
+							}
+							return { (53 * app->map->data.tileWidth) + 1, 13 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
+						case 14:
+							onceDoor = true;
+							if ((app->quests->tpFlags & QuestManager::TpFlags::KITCHEN) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::KITCHEN;
+							}
+							return { (53 * app->map->data.tileWidth) + 1, 14 * app->map->data.tileHeight, collider->rect.w, collider->rect.h };
+							break;
 						case 34:
 							app->audio->PlayMusic("Audio/Music/Options.ogg");
+							if ((app->quests->tpFlags & QuestManager::TpFlags::SHOP) == 0)
+							{
+								app->quests->tpFlags = 0;
+								app->quests->tpFlags |= QuestManager::TpFlags::SHOP;
+							}
 							return { 23 * app->map->data.tileWidth, (35 * app->map->data.tileHeight) - 1, collider->rect.w, collider->rect.h };
 							break;
 						default:
@@ -593,6 +721,11 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 										app->entities->DestroyEntity(s->cat);
 									}
 									app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+									if ((app->quests->tpFlags & QuestManager::TpFlags::BOSS_FIGHT) == 0)
+									{
+										app->quests->tpFlags = 0;
+										app->quests->tpFlags |= QuestManager::TpFlags::BOSS_FIGHT;
+									}
 									return { 64 * app->map->data.tileWidth, (66 * app->map->data.tileHeight) + 1, collider->rect.w, collider->rect.h };
 								}
 							}
@@ -667,6 +800,10 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 								}
 							}
 						}
+						break;
+
+					case 43:
+						app->quests->escapedLabyrinth = true;
 						break;
 					default:
 						break;
