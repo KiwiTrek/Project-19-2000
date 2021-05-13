@@ -166,6 +166,7 @@ bool SceneGameplay::Load()
 	app->scene->currentButton = app->gui->controls.start;
 	changeMenu = false;
 	enteringCombat = false;
+    usingGamepad = false;
 	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;
@@ -724,36 +725,36 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					}
 				}
 			}
-			else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
-			{
-				sldrVolume->Update(dt);
-				sldrFx->Update(dt);
-				boxFullScreen->Update(dt);
-				boxVSync->Update(dt);
-				btnControls->Update(dt);
-				btnBack->Update(dt);
-			}
-			else if ((flags & 1 << Flags::CONTROLS) != 0)
-			{
-				btnKeySelect->Update(dt);
-				btnKeyCancel->Update(dt);
-				btnKeyMenu->Update(dt);
-				btnKeyQuest->Update(dt);
-				btnKeyUp->Update(dt);
-				btnKeyDown->Update(dt);
-				btnKeyLeft->Update(dt);
-				btnKeyRight->Update(dt);
-				btnBack2->Update(dt);
-				btnPadSelect->Update(dt);
-				btnPadCancel->Update(dt);
-				btnPadMenu->Update(dt);
-				btnPadQuest->Update(dt);
-				btnPadUp->Update(dt);
-				btnPadDown->Update(dt);
-				btnPadLeft->Update(dt);
-				btnPadRight->Update(dt);
-			}
 		}
+        else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+        {
+            sldrVolume->Update(dt);
+            sldrFx->Update(dt);
+            boxFullScreen->Update(dt);
+            boxVSync->Update(dt);
+            btnControls->Update(dt);
+            btnBack->Update(dt);
+        }
+        else if ((flags & 1 << Flags::CONTROLS) != 0)
+        {
+            btnKeySelect->Update(dt);
+            btnKeyCancel->Update(dt);
+            btnKeyMenu->Update(dt);
+            btnKeyQuest->Update(dt);
+            btnKeyUp->Update(dt);
+            btnKeyDown->Update(dt);
+            btnKeyLeft->Update(dt);
+            btnKeyRight->Update(dt);
+            btnBack2->Update(dt);
+            btnPadSelect->Update(dt);
+            btnPadCancel->Update(dt);
+            btnPadMenu->Update(dt);
+            btnPadQuest->Update(dt);
+            btnPadUp->Update(dt);
+            btnPadDown->Update(dt);
+            btnPadLeft->Update(dt);
+            btnPadRight->Update(dt);
+        }
 	}
 	
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))

@@ -97,6 +97,7 @@ bool SceneTitleScreen::Load()
     // Used for the Gamepad GUI control
     app->scene->currentButton = app->gui->controls.start;
     changeMenu = false;
+    usingGamepad = false;
     if (app->input->GetControllerName() != "unplugged") usingGamepad = false;
     app->input->mouseMotionX = 0;
     app->input->mouseMotionY = 0;

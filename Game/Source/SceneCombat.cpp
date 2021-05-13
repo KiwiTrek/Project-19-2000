@@ -178,6 +178,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	SpawnEnemies(id1, id2, id3);
 
 	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+    usingGamepad = false;
 	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;

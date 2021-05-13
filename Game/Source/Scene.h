@@ -31,7 +31,7 @@ public:
         combat = false;
         combatCooldown = 1.0f;
         enteringCombat = false;
-        usingGamepad = true;
+        usingGamepad = false;
         inMenu = false;
         changeMenu = false;
     }
