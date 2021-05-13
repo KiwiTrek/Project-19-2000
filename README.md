@@ -11,7 +11,7 @@ Set in the 21th century. Shattered Dreams is about a 23 years old guy. He lost c
 
 ## Key Features
 - Battle against the protagonist's inner ghost accompanied by your deceased grandfather. Watch out for your stress!
-- Explore the intrinsic and labyrinthic inner thoughts of our protagonist.
+- Explore the intrinsic and labyrinthic inner thoughts of our protagonist and complete quests and puzzles along the way.
 - Interact with some of the main character's influences & most important people in his life.
 - Support for both keyboard and gamepad*.
 
