@@ -78,7 +78,7 @@ public:
     void NextLine(const char* line);
 
     bool Draw(Font* dialogueFont);
-    bool UpdateTransition(float dt);
+    bool UpdateTransition(float dt, TransitionStatus transitionTo);
 
     bool Finish();
     void VictoryCondition();
@@ -107,6 +107,8 @@ public:
     List<Item*> items;
 
     TransitionStatus waitForTransition;
+    bool backToGameplay;
+    float alpha;
 
 private:
     List<CombatEntity*> turnOrder;

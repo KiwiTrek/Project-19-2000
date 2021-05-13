@@ -252,9 +252,18 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 bool EntityManager::PostUpdate()
 {
 	ListItem<Entity*>* e = entities.start;
+    SceneGameplay* s = nullptr;
+    SceneCombat* cbt = nullptr;
+    if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+    {
+        s = (SceneGameplay*)app->scene->current;
+        cbt = s->combatScene;
+    }
+
 	Entity* p = nullptr;
 	while (e != nullptr)
 	{
+        if (e->data->type == EntityType::PLAYER) p = e->data;
 		if (e->data->pendingToDelete == true)
 		{
 			DestroyEntity(e->data);
@@ -263,34 +272,34 @@ bool EntityManager::PostUpdate()
 		{
 			if (app->scene->current->combat)
 			{
-				SceneGameplay* s = nullptr;
-				SceneCombat* cbt = nullptr;
-				if (app->scene->current->currentScene == SceneType::GAMEPLAY)
-				{
-					s = (SceneGameplay*)app->scene->current;
-					cbt = s->combatScene;
-				}
-
-				if (cbt->waitForTransition == TransitionStatus::END)
-				{
-					if (e->data->type == EntityType::COMBAT_ENTITY)
-					{
-						e->data->Draw();
-					}
-				}
+                if (cbt != nullptr)
+                {
+                    if (cbt->waitForTransition == TransitionStatus::END)
+                    {
+                        if (e->data->type == EntityType::COMBAT_ENTITY)
+                        {
+                            e->data->Draw();
+                        }
+                    }
+                }
 			}
 			else
 			{
-				if (e->data->type == EntityType::PLAYER) p = e->data;
-				if (app->map->data.name == "home.tmx")
-				{
-					if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE) e->data->Draw(); //Should also not draw spikes, just overall entities
-				}
-				else
-				{
-					e->data->Draw();
-				}
-				if (p != nullptr) p->Draw();
+                if (cbt != nullptr)
+                {
+                    if (cbt->waitForTransition == TransitionStatus::NONE)
+                    {
+                        if (app->map->data.name == "home.tmx")
+                        {
+                            if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE) e->data->Draw(); //Should also not draw spikes, just overall entities
+                        }
+                        else
+                        {
+                            e->data->Draw();
+                        }
+                        if (p != nullptr) p->Draw();
+                    }
+                }
 			}
 		}
 		e = e->next;

@@ -205,6 +205,11 @@ bool SceneGameplay::Update(float dt)
 		//Update normal scene
 	}
 
+    if (combatScene->backToGameplay)
+    {
+        combatScene->UpdateTransition(dt, TransitionStatus::SCENE);
+    }
+
 	if (combatScene->heDed) TransitionToScene(SceneType::ENDING);
 
 	// Make quests draw only while on gameplay not start menu
@@ -789,7 +794,11 @@ bool SceneGameplay::Draw()
 
 		app->map->Draw();
 	}
-	if (combat){ combatScene->Draw(dialogueFont); }
+	
+    if (combat || combatScene->waitForTransition == TransitionStatus::BATTLE || combatScene->waitForTransition == TransitionStatus::END || !app->scene->transitionAlpha >= 1.0f)
+    {
+        combatScene->Draw(dialogueFont);
+    }
 
 	if (dialogSystem->currentDialog != nullptr)
 	{
@@ -854,6 +863,11 @@ bool SceneGameplay::Draw()
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
 		app->render->DrawText(dialogueFont, app->entities->itemPasser.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
+
+    if (combatScene->backToGameplay)
+    {
+        app->render->DrawRectangle({ -app->render->camera.x, -app->render->camera.y, app->render->camera.w, app->render->camera.h }, 0, 0, 0, Uint8(255 - (255 * combatScene->alpha)));
+    }
 
 	return false;
 }

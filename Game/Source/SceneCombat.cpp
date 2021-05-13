@@ -42,6 +42,7 @@ bool SceneCombat::Load()
 	transitionTx = app->tex->Load("Textures/BattleTransition.png");
 	waitForTransition = TransitionStatus::NONE;
 	scripted = false;
+    backToGameplay = false;
 
 	currentChar = nullptr;
 	target = nullptr;
@@ -152,6 +153,8 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	pageOne = true;
 	targetItem = false;
 
+    backToGameplay = false;
+    alpha = 1.0f;
 	wait = false;
 	waitForTransition = TransitionStatus::SCENE;
 
@@ -190,7 +193,7 @@ bool SceneCombat::Update(float dt)
 {
 	if (waitForTransition == TransitionStatus::SCENE || waitForTransition == TransitionStatus::BATTLE)
 	{
-		UpdateTransition(dt);
+		UpdateTransition(dt,TransitionStatus::BATTLE);
 	}
 	else if (waitForTransition == TransitionStatus::END)
 	{
@@ -786,7 +789,7 @@ bool SceneCombat::Update(float dt)
 
 						if (finishedAction)
 						{
-							LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
+							if (currentEntity != nullptr) LOG("HP: %d/%d", currentEntity->data->stats.hPoints, currentEntity->data->stats.hPointsMax);
 							finishedAction = false;
 							hasTicked = false;
 							once = true;
@@ -1028,17 +1031,45 @@ bool SceneCombat::Update(float dt)
 	return true;
 }
 
-bool SceneCombat::UpdateTransition(float dt)
+bool SceneCombat::UpdateTransition(float dt, TransitionStatus transitionTo)
 {
-	transition.Update(dt);
-	if (transition.currentFrame >= 23)
-	{
-		waitForTransition = TransitionStatus::BATTLE;
-	}
-	if (transition.HasFinished())
-	{
-		waitForTransition = TransitionStatus::END;
-	}
+    if (transitionTo == TransitionStatus::BATTLE)
+    {
+        transition.Update(dt);
+        if (transition.currentFrame >= 23)
+        {
+            waitForTransition = TransitionStatus::BATTLE;
+        }
+        if (transition.HasFinished())
+        {
+            waitForTransition = TransitionStatus::END;
+        }
+    }
+    else if (transitionTo == TransitionStatus::SCENE)
+    {
+        if (waitForTransition != TransitionStatus::SCENE)
+        {
+            alpha -= dt;
+        }
+        else
+        {
+            alpha += dt;
+        }
+        if (alpha <= 0.0f)
+        {
+            alpha = 0.0f;
+            waitForTransition = TransitionStatus::SCENE;
+            if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+            else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
+        }
+        else if (alpha >= 1.01f)
+        {
+            alpha = 1.0f;
+            waitForTransition = TransitionStatus::NONE;
+            backToGameplay = false;
+        }
+
+    }
 	return true;
 }
 
@@ -1254,7 +1285,7 @@ bool SceneCombat::Finish()
 	thirdLine.Clear();
 
 	transition.Reset();
-	waitForTransition = TransitionStatus::NONE; // TEMPORAL
+    if (!heDed) backToGameplay = true;
 
 	enemy1 = nullptr;
 	enemy2 = nullptr;
@@ -1279,8 +1310,6 @@ bool SceneCombat::Finish()
 	{
 		SceneGameplay* s = (SceneGameplay*)app->scene->current;
 		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(s->btnInventory));
-		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
-		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
 	}
 	else
 	{
