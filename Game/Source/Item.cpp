@@ -86,7 +86,7 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 		LOG("You picked up %s item.", item.effect.attackName.GetString());
 
 		app->entities->takingItem = true;
-		SString start = ("You just picked ");
+		SString start = ("You picked up ");
 		start += item.effect.attackName.GetString();
 		app->entities->itemPasser = start.GetString();
 

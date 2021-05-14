@@ -31,6 +31,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	// Save & Load
+	bool Save(pugi::xml_node&);
+	bool Load(pugi::xml_node&);
+
 public:
 	Scene* current;
 
@@ -44,7 +48,5 @@ private:
 	Scene* next;
 	bool fadeOutCompleted;
 
-
 };
-
 #endif // __SCENEMANAGER_H__

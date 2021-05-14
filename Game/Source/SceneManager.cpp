@@ -12,6 +12,7 @@
 #include "SceneTitleScreen.h"
 #include "SceneGameplay.h"
 #include "SceneEnding.h"
+#include "SceneCombat.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -175,6 +176,144 @@ bool SceneManager::CleanUp()
 
 	current->Unload();
 	next = nullptr;
+
+	return true;
+}
+
+bool SceneManager::Save(pugi::xml_node& save)
+{
+	LOG("Saving items data");
+	bool ret = true;
+
+	SceneGameplay* s = (SceneGameplay*)current;
+	ListItem<Item*>* i = s->combatScene->items.start;
+	while (i != nullptr)
+	{
+		pugi::xml_node item = save.append_child("item");
+		item.append_attribute("id").set_value((int)i->data->id);
+		pugi::xml_node effect = item.append_child("effect");
+		effect.append_attribute("name").set_value(i->data->effect.attackName.GetString());
+		effect.append_attribute("type").set_value((int)i->data->effect.type);
+		effect.append_attribute("stat1").set_value(i->data->effect.stat1);
+		effect.append_attribute("stat2").set_value(i->data->effect.stat2);
+		effect.append_attribute("target").set_value((int)i->data->effect.target);
+		effect.append_attribute("turns").set_value(i->data->effect.turns);
+		item.append_attribute("count").set_value(i->data->count);
+		i = i->next;
+	}
+
+	return ret;
+}
+
+bool SceneManager::Load(pugi::xml_node& save)
+{
+	LOG("Loading items data");
+	bool ret = true;
+
+	SceneGameplay* s = (SceneGameplay*)current;
+	pugi::xml_node item = save.child("item");
+	s->combatScene->items.Clear();
+
+	while (!item.empty())
+	{
+		pugi::xml_node effect = item.child("effect");
+		Item* i = nullptr;
+		ItemId id = ItemId::NONE;
+		Attack e;
+		SString name = effect.attribute("name").as_string();
+		AttackType type = AttackType::DAMAGE;
+		int stat1 = effect.attribute("stat1").as_int();
+		int stat2 = effect.attribute("stat1").as_int();
+		TargetType target = TargetType::SELF;
+		int turns = effect.attribute("turns").as_int();
+		int count = item.attribute("count").as_int();
+		SDL_Rect sec = { 288,416,32,32 };
+		GuiControl* button = nullptr;
+
+		switch (effect.attribute("type").as_int())
+		{
+		case 0:
+			type = AttackType::DAMAGE;
+			break;
+		case 1:
+			type = AttackType::BUFF;
+			break;
+		case 2:
+			type = AttackType::HEAL;
+			break;
+		case 3:
+			type = AttackType::TAUNT;
+			break;
+		default:
+			break;
+		}
+
+		switch (effect.attribute("target").as_int())
+		{
+		case 0:
+			target = TargetType::SELF;
+			break;
+		case 1:
+			target = TargetType::ONE;
+			break;
+		case 2:
+			target = TargetType::ALL_ENEMIES;
+			break;
+		case 3:
+			target = TargetType::ALL_ALLIES;
+			break;
+		default:
+			break;
+		}
+
+		switch (item.attribute("id").as_int())
+		{
+		case 1:
+			id = ItemId::HP_POTION;
+			sec = { 5 * 32,8 * 32,32,32 };
+			break;
+		case 2:
+			id = ItemId::MANA_POTION;
+			sec = { 8 * 32,8 * 32,32,32 };
+			break;
+		case 3:
+			id = ItemId::ELIXIR;
+			sec = { 9 * 32,8 * 32,32,32 };
+			break;
+		case 4:
+			id = ItemId::GRANDMA_STEW;
+			sec = { 8 * 32,7 * 32,32,32 };
+			break;
+		case 5:
+			id = ItemId::BOTTLEED_SMITE;
+			sec = { 6 * 32,8 * 32,32,32 };
+			break;
+		case 6:
+			id = ItemId::HAPPILLS;
+			sec = { 4 * 32,8 * 32,32,32 };
+			break;
+		case 7:
+			id = ItemId::PHYS_BUFFER;
+			sec = { 3 * 32,7 * 32,32,32 };
+			break;
+		case 8:
+			id = ItemId::MAGIC_BUFFER;
+			sec = { 7 * 32,8 * 32,32,32 };
+			break;
+		default:
+			break;
+		}
+
+		e = Attack(name, type, target, stat1, stat2);
+		name.Clear();
+		e.turns = turns;
+		i = new Item(id, e, count);
+		i->UpdateCountText();
+		i->texSec = sec;
+		i->button = button;
+		s->combatScene->items.Add(i);
+		item = item.next_sibling();
+	}
 
 	return true;
 }

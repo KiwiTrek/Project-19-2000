@@ -360,7 +360,6 @@ bool QuestManager::CheckQuestCompleted(int id)
 // This function converts the xml string data "requiredIdString", and modifies the Quest data "required Id", that it's an int array
 void QuestManager::StringToIntArray(Quest* quest, string requiredIdString)
 {
-	int stringLength = quest->requiredIdString.length();
 	int j = 0;
 	for (int i = 0; quest->requiredIdString[i] != '\0'; ++i)
 	{

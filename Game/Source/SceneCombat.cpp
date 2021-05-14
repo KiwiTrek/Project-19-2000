@@ -300,6 +300,11 @@ bool SceneCombat::Update(float dt)
 							currentChar = nullptr;
 							characterSelected = false;
 
+							combatState = CombatStateType::COMBAT_END;
+							currentEntity = e;
+							TickDownBuffs();
+							combatState = CombatStateType::COMBAT_MIDGAME;
+
 							if (!IsCharacter(e->data)) app->entities->DestroyEntity(e->data);
 							turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
 							SortSpeed(false);
@@ -314,7 +319,17 @@ bool SceneCombat::Update(float dt)
 					VictoryCondition();
 					DefeatCondition();
 
-					if (combatState != CombatStateType::COMBAT_END)
+					if (combatState == CombatStateType::COMBAT_END)
+					{
+						ListItem<CombatEntity*>* e = turnOrder.start;
+						while (e != nullptr)
+						{
+							currentEntity = e;
+							TickDownBuffs();
+							e = e->next;
+						}
+					}
+					else if (combatState != CombatStateType::COMBAT_END)
 					{
 						if (!hasTicked)
 						{
@@ -1437,10 +1452,11 @@ void SceneCombat::TickDownBuffs()
 	ListItem<Attack*>* a = currentEntity->data->attackPool.start;
 	while (a != nullptr)
 	{
+		ListItem<Attack*>* aNext = a->next;
 		if (a->data->turns > 0)
 		{
 			a->data->turns--;
-			if (a->data->turns == 0)
+			if (a->data->turns == 0 || combatState == CombatStateType::COMBAT_END)
 			{
 				if (a->data->attackName == "10 debuff")
 				{
@@ -1467,9 +1483,11 @@ void SceneCombat::TickDownBuffs()
 					currentChar->character->stats.pAtk -= (a->data->stat1 * 5) / 100;
 					currentChar->character->stats.mAtk -= (a->data->stat2 * 5) / 100;
 				}
+				currentEntity->data->attackPool.Del(a);
+				if(a != nullptr) a = nullptr;
 			}
 		}
-		if (a->next != nullptr) a = a->next;
+		if (aNext != nullptr) a = aNext;
 		else break;
 	}
 }

@@ -348,22 +348,12 @@ bool EntityManager::Load(pugi::xml_node& save)
 
 	// Destroy entities
 	ListItem<Entity*>* e = entities.start;
-	ListItem<Entity*>* eNext = nullptr;
 	while (e != nullptr)
 	{
-		if (e->next != nullptr)
-		{
-			eNext = e->next;
-			DestroyEntity(e->data);
-			e = eNext;
-		}
-		else
-		{
-			DestroyEntity(e->data);
-			break;
-		}
+		ListItem<Entity*>* eNext = e->next;
+		if (e->data->id == EntityId::MC || e->data->id == EntityId::VIOLENT) DestroyEntity(e->data);
+		e = eNext;
 	}
-	entities.Clear();
 
 	SceneGameplay* s = nullptr;
 	SceneCombat* cbt = nullptr;
