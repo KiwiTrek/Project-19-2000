@@ -50,7 +50,7 @@ bool SceneCombat::Load()
 	currentEntity = nullptr;
 	mainChar.box = { 1280,0,204,190 };
 	mainChar.characterTex = { 0,252,72,92 };
-	mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(20, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
+	mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(15, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
 	mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
 	mainChar.mp.Create("MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
 	mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
@@ -439,9 +439,21 @@ bool SceneCombat::Update(float dt)
 												app->audio->PlayFx(confortFx);
 												break;
 											}
-											//case 4: //skill 4
-											//	LOG("skill 4");
-											//	break;
+											case 4: //skill 4
+											{
+												
+												LOG("%s debuffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
+												char tmp[75];
+												sprintf(tmp, "%s debuffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
+												NextLine(tmp);
+												SString s = "10 debuff";
+												Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pDef, target->stats.mDef);
+												a->turns = 3;
+												target->attackPool.Add(a);
+												target->stats.pAtk -= (a->stat1 * 10) / 100;
+												target->stats.mAtk -= (a->stat2 * 10) / 100;
+												break;
+											}
 											//case 5: //skill 5
 											//	LOG("skill 5");
 											//	break;
@@ -528,19 +540,27 @@ bool SceneCombat::Update(float dt)
 												app->audio->PlayFx(smackFx);
 												Damage(0, target, true);
 												break;
-												//case 1: //skill 1
-												//  app->audio->PlayFx(smiteFx);
-												//	LOG("skill 1");
-												//	break;
+												case 1: //skill 1
+												{
+													app->audio->PlayFx(smiteFx);
+													LOG("skill 1");
+													Damage(1, target, true);
+													Damage(1, target, true);
+													Damage(1, target, true);
+													break;
+												}
 												//case 2: //skill 2
 												//	LOG("skill 2");
 												//	break;
-												//case 3: //skill 3
-												//	LOG("skill 3");
-												//	break;
-												//case 4: //skill 4
-												//	LOG("skill 4");
-												//	break;
+												case 3: //skill 3
+													LOG("skill 3");
+													Damage(3, target, true);
+													Damage(3, target, true);
+													break;
+												case 4: //skill 4
+													LOG("skill 4");
+													Damage(4, target, true);
+													break;
 												//case 5: //skill 5
 												//	LOG("skill 5");
 												//	break;
@@ -565,8 +585,11 @@ bool SceneCombat::Update(float dt)
 											LOG("skill 1");
 											break;
 										case 2: //skill 2
+										{
 											LOG("skill 2");
+											//Damage(2, target, true);
 											break;
+										}
 										case 3: //skill 3
 											LOG("skill 3");
 											break;

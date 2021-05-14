@@ -31,7 +31,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		name = "MC";
 
 		SString tmpS = "Smack";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk/3);
+		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
 		this->attackPool.Add(tmpA);
 
 		tmpS = "Comfort";
@@ -43,7 +43,11 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		this->attackPool.Add(tmpA);
 
 		tmpS = "Encourage";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, stats.pAtk, stats.mAtk);
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE);
+		this->attackPool.Add(tmpA);
+
+		tmpS = "Boring Speech";
+		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE);
 		this->attackPool.Add(tmpA);
 
 		break;
@@ -55,6 +59,23 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		SString tmpS = "Smite foes";
 		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk);
 		this->attackPool.Add(tmpA);
+
+		tmpS = "Weak Magic missile";
+		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk / 1.3f);
+		this->attackPool.Add(tmpA);
+
+		tmpS = "Weak Magic Barrage";
+		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ALL_ENEMIES, stats.mAtk / 1.4f);
+		this->attackPool.Add(tmpA);
+
+		tmpS = "Magic Hand Slap";
+		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk / 1.1f);
+		this->attackPool.Add(tmpA);
+
+		tmpS = "Judgemental Stare";
+		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk * 1.5f);
+		this->attackPool.Add(tmpA);
+
 		break;
 	}
 	case EntityId::STUBBORN:

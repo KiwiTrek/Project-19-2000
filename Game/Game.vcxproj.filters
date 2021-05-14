@@ -66,9 +66,6 @@
     <ClCompile Include="Source\Font.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CombatEntity.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Collisions.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="Source\Blockers.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CombatEntity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
