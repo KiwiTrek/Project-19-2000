@@ -213,7 +213,7 @@ void Player::OnCollision(Collider* c1, Collider* c2)
 	{
 		while (c1->Intersects(c2->rect))
 		{
-			iPoint difference = { c2->rect.x - c1->rect.x, c2->rect.y - c1->rect.y };
+			iPoint difference = { c2->rect.x + c2->rect.w/2 - c1->rect.x - c1->rect.w/2, c2->rect.y + c2->rect.h/2 - c1->rect.y - c1->rect.h / 2 };
 
 			if (difference.x > 0) c1->rect.x--;
 			else if (difference.x < 0) c1->rect.x++;

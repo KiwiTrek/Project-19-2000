@@ -96,6 +96,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\AssetsManager.cpp" />
+    <ClCompile Include="Source\Blockers.cpp" />
     <ClCompile Include="Source\Collisions.cpp" />
     <ClCompile Include="Source\CombatEntity.cpp" />
     <ClCompile Include="Source\DialogSystem.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Animation.h" />
     <ClInclude Include="Source\AssetsManager.h" />
+    <ClInclude Include="Source\Blockers.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Collisions.h" />
     <ClInclude Include="Source\CombatEntity.h" />

@@ -18,6 +18,8 @@ public:
 		SOLID,
 		DOOR,
 		PUZZLE,
+		BUTTON,
+		MOVEABLE,
 		OTHER,
 		EVENT,
 		ENEMY_SPAWN,

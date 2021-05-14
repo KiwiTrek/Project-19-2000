@@ -99,6 +99,9 @@
     <ClCompile Include="Source\PuzzlePieces.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Blockers.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -242,6 +245,9 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\PuzzlePieces.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blockers.h">
       <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>

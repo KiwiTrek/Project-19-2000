@@ -17,6 +17,7 @@
 #include "NPC.h"
 #include "Item.h"
 #include "PuzzlePieces.h"
+#include "Blockers.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -160,7 +161,7 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer, ItemId itemId, int count, PuzzleId puzzleId)
+Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId, Entity* playerPointer, ItemId itemId, int count, PuzzleId puzzleId, BlockerId blockerId)
 {
 	Entity* ret = nullptr;
 
@@ -208,6 +209,12 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 	case EntityType::PUZZLE_PIECE:
 	{
 		ret = new PuzzlePieces(x, y, puzzleId, playerPointer);
+		break;
+	}
+
+	case EntityType::BLOCKER:
+	{
+		ret = new Blockers(x, y, blockerId, playerPointer);
 		break;
 	}
 	}
@@ -309,10 +316,10 @@ bool EntityManager::PostUpdate()
 
 void EntityManager::DestroyEntity(Entity* entity)
 {
-	//if (entity->collider != nullptr)
-	//{
-	//	entity->collider->pendingToDelete = true;
-	//}
+	if (entity->collider != nullptr)
+	{
+		entity->collider->pendingToDelete = true;
+	}
 	int i = entities.Find(entity);
 	RELEASE(entities[i]);
 	entities.Del(entities.At(i));

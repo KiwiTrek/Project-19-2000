@@ -19,6 +19,7 @@ enum class EntityType
 	NPC,
 	ITEM,
 	PUZZLE_PIECE,
+	BLOCKER,
 	UNKNOWN
 };
 
@@ -64,7 +65,14 @@ enum class PuzzleId
 	ROCK,
 	SLIDING_ROCK,
 	BUTTON,
-	BOX
+	BOX,
+};
+
+enum class BlockerId
+{
+	NONE,
+	SPIKES,
+	LOCKED_DOOR
 };
 
 //enum EnemyType

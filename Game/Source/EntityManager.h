@@ -50,7 +50,7 @@ public:
 	bool CleanUp();
 
 	// Create/Destroy entity
-	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId = NpcId::NONE, Entity* playerPointer = nullptr, ItemId itemId = ItemId::NONE, int count = 0, PuzzleId puzzleId= PuzzleId::NONE);
+	Entity* CreateEntity(int x, int y, EntityType type, EntityId id, Stats stats, NpcId npcId = NpcId::NONE, Entity* playerPointer = nullptr, ItemId itemId = ItemId::NONE, int count = 0, PuzzleId puzzleId = PuzzleId::NONE, BlockerId blockerId = BlockerId::NONE);
 	void DestroyEntity(Entity* entity);
 
 	// Calls Update for every entity

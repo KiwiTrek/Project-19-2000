@@ -12,6 +12,7 @@ class Entity;
 class SceneCombat;
 class DialogSystem;
 class PuzzlePieces;
+class Blockers;
 
 class SceneGameplay : public Scene
 {
@@ -58,6 +59,17 @@ public:
 
     Entity* player = nullptr;
     GuiButton* btnInventory;
+
+    //Puzzle buttons, spikes & locked doors
+    PuzzlePieces* buttonOne;
+    PuzzlePieces* buttonTwo;
+    PuzzlePieces* buttonThree;
+    PuzzlePieces* buttonFour;
+
+    Blockers* spikeRowOne;
+    Blockers* spikeRowTwo;
+    Blockers* spikeRowThree;
+    Blockers* lockedDoor;
 
 private:
     SDL_Texture* textBox = nullptr;
@@ -115,12 +127,6 @@ private:
     GuiImageButton* btnItem12;
     int itemSelected;
     // This line is added for the sake of commiting & testing
-
-    //Puzzle Buttons
-    PuzzlePieces* buttonOne;
-    PuzzlePieces* buttonTwo;
-    PuzzlePieces* buttonThree;
-    PuzzlePieces* buttonFour;
 
     //FONTS
     Font* dialogueFont = nullptr;

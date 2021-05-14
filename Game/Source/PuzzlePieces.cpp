@@ -3,26 +3,22 @@
 #include "App.h"
 #include "Window.h"
 #include "Textures.h"
-#include "Input.h"
 #include "Audio.h"
 #include "Render.h"
 #include "Map.h"
 #include "EntityManager.h"
 #include "SceneManager.h"
 #include "Scene.h"
-#include "Animation.h"
 #include "Collisions.h"
-#include "Player.h"
-#include "DialogSystem.h"
 
 
 PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x, y, EntityType::PUZZLE_PIECE)
 {
 	LOG("Init PuzzlePieces");
 	this->puzzleId = id;
-	this->playerPtr = player;
+	this->playerPtr = (Player*)player;
 
-	this->entityRect = { x, y,34,46 };
+	this->entityRect = { x, y,64,64 };
 
 	rock = { 0,256,64,64 };
 	slidingRock = { 0,384,64,64 };
@@ -31,26 +27,152 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x
 
 	pendingToDelete = false;
 
-	switch (puzzleId)
-	{
-	case PuzzleId::ROCK:
-	{
-		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::PUZZLE, (Module*)app->entities);
-		break;
-	}
-	case PuzzleId::SLIDING_ROCK:
-	{
-		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::PUZZLE, (Module*)app->entities);
-		break;
-	}
-	}
 
+	if (id == PuzzleId::BUTTON)
+	{
+		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::BUTTON, (Module*)app->entities);
+		isPressed = false;
+	}
+	else
+	{
+		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::MOVEABLE, (Module*)app->entities);
+
+		isPushedUp = false;
+		isPushedDown = false;
+		isPushedLeft = false;
+		isPushedRight = false;
+		value = 0;
+	}
 }
 
 
 bool PuzzlePieces::Update(float dt)
 {
-	
+	switch (puzzleId)
+	{
+	case PuzzleId::ROCK:
+	{
+		if (isPushedUp)
+		{
+			entityRect.y -= 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+				isPushedUp = false;
+			}
+		}
+		else if (isPushedDown)
+		{
+			entityRect.y += 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+				isPushedDown = false;
+			}
+		}
+		else if (isPushedLeft)
+		{
+			entityRect.x -= 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+				isPushedLeft = false;
+			}
+		}
+		else if (isPushedRight)
+		{
+			entityRect.x += 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+				isPushedRight = false;
+			}
+		}
+
+		if (value == 0)
+		{
+			CorrectPosition();
+		}
+
+		break;
+	case PuzzleId::SLIDING_ROCK:
+	{
+		if (isPushedUp)
+		{
+			entityRect.y -= 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+
+				CorrectPosition();
+
+				if (!CheckUp())
+				{
+					isPushedUp = false;
+				}		
+			}
+		}
+		else if (isPushedDown)
+		{
+			entityRect.y += 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+
+				CorrectPosition();
+
+				if (!CheckDown())
+				{
+					isPushedDown = false;
+				}
+			}
+		}
+		else if (isPushedLeft)
+		{
+			entityRect.x -= 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+
+				CorrectPosition();
+
+				if (!CheckLeft())
+				{
+					isPushedLeft = false;
+				}
+			}
+		}
+		else if (isPushedRight)
+		{
+			entityRect.x += 2;
+			value++;
+			if (value >= 32)
+			{
+				value = 0;
+
+				CorrectPosition();
+
+				if (!CheckRight())
+				{
+					isPushedRight = false;
+				}
+			}
+		}
+
+		break;
+	}
+	}
+	}
+
+	collider->SetPos(entityRect.x, entityRect.y, entityRect.w, entityRect.h);
+
 	return true;
 }
 
@@ -59,8 +181,10 @@ bool PuzzlePieces::Draw()
 	switch (puzzleId)
 	{
 	case PuzzleId::ROCK:
+	{
 		app->render->DrawTexture(app->entities->puzzleTex, entityRect.x, entityRect.y, false, &rock);
 		break;
+	}
 	case PuzzleId::SLIDING_ROCK:
 		{
 			app->render->DrawTexture(app->entities->puzzleTex, entityRect.x, entityRect.y, false, &slidingRock);
@@ -68,7 +192,7 @@ bool PuzzlePieces::Draw()
 		}
 		case PuzzleId::BUTTON:
 		{
-			if (!isPushed)
+			if (!isPressed)
 			{
 				app->render->DrawTexture(app->entities->puzzleTex, entityRect.x, entityRect.y, false, &button);
 			}
@@ -76,6 +200,9 @@ bool PuzzlePieces::Draw()
 			{
 				app->render->DrawTexture(app->entities->puzzleTex, entityRect.x, entityRect.y, false, &buttonPressed);
 			}
+
+			isPressed = false;
+
 			break;
 		}
 	default:
@@ -91,24 +218,134 @@ bool PuzzlePieces::Draw()
 
 void PuzzlePieces::OnCollision(Collider* c1, Collider* c2)
 {
-	switch (puzzleId)
+	if (c1->type == Collider::Type::BUTTON)
+	{	
+		isPressed = true;
+	}
+	if (c1->type == Collider::Type::MOVEABLE)
 	{
-	case PuzzleId::ROCK:
-		
-		break;
-	case PuzzleId::SLIDING_ROCK:
-	{
-		if (this->collider->rect.y + this->collider->rect.h > playerPtr->entityRect.y)
+		if (c2->type == Collider::Type::PLAYER)
 		{
-			//this->collider->rect.x += 64;
+			if (playerPtr->animFlags == 1 << Player::FlagsAnimation::UP)
+			{
+				if (!isPushedUp)
+				{
+					isPushedUp = CheckUp();
+				}
+			}
+			if (playerPtr->animFlags == 1 << Player::FlagsAnimation::DOWN)
+			{
+				if (!isPushedDown)
+				{
+					isPushedDown = CheckDown();
+				}
+			}
+			if (playerPtr->animFlags == 1 << Player::FlagsAnimation::LEFT)
+			{
+				if (!isPushedLeft)
+				{
+					isPushedLeft = CheckLeft();
+				}
+			}
+			if (playerPtr->animFlags == 1 << Player::FlagsAnimation::RIGHT)
+			{
+				if (!isPushedRight)
+				{
+					isPushedRight = CheckRight();
+				}
+			}
 		}
-		if (this->collider->rect.y < playerPtr->entityRect.y + playerPtr->entityRect.h)
-		{
+	}
+}
 
+bool PuzzlePieces::CheckUp()
+{
+	ListItem<Entity*>* e = app->entities->entities.start;
+	while (e != nullptr)
+	{
+		if (e->data->collider->type == Collider::Type::MOVEABLE && e->data->collider->rect.x == entityRect.x && e->data->collider->rect.y == (entityRect.y - 64))
+		{
+			return false;
 		}
-		break;
+		e = e->next;
 	}
-	default:
-		break;
+	if (app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) - 1, "CollisionId") == Collider::Type::PUZZLE || app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) - 1, "CollisionId") == Collider::Type::MOVEABLE)
+	{
+		return true;
 	}
+	else
+	{
+		return false;
+	}
+}
+
+bool PuzzlePieces::CheckDown()
+{
+	ListItem<Entity*>* e = app->entities->entities.start;
+	while (e != nullptr)
+	{
+		if (e->data->collider->type == Collider::Type::MOVEABLE && e->data->collider->rect.x == entityRect.x && e->data->collider->rect.y == (entityRect.y + 64))
+		{
+			return false;
+		}
+		e = e->next;
+	}
+	if (app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) + 1, "CollisionId") == Collider::Type::PUZZLE)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool PuzzlePieces::CheckLeft()
+{
+	ListItem<Entity*>* e = app->entities->entities.start;
+	while (e != nullptr)
+	{
+		if (e->data->collider->type == Collider::Type::MOVEABLE && e->data->collider->rect.x == (entityRect.x - 64) && e->data->collider->rect.y == entityRect.y)
+		{
+			return false;
+		}
+		e = e->next;
+	}
+	if (app->map->GetTileProperty((entityRect.x / 64) - 1, (entityRect.y / 64), "CollisionId") == Collider::Type::PUZZLE)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool PuzzlePieces::CheckRight()
+{
+	ListItem<Entity*>* e = app->entities->entities.start;
+	while (e != nullptr)
+	{
+		if (e->data->collider->type == Collider::Type::MOVEABLE && e->data->collider->rect.x == (entityRect.x + 64) && e->data->collider->rect.y == entityRect.y)
+		{
+			return false;
+		}
+		e = e->next;
+	}
+	if (app->map->GetTileProperty((entityRect.x / 64) + 1, (entityRect.y / 64), "CollisionId") == Collider::Type::PUZZLE)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void PuzzlePieces::CorrectPosition()
+{
+	prevPos = app->map->WorldToMap(entityRect.x, entityRect.y);
+	prevPos = app->map->MapToWorld(prevPos.x, prevPos.y);
+	entityRect.x = prevPos.x;
+	entityRect.y = prevPos.y;
 }

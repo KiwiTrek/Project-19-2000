@@ -2,6 +2,7 @@
 #define __PUZZLE_PIECES_H__
 
 #include "Entity.h"
+#include "Player.h"
 
 class PuzzlePieces : public Entity
 {
@@ -17,21 +18,35 @@ public:
 
 	void OnCollision(Collider* c1, Collider* c2);
 
+	void CorrectPosition();
+
+	bool CheckUp();
+	bool CheckDown();
+	bool CheckLeft();
+	bool CheckRight();
+
 private:
 
 	PuzzleId puzzleId = PuzzleId::NONE;
 
-	Entity* playerPtr;
+	Player* playerPtr;
 
 	SDL_Rect rock;
 	SDL_Rect slidingRock;
 	SDL_Rect button;
 	SDL_Rect buttonPressed;
+	SDL_Rect doorUp;
 
 public:
 
-	bool isPushed = true;
+	bool isPressed;
+	bool isPushedUp;	
+	bool isPushedDown;
+	bool isPushedLeft;
+	bool isPushedRight;
+	int value = 0;
 
+	iPoint prevPos;
 };
 
 #endif // !__PUZZLE_PIECES_H__

@@ -29,11 +29,12 @@ public:
 	bool inDialog;
 	bool godMode;
 
+	int animFlags;
+
 private:
 	iPoint playerPos;
 
 	// Animations stuff
-	int animFlags;
 	float timerFootstep;
 	int footstepFx;
 

@@ -17,6 +17,8 @@
 #include "Item.h"
 #include "PuzzlePieces.h"
 #include "QuestManager.h"
+#include "Blockers.h"
+
 
 SceneGameplay::SceneGameplay()
 {
@@ -149,6 +151,11 @@ bool SceneGameplay::Load()
 	(PuzzlePieces*)app->entities->CreateEntity(58 * 64, 16 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::SLIDING_ROCK);
 	(PuzzlePieces*)app->entities->CreateEntity(54 * 64, 16 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::SLIDING_ROCK);
 
+	spikeRowOne = (Blockers*)app->entities->CreateEntity(46 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
+	spikeRowTwo = (Blockers*)app->entities->CreateEntity(52 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
+	spikeRowThree = (Blockers*)app->entities->CreateEntity(60 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
+	lockedDoor = (Blockers*)app->entities->CreateEntity(15 * 64, 38 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::LOCKED_DOOR);
+
 	hero = nullptr;
 	grandpa = nullptr;
 	shopDude = nullptr;
@@ -188,9 +195,22 @@ bool SceneGameplay::Update(float dt)
 	{
 		combat = true;
 		enteringCombat = true;
+	}	
+
+	//Remove puzzle blockers
+	if (buttonOne->isPressed && buttonTwo->isPressed)
+	{
+		if (lockedDoor != nullptr)
+		{
+			lockedDoor->pendingToDelete = true;
+			lockedDoor = nullptr;
+		}
 	}
-
-
+	else if (lockedDoor == nullptr)
+	{
+		lockedDoor = (Blockers*)app->entities->CreateEntity(15 * 64, 38 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::LOCKED_DOOR);
+	}
+	
 	if (combat)
 	{
 		if (enteringCombat)
