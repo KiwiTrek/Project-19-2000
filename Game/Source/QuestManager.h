@@ -75,6 +75,10 @@ public:
 	void StringToIntArray(Quest* quest, string requiredIdString);
 	int CountRequiredIds(int requiredIds[]);
 
+	// Load/Save
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&);
+
 public:
 	enum TpFlags
 	{
@@ -110,9 +114,6 @@ private:
 	Font* font;
 	SDL_Texture *bookTex;
 	SDL_Rect bookBox;
-
-	int debugId = 1;
-
 
 };
 

@@ -30,7 +30,7 @@
 		description = "Manage your knowledge and skills and escape from the puzzle."
 		rewardXP = "0"
 		rewardGold = "0"
-		requiredId = "1"
+		requiredId = "0"
 		isCompleted = "false"
 		status = "0"
 	/>

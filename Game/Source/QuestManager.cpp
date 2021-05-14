@@ -93,11 +93,43 @@ bool QuestManager::PostUpdate()
 
 bool QuestManager::CleanUp()
 {
+	// Destroy && Clean quests
+	ListItem<Quest*>* questL = questsList.start;
+	while (questL != nullptr)
+	{
+		questsList.Del(questL);
+		questL = questL->next;
+	}
 	questsList.Clear();
+
+	ListItem<Quest*>* inactiveL = questsInactive.start;
+	while (inactiveL != nullptr)
+	{
+		questsInactive.Del(inactiveL);
+		inactiveL = inactiveL->next;
+	}
 	questsInactive.Clear();
+
+	ListItem<Quest*>* activeL = questsActive.start;
+	while (activeL != nullptr)
+	{
+		questsActive.Del(activeL);
+		activeL = activeL->next;
+	}
 	questsActive.Clear();
+
+	ListItem<Quest*>* finishL = questsFinished.start;
+	while (finishL != nullptr)
+	{
+		questsFinished.Del(finishL);
+		finishL = finishL->next;
+	}
 	questsFinished.Clear();
-	
+
+	// Destroy && Release Textures and Fonts
+	RELEASE(font);
+	app->tex->UnLoad(bookTex);
+
 	return true;
 }
 
@@ -165,11 +197,12 @@ bool QuestManager::CheckQuestsLogic()
 	// Quest 1: Grandpa talk
 	if ((tpFlags & TpFlags::GRANDPA) != 0)
 		AppearQuest(1);
-	if (/*(app->entities->flagsGrandpa & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && */((tpFlags & TpFlags::SMALL_PUZZLE) != 0))
+	if (/*(app->entities->flagsGrandpa & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && ((tpFlags & TpFlags::GRANDPA) != 0)*/((tpFlags & TpFlags::SMALL_PUZZLE) != 0)) // Delete tpFlags of SMALL_PUZZLE when grandpa implemented
 		CompleteQuest(1);
 
 	// Quest 2: Small puzzle
-	// It appears when completing quest 1
+	if (((tpFlags & TpFlags::SMALL_PUZZLE) != 0))
+		AppearQuest(2);
 	if (/* Finsh small puzzle condition && */((tpFlags & TpFlags::FIGHT) != 0))
 		CompleteQuest(2);
 
@@ -218,7 +251,7 @@ bool QuestManager::CheckQuestsLogic()
 
 	// Quest 11: Talk to grandpa
 	// It appears when completing quest 8, 9, 10
-	if (/* has talked to grandpa */ 0)
+	if (/* has talked to grandpa && ((tpFlags & TpFlags::MAIN_LOBBY) != 0)*/ 0) // Differentiate both has talked to grandpa. Maybe with flags
 		CompleteQuest(11);
 
 	return true;
@@ -361,4 +394,124 @@ int QuestManager::CountRequiredIds(int requiredIds[])
 			count++;
 	}
 	return count;
+}
+
+bool QuestManager::Save(pugi::xml_node& savegame)
+{
+	LOG("Saving quests data");
+	bool ret = true;
+
+	savegame.append_attribute("tpFlags").set_value(tpFlags);
+	savegame.append_attribute("drawQuests").set_value(drawQuests);
+	savegame.append_attribute("firstCombatWon").set_value(firstCombatWon);
+	savegame.append_attribute("escapedLabyrinth").set_value(escapedLabyrinth);
+	savegame.append_attribute("firstBossDefeated").set_value(firstBossDefeated);
+
+	ListItem<Quest*>* totalQuestsL = questsList.start;
+	while (totalQuestsL != nullptr)
+	{
+		pugi::xml_node quest = savegame.append_child("quest");
+		quest.append_attribute("id").set_value(totalQuestsL->data->id);
+		quest.append_attribute("title").set_value(totalQuestsL->data->title.GetString());
+		quest.append_attribute("description").set_value(totalQuestsL->data->description.GetString());
+		quest.append_attribute("rewardXP").set_value(totalQuestsL->data->rewardXP);
+		quest.append_attribute("rewardGold").set_value(totalQuestsL->data->rewardGold);
+		quest.append_attribute("requiredId").set_value(totalQuestsL->data->requiredIdString.c_str());
+		quest.append_attribute("isCompleted").set_value(totalQuestsL->data->isCompleted);
+		quest.append_attribute("status").set_value(totalQuestsL->data->status);
+
+		totalQuestsL = totalQuestsL->next;
+	}
+
+
+	return ret;
+}
+
+bool QuestManager::Load(pugi::xml_node& savegame)
+{
+	LOG("Loading quests data");
+	bool ret = true;
+
+	// Destroy && Clean quests
+	ListItem<Quest*>* questL = questsList.start;
+	while (questL != nullptr)
+	{
+		questsList.Del(questL);
+		questL = questL->next;
+	}
+	questsList.Clear();
+	
+	ListItem<Quest*>* inactiveL = questsInactive.start;
+	while (inactiveL != nullptr)
+	{
+		questsInactive.Del(inactiveL);
+		inactiveL = inactiveL->next;
+	}
+	questsInactive.Clear();
+
+	ListItem<Quest*>* activeL = questsActive.start;
+	while (activeL != nullptr)
+	{
+		questsActive.Del(activeL);
+		activeL = activeL->next;
+	}
+	questsActive.Clear();
+
+	ListItem<Quest*>* finishL = questsFinished.start;
+	while (finishL != nullptr)
+	{
+		questsFinished.Del(finishL);
+		finishL = finishL->next;
+	}
+	questsFinished.Clear();
+
+	tpFlags = savegame.attribute("tpFlags").as_uint();
+	drawQuests = savegame.attribute("drawQuests").as_bool();
+	firstCombatWon = savegame.attribute("firstCombatWon").as_bool();
+	escapedLabyrinth = savegame.attribute("escapedLabyrinth").as_bool();
+	firstBossDefeated = savegame.attribute("firstBossDefeated").as_bool();
+
+	pugi::xml_node questNode = savegame.child("quest");
+	while (questNode != NULL)
+	{
+		Quest* quest = new Quest();
+		
+		quest->id = questNode.attribute("id").as_int();
+		//quest->type = questNode.attribute("type").as_int();
+		quest->title = questNode.attribute("title").as_string();
+		quest->description = questNode.attribute("description").as_string();
+		//quest->objective = questNode.attribute("objective").as_string();
+		//quest->quantity = questNode.attribute("quantity").as_int();
+		//quest->demandingNPC = questNode.attribute("demandingNPC").as_string();
+		//quest->rewardingNPC = questNode.attribute("rewardingNPC").as_string();
+		quest->rewardXP = questNode.attribute("rewardXP").as_int();
+		quest->rewardGold = questNode.attribute("rewardGold").as_int();
+		quest->requiredIdString = questNode.attribute("requiredId").as_string();
+		quest->isCompleted = questNode.attribute("isCompleted").as_bool();
+		quest->status = questNode.attribute("status").as_int();
+
+		// This serves to sort out the list with the quests status
+		if (quest->status == 0) // status 0 goes to inactive list
+		{
+			questsInactive.Add(quest);
+		}
+		else if (quest->status == 1) // status 1 goes to active list 
+		{
+			questsActive.Add(quest);
+		}
+		else if (quest->status == 2) // status 2 goes to finished list
+		{
+			questsFinished.Add(quest);
+		}
+
+		// List with all quests
+		questsList.Add(quest);
+
+		StringToIntArray(quest, quest->requiredIdString);
+
+		questNode = questNode.next_sibling("quest");
+	}
+
+
+	return ret;
 }
