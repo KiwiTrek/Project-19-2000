@@ -240,7 +240,7 @@ bool SceneManager::Load(pugi::xml_node& save)
 			sec = { 8 * 32,7 * 32,32,32 };
 			break;
 		case 5:
-			id = ItemId::BOTTLEED_SMITE;
+			id = ItemId::BOTTLED_SMITE;
 			sec = { 6 * 32,8 * 32,32,32 };
 			break;
 		case 6:

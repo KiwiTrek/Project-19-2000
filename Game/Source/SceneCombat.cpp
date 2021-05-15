@@ -108,14 +108,14 @@ bool SceneCombat::Load()
 	btnCombatItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 61, { 84,630,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 62, { 384,630,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 63, { 684,630,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 64, { 84,570,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 65, { 384,570,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 66, { 684,570,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 67, { 84,630,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 68, { 384,630,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 69, { 684,630,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
-	btnLeftArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 70, { 34,605,50,50 }, "", 40, this);
-	btnRightArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 71, { 984,605,50,50 }, "", 40, this);
+	btnRightArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 64, { 984,605,50,50 }, "", 40, this);
+	btnLeftArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 65, { 34,605,50,50 }, "", 40, this);
+	btnCombatItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 66, { 84,570,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 67, { 384,570,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 68, { 684,570,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 69, { 84,630,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 70, { 384,630,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 71, { 684,630,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
 	LOG("%d", characterFlags);
 
@@ -305,12 +305,15 @@ bool SceneCombat::Update(float dt)
 							currentChar = nullptr;
 							characterSelected = false;
 
-							combatState = CombatStateType::COMBAT_END;
-							currentEntity = e;
-							TickDownBuffs();
-							combatState = CombatStateType::COMBAT_MIDGAME;
+							if (IsCharacter(e->data))
+							{
+								combatState = CombatStateType::COMBAT_END;
+								currentEntity = e;
+								TickDownBuffs();
+								combatState = CombatStateType::COMBAT_MIDGAME;
+							}
+							else app->entities->DestroyEntity(e->data);
 
-							if (!IsCharacter(e->data)) app->entities->DestroyEntity(e->data);
 							turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
 							SortSpeed(false);
 							if (currentEntity == nullptr)
@@ -378,24 +381,6 @@ bool SceneCombat::Update(float dt)
 								{
 									app->gui->ResetButtons();
 									items.At(itemSelected - 1)->data->Use(target);
-									if (IsCharacter(currentEntity->data))
-									{
-										switch (currentEntity->data->id)
-										{
-										case EntityId::MC:
-											mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
-											mainChar.mp.Create("MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
-											mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
-											break;
-										case EntityId::VIOLENT:
-											grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
-											grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
-											break;
-										default:
-											break;
-										}
-									}
-
 									char tmp[50];
 									sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
 									NextLine(tmp);
@@ -835,7 +820,7 @@ bool SceneCombat::Update(float dt)
 			}
 			if (characterSelected)
 			{
-				app->scene->currentButton->data->Update(dt, 29, 33);
+				app->scene->currentButton->data->Update(dt, 47, 51);
 				if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
 				{
 					if (changeMenu)
@@ -845,7 +830,7 @@ bool SceneCombat::Update(float dt)
 					}
 					else
 					{
-						app->scene->currentButton->data->Update(dt, 34, 39);
+						app->scene->currentButton->data->Update(dt, 52, 71);
 						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
 						{
 							app->gui->ResetButtons();
@@ -864,7 +849,7 @@ bool SceneCombat::Update(float dt)
 					}
 					else
 					{
-						app->scene->currentButton->data->Update(dt, 40, 45);
+						app->scene->currentButton->data->Update(dt, 58, 63);
 						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
 						{
 							app->gui->ResetButtons();
@@ -896,23 +881,27 @@ bool SceneCombat::Update(float dt)
 						switch (i)
 						{
 						case 1:
-							btnCombatSkill1->text = currentEntity->data->attackPool.At(i)->data->attackName;
-							btnCombatSkill1->sec = SkillSec(i);
+							btnCombatSkill1->text.Clear();
+							btnCombatSkill1->text.Create(currentEntity->data->attackPool.At(i)->data->attackName.GetString());
+							btnCombatSkill1->sec = SkillSec(i, currentEntity->data->id);
 							btnCombatSkill1->Update(dt);
 							break;
 						case 2:
-							btnCombatSkill2->text = currentEntity->data->attackPool.At(i)->data->attackName;
-							btnCombatSkill2->sec = SkillSec(i);
+							btnCombatSkill2->text.Clear();
+							btnCombatSkill2->text.Create(currentEntity->data->attackPool.At(i)->data->attackName.GetString());
+							btnCombatSkill2->sec = SkillSec(i, currentEntity->data->id);
 							btnCombatSkill2->Update(dt);
 							break;
 						case 3:
-							btnCombatSkill3->text = currentEntity->data->attackPool.At(i)->data->attackName;
-							btnCombatSkill3->sec = SkillSec(i);
+							btnCombatSkill3->text.Clear();
+							btnCombatSkill3->text.Create(currentEntity->data->attackPool.At(i)->data->attackName.GetString());
+							btnCombatSkill3->sec = SkillSec(i, currentEntity->data->id);
 							btnCombatSkill3->Update(dt);
 							break;
 						case 4:
-							btnCombatSkill4->text = currentEntity->data->attackPool.At(i)->data->attackName;
-							btnCombatSkill4->sec = SkillSec(i);
+							btnCombatSkill4->text.Clear();
+							btnCombatSkill4->text.Create(currentEntity->data->attackPool.At(i)->data->attackName.GetString());
+							btnCombatSkill4->sec = SkillSec(i, currentEntity->data->id);
 							btnCombatSkill4->Update(dt);
 							break;
 						//case 5:
@@ -951,96 +940,120 @@ bool SceneCombat::Update(float dt)
 						{
 						case 0:
 							btnCombatItem1->itemId = items.At(i)->data->id;
-							btnCombatItem1->text = items.At(i)->data->effect.attackName;
-							btnCombatItem1->count = items.At(i)->data->countText;
+							btnCombatItem1->text.Clear();
+							btnCombatItem1->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem1->count.Clear();
+							btnCombatItem1->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem1->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem1;
 							btnCombatItem1->Update(dt);
 							break;
 						case 1:
 							btnCombatItem2->itemId = items.At(i)->data->id;
-							btnCombatItem2->text = items.At(i)->data->effect.attackName;
-							btnCombatItem2->count = items.At(i)->data->countText;
+							btnCombatItem2->text.Clear();
+							btnCombatItem2->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem2->count.Clear();
+							btnCombatItem2->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem2->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem2;
 							btnCombatItem2->Update(dt);
 							break;
 						case 2:
 							btnCombatItem3->itemId = items.At(i)->data->id;
-							btnCombatItem3->text = items.At(i)->data->effect.attackName;
-							btnCombatItem3->count = items.At(i)->data->countText;
+							btnCombatItem3->text.Clear();
+							btnCombatItem3->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem3->count.Clear();
+							btnCombatItem3->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem3->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem3;
 							btnCombatItem3->Update(dt);
 							break;
 						case 3:
 							btnCombatItem4->itemId = items.At(i)->data->id;
-							btnCombatItem4->text = items.At(i)->data->effect.attackName;
-							btnCombatItem4->count = items.At(i)->data->countText;
+							btnCombatItem4->text.Clear();
+							btnCombatItem4->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem4->count.Clear();
+							btnCombatItem4->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem4->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem4;
 							btnCombatItem4->Update(dt);
 							break;
 						case 4:
 							btnCombatItem5->itemId = items.At(i)->data->id;
-							btnCombatItem5->text = items.At(i)->data->effect.attackName;
-							btnCombatItem5->count = items.At(i)->data->countText;
+							btnCombatItem5->text.Clear();
+							btnCombatItem5->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem5->count.Clear();
+							btnCombatItem5->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem5->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem5;
 							btnCombatItem5->Update(dt);
 							break;
 						case 5:
 							btnCombatItem6->itemId = items.At(i)->data->id;
-							btnCombatItem6->text = items.At(i)->data->effect.attackName;
-							btnCombatItem6->count = items.At(i)->data->countText;
+							btnCombatItem6->text.Clear();
+							btnCombatItem6->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem6->count.Clear();
+							btnCombatItem6->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem6->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem6;
 							btnCombatItem6->Update(dt);
 							break;
 						case 6:
 							btnCombatItem7->itemId = items.At(i)->data->id;
-							btnCombatItem7->text = items.At(i)->data->effect.attackName;
-							btnCombatItem7->count = items.At(i)->data->countText;
+							btnCombatItem7->text.Clear();
+							btnCombatItem7->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem7->count.Clear();
+							btnCombatItem7->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem7->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem7;
 							btnCombatItem7->Update(dt);
 							break;
 						case 7:
 							btnCombatItem8->itemId = items.At(i)->data->id;
-							btnCombatItem8->text = items.At(i)->data->effect.attackName;
-							btnCombatItem8->count = items.At(i)->data->countText;
+							btnCombatItem8->text.Clear();
+							btnCombatItem8->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem8->count.Clear();
+							btnCombatItem8->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem8->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem8;
 							btnCombatItem8->Update(dt);
 							break;
 						case 8:
 							btnCombatItem9->itemId = items.At(i)->data->id;
-							btnCombatItem9->text = items.At(i)->data->effect.attackName;
-							btnCombatItem9->count = items.At(i)->data->countText;
+							btnCombatItem9->text.Clear();
+							btnCombatItem9->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem9->count.Clear();
+							btnCombatItem9->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem9->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem9;
 							btnCombatItem9->Update(dt);
 							break;
 						case 9:
 							btnCombatItem10->itemId = items.At(i)->data->id;
-							btnCombatItem10->text = items.At(i)->data->effect.attackName;
-							btnCombatItem10->count = items.At(i)->data->countText;
+							btnCombatItem10->text.Clear();
+							btnCombatItem10->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem10->count.Clear();
+							btnCombatItem10->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem10->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem10;
 							btnCombatItem10->Update(dt);
 							break;
 						case 10:
 							btnCombatItem11->itemId = items.At(i)->data->id;
-							btnCombatItem11->text = items.At(i)->data->effect.attackName;
-							btnCombatItem11->count = items.At(i)->data->countText;
+							btnCombatItem11->text.Clear();
+							btnCombatItem11->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem11->count.Clear();
+							btnCombatItem11->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem11->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem11;
 							btnCombatItem11->Update(dt);
 							break;
 						case 11:
 							btnCombatItem12->itemId = items.At(i)->data->id;
-							btnCombatItem12->text = items.At(i)->data->effect.attackName;
-							btnCombatItem12->count = items.At(i)->data->countText;
+							btnCombatItem12->text.Clear();
+							btnCombatItem12->text.Create(items.At(i)->data->effect.attackName.GetString());
+							btnCombatItem12->count.Clear();
+							btnCombatItem12->count.Create(items.At(i)->data->countText.GetString());
 							btnCombatItem12->sec = items.At(i)->data->texSec;
 							items.At(i)->data->button = btnCombatItem12;
 							btnCombatItem12->Update(dt);
@@ -1770,9 +1783,9 @@ void SceneCombat::StressPower()
 	}
 }
 
-SDL_Rect SceneCombat::SkillSec(int i)
+SDL_Rect SceneCombat::SkillSec(int i, EntityId id)
 {
-	switch (currentChar->character->id)
+	switch (id)
 	{
 	case EntityId::MC:
 		switch (i)
@@ -2250,7 +2263,17 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem6->text.GetString());
 		break;
-	case 64: //ITEM 7
+	case 64: //RIGHT ARROW
+		pageOne = false;
+		btnLeftArrow->state = GuiControlState::NORMAL;
+		btnRightArrow->state = GuiControlState::DISABLED;
+		break;
+	case 65: //LEFT ARROW
+		pageOne = true;
+		btnLeftArrow->state = GuiControlState::DISABLED;
+		btnRightArrow->state = GuiControlState::NORMAL;
+		break;
+	case 66: //ITEM 7
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2258,7 +2281,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem7->text.GetString());
 		break;
-	case 65: //ITEM 8
+	case 67: //ITEM 8
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2266,7 +2289,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem8->text.GetString());
 		break;
-	case 66: //ITEM 9
+	case 68: //ITEM 9
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2274,7 +2297,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem9->text.GetString());
 		break;
-	case 67: //ITEM 10
+	case 69: //ITEM 10
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2282,7 +2305,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem10->text.GetString());
 		break;
-	case 68: //ITEM 11
+	case 70: //ITEM 11
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2290,7 +2313,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem11->text.GetString());
 		break;
-	case 69: //ITEM 12
+	case 71: //ITEM 12
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2298,16 +2321,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem12->text.GetString());
 		break;
-	case 70: //LEFT ARROW
-		pageOne = true;
-		btnLeftArrow->state = GuiControlState::DISABLED;
-		btnRightArrow->state = GuiControlState::NORMAL;
-		break;
-	case 71: //RIGHT ARROW
-		pageOne = false;
-		btnLeftArrow->state = GuiControlState::NORMAL;
-		btnRightArrow->state = GuiControlState::DISABLED;
-		break;
+
 	default:
 		break;
 	}

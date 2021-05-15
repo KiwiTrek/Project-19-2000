@@ -77,7 +77,7 @@ public:
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
     void StressPower();
-    SDL_Rect SkillSec(int i);
+    SDL_Rect SkillSec(int i, EntityId id);
     void NextLine(const char* line);
 
     bool Draw(Font* dialogueFont);

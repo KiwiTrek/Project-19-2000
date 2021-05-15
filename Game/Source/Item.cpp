@@ -38,8 +38,8 @@ ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, Entity
 		a = Attack("Grandma's Stew");
 		sec = { 8 * 32,7 * 32,32,32 };
 		break;
-	case ItemId::BOTTLEED_SMITE:
-		a = Attack("Smite In A Bottle");
+	case ItemId::BOTTLED_SMITE:
+		a = Attack("Bottled Smite");
 		sec = { 6 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::HAPPILLS:
@@ -142,7 +142,7 @@ void Item::Use(CombatEntity* target)
 	case ItemId::GRANDMA_STEW:
 		// Clears status poison
 		break;
-	case ItemId::BOTTLEED_SMITE:
+	case ItemId::BOTTLED_SMITE:
 		target->stats.hPoints -= 30;
 		if (target->stats.hPoints <= 0) target->stats.hPoints = 0;
 		break;
@@ -177,7 +177,10 @@ void Item::Use(CombatEntity* target)
 	{
 		SceneGameplay* s = (SceneGameplay*)app->scene->current;
 		s->combatScene->mainChar.hp.Create("HP: %d/%d", s->combatScene->mainChar.character->stats.hPoints, s->combatScene->mainChar.character->stats.hPointsMax);
+		s->combatScene->mainChar.mp.Create("MP: %d/%d", s->combatScene->mainChar.character->stats.mPoints, s->combatScene->mainChar.character->stats.mPointsMax);
+		s->combatScene->mainChar.stress.Create("ST: %d/%d", s->combatScene->mainChar.character->stats.stress, s->combatScene->mainChar.character->stats.stressMax);
 		s->combatScene->grandpa.hp.Create("HP: %d/%d", s->combatScene->grandpa.character->stats.hPoints, s->combatScene->grandpa.character->stats.hPointsMax);
+		s->combatScene->grandpa.mp.Create("MP: %d/%d", s->combatScene->grandpa.character->stats.mPoints, s->combatScene->grandpa.character->stats.mPointsMax);
 		//Should add the rest of the characters
 	}
     app->audio->PlayFx(app->entities->itemFx);

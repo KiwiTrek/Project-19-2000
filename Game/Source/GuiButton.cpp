@@ -111,7 +111,7 @@ bool GuiButton::Update(float dt, int minId, int maxId)
 				app->audio->PlayFx(hover);
 			}
 		}
-		if (app->input->CheckButton("select", KEY_REPEAT))
+		if (app->input->CheckButton("select", KEY_DOWN))
 		{
 			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
 				app->audio->PlayFx(click);

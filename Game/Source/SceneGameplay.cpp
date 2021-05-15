@@ -112,25 +112,21 @@ bool SceneGameplay::Load()
 	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 41, { 330,520,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
 	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 42, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
-	//btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 43, { 330,120,300,60 }, "skill one", 40, this, 0, app->entities->itemAtlas);
-	//btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 44, { 646,120,300,60 }, "skill two", 40, this, 0, app->entities->itemAtlas);
-	//btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 45, { 330,200,300,60 }, "skill three", 40, this, 0, app->entities->itemAtlas);
-	//btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 46, { 646,200,300,60 }, "skill four", 40, this, 0, app->entities->itemAtlas);
-	//btnSkill1->state = GuiControlState::DISABLED;
-	//btnSkill2->state = GuiControlState::DISABLED;
-	//btnSkill3->state = GuiControlState::DISABLED;
-	//btnSkill4->state = GuiControlState::DISABLED;
+	btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 43, { 330,120,300,60 }, "skill one", 32, this, 0, app->entities->itemAtlas);
+	btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 44, { 646,120,300,60 }, "skill two", 32, this, 0, app->entities->itemAtlas);
+	btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 45, { 330,200,300,60 }, "skill three", 32, this, 0, app->entities->itemAtlas);
+	btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 46, { 646,200,300,60 }, "skill four", 32, this, 0, app->entities->itemAtlas);
 
 	app->entities->CreateEntity(14 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
 	app->entities->CreateEntity(33 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 2);
 	app->entities->CreateEntity(36 * 64, 69 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 2);
-	app->entities->CreateEntity(37 * 64, 59 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::BOTTLEED_SMITE, 1);
+	app->entities->CreateEntity(37 * 64, 59 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::BOTTLED_SMITE, 1);
 	app->entities->CreateEntity(13 * 64, 72 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HAPPILLS, 2);
 	app->entities->CreateEntity(15 * 64, 43 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
 	app->entities->CreateEntity(15 * 64, 41 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::MANA_POTION, 3);
 	app->entities->CreateEntity(11 * 64, 25 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 3);
 	app->entities->CreateEntity(42 * 64, 91 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HAPPILLS, 2);
-	app->entities->CreateEntity(63 * 64, 86 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::BOTTLEED_SMITE, 2);
+	app->entities->CreateEntity(63 * 64, 86 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::BOTTLED_SMITE, 2);
 	app->entities->CreateEntity(65 * 64, 86 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HAPPILLS, 3);
 	app->entities->CreateEntity(59 * 64, 76 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
 	app->entities->CreateEntity(59 * 64, 80 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::MAGIC_BUFFER , 3);
@@ -427,85 +423,109 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		{
 		case 0:
 			btnItem1->itemId = combatScene->items.At(i)->data->id;
-			btnItem1->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem1->count = combatScene->items.At(i)->data->countText;
+			btnItem1->text.Clear();
+			btnItem1->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem1->count.Clear();
+			btnItem1->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem1->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem1;
 			break;
 		case 1:
 			btnItem2->itemId = combatScene->items.At(i)->data->id;
-			btnItem2->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem2->count = combatScene->items.At(i)->data->countText;
+			btnItem2->text.Clear();
+			btnItem2->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem2->count.Clear();
+			btnItem2->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem2->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem2;
 			break;
 		case 2:
 			btnItem3->itemId = combatScene->items.At(i)->data->id;
-			btnItem3->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem3->count = combatScene->items.At(i)->data->countText;
+			btnItem3->text.Clear();
+			btnItem3->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem3->count.Clear();
+			btnItem3->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem3->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem3;
 			break;
 		case 3:
 			btnItem4->itemId = combatScene->items.At(i)->data->id;
-			btnItem4->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem4->count = combatScene->items.At(i)->data->countText;
+			btnItem4->text.Clear();
+			btnItem4->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem4->count.Clear();
+			btnItem4->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem4->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem4;
 			break;
 		case 4:
 			btnItem5->itemId = combatScene->items.At(i)->data->id;
-			btnItem5->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem5->count = combatScene->items.At(i)->data->countText;
+			btnItem5->text.Clear();
+			btnItem5->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem5->count.Clear();
+			btnItem5->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem5->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem5;
 			break;
 		case 5:
 			btnItem6->itemId = combatScene->items.At(i)->data->id;
-			btnItem6->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem6->count = combatScene->items.At(i)->data->countText;
+			btnItem6->text.Clear();
+			btnItem6->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem6->count.Clear();
+			btnItem6->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem6->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem6;
 			break;
 		case 6:
 			btnItem7->itemId = combatScene->items.At(i)->data->id;
-			btnItem7->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem7->count = combatScene->items.At(i)->data->countText;
+			btnItem7->text.Clear();
+			btnItem7->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem7->count.Clear();
+			btnItem7->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem7->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem7;
 			break;
 		case 7:
 			btnItem8->itemId = combatScene->items.At(i)->data->id;
-			btnItem8->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem8->count = combatScene->items.At(i)->data->countText;
+			btnItem8->text.Clear();
+			btnItem8->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem8->count.Clear();
+			btnItem8->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem8->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem8;
 			break;
 		case 8:
 			btnItem9->itemId = combatScene->items.At(i)->data->id;
-			btnItem9->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem9->count = combatScene->items.At(i)->data->countText;
+			btnItem9->text.Clear();
+			btnItem9->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem9->count.Clear();
+			btnItem9->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem9->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem9;
 			break;
 		case 9:
 			btnItem10->itemId = combatScene->items.At(i)->data->id;
-			btnItem10->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem10->count = combatScene->items.At(i)->data->countText;
+			btnItem10->text.Clear();
+			btnItem10->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem10->count.Clear();
+			btnItem10->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem10->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem10;
 			break;
 		case 10:
 			btnItem11->itemId = combatScene->items.At(i)->data->id;
-			btnItem11->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem11->count = combatScene->items.At(i)->data->countText;
+			btnItem11->text.Clear();
+			btnItem11->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem11->count.Clear();
+			btnItem11->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem11->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem11;
 			break;
 		case 11:
 			btnItem12->itemId = combatScene->items.At(i)->data->id;
-			btnItem12->text = combatScene->items.At(i)->data->effect.attackName;
-			btnItem12->count = combatScene->items.At(i)->data->countText;
+			btnItem12->text.Clear();
+			btnItem12->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
+			btnItem12->count.Clear();
+			btnItem12->count.Create(combatScene->items.At(i)->data->countText.GetString());
 			btnItem12->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem12;
 			break;
@@ -577,6 +597,118 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				if (app->input->CheckButton("cancel",KEY_DOWN))
 				{
 					flags = ClearBit(flags, Flags::INVENTORY);
+					changeMenu = true;
+					app->gui->ResetButtons();
+					itemSelected = 0;
+					usingGamepad = true;
+				}
+			}
+			else if ((flags & 1 << Flags::SKILLS) != 0)
+			{
+				statFlags = 0;
+				int x, y;
+				app->input->GetMousePosition(x, y);
+				if (combatScene->characterFlags >= 2)
+				{
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+					{
+						statFlags = SetBit(statFlags, (uint)EntityId::MC);
+					}
+				}
+				if (combatScene->characterFlags >= 6)
+				{
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+					{
+						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
+					}
+				}
+
+				int i = 1;
+				int maxSkills = 5;
+				for (i; i < maxSkills; i++)
+				{
+					switch (i)
+					{
+					case 1:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill1->text.Clear();
+							btnSkill1->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill1->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill1->text.Clear();
+							btnSkill1->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill1->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						break;
+					case 2:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill2->text.Clear();
+							btnSkill2->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill2->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill2->text.Clear();
+							btnSkill2->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill2->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						break;
+					case 3:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill3->text.Clear();
+							btnSkill3->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill3->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill3->text.Clear();
+							btnSkill3->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill3->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+
+						break;
+					case 4:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill4->text.Clear();
+							btnSkill4->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill4->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill4->text.Clear();
+							btnSkill4->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							btnSkill4->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						break;
+						//case 5:
+						//	btnCombatSkill5->text = currentEntity->data->attackPool.At(i)->data->attackName;
+						//	btnCombatSkill5->sec = SkillSec(i);
+						//	btnCombatSkill5->Update(dt);
+						//	break;
+						//case 6:
+						//	btnCombatSkill6->text = currentEntity->data->attackPool.At(i)->data->attackName;
+						//	btnCombatSkill6->sec = SkillSec(i);
+						//	btnCombatSkill6->Update(dt);
+						//	break;
+					}
+				}
+				if (statFlags == 1 << (int)EntityId::MC || statFlags == 1 << (int)EntityId::VIOLENT)
+				{
+					btnSkill1->Update(dt);
+					btnSkill2->Update(dt);
+					btnSkill3->Update(dt);
+					btnSkill4->Update(dt);
+				}
+
+				if (app->input->CheckButton("cancel", KEY_DOWN))
+				{
+					flags = ClearBit(flags, Flags::SKILLS);
 					changeMenu = true;
 					app->gui->ResetButtons();
 					itemSelected = 0;
@@ -765,8 +897,84 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			}
 			else if ((flags & 1 << Flags::SKILLS) != 0)
 			{
-				// arrow buttons maybe?
-				// buttons for each skill i supose?
+				statFlags = 0;
+				int x, y;
+				app->input->GetMousePosition(x, y);
+				if (combatScene->characterFlags >= 2)
+				{
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+					{
+						statFlags = SetBit(statFlags, (uint)EntityId::MC);
+					}
+				}
+				if (combatScene->characterFlags >= 6)
+				{
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+					{
+						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
+					}
+				}
+
+				int i = 1;
+				int maxSkills = 5;
+				for (i; i < maxSkills; i++)
+				{
+					switch (i)
+					{
+					case 1:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill1->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							btnSkill1->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill1->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							btnSkill1->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						btnSkill1->Update(dt);
+						break;
+					case 2:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill2->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							btnSkill2->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill2->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							btnSkill2->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						btnSkill2->Update(dt);
+						break;
+					case 3:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill3->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							btnSkill2->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill3->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							btnSkill3->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						btnSkill3->Update(dt);
+						break;
+					case 4:
+						if (statFlags == 1 << (int)EntityId::MC)
+						{
+							btnSkill4->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							btnSkill4->sec = combatScene->SkillSec(i, EntityId::MC);
+						}
+						else if (statFlags == 1 << (int)EntityId::VIOLENT)
+						{
+							btnSkill4->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							btnSkill4->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+						}
+						btnSkill4->Update(dt);
+						break;
+					}
+				}
 			}
 			else if ((flags & 1 << Flags::SKILL_TREE) != 0)
 			{
@@ -1051,6 +1259,21 @@ bool SceneGameplay::DrawPauseMenu()
 		else if ((flags & 1 << Flags::SKILLS) != 0)
 		{
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+			if (statFlags == 1 << (int)EntityId::MC || statFlags == 1 << (int)EntityId::VIOLENT)
+			{
+				btnSkill1->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnSkill2->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnSkill3->Draw(-app->render->camera.x, -app->render->camera.y);
+				btnSkill4->Draw(-app->render->camera.x, -app->render->camera.y);
+			}
+			else
+			{
+				SString tmp1 = "Select a character";
+				SString tmp2 = "to see its skills";
+				app->render->DrawText(dialogueFont, tmp1.GetString(), (app->render->camera.w / 2) - ((tmp1.Length() * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp2.GetString(), (app->render->camera.w / 2) - ((tmp2.Length() * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
+			}
+
 		}
 		else if ((flags & 1 << Flags::SKILL_TREE) != 0)
 		{
