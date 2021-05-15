@@ -333,6 +333,12 @@ bool SceneCombat::Update(float dt)
 							StressPower();
 							TickDownBuffs();
 							hasTicked = true;
+							ListItem<CombatEntity*>* e = turnOrder.start;
+							while (e != nullptr)
+							{
+								LOG("%s", e->data->name.GetString());
+								e = e->next;
+							}
 						}
 
 						if (IsCharacter(currentEntity->data))													// CHARACTER
@@ -422,8 +428,8 @@ bool SceneCombat::Update(float dt)
 										}
 										else if (attackSelected == "Comfort")
 										{
-											int p = rand() % 10 + 11;
-											Heal(target, p);
+											float p = rand() % 10 + 11;
+											Heal(target, p/100);
 											app->audio->PlayFx(confortFx);
 										}
 										else if (attackSelected == "Slap")
@@ -452,7 +458,7 @@ bool SceneCombat::Update(float dt)
 											char tmp[75];
 											sprintf(tmp, "%s debuffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
 											NextLine(tmp);
-											Attack* a = new Attack("10 debuff");
+											Attack* a = new Attack("10 debuff defenses");
 											a->turns = 3;
 											a->beforeBuff1 = target->stats.pAtk;
 											a->beforeBuff2 = target->stats.mAtk;
@@ -498,7 +504,7 @@ bool SceneCombat::Update(float dt)
 										ListItem<CombatEntity*>* e = turnOrder.start;
 										while (e != nullptr)
 										{
-											if (!IsCharacter(e->data)) Damage(target, currentEntity->data->stats.mAtk / 1.4f, true);
+											if (!IsCharacter(e->data)) Damage(e->data, currentEntity->data->stats.mAtk / 1.4f, true);
 											e = e->next;
 										}
 										finishedAction = true;
@@ -656,8 +662,8 @@ bool SceneCombat::Update(float dt)
 									Attack* a = new Attack("10 buff defenses");
 									a->turns = 2;
 									currentEntity->data->attackPool.Add(a);
-									currentEntity->data->stats.pDef += currentEntity->data->stats.pDef / 10;
-									currentEntity->data->stats.mDef += currentEntity->data->stats.mDef / 10;
+									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef / 10) * 100;
+									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef / 10) * 100;
 									app->audio->PlayFx(strongerFx);
 								}
 								else if (p >= 5) //Close your eyes
@@ -696,11 +702,11 @@ bool SceneCombat::Update(float dt)
 										LOG("Nightmarish used Grasp of Depression on You!");
 										NextLine("Nightmarish used Grasp of Depression on You!");
 										mainChar.character->isStunned = 1;
-										Attack* a = new Attack("10 debuff");
+										Attack* a = new Attack("10 debuff defenses");
 										a->turns = 1;
 										mainChar.character->attackPool.Add(a);
-										mainChar.character->stats.pDef -= mainChar.character->stats.pDef / 10;
-										mainChar.character->stats.mDef -= mainChar.character->stats.mDef / 10;
+										mainChar.character->stats.pDef -= (mainChar.character->stats.pDef / 10) * 100;
+										mainChar.character->stats.mDef -= (mainChar.character->stats.mDef / 10) * 100;
 										break;
 									}
 									case 2: //GRANDPA
@@ -708,11 +714,11 @@ bool SceneCombat::Update(float dt)
 										LOG("Nightmarish used Grasp of Depression on Grandpa!");
 										NextLine("Nightmarish used Grasp of Depression on Grandpa!");
 										grandpa.character->isStunned = 1;
-										Attack* a = new Attack("10 debuff");
+										Attack* a = new Attack("10 debuff defenses");
 										a->turns = 1;
 										grandpa.character->attackPool.Add(a);
-										grandpa.character->stats.pDef -= grandpa.character->stats.pDef / 10;
-										grandpa.character->stats.mDef -= grandpa.character->stats.mDef / 10;
+										grandpa.character->stats.pDef -= (grandpa.character->stats.pDef / 10) * 100;
+										grandpa.character->stats.mDef -= (grandpa.character->stats.mDef / 10) * 100;
 										break;
 									}
 									//case 3:
@@ -1365,10 +1371,10 @@ void SceneCombat::TickDownBuffs()
 			a->data->turns--;
 			if (a->data->turns == 0 || combatState == CombatStateType::COMBAT_END)
 			{
-				if (a->data->attackName == "10 debuff")
+				if (a->data->attackName == "10 debuff defenses")
 				{
-					currentEntity->data->stats.pDef += a->data->beforeBuff1 / 10;
-					currentEntity->data->stats.mDef += a->data->beforeBuff2 / 10;
+					currentEntity->data->stats.pDef += (a->data->beforeBuff1 / 10) * 100;
+					currentEntity->data->stats.mDef += (a->data->beforeBuff2 / 10) * 100;
 				}
 				else if (a->data->attackName == "5 buff defenses")
 				{
@@ -1377,8 +1383,8 @@ void SceneCombat::TickDownBuffs()
 				}
 				else if (a->data->attackName == "10 buff defenses")
 				{
-					currentEntity->data->stats.pDef -= a->data->beforeBuff1 / 10;
-					currentEntity->data->stats.mDef -= a->data->beforeBuff2 / 10;
+					currentEntity->data->stats.pDef -= (a->data->beforeBuff1 / 10) * 100;
+					currentEntity->data->stats.mDef -= (a->data->beforeBuff2 / 10) * 100;
 				}
 				else if (a->data->attackName == "25 buff")
 				{
@@ -1415,6 +1421,7 @@ void SceneCombat::Damage(CombatEntity* target, int damage, bool isMagic)
 
 	if (player != nullptr && !player->godMode)
 	{
+
 		LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
 		char tmp[75];
 		sprintf(tmp, "%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
@@ -1460,7 +1467,7 @@ void SceneCombat::Damage(CombatEntity* target, int damage, bool isMagic)
 	//Should add the rest of the characters
 }
 
-void SceneCombat::Heal(CombatEntity* target, int p)
+void SceneCombat::Heal(CombatEntity* target, float p)
 {
 	ListItem<Entity*>* e = app->entities->entities.start;
 	Player* player = nullptr;
@@ -1482,6 +1489,7 @@ void SceneCombat::Heal(CombatEntity* target, int p)
 		NextLine(tmp);
 
 		int heal = p * target->stats.hPointsMax;
+		LOG("healed %d", heal);
 
 		if (heal <= 0) heal = 0;
 		target->stats.hPoints += heal;
