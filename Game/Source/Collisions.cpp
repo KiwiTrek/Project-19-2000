@@ -184,7 +184,7 @@ Collisions::Collisions()
 
 
 
-	srand(time(NULL));
+	
 }
 
 Collisions::~Collisions()

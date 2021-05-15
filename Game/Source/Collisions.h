@@ -17,8 +17,6 @@ public:
 		AIR,
 		SOLID,
 		DOOR,
-		PUZZLE,
-		BUTTON,
 		MOVEABLE,
 		OTHER,
 		EVENT,
@@ -26,6 +24,8 @@ public:
 		INTERACTABLE,
 		DEBUG,
 		PLAYER,
+		PUZZLE,
+		BUTTON,
 		MAX
 	};
 
