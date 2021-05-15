@@ -95,12 +95,12 @@ bool SceneCombat::Load()
 	btnCombatSpecial->state = GuiControlState::DISABLED;
 	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 51, { 834,505,200,60 }, "FLEE", 40, this);
 
-	btnCombatSkill1 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 52, { 84,570,300,60 }, "skill 1", 40, this, 0, app->entities->itemAtlas);
-	btnCombatSkill2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 53, { 384,570,300,60 }, "skill 2", 40, this, 0, app->entities->itemAtlas);
-	btnCombatSkill3 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 54, { 684,570,300,60 }, "skill 3", 40, this, 0, app->entities->itemAtlas);
-	btnCombatSkill4 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 55, { 84,630,300,60 }, "skill 4", 40, this, 0, app->entities->itemAtlas);
-	//btnCombatSkill5 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 56, { 384,630,300,60 }, "skill 5", 40, this);
-	//btnCombatSkill6 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 57, { 684,630,300,60 }, "skill 6", 40, this);
+	btnCombatSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 52, { 84,570,300,60 }, "skill 1", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 53, { 384,570,300,60 }, "skill 2", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 54, { 684,570,300,60 }, "skill 3", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 55, { 84,630,300,60 }, "skill 4", 32, this, 0, app->entities->itemAtlas);
+	//btnCombatSkill5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 56, { 384,630,300,60 }, "skill 5", 40, this);
+	//btnCombatSkill6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 57, { 684,630,300,60 }, "skill 6", 40, this);
 
 	btnCombatItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 58, { 84,570,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 59, { 384,570,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
@@ -897,25 +897,36 @@ bool SceneCombat::Update(float dt)
 						{
 						case 1:
 							btnCombatSkill1->text = currentEntity->data->attackPool.At(i)->data->attackName;
+							btnCombatSkill1->sec = SkillSec(i);
+							btnCombatSkill1->Update(dt);
 							break;
 						case 2:
 							btnCombatSkill2->text = currentEntity->data->attackPool.At(i)->data->attackName;
+							btnCombatSkill2->sec = SkillSec(i);
+							btnCombatSkill2->Update(dt);
 							break;
 						case 3:
 							btnCombatSkill3->text = currentEntity->data->attackPool.At(i)->data->attackName;
+							btnCombatSkill3->sec = SkillSec(i);
+							btnCombatSkill3->Update(dt);
 							break;
 						case 4:
 							btnCombatSkill4->text = currentEntity->data->attackPool.At(i)->data->attackName;
+							btnCombatSkill4->sec = SkillSec(i);
+							btnCombatSkill4->Update(dt);
 							break;
+						//case 5:
+						//	btnCombatSkill5->text = currentEntity->data->attackPool.At(i)->data->attackName;
+						//	btnCombatSkill5->sec = SkillSec(i);
+						//	btnCombatSkill5->Update(dt);
+						//	break;
+						//case 6:
+						//	btnCombatSkill6->text = currentEntity->data->attackPool.At(i)->data->attackName;
+						//	btnCombatSkill6->sec = SkillSec(i);
+						//	btnCombatSkill6->Update(dt);
+						//	break;
 						}
 					}
-
-					btnCombatSkill1->Update(dt);
-					btnCombatSkill2->Update(dt);
-					btnCombatSkill3->Update(dt);
-					btnCombatSkill4->Update(dt);
-					//btnCombatSkill5->Update(dt);
-					//btnCombatSkill6->Update(dt);
 				}
 				else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
 				{
@@ -1756,6 +1767,53 @@ void SceneCombat::StressPower()
 			}
 			break;
 		}
+	}
+}
+
+SDL_Rect SceneCombat::SkillSec(int i)
+{
+	switch (currentChar->character->id)
+	{
+	case EntityId::MC:
+		switch (i)
+		{
+		case 1:
+			return { 96,416,32,32 };
+			break;
+		case 2:
+			return { 32,160,32,32 };
+			break;
+		case 3:
+			return { 32,96,32,32 };
+			break;
+		case 4:
+			return { 128,416,32,32 };
+			break;
+		default:
+			break;
+		}
+		break;
+	case EntityId::VIOLENT:
+		switch (i)
+		{
+		case 1:
+			return { 0,192,32,32 };
+			break;
+		case 2:
+			return { 0,192,32,32 };
+			break;
+		case 3:
+			return { 0,192,32,32 };
+			break;
+		case 4:
+			return { 0,192,32,32 };
+			break;
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
 	}
 }
 

@@ -77,6 +77,7 @@ public:
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
     void StressPower();
+    SDL_Rect SkillSec(int i);
     void NextLine(const char* line);
 
     bool Draw(Font* dialogueFont);
@@ -143,12 +144,13 @@ private:
     GuiButton* btnCombatItems;
     GuiButton* btnCombatSpecial;
     GuiButton* btnCombatFlee;
-    GuiButton* btnCombatSkill1;
-    GuiButton* btnCombatSkill2;
-    GuiButton* btnCombatSkill3;
-    GuiButton* btnCombatSkill4;
-    //GuiButton* btnCombatSkill5;
-    //GuiButton* btnCombatSkill6;
+
+    GuiImageButton* btnCombatSkill1;
+    GuiImageButton* btnCombatSkill2;
+    GuiImageButton* btnCombatSkill3;
+    GuiImageButton* btnCombatSkill4;
+    //GuiImageButton* btnCombatSkill5;
+    //GuiImageButton* btnCombatSkill6;
 
     GuiImageButton* btnCombatItem1;
     GuiImageButton* btnCombatItem2;
