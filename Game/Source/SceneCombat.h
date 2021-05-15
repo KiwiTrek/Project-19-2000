@@ -69,7 +69,6 @@ public:
 
     bool Update(float dt);
     void Damage(CombatEntity* target, int damage, bool isMagic);
-    //void Damage(int index, CombatEntity* target, bool isMagic);
     void Heal(CombatEntity* target, int p);
     void Stress(int value);
     void SelectTarget();

@@ -73,13 +73,6 @@ enum class BlockerId
 	LOCKED_DOOR
 };
 
-//enum EnemyType
-//{
-//	NO_TYPE,
-//	GROUND,
-//	FLYING
-//};
-
 class Stats
 {
 public:
@@ -92,24 +85,6 @@ public:
 public:
 	int pAtk, mAtk, pDef, mDef, hPoints, hPointsMax, speed, mPoints, mPointsMax, stress, stressMax; // stress is only for MC
 };
-//
-//enum class StatType
-//{
-//	NONE,
-//	P_ATK,
-//	M_ATK,
-//	P_DEF,
-//	M_DEF,
-//	STRESS
-//};
-
-//enum class TargetType
-//{
-//	SELF,
-//	ONE,
-//	ALL_ENEMIES,
-//	ALL_ALLIES
-//};
 
 class Attack
 {
