@@ -136,10 +136,10 @@ bool SceneGameplay::Load()
 	//Puzzle elements
 	buttonOne = (PuzzlePieces*)app->entities->CreateEntity(13 * 64, 41 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
 	buttonTwo = (PuzzlePieces*)app->entities->CreateEntity(17 * 64, 41 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
-	(PuzzlePieces*)app->entities->CreateEntity(43 * 64, 14 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
-	(PuzzlePieces*)app->entities->CreateEntity(50 * 64, 14 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
-	buttonThree = (PuzzlePieces*)app->entities->CreateEntity(55 * 64, 13 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
-	buttonFour = (PuzzlePieces*)app->entities->CreateEntity(57 * 64, 16 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
+	buttonThree = (PuzzlePieces*)app->entities->CreateEntity(43 * 64, 14 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
+	buttonFour = (PuzzlePieces*)app->entities->CreateEntity(50 * 64, 14 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
+	buttonFive = (PuzzlePieces*)app->entities->CreateEntity(55 * 64, 13 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
+	buttonSix = (PuzzlePieces*)app->entities->CreateEntity(57 * 64, 16 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
 
 	(PuzzlePieces*)app->entities->CreateEntity(13 * 64, 43 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::ROCK);
 	(PuzzlePieces*)app->entities->CreateEntity(42 * 64, 13 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::ROCK);
@@ -209,6 +209,45 @@ bool SceneGameplay::Update(float dt)
 	else if (lockedDoor == nullptr)
 	{
 		lockedDoor = (Blockers*)app->entities->CreateEntity(15 * 64, 38 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::LOCKED_DOOR);
+	}
+
+	if (buttonThree->isPressed)
+	{
+		if (spikeRowOne != nullptr)
+		{
+			spikeRowOne->pendingToDelete = true;
+			spikeRowOne = nullptr;
+		}
+	}
+	else if (spikeRowOne == nullptr)
+	{
+		spikeRowOne = (Blockers*)app->entities->CreateEntity(46 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
+	}
+
+	if (buttonFour->isPressed)
+	{
+		if (spikeRowTwo != nullptr)
+		{
+			spikeRowTwo->pendingToDelete = true;
+			spikeRowTwo = nullptr;
+		}
+	}
+	else if (spikeRowTwo == nullptr)
+	{
+		spikeRowTwo = (Blockers*)app->entities->CreateEntity(52 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
+	}
+
+	if (buttonFive->isPressed && buttonSix->isPressed)
+	{
+		if (spikeRowThree != nullptr)
+		{
+			spikeRowThree->pendingToDelete = true;
+			spikeRowThree = nullptr;
+		}
+	}
+	else if (spikeRowThree == nullptr)
+	{
+		spikeRowThree = (Blockers*)app->entities->CreateEntity(60 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
 	}
 	
 	if (combat)

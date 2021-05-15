@@ -46,6 +46,8 @@ public:
 	bool isPushedRight;
 	int value = 0;
 
+	Collider* collision;
+
 	iPoint prevPos;
 };
 

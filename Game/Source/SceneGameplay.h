@@ -65,6 +65,8 @@ public:
     PuzzlePieces* buttonTwo;
     PuzzlePieces* buttonThree;
     PuzzlePieces* buttonFour;
+    PuzzlePieces* buttonFive;
+    PuzzlePieces* buttonSix;
 
     Blockers* spikeRowOne;
     Blockers* spikeRowTwo;

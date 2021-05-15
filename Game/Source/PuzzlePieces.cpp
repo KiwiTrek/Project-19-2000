@@ -36,6 +36,7 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x
 	else
 	{
 		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::MOVEABLE, (Module*)app->entities);
+		collision = app->collisions->AddCollider({ x + 4,y + 4,56,56 }, Collider::Type::SOLID, (Module*)app->entities);
 
 		isPushedUp = false;
 		isPushedDown = false;
@@ -172,6 +173,10 @@ bool PuzzlePieces::Update(float dt)
 	}
 
 	collider->SetPos(entityRect.x, entityRect.y, entityRect.w, entityRect.h);
+	if (collision != nullptr)
+	{
+		collision->SetPos(entityRect.x + 4, entityRect.y + 4, collision->rect.w, collision->rect.h);
+	}
 
 	return true;
 }
@@ -211,6 +216,7 @@ bool PuzzlePieces::Draw()
 	if (app->render->debug)
 	{
 		if (collider != nullptr) app->render->DrawRectangle(collider->rect, 0, 0, 150, 100);
+		if (collision != nullptr) app->render->DrawRectangle(collision->rect, 150, 0, 0, 100);
 	}
 
 	return true;

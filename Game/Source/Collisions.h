@@ -17,15 +17,15 @@ public:
 		AIR,
 		SOLID,
 		DOOR,
-		MOVEABLE,
+		PUZZLE,
 		OTHER,
 		EVENT,
 		ENEMY_SPAWN,
 		INTERACTABLE,
 		DEBUG,
 		PLAYER,
-		PUZZLE,
 		BUTTON,
+		MOVEABLE,
 		MAX
 	};
 
