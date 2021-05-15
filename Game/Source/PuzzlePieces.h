@@ -45,6 +45,7 @@ public:
 	bool isPushedLeft;
 	bool isPushedRight;
 	int value = 0;
+	float timerSlideFx;
 
 	Collider* collision;
 

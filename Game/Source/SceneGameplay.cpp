@@ -112,6 +112,15 @@ bool SceneGameplay::Load()
 	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 41, { 330,520,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
 	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 42, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
+	//btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 43, { 330,120,300,60 }, "skill one", 40, this, 0, app->entities->itemAtlas);
+	//btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 44, { 646,120,300,60 }, "skill two", 40, this, 0, app->entities->itemAtlas);
+	//btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 45, { 330,200,300,60 }, "skill three", 40, this, 0, app->entities->itemAtlas);
+	//btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 46, { 646,200,300,60 }, "skill four", 40, this, 0, app->entities->itemAtlas);
+	//btnSkill1->state = GuiControlState::DISABLED;
+	//btnSkill2->state = GuiControlState::DISABLED;
+	//btnSkill3->state = GuiControlState::DISABLED;
+	//btnSkill4->state = GuiControlState::DISABLED;
+
 	app->entities->CreateEntity(14 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
 	app->entities->CreateEntity(33 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 2);
 	app->entities->CreateEntity(36 * 64, 69 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 2);
@@ -202,6 +211,7 @@ bool SceneGameplay::Update(float dt)
 	{
 		if (lockedDoor != nullptr)
 		{
+			app->audio->PlayFx(app->entities->solvedFx);
 			lockedDoor->pendingToDelete = true;
 			lockedDoor = nullptr;
 		}
@@ -215,6 +225,7 @@ bool SceneGameplay::Update(float dt)
 	{
 		if (spikeRowOne != nullptr)
 		{
+			app->audio->PlayFx(app->entities->solvedFx);
 			spikeRowOne->pendingToDelete = true;
 			spikeRowOne = nullptr;
 		}
@@ -228,6 +239,7 @@ bool SceneGameplay::Update(float dt)
 	{
 		if (spikeRowTwo != nullptr)
 		{
+			app->audio->PlayFx(app->entities->solvedFx);
 			spikeRowTwo->pendingToDelete = true;
 			spikeRowTwo = nullptr;
 		}
@@ -241,6 +253,7 @@ bool SceneGameplay::Update(float dt)
 	{
 		if (spikeRowThree != nullptr)
 		{
+			app->audio->PlayFx(app->entities->solvedFx);
 			spikeRowThree->pendingToDelete = true;
 			spikeRowThree = nullptr;
 		}

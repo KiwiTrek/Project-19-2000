@@ -47,10 +47,10 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		Attack* a = new Attack("Smite foes");
 		this->attackPool.Add(a);
 
-		a = new Attack("Weak Magic missile");
+		a = new Attack("W. Magic missile");
 		this->attackPool.Add(a);
 
-		a = new Attack("Weak Magic Barrage");
+		a = new Attack("W. Magic Barrage");
 		this->attackPool.Add(a);
 
 		a = new Attack("Magic Hand Slap");

@@ -26,24 +26,25 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x
 	buttonPressed = { 960,0,64,64 };
 
 	pendingToDelete = false;
+	timerSlideFx = 0.0f;
+	value = 0;
 
+	isPressed = false;
+
+	isPushedUp = false;
+	isPushedDown = false;
+	isPushedLeft = false;
+	isPushedRight = false;
 
 	if (id == PuzzleId::BUTTON)
 	{
 		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::BUTTON, (Module*)app->entities);
 		collision = nullptr;
-		isPressed = false;
 	}
 	else
 	{
 		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::MOVEABLE, (Module*)app->entities);
 		collision = app->collisions->AddCollider({ x + 4,y + 4,56,56 }, Collider::Type::SOLID, (Module*)app->entities);
-
-		isPushedUp = false;
-		isPushedDown = false;
-		isPushedLeft = false;
-		isPushedRight = false;
-		value = 0;
 	}
 }
 
@@ -105,6 +106,16 @@ bool PuzzlePieces::Update(float dt)
 	{
 		if (isPushedUp)
 		{
+			if (timerSlideFx >= 0.2f)
+			{
+				app->audio->PlayFx(app->entities->iceRockFx);
+				timerSlideFx = 0.0f;
+			}
+			else
+			{
+				timerSlideFx += dt;
+			}
+
 			entityRect.y -= 2;
 			value++;
 			if (value >= 32)
@@ -121,6 +132,16 @@ bool PuzzlePieces::Update(float dt)
 		}
 		else if (isPushedDown)
 		{
+			if (timerSlideFx >= 0.2f)
+			{
+				app->audio->PlayFx(app->entities->iceRockFx);
+				timerSlideFx = 0.0f;
+			}
+			else
+			{
+				timerSlideFx += dt;
+			}
+
 			entityRect.y += 2;
 			value++;
 			if (value >= 32)
@@ -137,6 +158,16 @@ bool PuzzlePieces::Update(float dt)
 		}
 		else if (isPushedLeft)
 		{
+			if (timerSlideFx >= 0.2f)
+			{
+				app->audio->PlayFx(app->entities->iceRockFx);
+				timerSlideFx = 0.0f;
+			}
+			else
+			{
+				timerSlideFx += dt;
+			}
+
 			entityRect.x -= 2;
 			value++;
 			if (value >= 32)
@@ -153,6 +184,16 @@ bool PuzzlePieces::Update(float dt)
 		}
 		else if (isPushedRight)
 		{
+			if (timerSlideFx >= 0.2f)
+			{
+				app->audio->PlayFx(app->entities->iceRockFx);
+				timerSlideFx = 0.0f;
+			}
+			else
+			{
+				timerSlideFx += dt;
+			}
+
 			entityRect.x += 2;
 			value++;
 			if (value >= 32)
@@ -233,6 +274,7 @@ void PuzzlePieces::OnCollision(Collider* c1, Collider* c2)
 	{
 		if (c2->type == Collider::Type::PLAYER)
 		{
+			app->audio->PlayFx(app->entities->rockFx);
 			if (playerPtr->animFlags == 1 << Player::FlagsAnimation::UP)
 			{
 				if (!isPushedUp)

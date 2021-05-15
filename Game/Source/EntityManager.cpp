@@ -103,8 +103,25 @@ bool EntityManager::Start()
 	tmp.Create("%s%s", folderAudioFx.GetString(), "Footstep.wav");
 	footstepFx = app->audio->LoadFx(tmp.GetString());
 
-	itemFx = app->audio->LoadFx("Audio/Fx/Item.wav");
-	itemCollectedFx = app->audio->LoadFx("Audio/Fx/ItemCollected.wav");
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Item.wav");
+	itemFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "ItemCollected.wav");
+	itemCollectedFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Rock.wav");
+	rockFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "IceRock.wav");
+	iceRockFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Solved.wav");
+	solvedFx = app->audio->LoadFx(tmp.GetString());
 
 	doLogic = true;
 
@@ -155,6 +172,9 @@ bool EntityManager::CleanUp()
 	app->audio->UnloadFx(footstepFx);
 	app->audio->UnloadFx(itemFx);
 	app->audio->UnloadFx(itemCollectedFx);
+	app->audio->UnloadFx(rockFx);
+	app->audio->UnloadFx(iceRockFx);
+	app->audio->UnloadFx(solvedFx);
 
 	itemPasser.Clear();
 

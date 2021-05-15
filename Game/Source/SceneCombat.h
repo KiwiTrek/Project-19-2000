@@ -147,8 +147,8 @@ private:
     GuiButton* btnCombatSkill2;
     GuiButton* btnCombatSkill3;
     GuiButton* btnCombatSkill4;
-    GuiButton* btnCombatSkill5;
-    GuiButton* btnCombatSkill6;
+    //GuiButton* btnCombatSkill5;
+    //GuiButton* btnCombatSkill6;
 
     GuiImageButton* btnCombatItem1;
     GuiImageButton* btnCombatItem2;
@@ -178,8 +178,15 @@ private:
     int smackFx;
     int slapFx;
     int confortFx;
+    int speechFx;
+
     int smiteFx;
     int magicBlowFx;
+    int magicBarrageFx;
+    int magicSlapFx;
+    int stareFx;
+
+
     int strongerFx;
     int bladesFx;
     int stressFx;

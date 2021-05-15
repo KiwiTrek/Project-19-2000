@@ -128,6 +128,13 @@ private:
     GuiImageButton* btnItem11;
     GuiImageButton* btnItem12;
     int itemSelected;
+
+    //SKILLS
+    //GuiImageButton* btnSkill1;
+    //GuiImageButton* btnSkill2;
+    //GuiImageButton* btnSkill3;
+    //GuiImageButton* btnSkill4;
+
     // This line is added for the sake of commiting & testing
 
     //FONTS

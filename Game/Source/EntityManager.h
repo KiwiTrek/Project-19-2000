@@ -91,6 +91,9 @@ public:
 	int footstepFx;
 	int itemFx;
 	int itemCollectedFx;
+	int rockFx;
+	int iceRockFx;
+	int solvedFx;
 
 	bool inPause = false;
 
