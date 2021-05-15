@@ -68,8 +68,10 @@ public:
     bool SortSpeed(bool isSorted);
 
     bool Update(float dt);
-    void Damage(int index, CombatEntity* target, bool isMagic);
-    void Heal(int p, CombatEntity* target);
+    void Damage(CombatEntity* target, int damage, bool isMagic);
+    //void Damage(int index, CombatEntity* target, bool isMagic);
+    void Heal(CombatEntity* target, int p);
+    void Stress(int value);
     void SelectTarget();
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
@@ -119,7 +121,7 @@ private:
     bool finishedAction;
     bool hasTicked;
     bool scripted;
-    int attackSelected;
+    SString attackSelected;
     bool once;
     bool wait;
 

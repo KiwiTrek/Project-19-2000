@@ -193,10 +193,6 @@ bool SceneManager::Save(pugi::xml_node& save)
 		item.append_attribute("id").set_value((int)i->data->id);
 		pugi::xml_node effect = item.append_child("effect");
 		effect.append_attribute("name").set_value(i->data->effect.attackName.GetString());
-		effect.append_attribute("type").set_value((int)i->data->effect.type);
-		effect.append_attribute("stat1").set_value(i->data->effect.stat1);
-		effect.append_attribute("stat2").set_value(i->data->effect.stat2);
-		effect.append_attribute("target").set_value((int)i->data->effect.target);
 		effect.append_attribute("turns").set_value(i->data->effect.turns);
 		item.append_attribute("count").set_value(i->data->count);
 		i = i->next;
@@ -220,51 +216,10 @@ bool SceneManager::Load(pugi::xml_node& save)
 		Item* i = nullptr;
 		ItemId id = ItemId::NONE;
 		Attack e;
-		SString name = effect.attribute("name").as_string();
-		AttackType type = AttackType::DAMAGE;
-		int stat1 = effect.attribute("stat1").as_int();
-		int stat2 = effect.attribute("stat1").as_int();
-		TargetType target = TargetType::SELF;
 		int turns = effect.attribute("turns").as_int();
 		int count = item.attribute("count").as_int();
 		SDL_Rect sec = { 288,416,32,32 };
 		GuiControl* button = nullptr;
-
-		switch (effect.attribute("type").as_int())
-		{
-		case 0:
-			type = AttackType::DAMAGE;
-			break;
-		case 1:
-			type = AttackType::BUFF;
-			break;
-		case 2:
-			type = AttackType::HEAL;
-			break;
-		case 3:
-			type = AttackType::TAUNT;
-			break;
-		default:
-			break;
-		}
-
-		switch (effect.attribute("target").as_int())
-		{
-		case 0:
-			target = TargetType::SELF;
-			break;
-		case 1:
-			target = TargetType::ONE;
-			break;
-		case 2:
-			target = TargetType::ALL_ENEMIES;
-			break;
-		case 3:
-			target = TargetType::ALL_ALLIES;
-			break;
-		default:
-			break;
-		}
 
 		switch (item.attribute("id").as_int())
 		{
@@ -304,8 +259,7 @@ bool SceneManager::Load(pugi::xml_node& save)
 			break;
 		}
 
-		e = Attack(name, type, target, stat1, stat2);
-		name.Clear();
+		e = Attack(effect.attribute("name").as_string());
 		e.turns = turns;
 		i = new Item(id, e, count);
 		i->UpdateCountText();

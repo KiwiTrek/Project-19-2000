@@ -666,7 +666,6 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					}
 				}
 
-				// buttons for each item i supose?
 				for (int i = 0; i < combatScene->items.Count(); i++)
 				{
 					switch (i)

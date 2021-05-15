@@ -32,9 +32,7 @@ enum class EntityId
 	KIND,
 	STRESSING_SHADOW,
 	FURIOUS_SHADOW,
-	NIGHTMARE,
-	ENEMY_4,
-	ENEMY_5
+	NIGHTMARE
 };
 
 enum class NpcId
@@ -94,29 +92,33 @@ public:
 public:
 	int pAtk, mAtk, pDef, mDef, hPoints, hPointsMax, speed, mPoints, mPointsMax, stress, stressMax; // stress is only for MC
 };
+//
+//enum class StatType
+//{
+//	NONE,
+//	P_ATK,
+//	M_ATK,
+//	P_DEF,
+//	M_DEF,
+//	STRESS
+//};
 
-enum class AttackType
-{
-	DAMAGE,
-	BUFF,
-	HEAL,
-	TAUNT
-};
-
-enum class TargetType
-{
-	SELF,
-	ONE,
-	ALL_ENEMIES,
-	ALL_ALLIES
-};
+//enum class TargetType
+//{
+//	SELF,
+//	ONE,
+//	ALL_ENEMIES,
+//	ALL_ALLIES
+//};
 
 class Attack
 {
 public:
-	Attack(SString name, AttackType type, TargetType target, int stat1 = 0, int stat2 = 0) : attackName(name), type(type), target(target), stat1(stat1), stat2(stat2)
+	Attack(SString name) : attackName(name)
 	{
-		turns = 0;
+		turns = -1;
+		beforeBuff1 = -1;
+		beforeBuff2 = -1;
 	}
 
 	Attack()
@@ -124,9 +126,7 @@ public:
 
 public:
 	SString attackName;
-	AttackType type;
-	int stat1, stat2;
-	TargetType target;
+	int beforeBuff1, beforeBuff2;
 	int turns;
 };
 

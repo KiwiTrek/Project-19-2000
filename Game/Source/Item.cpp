@@ -23,35 +23,35 @@ ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, Entity
 	switch (id)
 	{
 	case ItemId::HP_POTION:
-		a = Attack("HP Potion", AttackType::HEAL, TargetType::ONE);
+		a = Attack("HP Potion");
 		sec = { 5 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::MANA_POTION:
-		a = Attack("Mana Potion", AttackType::BUFF, TargetType::ONE);
+		a = Attack("Mana Potion");
 		sec = { 8 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::ELIXIR:
-		a = Attack("Elixir", AttackType::BUFF, TargetType::ONE);
+		a = Attack("Elixir");
 		sec = { 9 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::GRANDMA_STEW:
-		a = Attack("Grandma's Stew", AttackType::BUFF, TargetType::ONE);
+		a = Attack("Grandma's Stew");
 		sec = { 8 * 32,7 * 32,32,32 };
 		break;
 	case ItemId::BOTTLEED_SMITE:
-		a = Attack("Smite In A Bottle", AttackType::DAMAGE, TargetType::ONE);
+		a = Attack("Smite In A Bottle");
 		sec = { 6 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::HAPPILLS:
-		a = Attack("Happills", AttackType::BUFF, TargetType::ONE);
+		a = Attack("Happills");
 		sec = { 4 * 32,8 * 32,32,32 };
 		break;
 	case ItemId::PHYS_BUFFER:
-		a = Attack("Phys Buffer", AttackType::BUFF, TargetType::ONE);
+		a = Attack("Phys Buffer");
 		sec = { 3 * 32,7 * 32,32,32 };
 		break;
 	case ItemId::MAGIC_BUFFER:
-		a = Attack("Magic Buffer", AttackType::BUFF, TargetType::ONE);
+		a = Attack("Magic Buffer");
 		sec = { 7 * 32,8 * 32,32,32 };
 		break;
 	default:
@@ -82,7 +82,7 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 {
 	if (app->input->CheckButton("select", KeyState::KEY_DOWN) && app->scene->current->currentScene == SceneType::GAMEPLAY)
 	{
-        app->audio->PlayFx(app->entities->itemCollectedFx);
+		app->audio->PlayFx(app->entities->itemCollectedFx);
 		LOG("You picked up %s item.", item.effect.attackName.GetString());
 
 		app->entities->takingItem = true;
@@ -152,22 +152,20 @@ void Item::Use(CombatEntity* target)
 		break;
 	case ItemId::PHYS_BUFFER:
 	{
-		SString s = "5 buff";
-		Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.pAtk, target->stats.pDef);
+		Attack* a = new Attack("5 buff");
 		a->turns = 2;
 		target->attackPool.Add(a);
-		target->stats.pAtk += (a->stat1 * 5) / 100;
-		target->stats.pDef += (a->stat2 * 5) / 100;
+		target->stats.pAtk += (target->stats.pAtk * 5) / 100;
+		target->stats.pDef += (target->stats.pDef * 5) / 100;
 		break;
 	}
 	case ItemId::MAGIC_BUFFER:
 	{
-		SString s = "5 buff";
-		Attack* a = new Attack(s, AttackType::BUFF, TargetType::SELF, target->stats.mAtk, target->stats.mDef);
+		Attack* a = new Attack("5 buff");
 		a->turns = 2;
 		target->attackPool.Add(a);
-		target->stats.mAtk += (a->stat1 * 5) / 100;
-		target->stats.mDef += (a->stat2 * 5) / 100;
+		target->stats.mAtk += (target->stats.mAtk * 5) / 100;
+		target->stats.mDef += (target->stats.mDef * 5) / 100;
 		break;
 	}
 	default:

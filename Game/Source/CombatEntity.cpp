@@ -17,12 +17,6 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	isTaunted = false;
 	tauntedBy = nullptr;
 
-	// Animation
-
-	//idle.PushBack({ 0,0,38,48 });
-
-	//currentAnim = &idle;
-
 	// initialize specific combat entity id variables
 	switch (id)
 	{
@@ -30,52 +24,40 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	{
 		name = "MC";
 
-		SString tmpS = "Smack";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
-		this->attackPool.Add(tmpA);
+		Attack* a = new Attack("Smack");
+		this->attackPool.Add(a);
 
-		tmpS = "Comfort";
-		tmpA = new Attack(tmpS, AttackType::HEAL, TargetType::ONE, 0);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Comfort");
+		this->attackPool.Add(a);
 
-		tmpS = "Slap";
-		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Slap");
+		this->attackPool.Add(a);
 
-		tmpS = "Encourage";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Encourage");
+		this->attackPool.Add(a);
 
-		tmpS = "Boring Speech";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE);
-		this->attackPool.Add(tmpA);
-
+		a = new Attack("Boring Speech");
+		this->attackPool.Add(a);
 		break;
 	}
 	case EntityId::VIOLENT:
 	{
 		name = "Grandpa";
 
-		SString tmpS = "Smite foes";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk);
-		this->attackPool.Add(tmpA);
+		Attack* a = new Attack("Smite foes");
+		this->attackPool.Add(a);
 
-		tmpS = "Weak Magic missile";
-		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk / 1.3f);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Weak Magic missile");
+		this->attackPool.Add(a);
 
-		tmpS = "Weak Magic Barrage";
-		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ALL_ENEMIES, stats.mAtk / 1.4f);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Weak Magic Barrage");
+		this->attackPool.Add(a);
 
-		tmpS = "Magic Hand Slap";
-		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk / 1.1f);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Magic Hand Slap");
+		this->attackPool.Add(a);
 
-		tmpS = "Judgemental Stare";
-		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk * 1.5f);
-		this->attackPool.Add(tmpA);
-
+		a = new Attack("Judgemental Stare");
+		this->attackPool.Add(a);
 		break;
 	}
 	case EntityId::STUBBORN:
@@ -87,13 +69,11 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		stressingShadowSec = { 128,0,128,128 };
 		name = "Stressing Shadow";
 
-		SString tmpS = "Magical blow";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.mAtk);
-		this->attackPool.Add(tmpA);
+		Attack* a = new Attack("Magical blow");
+		this->attackPool.Add(a);
 
-		tmpS = "Stressing attack";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE, 10);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Stressing attack");
+		this->attackPool.Add(a);
 		break;
 	}
 	case EntityId::FURIOUS_SHADOW:
@@ -101,13 +81,11 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		furiousShadowSec = { 0,0,128,128 };
 		name = "Furious Shadow";
 
-		SString tmpS = "Getting stronger";
-		Attack* tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::SELF, stats.pDef, stats.mDef);
-		this->attackPool.Add(tmpA);
+		Attack* a = new Attack("Getting stronger");
+		this->attackPool.Add(a);
 
-		tmpS = "Fury of blades";
-		tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ALL_ALLIES, stats.pAtk);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Fury of blades");
+		this->attackPool.Add(a);
 		break;
 	}
 	case EntityId::NIGHTMARE:
@@ -115,27 +93,19 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		nightmareSec = { 256,0,128,128 };
 		name = "Nightmare";
 
-		SString tmpS = "Bad dream";
-		Attack* tmpA = new Attack(tmpS, AttackType::DAMAGE, TargetType::ONE, stats.pAtk);
-		this->attackPool.Add(tmpA);
+		Attack* a = new Attack("Bad dream");
+		this->attackPool.Add(a);
 
-		tmpS = "Nightmarish";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::SELF, stats.pDef, stats.mDef);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Nightmarish");
+		this->attackPool.Add(a);
 
-		tmpS = "Close your eyes";
-		tmpA = new Attack(tmpS, AttackType::TAUNT, TargetType::SELF);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Close your eyes");
+		this->attackPool.Add(a);
 
-		tmpS = "Grasp of depression";
-		tmpA = new Attack(tmpS, AttackType::BUFF, TargetType::ONE);
-		this->attackPool.Add(tmpA);
+		a = new Attack("Grasp of depression");
+		this->attackPool.Add(a);
 		break;
 	}
-	case EntityId::ENEMY_4:
-		break;
-	case EntityId::ENEMY_5:
-		break;
 	default:
 		break;
 	}
@@ -165,10 +135,6 @@ bool CombatEntity::Draw()
 		case EntityId::NIGHTMARE:
 			app->render->DrawTexture(app->entities->enemiesTex, -app->render->camera.x + entityRect.x, -app->render->camera.y + entityRect.y, false, &nightmareSec);
 			break;
-		case EntityId::ENEMY_4:
-			break;
-		case EntityId::ENEMY_5:
-			break;
 		default:
 			break;
 		}
@@ -179,7 +145,6 @@ bool CombatEntity::Draw()
 
 void CombatEntity::CalculatePrecision(int& i)
 {
-	srand(time(NULL));
 	int p = rand() % 20 - 9;
-	i += (i * p)/100;
+	i += (i * p) / 100;
 }
