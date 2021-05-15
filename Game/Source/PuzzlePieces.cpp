@@ -31,6 +31,7 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x
 	if (id == PuzzleId::BUTTON)
 	{
 		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::BUTTON, (Module*)app->entities);
+		collision = nullptr;
 		isPressed = false;
 	}
 	else

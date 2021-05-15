@@ -370,6 +370,24 @@ bool SceneCombat::Update(float dt)
 								{
 									app->gui->ResetButtons();
 									items.At(itemSelected - 1)->data->Use(target);
+									if (IsCharacter(currentEntity->data))
+									{
+										switch (currentEntity->data->id)
+										{
+										case EntityId::MC:
+											mainChar.hp.Create("HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
+											mainChar.mp.Create("MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
+											mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
+											break;
+										case EntityId::VIOLENT:
+											grandpa.hp.Create("HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
+											grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
+											break;
+										default:
+											break;
+										}
+									}
+
 									char tmp[50];
 									sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
 									NextLine(tmp);
@@ -418,7 +436,7 @@ bool SceneCombat::Update(float dt)
 											SelectTarget();
 										}
 									}
-									else
+									else if (itemSelected == 0)
 									{
 										if (attackSelected == "Smack")
 										{
@@ -428,17 +446,20 @@ bool SceneCombat::Update(float dt)
 										}
 										else if (attackSelected == "Comfort")
 										{
+											app->audio->PlayFx(confortFx);
 											float p = rand() % 10 + 11;
 											Heal(target, p/100);
-											app->audio->PlayFx(confortFx);
+											ManaCost(10);
 										}
 										else if (attackSelected == "Slap")
 										{
 											app->audio->PlayFx(slapFx);
 											Damage(target, currentEntity->data->stats.pAtk, false);
+											ManaCost(10);
 										}
 										else if (attackSelected == "Encourage")
 										{
+											app->audio->PlayFx(confortFx);
 											LOG("%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
 											char tmp[75];
 											sprintf(tmp, "%s buffs %s!", currentEntity->data->name.GetString(), target->name.GetString());
@@ -450,7 +471,7 @@ bool SceneCombat::Update(float dt)
 											target->attackPool.Add(a);
 											target->stats.pAtk += (target->stats.pAtk * 25) / 100;
 											target->stats.mAtk += (target->stats.mAtk * 25) / 100;
-											app->audio->PlayFx(confortFx);
+											ManaCost(10);
 										}
 										else if (attackSelected == "Boring Speech")
 										{
@@ -465,6 +486,7 @@ bool SceneCombat::Update(float dt)
 											target->attackPool.Add(a);
 											target->stats.pDef -= (target->stats.pDef * 10) / 100;
 											target->stats.mDef -= (target->stats.mDef * 10) / 100;
+											ManaCost(10);
 										}
 										finishedAction = true;
 										wait = true;
@@ -507,6 +529,7 @@ bool SceneCombat::Update(float dt)
 											if (!IsCharacter(e->data)) Damage(e->data, currentEntity->data->stats.mAtk / 1.4f, true);
 											e = e->next;
 										}
+										ManaCost(10);
 										finishedAction = true;
 										wait = true;
 										if (target != nullptr)
@@ -524,7 +547,7 @@ bool SceneCombat::Update(float dt)
 											SelectTarget();
 										}
 									}
-									else
+									else if (itemSelected == 0)
 									{
 										if (attackSelected == "Smite foes")
 										{
@@ -538,15 +561,18 @@ bool SceneCombat::Update(float dt)
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
+											ManaCost(10);
 										}
 										else if (attackSelected == "Magic Hand Slap")
 										{
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
+											ManaCost(10);
 										}
 										else if (attackSelected == "Judgemental Stare")
 										{
 											Damage(target, currentEntity->data->stats.mAtk * 1.5f, true);
+											ManaCost(10);
 										}
 										finishedAction = true;
 										wait = true;
@@ -1528,6 +1554,24 @@ void SceneCombat::Stress(int value)
 		if (mainChar.character->stats.hPoints >= mainChar.character->stats.hPointsMax) mainChar.character->stats.hPoints = mainChar.character->stats.hPointsMax;
 	}
 	mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
+}
+
+void SceneCombat::ManaCost(int value)
+{
+	if ((currentChar->character->stats.mPoints - value) <= 0)
+	{
+		LOG("%s can't use this skill, not enough MP!", currentChar->character->name.GetString());
+		char tmp[75];
+		sprintf(tmp, "%s can't use this skill, not enough MP!", currentChar->character->name.GetString());
+		NextLine(tmp);
+	}
+	else
+	{
+		currentChar->character->stats.mPoints -= value;
+	}
+	mainChar.mp.Create("MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
+	grandpa.mp.Create("MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
+	//Should add the rest of the characters
 }
 
 void SceneCombat::VictoryCondition()

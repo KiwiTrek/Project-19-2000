@@ -71,6 +71,7 @@ public:
     void Damage(CombatEntity* target, int damage, bool isMagic);
     void Heal(CombatEntity* target, float p);
     void Stress(int value);
+    void ManaCost(int value);
     void SelectTarget();
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
