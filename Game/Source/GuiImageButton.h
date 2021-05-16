@@ -25,18 +25,6 @@ public:
 
 public:
 	// GUI Image Button specific properties
-	//SDL_Rect disabled;
-	//SDL_Rect normal;
-	//SDL_Rect focused;
-	//SDL_Rect pressed;
-
-	//SDL_Rect disabledSmall;
-	//SDL_Rect normalSmall;
-	//SDL_Rect focusedSmall;
-	//SDL_Rect pressedSmall;
-
-	//bool hoverPlay;
-	//bool clickPlay;
 	SString count;
 	SDL_Texture* tex;
 	SDL_Rect sec;

@@ -1374,7 +1374,7 @@ bool SceneCombat::Unload()
 	grandpa.mp.Clear();
 	grandpa.stress.Clear();
 
-	if (combatGui != nullptr) app->tex->UnLoad(combatGui);
+	 app->tex->UnLoad(combatGui);
 	if (transitionTx != nullptr) app->tex->UnLoad(transitionTx);
     
     app->audio->UnloadFx(smackFx);

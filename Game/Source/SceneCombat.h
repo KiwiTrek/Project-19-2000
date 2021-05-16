@@ -196,7 +196,6 @@ private:
     int closeEyesFx;
     int deadFx;
     int graspFx;
-    int itemFx;
 
 	int enemiesCount;
 };

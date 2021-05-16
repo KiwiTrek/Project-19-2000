@@ -97,32 +97,36 @@ bool QuestManager::CleanUp()
 	ListItem<Quest*>* questL = questsList.start;
 	while (questL != nullptr)
 	{
+		ListItem<Quest*>* questLNext = questL->next;
 		questsList.Del(questL);
-		questL = questL->next;
+		questL = questLNext;
 	}
 	questsList.Clear();
 
 	ListItem<Quest*>* inactiveL = questsInactive.start;
 	while (inactiveL != nullptr)
 	{
+		ListItem<Quest*>* inactiveLNext = inactiveL->next;
 		questsInactive.Del(inactiveL);
-		inactiveL = inactiveL->next;
+		inactiveL = inactiveLNext;
 	}
 	questsInactive.Clear();
 
 	ListItem<Quest*>* activeL = questsActive.start;
 	while (activeL != nullptr)
 	{
+		ListItem<Quest*>* activeLNext = activeL->next;
 		questsActive.Del(activeL);
-		activeL = activeL->next;
+		activeL = activeLNext;
 	}
 	questsActive.Clear();
 
 	ListItem<Quest*>* finishL = questsFinished.start;
 	while (finishL != nullptr)
 	{
-		questsFinished.Del(finishL);
-		finishL = finishL->next;
+		ListItem<Quest*>* finishLNext = finishL->next;
+		questsActive.Del(finishL);
+		finishL = finishLNext;
 	}
 	questsFinished.Clear();
 

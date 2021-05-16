@@ -21,8 +21,6 @@ Blockers::Blockers(int x, int y, BlockerId id, Entity* player) : Entity(x, y, En
 	spikes = { 512,320,64,64 };
 	lockedDoor = { 384,320,64,64 };
 
-
-
 	switch (blockerId)
 	{
 	case BlockerId::SPIKES:

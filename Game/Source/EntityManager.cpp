@@ -52,6 +52,8 @@ bool EntityManager::Start()
 {
 	// Initializing dialogue bools
 	dialogCounter = 0.0f;
+	itemPasser.Clear();
+	takingItem = false;
 
 	flagsShopkeeper = 0;
 	flagsCat = 0;
@@ -163,6 +165,7 @@ bool EntityManager::CleanUp()
 	app->tex->UnLoad(grandpaTex);
 	app->tex->UnLoad(enemiesTex);
 	app->tex->UnLoad(NPCTex);
+	app->tex->UnLoad(puzzleTex);
 	app->tex->UnLoad(itemAtlas);
 
 	app->audio->UnloadFx(interactCat);
