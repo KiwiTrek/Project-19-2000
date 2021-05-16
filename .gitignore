@@ -35,6 +35,7 @@
 *.out
 *.app
 !Output/Game.exe
+!Output/shatered_dreams.exe
 
 # Ignore thumbnails created by windows
 Thumbs.db
