@@ -16,35 +16,7 @@ Set in the 21th century. Shattered Dreams is about a 23 years old guy. He lost c
 - Support for both keyboard and gamepad*.
 
 ## Controls (By default)
-- Gamepad
-  - Directional pad: Move character/between options (EXCEPT selecting target on combat)
-  - B/O button: Select
-  - A/X button: Cancel
-  - **NEW!** Select/Back: Quest Log
-  - Start/Options button: Menu
-
-- Keyboard & Mouse
-  - Arrow keys: Move character/between options
-  - Z: Select
-  - X: Cancel
-  - C/Esc: Menu
-  - **NEW!** V: Quest Log
-  - Mouse click: Select button/target (combat)
-
-- Debug keys:
-  - Esc: Exit game (on title/Dev room)
-  - F1: Show colliders
-  - F2: Change between scenes (between title/Dev room)
-  - F3: Trigger combat
-  - F4: Save request
-  - F5: Load request
-  - **NEW!** F7: Complete Quest
-  - F10: God mode
-    - No collisions
-    - No event triggers
-    - No encounters
-    - No damage in combat
-    - Shift: Run
+![Controls](https://github.com/WillyTrek19/Project-19-2000/blob/v0.8/Screenshots/ControlsImageNewAlpha.png)
 
 ## Developers
 
