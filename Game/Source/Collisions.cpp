@@ -181,10 +181,6 @@ Collisions::Collisions()
 	matrix[Collider::Type::PLAYER][Collider::Type::INTERACTABLE] = true;
 	matrix[Collider::Type::PLAYER][Collider::Type::DEBUG] = false;
 	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
-
-
-
-	
 }
 
 Collisions::~Collisions()
@@ -195,23 +191,37 @@ void Collisions::Init()
 	active = false;
 }
 
+bool Collisions::Awake(pugi::xml_node& config)
+{
+	folderAudioFx.Create(config.child("folderAudioFx").child_value());
+	return true;
+}
+
 bool Collisions::Start()
 {
 	onceNightmare = true;
 	saveOnce = false;
 	onceDoor = false;
 
-	saveFx = app->audio->LoadFx("Audio/Fx/Save.wav");
-	toiletFx = app->audio->LoadFx("Audio/Fx/Toilet.wav");
-	tutorialWarpFx = app->audio->LoadFx("Audio/Fx/TutorialWarp.wav");
-	doorFx = app->audio->LoadFx("Audio/Fx/Door.wav");
-	wakingUpFx = app->audio->LoadFx("Audio/Fx/WakingUp.wav");
+	SString tmp("%s%s", folderAudioFx.GetString(), "Save.wav");
+	saveFx = app->audio->LoadFx(tmp.GetString());
 
-	return true;
-}
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Toilet.wav");
+	toiletFx = app->audio->LoadFx(tmp.GetString());
 
-bool Collisions::Awake(pugi::xml_node&)
-{
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "TutorialWarp.wav");
+	tutorialWarpFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "Door.wav");
+	doorFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", folderAudioFx.GetString(), "WakingUp.wav");
+	wakingUpFx = app->audio->LoadFx(tmp.GetString());
+
 	return true;
 }
 

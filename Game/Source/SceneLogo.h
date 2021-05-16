@@ -10,29 +10,29 @@ class SceneLogo : public Scene
 {
 public:
 
-    SceneLogo();
-    virtual ~SceneLogo();
+	SceneLogo();
+	virtual ~SceneLogo();
 
-    bool Load();
+	bool Load();
 
-    bool Update(float dt);
+	bool Update(float dt);
 
-    bool Draw();
+	bool Draw();
 
-    bool Unload();
+	bool Unload();
 
 private:
 
-    SDL_Texture* logo;
-    iPoint pos;
+	SDL_Texture* logo;
+	iPoint pos;
 
-    bool onceFx;
-    bool onceOut;
-    int logoFx;
-    
-    int state;
-    float timeCounter;
-    float timeVelocity;
+	bool onceFx;
+	bool onceOut;
+	int logoFx;
+	
+	int state;
+	float timeCounter;
+	float timeVelocity;
 };
 
 #endif // __SCENELOGO_H__

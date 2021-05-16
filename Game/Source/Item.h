@@ -9,21 +9,21 @@ class CombatEntity;
 class Item
 {
 public:
-    Item(ItemId id, Attack effect, int count);
+	Item(ItemId id, Attack effect, int count);
 
-    Item();
+	Item();
 
-    void Use(CombatEntity* target);
+	void Use(CombatEntity* target);
 
-    void UpdateCountText();
+	void UpdateCountText();
 
 public:
-    ItemId id;
-    Attack effect;
-    SString countText;
-    int count;
-    SDL_Rect texSec = { 288,416,32,32 };
-    GuiControl* button;
+	ItemId id;
+	Attack effect;
+	SString countText;
+	int count;
+	SDL_Rect texSec = { 288,416,32,32 };
+	GuiControl* button;
 };
 
 class ItemEntity : public Entity
@@ -42,8 +42,8 @@ public:
 
 private:
 
-    Item item;
-    int itemCollectedFx;
+	Item item;
+	int itemCollectedFx;
 
 };
 

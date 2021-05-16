@@ -14,7 +14,7 @@ public:
 	virtual ~SceneManager();
 
 	// Called before render is available
-	bool Awake();
+	bool Awake(pugi::xml_node&);
 
 	// Called before the first frame
 	bool Start();
@@ -43,6 +43,10 @@ public:
 	bool onTransition;
 	bool continueLoadRequest;
 	float transitionAlpha;
+
+	SString folderAudioFx;
+	SString folderTexture;
+	SString folderFonts;
 
 private:
 	Scene* next;

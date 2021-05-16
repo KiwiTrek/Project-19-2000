@@ -17,140 +17,140 @@ class Blockers;
 class SceneGameplay : public Scene
 {
 public:
-    enum Flags
-    {
-        MENU,
-        INVENTORY,
-        SKILLS,
-        SKILL_TREE,
-        EQUIPMENT,
-        STATS,
-        OPTIONS,
-        CONTROLS
-    };
+	enum Flags
+	{
+		MENU,
+		INVENTORY,
+		SKILLS,
+		SKILL_TREE,
+		EQUIPMENT,
+		STATS,
+		OPTIONS,
+		CONTROLS
+	};
 
-    SceneGameplay();
-    virtual ~SceneGameplay();
+	SceneGameplay();
+	virtual ~SceneGameplay();
 
-    bool Load();
+	bool Load();
 
-    bool Update(float dt);
-    bool UpdateDialogue(float dt);
-    bool UpdatePauseMenu(float dt);
+	bool Update(float dt);
+	bool UpdateDialogue(float dt);
+	bool UpdatePauseMenu(float dt);
 
-    bool Draw();
-    bool DrawPauseMenu();
+	bool Draw();
+	bool DrawPauseMenu();
 
-    bool Unload();
+	bool Unload();
 
-    // Declare on mouse click event
-    bool OnGuiMouseClickEvent(GuiControl* control);
+	// Declare on mouse click event
+	bool OnGuiMouseClickEvent(GuiControl* control);
 
 public:
 
-    //COMBAT
-    SceneCombat* combatScene;
+	//COMBAT
+	SceneCombat* combatScene;
 
-    //NPCs
-    Entity* hero = nullptr;
-    Entity* cat = nullptr;
-    Entity* shopDude = nullptr;
-    Entity* grandpa = nullptr;
+	//NPCs
+	Entity* hero = nullptr;
+	Entity* cat = nullptr;
+	Entity* shopDude = nullptr;
+	Entity* grandpa = nullptr;
 
-    Entity* player = nullptr;
-    GuiButton* btnInventory;
+	Entity* player = nullptr;
+	GuiButton* btnInventory;
 
-    //Puzzle buttons, spikes & locked doors
-    PuzzlePieces* buttonOne;
-    PuzzlePieces* buttonTwo;
-    PuzzlePieces* buttonThree;
-    PuzzlePieces* buttonFour;
-    PuzzlePieces* buttonFive;
-    PuzzlePieces* buttonSix;
+	//Puzzle buttons, spikes & locked doors
+	PuzzlePieces* buttonOne;
+	PuzzlePieces* buttonTwo;
+	PuzzlePieces* buttonThree;
+	PuzzlePieces* buttonFour;
+	PuzzlePieces* buttonFive;
+	PuzzlePieces* buttonSix;
 
-    Blockers* spikeRowOne;
-    Blockers* spikeRowTwo;
-    Blockers* spikeRowThree;
-    Blockers* lockedDoor;
+	Blockers* spikeRowOne;
+	Blockers* spikeRowTwo;
+	Blockers* spikeRowThree;
+	Blockers* lockedDoor;
 
 private:
-    SDL_Texture* textBox = nullptr;
-    SDL_Color white;
+	SDL_Texture* textBox = nullptr;
+	SDL_Color white;
 
-    //MENU
-    SDL_Rect menuBox;
-    SDL_Rect menuCharacterBox;
-    GuiButton* btnSkills;
-    GuiButton* btnSkillTree;
-    GuiButton* btnEquipment;
-    GuiButton* btnStats;
-    GuiButton* btnOptions;
-    GuiButton* btnTitleScreen;
+	//MENU
+	SDL_Rect menuBox;
+	SDL_Rect menuCharacterBox;
+	GuiButton* btnSkills;
+	GuiButton* btnSkillTree;
+	GuiButton* btnEquipment;
+	GuiButton* btnStats;
+	GuiButton* btnOptions;
+	GuiButton* btnTitleScreen;
 
-    //OPTIONS
-    GuiSlider* sldrVolume;
-    GuiSlider* sldrFx;
-    GuiCheckBox* boxFullScreen;
-    GuiCheckBox* boxVSync;
-    GuiButton* btnControls;
-    GuiButton* btnBack;
+	//OPTIONS
+	GuiSlider* sldrVolume;
+	GuiSlider* sldrFx;
+	GuiCheckBox* boxFullScreen;
+	GuiCheckBox* boxVSync;
+	GuiButton* btnControls;
+	GuiButton* btnBack;
 
-    //CONTROLS
-    GuiButton* btnKeySelect;
-    GuiButton* btnKeyCancel;
-    GuiButton* btnKeyMenu;
-    GuiButton* btnKeyQuest;
-    GuiButton* btnKeyUp;
-    GuiButton* btnKeyDown;
-    GuiButton* btnKeyLeft;
-    GuiButton* btnKeyRight;
-    GuiButton* btnBack2;
-    GuiButton* btnPadSelect;
-    GuiButton* btnPadCancel;
-    GuiButton* btnPadMenu;
-    GuiButton* btnPadQuest;
-    GuiButton* btnPadUp;
-    GuiButton* btnPadDown;
-    GuiButton* btnPadLeft;
-    GuiButton* btnPadRight;
+	//CONTROLS
+	GuiButton* btnKeySelect;
+	GuiButton* btnKeyCancel;
+	GuiButton* btnKeyMenu;
+	GuiButton* btnKeyQuest;
+	GuiButton* btnKeyUp;
+	GuiButton* btnKeyDown;
+	GuiButton* btnKeyLeft;
+	GuiButton* btnKeyRight;
+	GuiButton* btnBack2;
+	GuiButton* btnPadSelect;
+	GuiButton* btnPadCancel;
+	GuiButton* btnPadMenu;
+	GuiButton* btnPadQuest;
+	GuiButton* btnPadUp;
+	GuiButton* btnPadDown;
+	GuiButton* btnPadLeft;
+	GuiButton* btnPadRight;
 
-    //ITEMS
-    GuiImageButton* btnItem1;
-    GuiImageButton* btnItem2;
-    GuiImageButton* btnItem3;
-    GuiImageButton* btnItem4;
-    GuiImageButton* btnItem5;
-    GuiImageButton* btnItem6;
-    GuiImageButton* btnItem7;
-    GuiImageButton* btnItem8;
-    GuiImageButton* btnItem9;
-    GuiImageButton* btnItem10;
-    GuiImageButton* btnItem11;
-    GuiImageButton* btnItem12;
-    int itemSelected;
+	//ITEMS
+	GuiImageButton* btnItem1;
+	GuiImageButton* btnItem2;
+	GuiImageButton* btnItem3;
+	GuiImageButton* btnItem4;
+	GuiImageButton* btnItem5;
+	GuiImageButton* btnItem6;
+	GuiImageButton* btnItem7;
+	GuiImageButton* btnItem8;
+	GuiImageButton* btnItem9;
+	GuiImageButton* btnItem10;
+	GuiImageButton* btnItem11;
+	GuiImageButton* btnItem12;
+	int itemSelected;
 
-    //SKILLS
-    GuiImageButton* btnSkill1;
-    GuiImageButton* btnSkill2;
-    GuiImageButton* btnSkill3;
-    GuiImageButton* btnSkill4;
+	//SKILLS
+	GuiImageButton* btnSkill1;
+	GuiImageButton* btnSkill2;
+	GuiImageButton* btnSkill3;
+	GuiImageButton* btnSkill4;
 
-    // This line is added for the sake of commiting & testing
+	// This line is added for the sake of commiting & testing
 
-    //FONTS
-    Font* dialogueFont = nullptr;
-    Font* buttonFont = nullptr;
+	//FONTS
+	Font* dialogueFont = nullptr;
+	Font* buttonFont = nullptr;
 
-    bool onPause = false;
+	bool onPause = false;
 
-    //STATE FLAGS
-    int flags;
-    int statFlags;
+	//STATE FLAGS
+	int flags;
+	int statFlags;
 
-    //DIALOG
-    DialogSystem* dialogSystem = nullptr;
-    float dtSave;
-    float dtItem;
+	//DIALOG
+	DialogSystem* dialogSystem = nullptr;
+	float dtSave;
+	float dtItem;
 };
 
 #endif // __SCENEGAMEPLAY_H__

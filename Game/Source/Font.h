@@ -9,22 +9,22 @@ class Font
 {
 public:
 
-    Font(const char* rtpFontFile);
+	Font(const char* rtpFontFile);
 
-    ~Font();
+	~Font();
 
-    SDL_Texture* GetTextureAtlas();
-    SDL_Rect GetCharRec(int value);
+	SDL_Texture* GetTextureAtlas();
+	SDL_Rect GetCharRec(int value);
 
 private:
 
-    bool fontLoaded;
+	bool fontLoaded;
 
-    SDL_Texture* texture;
+	SDL_Texture* texture;
 
-    int baseSize;
-    int charsCount;
-    SDL_Rect charsRecs[128];
+	int baseSize;
+	int charsCount;
+	SDL_Rect charsRecs[128];
 };
 
 #endif //__FONT_H__

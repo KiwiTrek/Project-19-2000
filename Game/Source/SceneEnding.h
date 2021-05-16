@@ -11,31 +11,31 @@ class SceneEnding : public Scene
 {
 public:
 
-    SceneEnding();
-    virtual ~SceneEnding();
+	SceneEnding();
+	virtual ~SceneEnding();
 
-    bool Load();
+	bool Load();
 
-    bool Update(float dt);
+	bool Update(float dt);
 
-    bool Draw();
+	bool Draw();
 
-    bool Unload();
+	bool Unload();
 
-    // Declare on mouse click event
-    bool OnGuiMouseClickEvent(GuiControl* control);
+	// Declare on mouse click event
+	bool OnGuiMouseClickEvent(GuiControl* control);
 
 private:
 
-    SDL_Texture* bg;
-    iPoint pos;
+	SDL_Texture* bg;
+	iPoint pos;
 
-    GuiButton* btnContinue;
-    GuiButton* btnTitle;
-    GuiButton* btnExit;
+	GuiButton* btnContinue;
+	GuiButton* btnTitle;
+	GuiButton* btnExit;
 
-    int state;
-    float timeCounter;
+	int state;
+	float timeCounter;
 };
 
 #endif // __SCENEENDING_H__

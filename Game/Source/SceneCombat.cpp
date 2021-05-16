@@ -41,11 +41,80 @@ bool SceneCombat::Load()
 	// COMBAT
 	srand(time(NULL));
 
-	combatGui = app->tex->Load("Textures/GUI/combatGui.png");
-	transitionTx = app->tex->Load("Textures/BattleTransition.png");
+	SString tmp("%s%s", app->scene->folderTexture.GetString(), "GUI/combatGui.png");
+	combatGui = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderTexture.GetString(), "BattleTransition.png");
+	transitionTx = app->tex->Load(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Smack.wav");
+	smackFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Slap.wav");
+	slapFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Confort.wav");
+	confortFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Speech.wav");
+	speechFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Smite.wav");
+	smiteFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "MagicBlow.wav");
+	magicBlowFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "MagicBarrage.wav");
+	magicBarrageFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "MagicSlap.wav");
+	magicSlapFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Stare.wav");
+	stareFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Stronger.wav");
+	strongerFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Blades.wav");
+	bladesFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Stress.wav");
+	stressFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "BadDream.wav");
+	badDreamFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "CloseEyes.wav");
+	closeEyesFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Dead.wav");
+	deadFx = app->audio->LoadFx(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Grasp.wav");
+	graspFx = app->audio->LoadFx(tmp.GetString());
+
 	waitForTransition = TransitionStatus::NONE;
 	scripted = false;
-    backToGameplay = false;
+	backToGameplay = false;
 
 	currentChar = nullptr;
 	target = nullptr;
@@ -81,11 +150,6 @@ bool SceneCombat::Load()
 	grandpa.mDef.Create("Magic Defense: %d", grandpa.character->stats.mDef);
 	grandpa.speed.Create("Speed: %d", grandpa.character->stats.speed);
 
-
-	//enemy1 = app->entities->CreateEntity(300, 300, EntityType::COMBAT_ENTITY, EntityId::STRESSING_SHADOW, Stats(0, 10, 10, 10, 40, 40, 60));
-	//enemy2 = app->entities->CreateEntity(700, 300, EntityType::COMBAT_ENTITY, EntityId::FURIOUS_SHADOW, Stats(15, 0, 20, 5, 60, 60, 90));
-
-		//COMBAT
 	combatTextBox = { 0,0,1280,248 };
 	combatMenuBox = { 305,249,1001,130 };
 	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 47, { 34,505,200,60 }, "ATTACK", 40, this);
@@ -108,8 +172,10 @@ bool SceneCombat::Load()
 	btnCombatItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 61, { 84,630,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 62, { 384,630,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 63, { 684,630,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
+
 	btnRightArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 64, { 984,605,50,50 }, "", 40, this);
 	btnLeftArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 65, { 34,605,50,50 }, "", 40, this);
+
 	btnCombatItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 66, { 84,570,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 67, { 384,570,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
 	btnCombatItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 68, { 684,570,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
@@ -118,26 +184,6 @@ bool SceneCombat::Load()
 	btnCombatItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 71, { 684,630,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
 	LOG("%d", characterFlags);
-
-    smackFx = app->audio->LoadFx("Audio/Fx/Smack.wav");
-    slapFx = app->audio->LoadFx("Audio/Fx/Slap.wav");
-    confortFx = app->audio->LoadFx("Audio/Fx/Confort.wav");
-	speechFx = app->audio->LoadFx("Audio/Fx/Speech.wav");
-
-
-    smiteFx = app->audio->LoadFx("Audio/Fx/Smite.wav");
-    magicBlowFx = app->audio->LoadFx("Audio/Fx/MagicBlow.wav");
-	magicBarrageFx = app->audio->LoadFx("Audio/Fx/MagicBarrage.wav");
-	magicSlapFx = app->audio->LoadFx("Audio/Fx/MagicSlap.wav");
-	stareFx = app->audio->LoadFx("Audio/Fx/Stare.wav");
-
-    strongerFx = app->audio->LoadFx("Audio/Fx/Stronger.wav");
-    bladesFx = app->audio->LoadFx("Audio/Fx/Blades.wav");
-    stressFx = app->audio->LoadFx("Audio/Fx/Stress.wav");
-    badDreamFx = app->audio->LoadFx("Audio/Fx/BadDream.wav");
-    closeEyesFx = app->audio->LoadFx("Audio/Fx/CloseEyes.wav");
-    deadFx = app->audio->LoadFx("Audio/Fx/Dead.wav");
-    graspFx = app->audio->LoadFx("Audio/Fx/Grasp.wav");
 
 	heDed = false;
 	pastStress = -1;
@@ -163,8 +209,8 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	pageOne = true;
 	targetItem = false;
 
-    backToGameplay = false;
-    alpha = 1.0f;
+	backToGameplay = false;
+	alpha = 1.0f;
 	wait = false;
 	waitForTransition = TransitionStatus::SCENE;
 
@@ -188,7 +234,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	SpawnEnemies(id1, id2, id3);
 
 	app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
-    usingGamepad = false;
+	usingGamepad = false;
 	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;
@@ -211,10 +257,8 @@ bool SceneCombat::Update(float dt)
 		//WAIT FOR PLAYER INPUT
 		if (wait)
 		{
-			if (app->input->CheckButton("select", KEY_DOWN))
-			{
-				wait = false;
-			}
+			if (app->input->CheckButton("select", KEY_DOWN)) wait = false;
+
 			blinkTimer += dt;
 			if (blinkTimer >= 0.5f)
 			{
@@ -255,10 +299,7 @@ bool SceneCombat::Update(float dt)
 					if (e->data->type == EntityType::COMBAT_ENTITY)
 					{
 						CombatEntity* cEntity = (CombatEntity*)e->data;
-						if (cEntity->stats.hPoints > 0)
-						{
-							turnOrder.Add(cEntity);
-						}
+						if (cEntity->stats.hPoints > 0) turnOrder.Add(cEntity);
 					}
 					e = e->next;
 				}
@@ -316,10 +357,7 @@ bool SceneCombat::Update(float dt)
 
 							turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
 							SortSpeed(false);
-							if (currentEntity == nullptr)
-							{
-								currentEntity = eNext;
-							}
+							if (currentEntity == nullptr) currentEntity = eNext;
 						}
 						e = eNext;
 					}
@@ -357,7 +395,7 @@ bool SceneCombat::Update(float dt)
 							if (once) //i think we should use the flags menu to turn this true only when there are no "main buttons" selected
 							{
 								once = false;
-								characterSelected = true;						//should delete eventually
+								characterSelected = true;
 								changeMenu = true;
 
 								if (currentEntity->data->id == EntityId::MC) NextLine("It's your turn!");
@@ -368,9 +406,6 @@ bool SceneCombat::Update(float dt)
 									NextLine(tmp);
 								}
 							}
-
-							//player should decide what to do here based on the buttons (guiclickevent)
-							//LOG("%s's turn!\n", currentEntity->data->name.GetString());
 
 							//Item logic
 							if (itemSelected != 0)
@@ -385,10 +420,8 @@ bool SceneCombat::Update(float dt)
 									sprintf(tmp, "%s used %s item.", currentEntity->data->name.GetString(), items.At(itemSelected - 1)->data->effect.attackName.GetString());
 									NextLine(tmp);
 									app->audio->PlayFx(app->entities->itemFx);
-									if (items.At(itemSelected - 1)->data->count == 0)
-									{
-										items.Del(items.At(itemSelected - 1));
-									}
+									if (items.At(itemSelected - 1)->data->count == 0) items.Del(items.At(itemSelected - 1));
+
 									itemSelected = 0;
 									target = nullptr;
 									targetItem = false;
@@ -779,13 +812,13 @@ bool SceneCombat::Update(float dt)
 			{
 				if (!heDed && ((app->quests->tpFlags & QuestManager::TpFlags::FIGHT) != 0))
 					app->quests->firstCombatWon = true;
+
+				if (!heDed && enemy2->id == EntityId::NIGHTMARE && ((app->quests->tpFlags & QuestManager::TpFlags::BOSS_FIGHT) != 0))
+					app->quests->firstBossDefeated = true;
+
 				if (enemy1 != nullptr) enemiesCount++;
 				if (enemy2 != nullptr) enemiesCount++;
 				if (enemy3 != nullptr) enemiesCount++;
-				if (enemiesCount == 3 && !heDed && 
-					(enemy1->id == EntityId::NIGHTMARE || enemy2->id == EntityId::NIGHTMARE || enemy3->id == EntityId::NIGHTMARE) && 
-					((app->quests->tpFlags & QuestManager::TpFlags::BOSS_FIGHT) != 0))
-					app->quests->firstBossDefeated = true;
 				Finish();
 				break;
 			}
@@ -861,8 +894,7 @@ bool SceneCombat::Update(float dt)
 				}
 			}
 		}
-		// Calls update for mouse parameters (GUI)
-		else
+		else													// Calls update for mouse parameters (GUI)
 		{
 			if (characterSelected)
 			{
@@ -924,10 +956,8 @@ bool SceneCombat::Update(float dt)
 					if (pageOne)
 					{
 						i = 0;
-						if (items.Count() > 6)
-							maxItems = 6;
-						else
-							maxItems = items.Count();
+						if (items.Count() > 6) maxItems = 6;
+						else maxItems = items.Count();
 					}
 					else
 					{
@@ -1078,43 +1108,42 @@ bool SceneCombat::Update(float dt)
 
 bool SceneCombat::UpdateTransition(float dt, TransitionStatus transitionTo)
 {
-    if (transitionTo == TransitionStatus::BATTLE)
-    {
-        transition.Update(dt);
-        if (transition.currentFrame >= 23)
-        {
-            waitForTransition = TransitionStatus::BATTLE;
-        }
-        if (transition.HasFinished())
-        {
-            waitForTransition = TransitionStatus::END;
-        }
-    }
-    else if (transitionTo == TransitionStatus::SCENE)
-    {
-        if (waitForTransition != TransitionStatus::SCENE)
-        {
-            alpha -= dt;
-        }
-        else
-        {
-            alpha += dt;
-        }
-        if (alpha <= 0.0f)
-        {
-            alpha = 0.0f;
-            waitForTransition = TransitionStatus::SCENE;
-            if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
-            else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
-        }
-        else if (alpha >= 1.01f)
-        {
-            alpha = 1.0f;
-            waitForTransition = TransitionStatus::NONE;
-            backToGameplay = false;
-        }
-
-    }
+	if (transitionTo == TransitionStatus::BATTLE)
+	{
+		transition.Update(dt);
+		if (transition.currentFrame >= 23)
+		{
+			waitForTransition = TransitionStatus::BATTLE;
+		}
+		if (transition.HasFinished())
+		{
+			waitForTransition = TransitionStatus::END;
+		}
+	}
+	else if (transitionTo == TransitionStatus::SCENE)
+	{
+		if (waitForTransition != TransitionStatus::SCENE)
+		{
+			alpha -= dt;
+		}
+		else
+		{
+			alpha += dt;
+		}
+		if (alpha <= 0.0f)
+		{
+			alpha = 0.0f;
+			waitForTransition = TransitionStatus::SCENE;
+			if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+			else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
+		}
+		else if (alpha >= 1.01f)
+		{
+			alpha = 1.0f;
+			waitForTransition = TransitionStatus::NONE;
+			backToGameplay = false;
+		}
+	}
 	return true;
 }
 
@@ -1159,18 +1188,18 @@ bool SceneCombat::Draw(Font* dialogueFont)
 			{
 				app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 34, -app->render->camera.y + app->render->camera.h - currentChar->box.h - 25, false, &currentChar->box);
 				app->render->DrawTexture(combatGui, -app->render->camera.x + app->render->camera.w - currentChar->box.w - 24, -app->render->camera.y + app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), false, &currentChar->characterTex);
-				app->render->DrawText(dialogueFont, currentChar->hp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, white);
-				app->render->DrawText(dialogueFont, currentChar->mp.GetString(), /*-app->render->camera.x +*/ app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, /*-app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, white);
-				if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(),/* -app->render->camera.x + */app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w,/* -app->render->camera.y +*/ app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, white);
+				app->render->DrawText(dialogueFont, currentChar->hp.GetString(), app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4), 28, 1, white);
+				app->render->DrawText(dialogueFont, currentChar->mp.GetString(), app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 30, 28, 1, white);
+				if (currentChar->character->id == EntityId::MC) app->render->DrawText(dialogueFont, currentChar->stress.GetString(), app->render->camera.w - currentChar->box.w - 24 + currentChar->characterTex.w, app->render->camera.h - currentChar->box.h + (currentChar->characterTex.h / 4) + 60, 28, 1, white);
 			}
 		}
 	}
 
 	if (waitForTransition == TransitionStatus::END)
 	{
-		app->render->DrawText(dialogueFont, firstLine.GetString(), /*-app->render->camera.x*/ +44, /*-app->render->camera.y*/ +52, 48, 2, white);
-		app->render->DrawText(dialogueFont, secondLine.GetString(), /*-app->render->camera.x*/ +44, /*-app->render->camera.y*/ +52 + 48, 48, 2, white);
-		app->render->DrawText(dialogueFont, thirdLine.GetString(), /*-app->render->camera.x*/ +44, /*-app->render->camera.y*/ +52 + 96, 48, 2, white);
+		app->render->DrawText(dialogueFont, firstLine.GetString(), 44, 52, 48, 2, white);
+		app->render->DrawText(dialogueFont, secondLine.GetString(), 44, 52 + 48, 48, 2, white);
+		app->render->DrawText(dialogueFont, thirdLine.GetString(), 44, 52 + 96, 48, 2, white);
 		if (wait && !blink)
 		{
 			app->render->DrawTexture(combatGui, -app->render->camera.x + combatTextBox.w - (arrowCombat.w / 2) - arrowCombat.w - 20, -app->render->camera.y + combatTextBox.h - arrowCombat.h - (arrowCombat.h / 2) - 10, false, &arrowCombat);
@@ -1195,34 +1224,13 @@ bool SceneCombat::Draw(Font* dialogueFont)
 			}
 			else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
 			{
-				//if (pageOne)
-				//{
-				//	btnCombatItem1->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem2->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem3->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem4->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem5->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem6->Draw(-app->render->camera.x, -app->render->camera.y);
-				//}
-				//else
-				//{
-				//	btnCombatItem7->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem8->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem9->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem10->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem11->Draw(-app->render->camera.x, -app->render->camera.y);
-				//	btnCombatItem12->Draw(-app->render->camera.x, -app->render->camera.y);
-				//}
-
 				int i = 0;
 				int maxItems = -1;
 				if (pageOne)
 				{
 					i = 0;
-					if (items.Count() > 6)
-						maxItems = 6;
-					else
-						maxItems = items.Count();
+					if (items.Count() > 6) maxItems = 6;
+					else maxItems = items.Count();
 				}
 				else
 				{
@@ -1283,7 +1291,6 @@ bool SceneCombat::Draw(Font* dialogueFont)
 			{
 
 			}
-
 		}
 
 		if (targetAttack || targetItem) //add more as we go
@@ -1311,7 +1318,6 @@ bool SceneCombat::Draw(Font* dialogueFont)
 
 bool SceneCombat::Finish()
 {
-	// cool animation as a victory thing and change back to gameplay
 	ListItem<CombatEntity*>* e = turnOrder.start;
 	while (e != nullptr)
 	{
@@ -1330,7 +1336,7 @@ bool SceneCombat::Finish()
 	thirdLine.Clear();
 
 	transition.Reset();
-    if (!heDed) backToGameplay = true;
+	if (!heDed) backToGameplay = true;
 
 	enemy1 = nullptr;
 	enemy2 = nullptr;
@@ -1400,25 +1406,25 @@ bool SceneCombat::Unload()
 
 	app->tex->UnLoad(combatGui);
 	app->tex->UnLoad(transitionTx);
-    
-    app->audio->UnloadFx(smackFx);
-    app->audio->UnloadFx(slapFx);
-    app->audio->UnloadFx(confortFx);
+	
+	app->audio->UnloadFx(smackFx);
+	app->audio->UnloadFx(slapFx);
+	app->audio->UnloadFx(confortFx);
 	app->audio->UnloadFx(speechFx);
 
-    app->audio->UnloadFx(smiteFx);
-    app->audio->UnloadFx(magicBlowFx);
+	app->audio->UnloadFx(smiteFx);
+	app->audio->UnloadFx(magicBlowFx);
 	app->audio->UnloadFx(magicBarrageFx);
 	app->audio->UnloadFx(magicSlapFx);
 	app->audio->UnloadFx(stareFx);
 
-    app->audio->UnloadFx(strongerFx);
-    app->audio->UnloadFx(bladesFx);
-    app->audio->UnloadFx(stressFx);
-    app->audio->UnloadFx(badDreamFx);
-    app->audio->UnloadFx(closeEyesFx);
-    app->audio->UnloadFx(deadFx);
-    app->audio->UnloadFx(graspFx);
+	app->audio->UnloadFx(strongerFx);
+	app->audio->UnloadFx(bladesFx);
+	app->audio->UnloadFx(stressFx);
+	app->audio->UnloadFx(badDreamFx);
+	app->audio->UnloadFx(closeEyesFx);
+	app->audio->UnloadFx(deadFx);
+	app->audio->UnloadFx(graspFx);
 
 	return true;
 }
@@ -1437,10 +1443,7 @@ bool SceneCombat::SortSpeed(bool isSorted)
 		e = e->next;
 	}
 
-	if (count != 0)
-	{
-		SortSpeed(false);
-	}
+	if (count != 0) SortSpeed(false);
 	return true;
 }
 
@@ -1456,7 +1459,7 @@ void SceneCombat::SelectTarget()
 {
 	if (usingGamepad)
 	{
-		// Select target with gamepad
+		// Select target with gamepad :)
 	}
 	else
 	{
@@ -1537,7 +1540,6 @@ void SceneCombat::Damage(CombatEntity* target, int damage, bool isMagic)
 
 	if (player != nullptr && !player->godMode)
 	{
-
 		LOG("%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
 		char tmp[75];
 		sprintf(tmp, "%s does damage attack to %s!", currentEntity->data->name.GetString(), target->name.GetString());
@@ -1637,11 +1639,10 @@ void SceneCombat::Stress(int value)
 		sprintf(tmp, "%s does a stressing attack to %s!", currentEntity->data->name.GetString(), mainChar.character->name.GetString());
 		NextLine(tmp);
 
-		int heal = value * mainChar.character->stats.hPointsMax;
-
-		if (heal <= 0) heal = 0;
-		mainChar.character->stats.hPoints += heal;
-		if (mainChar.character->stats.hPoints >= mainChar.character->stats.hPointsMax) mainChar.character->stats.hPoints = mainChar.character->stats.hPointsMax;
+		if (value <= 0) value = 0;
+		mainChar.character->stats.stress += value;
+		//if (mainChar.character->stats.stress >= mainChar.character->stats.stressMax) mainChar.character->stats.stress -= mainChar.character->stats.stressMax;
+		// already done in stress power
 	}
 	mainChar.stress.Create("ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
 }
@@ -1670,9 +1671,7 @@ void SceneCombat::VictoryCondition()
 	int counter = 0;
 	while (e != nullptr)
 	{
-		if (IsCharacter(e->data) == false)
-			counter++;
-
+		if (!IsCharacter(e->data)) counter++;
 		e = e->next;
 	}
 
@@ -1691,8 +1690,7 @@ void SceneCombat::DefeatCondition()
 	int counter = 0;
 	while (e != nullptr)
 	{
-		if (IsCharacter(e->data) == true)
-			counter++;
+		if (IsCharacter(e->data)) counter++;
 		e = e->next;
 	}
 
@@ -1711,6 +1709,7 @@ int SceneCombat::EnemyTarget()
 	int c = 0;
 	if (mainChar.character->stats.hPoints > 0) c++;
 	if (grandpa.character->stats.hPoints > 0) c++;
+	//Should add the rest of the characters
 	return  rand() % c + 1;
 }
 
@@ -2070,7 +2069,6 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 {
 	switch (control->id)
 	{
-		//COMBAT
 	case 47: //ATTACK
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
@@ -2345,7 +2343,6 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem12->text.GetString());
 		break;
-
 	default:
 		break;
 	}

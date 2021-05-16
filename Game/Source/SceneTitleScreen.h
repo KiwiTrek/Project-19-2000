@@ -9,78 +9,78 @@
 class SceneTitleScreen : public Scene
 {
 public:
-    enum Flags
-    {
-        OPTIONS,
-        CONTROLS
-    };
+	enum Flags
+	{
+		OPTIONS,
+		CONTROLS
+	};
 
-    SceneTitleScreen();
-    virtual ~SceneTitleScreen();
+	SceneTitleScreen();
+	virtual ~SceneTitleScreen();
 
-    bool Load();
+	bool Load();
 
-    bool Update(float dt);
+	bool Update(float dt);
 
-    bool Draw();
+	bool Draw();
 
-    bool Unload();
+	bool Unload();
 
-    // Declare on mouse click event
-    bool OnGuiMouseClickEvent(GuiControl* control);
+	// Declare on mouse click event
+	bool OnGuiMouseClickEvent(GuiControl* control);
 
 
 private:
 
-    SDL_Texture* nooseBG;
-    SDL_Texture* titleCard;
-    SDL_Rect titleCardPos;
-    SDL_Color white;
-    float titleAlpha;
-    bool onceFx;
+	SDL_Texture* nooseBG;
+	SDL_Texture* titleCard;
+	SDL_Rect titleCardPos;
+	SDL_Color white;
+	float titleAlpha;
+	bool onceFx;
 
-    Animation noose;
+	Animation noose;
 
-    //MAIN MENU
-    GuiButton* btnStart;
-    GuiButton* btnContinue;
-    GuiButton* btnOptions;
-    GuiButton* btnExit;
+	//MAIN MENU
+	GuiButton* btnStart;
+	GuiButton* btnContinue;
+	GuiButton* btnOptions;
+	GuiButton* btnExit;
 
-    //OPTIONS
-    GuiSlider* sldrVolume;
-    GuiSlider* sldrFx;
-    GuiCheckBox* boxFullScreen;
-    GuiCheckBox* boxVSync;
-    GuiButton* btnControls;
-    GuiButton* btnBack;
+	//OPTIONS
+	GuiSlider* sldrVolume;
+	GuiSlider* sldrFx;
+	GuiCheckBox* boxFullScreen;
+	GuiCheckBox* boxVSync;
+	GuiButton* btnControls;
+	GuiButton* btnBack;
 
-    //CONTROLS
-    GuiButton* btnKeySelect;
-    GuiButton* btnKeyCancel;
-    GuiButton* btnKeyMenu;
-    GuiButton* btnKeyQuest;
-    GuiButton* btnKeyUp;
-    GuiButton* btnKeyDown;
-    GuiButton* btnKeyLeft;
-    GuiButton* btnKeyRight;
-    GuiButton* btnBack2;
-    GuiButton* btnPadSelect;
-    GuiButton* btnPadCancel;
-    GuiButton* btnPadMenu;
-    GuiButton* btnPadQuest;
-    GuiButton* btnPadUp;
-    GuiButton* btnPadDown;
-    GuiButton* btnPadLeft;
-    GuiButton* btnPadRight;
+	//CONTROLS
+	GuiButton* btnKeySelect;
+	GuiButton* btnKeyCancel;
+	GuiButton* btnKeyMenu;
+	GuiButton* btnKeyQuest;
+	GuiButton* btnKeyUp;
+	GuiButton* btnKeyDown;
+	GuiButton* btnKeyLeft;
+	GuiButton* btnKeyRight;
+	GuiButton* btnBack2;
+	GuiButton* btnPadSelect;
+	GuiButton* btnPadCancel;
+	GuiButton* btnPadMenu;
+	GuiButton* btnPadQuest;
+	GuiButton* btnPadUp;
+	GuiButton* btnPadDown;
+	GuiButton* btnPadLeft;
+	GuiButton* btnPadRight;
 
-    //FONTS
-    Font* buttonFont = nullptr;
+	//FONTS
+	Font* buttonFont = nullptr;
 
-    //SOUND
-    int titleFx;
+	//SOUND
+	int titleFx;
 
-    unsigned char flags;
+	unsigned char flags;
 };
 
 #endif // __SCENETITLE_H__

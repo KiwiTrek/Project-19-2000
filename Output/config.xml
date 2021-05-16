@@ -5,11 +5,9 @@
     <title>Game Development Testbed</title>
     <organization>UPC</organization>
   </app>
-
   <renderer>
     <vsync value="true"/>
   </renderer>
-
   <window>
     <resolution width="1280" height="720" scale="1"/>
     <fullscreen value="false"/>
@@ -20,6 +18,14 @@
   <map>
     <folder>Maps/</folder>
   </map>
+  <collisions>
+    <folderAudioFx>Audio/Fx/</folderAudioFx>
+  </collisions>
+  <scenemanager>
+    <folderAudioFx>Audio/Fx/</folderAudioFx>
+    <folderTexture>Textures/</folderTexture>
+    <folderFonts>Fonts/</folderFonts>
+  </scenemanager>
   <input>
     <select keyId="29" padId="0">select</select>
     <cancel keyId="27" padId="1">cancel</cancel>

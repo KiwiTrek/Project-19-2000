@@ -183,7 +183,7 @@ void Item::Use(CombatEntity* target)
 		s->combatScene->grandpa.mp.Create("MP: %d/%d", s->combatScene->grandpa.character->stats.mPoints, s->combatScene->grandpa.character->stats.mPointsMax);
 		//Should add the rest of the characters
 	}
-    app->audio->PlayFx(app->entities->itemFx);
+	app->audio->PlayFx(app->entities->itemFx);
 }
 
 void Item::UpdateCountText()

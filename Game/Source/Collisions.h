@@ -94,5 +94,7 @@ private:
 	bool onceNightmare;
 	bool saveOnce;
 	bool onceDoor;
+
+	SString folderAudioFx;
 };
 #endif // !__COLLISIONS_H__

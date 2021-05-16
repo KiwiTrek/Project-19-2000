@@ -18,9 +18,9 @@
 
 SceneTitleScreen::SceneTitleScreen()
 {    
-    for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
-    white = { 255,255,255,255 };
-    flags = 0;
+	for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
+	white = { 255,255,255,255 };
+	flags = 0;
 }
 
 SceneTitleScreen::~SceneTitleScreen()
@@ -29,286 +29,297 @@ SceneTitleScreen::~SceneTitleScreen()
 
 bool SceneTitleScreen::Load()
 {
-    nooseBG = app->tex->Load("Textures/NooseBG.png");
-    titleCard = app->tex->Load("Textures/TitleCard.png");
-    buttonFont = new Font("Fonts/ButtonFont.xml");
-    titleFx = app->audio->LoadFx("Audio/Fx/TitleFX.wav");
+	SString tmp("%s%s", app->scene->folderTexture.GetString(), "NooseBG.png");
+	nooseBG = app->tex->Load(tmp.GetString());
 
-    app->audio->SetMusicVolume(app->audio->auxVolume);
-    app->audio->PlayMusic("Audio/Music/Title.ogg");
-    app->render->camera.x = 0;
-    app->render->camera.y = 0;
-    noose.Reset();
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderTexture.GetString(), "TitleCard.png");
+	titleCard = app->tex->Load(tmp.GetString());
 
-    // GUI: Initialize required controls for the screen
-    float tmpValue = 0;
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
+	buttonFont = new Font(tmp.GetString());
 
-    //MAIN MENU
-    app->gui->Enable();
-    btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -300, 300, 300, 60 }, "START", 40, this);
-    app->render->CreateSpline(&btnStart->bounds.x, 90, 2000, SplineType::QUART);
-    btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 400, 300, 60 }, "CONTINUE", 40, this);
-    app->render->CreateSpline(&btnContinue->bounds.x, 90, 2000, SplineType::QUART);
-    btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -300, 500, 300, 60 }, "OPTIONS", 40, this);
-    app->render->CreateSpline(&btnOptions->bounds.x, 90, 2000, SplineType::QUART);
-    btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -300, 600, 300, 60 }, "EXIT", 40, this);
-    app->render->CreateSpline(&btnExit->bounds.x, 90, 2000, SplineType::QUART);
-    /*if (app->input->GetControllerName() != "unplugged") btnStart->state = GuiControlState::FOCUSED;*/
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "TitleFX.wav");
+	titleFx = app->audio->LoadFx(tmp.GetString());
 
-    //OPTIONS
-    sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
-    sldrVolume->value = app->audio->GetMusicVolume();
-    sldrVolume->maxValue = 128;
-    tmpValue = (float)(sldrVolume->limits.w - sldrVolume->bounds.w) / (float)sldrVolume->maxValue;
-    sldrVolume->bounds.x = sldrVolume->limits.x + (tmpValue * sldrVolume->value);
+	app->audio->SetMusicVolume(app->audio->auxVolume);
+	app->audio->PlayMusic("Audio/Music/Title.ogg");
 
-    sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 69, 42 }, "FX", 40, this, 6);
-    sldrFx->value = app->audio->GetFxVolume();
-    sldrFx->maxValue = 128;
-    tmpValue = (float)(sldrFx->limits.w - sldrFx->bounds.w) / (float)sldrFx->maxValue;
-    sldrFx->bounds.x = sldrFx->limits.x + (tmpValue * sldrFx->value);
+	app->render->camera.x = 0;
+	app->render->camera.y = 0;
+	noose.Reset();
 
-    boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { 180, 400, 60, 60 }, "FULLSCREEN", 40, this);
-    boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", 40, this);
-    btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 180, 600, 200, 60 }, "CONTROLS", 35, this);
-    btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 10, { 800, 600, 200, 60 }, "BACK", 40, this);
-    
-    //CONTROLS
-    btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 180, 120, 300, 60 }, "SELECT", 40, this);
-    btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 188, 300, 60 }, "CANCEL", 40, this);
-    btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 180, 256, 300, 60 }, "MENU", 40, this);
-    btnKeyQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 324, 300, 60 }, "QUEST", 40, this);
-    btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 392, 300, 60 }, "UP", 40, this);
-    btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 460, 300, 60 }, "DOWN", 40, this);
-    btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 528, 300, 60 }, "LEFT", 40, this);
-    btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 180, 596, 300, 60 }, "RIGHT", 40, this);
+	// GUI: Initialize required controls for the screen
+	float tmpValue = 0;
 
-    btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 800, 120, 300, 60 }, "SELECT", 40, this);
-    btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 800, 188, 300, 60 }, "CANCEL", 40, this);
-    btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 256, 300, 60 }, "MENU", 40, this);
-    btnPadQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 324, 300, 60 }, "QUEST", 40, this);
-    btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 392, 300, 60 }, "UP", 40, this);
-    btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 460, 300, 60 }, "DOWN", 40, this);
-    btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 528, 300, 60 }, "LEFT", 40, this);
-    btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 596, 300, 60 }, "RIGHT", 40, this);
+	//MAIN MENU
+	app->gui->Enable();
+	btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -300, 300, 300, 60 }, "START", 40, this);
+	app->render->CreateSpline(&btnStart->bounds.x, 90, 2000, SplineType::QUART);
+	btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 400, 300, 60 }, "CONTINUE", 40, this);
+	app->render->CreateSpline(&btnContinue->bounds.x, 90, 2000, SplineType::QUART);
+	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -300, 500, 300, 60 }, "OPTIONS", 40, this);
+	app->render->CreateSpline(&btnOptions->bounds.x, 90, 2000, SplineType::QUART);
+	btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -300, 600, 300, 60 }, "EXIT", 40, this);
+	app->render->CreateSpline(&btnExit->bounds.x, 90, 2000, SplineType::QUART);
+	/*if (app->input->GetControllerName() != "unplugged") btnStart->state = GuiControlState::FOCUSED;*/
 
-    btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
+	//OPTIONS
+	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
+	sldrVolume->value = app->audio->GetMusicVolume();
+	sldrVolume->maxValue = 128;
+	tmpValue = (float)(sldrVolume->limits.w - sldrVolume->bounds.w) / (float)sldrVolume->maxValue;
+	sldrVolume->bounds.x = sldrVolume->limits.x + (tmpValue * sldrVolume->value);
 
-    // Used for the Gamepad GUI control
-    app->scene->currentButton = app->gui->controls.start;
-    changeMenu = false;
-    usingGamepad = false;
-    if (app->input->GetControllerName() != "unplugged") usingGamepad = false;
-    app->input->mouseMotionX = 0;
-    app->input->mouseMotionY = 0;
-    app->scene->continueLoadRequest = false;
+	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 69, 42 }, "FX", 40, this, 6);
+	sldrFx->value = app->audio->GetFxVolume();
+	sldrFx->maxValue = 128;
+	tmpValue = (float)(sldrFx->limits.w - sldrFx->bounds.w) / (float)sldrFx->maxValue;
+	sldrFx->bounds.x = sldrFx->limits.x + (tmpValue * sldrFx->value);
 
-    // Title Card easings
-    onceFx = true;
-    titleCardPos.x = 90;
-    uint tmpW;
-    uint tmpH;
-    app->tex->GetSize(titleCard, tmpW, tmpH);
-    titleCardPos.w = tmpW;
-    titleCardPos.h = tmpH;
-    titleCardPos.y = -titleCardPos.h;
-    titleAlpha = 0.0f;
-    app->render->CreateSpline(&titleCardPos.y,64,2000,SplineType::QUART);
+	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { 180, 400, 60, 60 }, "FULLSCREEN", 40, this);
+	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", 40, this);
+	btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 180, 600, 200, 60 }, "CONTROLS", 35, this);
+	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 10, { 800, 600, 200, 60 }, "BACK", 40, this);
+	
+	//CONTROLS
+	btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 11, { 180, 120, 300, 60 }, "SELECT", 40, this);
+	btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 188, 300, 60 }, "CANCEL", 40, this);
+	btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 180, 256, 300, 60 }, "MENU", 40, this);
+	btnKeyQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 324, 300, 60 }, "QUEST", 40, this);
+	btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 392, 300, 60 }, "UP", 40, this);
+	btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 460, 300, 60 }, "DOWN", 40, this);
+	btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 528, 300, 60 }, "LEFT", 40, this);
+	btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 180, 596, 300, 60 }, "RIGHT", 40, this);
 
-    return false;
+	btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 800, 120, 300, 60 }, "SELECT", 40, this);
+	btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 800, 188, 300, 60 }, "CANCEL", 40, this);
+	btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 800, 256, 300, 60 }, "MENU", 40, this);
+	btnPadQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 324, 300, 60 }, "QUEST", 40, this);
+	btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 392, 300, 60 }, "UP", 40, this);
+	btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 460, 300, 60 }, "DOWN", 40, this);
+	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 528, 300, 60 }, "LEFT", 40, this);
+	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 596, 300, 60 }, "RIGHT", 40, this);
+
+	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
+
+	// Used for the Gamepad GUI control
+	app->scene->currentButton = app->gui->controls.start;
+	changeMenu = false;
+	usingGamepad = false;
+	if (app->input->GetControllerName() != "unplugged") usingGamepad = false;
+	app->input->mouseMotionX = 0;
+	app->input->mouseMotionY = 0;
+	app->scene->continueLoadRequest = false;
+
+	// Title Card easings
+	onceFx = true;
+	titleCardPos.x = 90;
+	uint tmpW;
+	uint tmpH;
+	app->tex->GetSize(titleCard, tmpW, tmpH);
+	titleCardPos.w = tmpW;
+	titleCardPos.h = tmpH;
+	titleCardPos.y = -titleCardPos.h;
+	titleAlpha = 0.0f;
+	app->render->CreateSpline(&titleCardPos.y,64,2000,SplineType::QUART);
+
+	return false;
 }
 
 
 bool SceneTitleScreen::Update(float dt)
 {
-    noose.Update(dt);
-    titleAlpha += (TITLE_FADE_SPEED * dt);
-    if (titleAlpha >= 0.85f && onceFx)
-    {
-        onceFx = false;
-        app->audio->PlayFx(titleFx, 0);
-    }
-    if (titleAlpha > 1.0f) { titleAlpha = 1.0f; }
-    
-    // Logic for using Gamepad or mouse (GUI)
-    ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
-    while (gamepadControls->next != nullptr)
-    {
-        if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
-        {
-            usingGamepad = true;
-            break;
-        }
-        gamepadControls = gamepadControls->next;
-    }
-    int tmpX = 0, tmpY = 0;
-    app->input->GetMouseMotion(tmpX, tmpY);
-    if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)) usingGamepad = false;
+	noose.Update(dt);
+	titleAlpha += (TITLE_FADE_SPEED * dt);
+	if (titleAlpha >= 0.85f && onceFx)
+	{
+		onceFx = false;
+		app->audio->PlayFx(titleFx, 0);
+	}
+	if (titleAlpha > 1.0f) { titleAlpha = 1.0f; }
+	
+	// Logic for using Gamepad or mouse (GUI)
+	ListItem<InputButton*>* gamepadControls = app->input->controlConfig.start;
+	while (gamepadControls->next != nullptr)
+	{
+		if (app->input->GetPadKey(gamepadControls->data->gamePadId) == KEY_DOWN)
+		{
+			usingGamepad = true;
+			break;
+		}
+		gamepadControls = gamepadControls->next;
+	}
+	int tmpX = 0, tmpY = 0;
+	app->input->GetMouseMotion(tmpX, tmpY);
+	if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)) usingGamepad = false;
 
-    // Calls update with gamepad parameters (GUI)
-    if (usingGamepad)
-    {
-        if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
-        {
-            if (changeMenu)
-            {
-                app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnStart));
-                changeMenu = false;
-            }
-            app->scene->currentButton->data->Update(dt, 1, 4);
-        }
-        else if ((flags & 1 << Flags::CONTROLS) == 0)
-        {
-            if (changeMenu)
-            {
-                app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(sldrVolume));
-                changeMenu = false;
-            }
-            app->scene->currentButton->data->Update(dt, 5, 10);
-            if (app->input->CheckButton("cancel",KEY_DOWN))
-            {
-                flags = ClearBit(flags, Flags::OPTIONS);
-                app->audio->PlayMusic("Audio/Music/Title.ogg");
-                changeMenu = true;
-                app->gui->ResetButtons();
-                usingGamepad = true;
-            }
-        }
-        else
-        {
-            if (changeMenu)
-            {
-                app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnKeySelect));
-                changeMenu = false;
-            }
-            app->scene->currentButton->data->Update(dt, 11, 27);
-            if (app->input->CheckButton("cancel", KEY_DOWN))
-            {
-                flags = ClearBit(flags, Flags::CONTROLS);
-                changeMenu = true;
-                app->gui->ResetButtons();
-                usingGamepad = true;
-            }
-        }
-    }
-    // Calls update for mouse parameters (GUI)
-    else
-    {
-        if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
-        {
-            btnStart->Update(dt);
-            btnContinue->Update(dt);
-            btnOptions->Update(dt);
-            btnExit->Update(dt);
-        }
-        else if ((flags & 1 << Flags::CONTROLS) == 0)
-        {
-            sldrVolume->Update(dt);
-            sldrFx->Update(dt);
-            boxFullScreen->Update(dt);
-            boxVSync->Update(dt);
-            btnControls->Update(dt);
-            btnBack->Update(dt);
-        }
-        else
-        {
-            btnKeySelect->Update(dt);
-            btnKeyCancel->Update(dt);
-            btnKeyMenu->Update(dt);
-            btnKeyQuest->Update(dt);
-            btnKeyUp->Update(dt);
-            btnKeyDown->Update(dt);
-            btnKeyLeft->Update(dt);
-            btnKeyRight->Update(dt);
-            btnBack2->Update(dt);
-            btnPadSelect->Update(dt);
-            btnPadCancel->Update(dt);
-            btnPadMenu->Update(dt);
-            btnPadQuest->Update(dt);
-            btnPadUp->Update(dt);
-            btnPadDown->Update(dt);
-            btnPadLeft->Update(dt);
-            btnPadRight->Update(dt);
-        }
-    }
+	// Calls update with gamepad parameters (GUI)
+	if (usingGamepad)
+	{
+		if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnStart));
+				changeMenu = false;
+			}
+			app->scene->currentButton->data->Update(dt, 1, 4);
+		}
+		else if ((flags & 1 << Flags::CONTROLS) == 0)
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(sldrVolume));
+				changeMenu = false;
+			}
+			app->scene->currentButton->data->Update(dt, 5, 10);
+			if (app->input->CheckButton("cancel",KEY_DOWN))
+			{
+				flags = ClearBit(flags, Flags::OPTIONS);
+				app->audio->PlayMusic("Audio/Music/Title.ogg");
+				changeMenu = true;
+				app->gui->ResetButtons();
+				usingGamepad = true;
+			}
+		}
+		else
+		{
+			if (changeMenu)
+			{
+				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnKeySelect));
+				changeMenu = false;
+			}
+			app->scene->currentButton->data->Update(dt, 11, 27);
+			if (app->input->CheckButton("cancel", KEY_DOWN))
+			{
+				flags = ClearBit(flags, Flags::CONTROLS);
+				changeMenu = true;
+				app->gui->ResetButtons();
+				usingGamepad = true;
+			}
+		}
+	}
+	// Calls update for mouse parameters (GUI)
+	else
+	{
+		if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			btnStart->Update(dt);
+			btnContinue->Update(dt);
+			btnOptions->Update(dt);
+			btnExit->Update(dt);
+		}
+		else if ((flags & 1 << Flags::CONTROLS) == 0)
+		{
+			sldrVolume->Update(dt);
+			sldrFx->Update(dt);
+			boxFullScreen->Update(dt);
+			boxVSync->Update(dt);
+			btnControls->Update(dt);
+			btnBack->Update(dt);
+		}
+		else
+		{
+			btnKeySelect->Update(dt);
+			btnKeyCancel->Update(dt);
+			btnKeyMenu->Update(dt);
+			btnKeyQuest->Update(dt);
+			btnKeyUp->Update(dt);
+			btnKeyDown->Update(dt);
+			btnKeyLeft->Update(dt);
+			btnKeyRight->Update(dt);
+			btnBack2->Update(dt);
+			btnPadSelect->Update(dt);
+			btnPadCancel->Update(dt);
+			btnPadMenu->Update(dt);
+			btnPadQuest->Update(dt);
+			btnPadUp->Update(dt);
+			btnPadDown->Update(dt);
+			btnPadLeft->Update(dt);
+			btnPadRight->Update(dt);
+		}
+	}
 
-    //LOG("%d", flags);
-    return true;
+	//LOG("%d", flags);
+	return true;
 }
 
 bool SceneTitleScreen::Draw()
 {
-    app->render->background = { 0, 0, 0, 255 };
-    app->render->DrawTexture(nooseBG, 810, 0,false,&noose.GetCurrentFrame());
-    app->render->DrawTexture(titleCard, titleCardPos.x, titleCardPos.y);
-    app->render->DrawRectangle(titleCardPos, 0, 0, 0, (uchar)(255 - (255 * titleAlpha)));
+	app->render->background = { 0, 0, 0, 255 };
+	app->render->DrawTexture(nooseBG, 810, 0,false,&noose.GetCurrentFrame());
+	app->render->DrawTexture(titleCard, titleCardPos.x, titleCardPos.y);
+	app->render->DrawRectangle(titleCardPos, 0, 0, 0, (uchar)(255 - (255 * titleAlpha)));
 
-    if ((flags & 1<<Flags::OPTIONS) == 0 && (flags & 1<<Flags::CONTROLS) == 0)
-    {
-        btnStart->Draw();
-        btnContinue->Draw();
-        btnOptions->Draw();
-        btnExit->Draw();
-    }
-    else if ((flags & 1 << Flags::CONTROLS) == 0)
-    {
-        app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
-        SString titleOptions = "Options";
-        app->render->DrawText(buttonFont, titleOptions.GetString(), /*app->render->camera.x + */((app->render->camera.w - (titleOptions.Length() * 24))/2), 100, 64, 2, white);
+	if ((flags & 1<<Flags::OPTIONS) == 0 && (flags & 1<<Flags::CONTROLS) == 0)
+	{
+		btnStart->Draw();
+		btnContinue->Draw();
+		btnOptions->Draw();
+		btnExit->Draw();
+	}
+	else if ((flags & 1 << Flags::CONTROLS) == 0)
+	{
+		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
+		SString titleOptions = "Options";
+		app->render->DrawText(buttonFont, titleOptions.GetString(), /*app->render->camera.x + */((app->render->camera.w - (titleOptions.Length() * 24))/2), 100, 64, 2, white);
 
-        sldrVolume->Draw();
-        sldrFx->Draw();
+		sldrVolume->Draw();
+		sldrFx->Draw();
 		if (app->win->fullscreenWindow)
 			boxFullScreen->checked = true;
-        boxFullScreen->Draw();
+		boxFullScreen->Draw();
 		if (app->vsync)
 			boxVSync->checked = true;
-        boxVSync->Draw();
-        btnControls->Draw();
-        btnBack->Draw();
-    }
-    else
-    {
-        app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
-        SString titleControls = "Controls";
-        app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, white);
+		boxVSync->Draw();
+		btnControls->Draw();
+		btnBack->Draw();
+	}
+	else
+	{
+		app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
+		SString titleControls = "Controls";
+		app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, white);
 
-        btnKeySelect->Draw();
-        btnKeyCancel->Draw();
-        btnKeyMenu->Draw();
-        btnKeyQuest->Draw();
-        btnKeyUp->Draw();
-        btnKeyDown->Draw();
-        btnKeyLeft->Draw();
-        btnKeyRight->Draw();
-        btnBack2->Draw();
-        btnPadSelect->Draw();
-        btnPadCancel->Draw();
-        btnPadMenu->Draw();
-        btnPadQuest->Draw();
-        btnPadUp->Draw();
-        btnPadDown->Draw();
-        btnPadLeft->Draw();
-        btnPadRight->Draw();
-    }
-    if (usingGamepad) app->scene->currentButton->data->Draw();
-    //char test[64] = { 0 };
-    //sprintf_s(test, 64, "SCORE: %03i", 56);
-    //app->render->DrawText(dialogueFont, test, 700, 640, 64, 2, { 0, 255, 255, 255 });
+		btnKeySelect->Draw();
+		btnKeyCancel->Draw();
+		btnKeyMenu->Draw();
+		btnKeyQuest->Draw();
+		btnKeyUp->Draw();
+		btnKeyDown->Draw();
+		btnKeyLeft->Draw();
+		btnKeyRight->Draw();
+		btnBack2->Draw();
+		btnPadSelect->Draw();
+		btnPadCancel->Draw();
+		btnPadMenu->Draw();
+		btnPadQuest->Draw();
+		btnPadUp->Draw();
+		btnPadDown->Draw();
+		btnPadLeft->Draw();
+		btnPadRight->Draw();
+	}
+	if (usingGamepad) app->scene->currentButton->data->Draw();
+	//char test[64] = { 0 };
+	//sprintf_s(test, 64, "SCORE: %03i", 56);
+	//app->render->DrawText(dialogueFont, test, 700, 640, 64, 2, { 0, 255, 255, 255 });
 
-    return true;
+	return true;
 }
 
 bool SceneTitleScreen::Unload()
 {
-    app->tex->UnLoad(nooseBG);
-    app->tex->UnLoad(titleCard);
-    app->audio->UnloadFx(titleFx);
-    app->gui->Disable();
-    RELEASE(buttonFont);
-    app->scene->currentButton = nullptr;
+	app->tex->UnLoad(nooseBG);
+	app->tex->UnLoad(titleCard);
+	app->audio->UnloadFx(titleFx);
+	app->gui->Disable();
+	RELEASE(buttonFont);
+	app->scene->currentButton = nullptr;
 
-    return true;
+	return true;
 }
 
 //----------------------------------------------------------
@@ -316,92 +327,92 @@ bool SceneTitleScreen::Unload()
 //----------------------------------------------------------
 bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
 {
-    switch (control->id)
-    {
-    case 1: //START
-        TransitionToScene(SceneType::GAMEPLAY);
-        break;
-    case 2: //CONTINUE
-        TransitionToScene(SceneType::GAMEPLAY);
-        app->scene->continueLoadRequest = true;
-        break;
-    case 3: //OPTIONS
-        flags = SetBit(flags, Flags::OPTIONS);
-        changeMenu = true;
-        app->audio->PlayMusic("Audio/Music/Options.ogg");
-        app->gui->ResetButtons();
-        usingGamepad = true;
-        break;
-    case 4: //EXIT
-        app->exitRequest = true;
-        break;
-    case 5: //VOLUME
-        app->audio->SetMusicVolume(sldrVolume->value / 2);
-        app->audio->auxVolume = sldrVolume->value;
-        break;
-    case 6: //FX
-        app->audio->SetFxVolumeValue(sldrFx->value);
-        break;
-    case 7: //FULLSCREEN
-        app->win->ToggleFullscreen(boxFullScreen->checked);
-        break;
-    case 8: //VSYNC
-        app->render->ToggleVsync(boxVSync->checked, (Module*)this);
-        break;
-    case 9: //CONTROLS
-        flags = SetBit(flags, Flags::CONTROLS);
-        changeMenu = true;
-        app->gui->ResetButtons();
-        usingGamepad = true;
-        break;
-    case 10: //BACK
-        flags = ClearBit(flags, Flags::OPTIONS);
-        app->audio->PlayMusic("Audio/Music/Title.ogg");
-        changeMenu = true;
-        app->gui->ResetButtons();
-        usingGamepad = true;
-        break;
-    case 11: //KEY SELECT
-        break;
-    case 12: //KEY CANCEL
-        break;
-    case 13: //KEY MENU
-        break;
-    case 14: //KEY QUEST
-        break;
-    case 15: //KEY UP
-        break;
-    case 16: //KEY DOWN
-        break;
-    case 17: //KEY LEFT
-        break;
-    case 18: //KEY RIGHT
-        break;
-    case 19: //PAD SELECT
-        break;
-    case 20: //PAD CANCEL
-        break;
-    case 21: //PAD MENU
-        break;
-    case 22: //PAD QUEST
-        break;
-    case 23: //PAD UP
-        break;
-    case 24: //PAD DOWN
-        break;
-    case 25: //PAD LEFT
-        break;
-    case 26: //PAD RIGHT
-        break;
-    case 27: //BACK 2
-        flags = ClearBit(flags, Flags::CONTROLS);
-        changeMenu = true;
-        app->gui->ResetButtons();
-        usingGamepad = true;
-        break;
-    default:
-        break;
-    }
+	switch (control->id)
+	{
+	case 1: //START
+		TransitionToScene(SceneType::GAMEPLAY);
+		break;
+	case 2: //CONTINUE
+		TransitionToScene(SceneType::GAMEPLAY);
+		app->scene->continueLoadRequest = true;
+		break;
+	case 3: //OPTIONS
+		flags = SetBit(flags, Flags::OPTIONS);
+		changeMenu = true;
+		app->audio->PlayMusic("Audio/Music/Options.ogg");
+		app->gui->ResetButtons();
+		usingGamepad = true;
+		break;
+	case 4: //EXIT
+		app->exitRequest = true;
+		break;
+	case 5: //VOLUME
+		app->audio->SetMusicVolume(sldrVolume->value / 2);
+		app->audio->auxVolume = sldrVolume->value;
+		break;
+	case 6: //FX
+		app->audio->SetFxVolumeValue(sldrFx->value);
+		break;
+	case 7: //FULLSCREEN
+		app->win->ToggleFullscreen(boxFullScreen->checked);
+		break;
+	case 8: //VSYNC
+		app->render->ToggleVsync(boxVSync->checked, (Module*)this);
+		break;
+	case 9: //CONTROLS
+		flags = SetBit(flags, Flags::CONTROLS);
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
+		break;
+	case 10: //BACK
+		flags = ClearBit(flags, Flags::OPTIONS);
+		app->audio->PlayMusic("Audio/Music/Title.ogg");
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
+		break;
+	case 11: //KEY SELECT
+		break;
+	case 12: //KEY CANCEL
+		break;
+	case 13: //KEY MENU
+		break;
+	case 14: //KEY QUEST
+		break;
+	case 15: //KEY UP
+		break;
+	case 16: //KEY DOWN
+		break;
+	case 17: //KEY LEFT
+		break;
+	case 18: //KEY RIGHT
+		break;
+	case 19: //PAD SELECT
+		break;
+	case 20: //PAD CANCEL
+		break;
+	case 21: //PAD MENU
+		break;
+	case 22: //PAD QUEST
+		break;
+	case 23: //PAD UP
+		break;
+	case 24: //PAD DOWN
+		break;
+	case 25: //PAD LEFT
+		break;
+	case 26: //PAD RIGHT
+		break;
+	case 27: //BACK 2
+		flags = ClearBit(flags, Flags::CONTROLS);
+		changeMenu = true;
+		app->gui->ResetButtons();
+		usingGamepad = true;
+		break;
+	default:
+		break;
+	}
 
-    return true;
+	return true;
 }

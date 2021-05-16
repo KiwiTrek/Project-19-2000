@@ -40,8 +40,12 @@ bool SceneGameplay::Load()
 	dtSave = 0.0f;
 	dtItem = 0.0f;
 
-	dialogueFont = new Font("Fonts/DialogueFont.xml");
-	buttonFont = new Font("Fonts/ButtonFont.xml");
+	SString tmp("%s%s", app->scene->folderFonts.GetString(), "DialogueFont.xml");
+	dialogueFont = new Font(tmp.GetString());
+
+	tmp.Clear();
+	tmp.Create("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
+	buttonFont = new Font(tmp.GetString());
 
 	float tmpValue = 0;
 	//MENU
@@ -134,12 +138,14 @@ bool SceneGameplay::Load()
 	app->entities->CreateEntity(69 * 64, 76 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::MANA_POTION, 3);
 	app->entities->CreateEntity(69 * 64, 80 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::PHYS_BUFFER, 3);
 
+	// Map
 	app->map->Enable();
 	if (app->map->data.type == MapTypes::MAPTYPE_UNKNOWN) app->map->LoadNewMap("tutorial.tmx");
+
 	// Initialize player
 	player = app->entities->CreateEntity(-1, -1, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
 
-	//Puzzle elements
+	// Puzzle elements
 	buttonOne = (PuzzlePieces*)app->entities->CreateEntity(13 * 64, 41 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
 	buttonTwo = (PuzzlePieces*)app->entities->CreateEntity(17 * 64, 41 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
 	buttonThree = (PuzzlePieces*)app->entities->CreateEntity(43 * 64, 14 * 64, EntityType::PUZZLE_PIECE, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::BUTTON);
@@ -179,7 +185,7 @@ bool SceneGameplay::Load()
 	app->scene->currentButton = app->gui->controls.start;
 	changeMenu = false;
 	enteringCombat = false;
-    usingGamepad = false;
+	usingGamepad = false;
 	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;
@@ -275,10 +281,10 @@ bool SceneGameplay::Update(float dt)
 		//Update normal scene
 	}
 
-    if (combatScene->backToGameplay)
-    {
-        combatScene->UpdateTransition(dt, TransitionStatus::SCENE);
-    }
+	if (combatScene->backToGameplay)
+	{
+		combatScene->UpdateTransition(dt, TransitionStatus::SCENE);
+	}
 
 	if (combatScene->heDed) TransitionToScene(SceneType::ENDING);
 
@@ -1008,35 +1014,35 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				}
 			}
 		}
-        else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
-        {
-            sldrVolume->Update(dt);
-            sldrFx->Update(dt);
-            boxFullScreen->Update(dt);
-            boxVSync->Update(dt);
-            btnControls->Update(dt);
-            btnBack->Update(dt);
-        }
-        else if ((flags & 1 << Flags::CONTROLS) != 0)
-        {
-            btnKeySelect->Update(dt);
-            btnKeyCancel->Update(dt);
-            btnKeyMenu->Update(dt);
-            btnKeyQuest->Update(dt);
-            btnKeyUp->Update(dt);
-            btnKeyDown->Update(dt);
-            btnKeyLeft->Update(dt);
-            btnKeyRight->Update(dt);
-            btnBack2->Update(dt);
-            btnPadSelect->Update(dt);
-            btnPadCancel->Update(dt);
-            btnPadMenu->Update(dt);
-            btnPadQuest->Update(dt);
-            btnPadUp->Update(dt);
-            btnPadDown->Update(dt);
-            btnPadLeft->Update(dt);
-            btnPadRight->Update(dt);
-        }
+		else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		{
+			sldrVolume->Update(dt);
+			sldrFx->Update(dt);
+			boxFullScreen->Update(dt);
+			boxVSync->Update(dt);
+			btnControls->Update(dt);
+			btnBack->Update(dt);
+		}
+		else if ((flags & 1 << Flags::CONTROLS) != 0)
+		{
+			btnKeySelect->Update(dt);
+			btnKeyCancel->Update(dt);
+			btnKeyMenu->Update(dt);
+			btnKeyQuest->Update(dt);
+			btnKeyUp->Update(dt);
+			btnKeyDown->Update(dt);
+			btnKeyLeft->Update(dt);
+			btnKeyRight->Update(dt);
+			btnBack2->Update(dt);
+			btnPadSelect->Update(dt);
+			btnPadCancel->Update(dt);
+			btnPadMenu->Update(dt);
+			btnPadQuest->Update(dt);
+			btnPadUp->Update(dt);
+			btnPadDown->Update(dt);
+			btnPadLeft->Update(dt);
+			btnPadRight->Update(dt);
+		}
 	}
 	
 	if (app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || app->input->CheckButton("menu", KeyState::KEY_DOWN))
@@ -1078,10 +1084,10 @@ bool SceneGameplay::Draw()
 		app->map->Draw();
 	}
 	
-    if (combat || combatScene->waitForTransition == TransitionStatus::BATTLE || combatScene->waitForTransition == TransitionStatus::END || !app->scene->transitionAlpha >= 1.0f)
-    {
-        combatScene->Draw(dialogueFont);
-    }
+	if (combat || combatScene->waitForTransition == TransitionStatus::BATTLE || combatScene->waitForTransition == TransitionStatus::END || !app->scene->transitionAlpha >= 1.0f)
+	{
+		combatScene->Draw(dialogueFont);
+	}
 
 	if (dialogSystem->currentDialog != nullptr)
 	{
@@ -1147,10 +1153,10 @@ bool SceneGameplay::Draw()
 		app->render->DrawText(dialogueFont, app->entities->itemPasser.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
 
-    if (combatScene->backToGameplay)
-    {
-        app->render->DrawRectangle({ -app->render->camera.x, -app->render->camera.y, app->render->camera.w, app->render->camera.h }, 0, 0, 0, Uint8(255 - (255 * combatScene->alpha)));
-    }
+	if (combatScene->backToGameplay)
+	{
+		app->render->DrawRectangle({ -app->render->camera.x, -app->render->camera.y, app->render->camera.w, app->render->camera.h }, 0, 0, 0, Uint8(255 - (255 * combatScene->alpha)));
+	}
 
 	return false;
 }

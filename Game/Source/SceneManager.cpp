@@ -36,10 +36,14 @@ SceneManager::~SceneManager()
 {}
 
 // Called before render is available
-bool SceneManager::Awake()
+bool SceneManager::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Scene Manager");
 	bool ret = true;
+
+	folderAudioFx.Create(config.child("folderAudioFx").child_value());
+	folderTexture.Create(config.child("folderTexture").child_value());
+	folderFonts.Create(config.child("folderFonts").child_value());
 
 	return ret;
 }
