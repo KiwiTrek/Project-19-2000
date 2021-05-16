@@ -8,6 +8,7 @@
   - Directional pad: Move character/between options (EXCEPT selecting target on combat)
   - B/O button: Select
   - A/X button: Cancel
+  - **NEW!** Select/Back: Quest Log
   - Start/Options button: Menu
 
 - Keyboard & Mouse
@@ -15,6 +16,7 @@
   - Z: Select
   - X: Cancel
   - C/Esc: Menu
+  - **NEW!** V: Quest Log
   - Mouse click: Select button/target (combat)
 
 - Debug keys:
@@ -24,6 +26,7 @@
   - F3: Trigger combat
   - F4: Save request
   - F5: Load request
+  - **NEW!** F7: Complete Quest
   - F10: God mode
     - No collisions
     - No event triggers

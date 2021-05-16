@@ -114,7 +114,7 @@ bool SceneEnding::Draw()
 
 bool SceneEnding::Unload()
 {
-    if (bg != nullptr) app->tex->UnLoad(bg);
+    app->tex->UnLoad(bg);
 
     app->gui->Disable();
     app->scene->currentButton = nullptr;

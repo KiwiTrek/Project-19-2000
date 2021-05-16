@@ -188,7 +188,6 @@ private:
     int magicSlapFx;
     int stareFx;
 
-
     int strongerFx;
     int bladesFx;
     int stressFx;

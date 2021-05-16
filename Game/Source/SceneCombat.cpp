@@ -1366,16 +1366,40 @@ bool SceneCombat::Finish()
 
 bool SceneCombat::Unload()
 {
+	items.Clear();
+	turnOrder.Clear();
+	attackSelected.Clear();
+
 	mainChar.hp.Clear();
 	mainChar.mp.Clear();
 	mainChar.stress.Clear();
+	mainChar.lvl.Clear();
+	mainChar.xp.Clear();
+	mainChar.nextLvl.Clear();
+	mainChar.pAtk.Clear();
+	mainChar.mAtk.Clear();
+	mainChar.pDef.Clear();
+	mainChar.mDef.Clear();
+	mainChar.speed.Clear();
 
 	grandpa.hp.Clear();
 	grandpa.mp.Clear();
 	grandpa.stress.Clear();
+	grandpa.lvl.Clear();
+	grandpa.xp.Clear();
+	grandpa.nextLvl.Clear();
+	grandpa.pAtk.Clear();
+	grandpa.mAtk.Clear();
+	grandpa.pDef.Clear();
+	grandpa.mDef.Clear();
+	grandpa.speed.Clear();
 
-	 app->tex->UnLoad(combatGui);
-	if (transitionTx != nullptr) app->tex->UnLoad(transitionTx);
+	firstLine.Clear();
+	secondLine.Clear();
+	thirdLine.Clear();
+
+	app->tex->UnLoad(combatGui);
+	app->tex->UnLoad(transitionTx);
     
     app->audio->UnloadFx(smackFx);
     app->audio->UnloadFx(slapFx);

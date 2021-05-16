@@ -76,7 +76,6 @@ public:
 public:
 
     bool active = true;
-    SString name;         // Scene name identifier?
 
     // Possible properties
     bool loaded = false;
