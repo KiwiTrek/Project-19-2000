@@ -39,8 +39,8 @@ bool QuestManager::Start()
 
 		quest->id = questNode.attribute("id").as_int();
 		//quest->type = questNode.attribute("type").as_int();
-		quest->title = questNode.attribute("title").as_string();
-		quest->description = questNode.attribute("description").as_string();
+		quest->title.Create(questNode.attribute("title").as_string());
+		quest->description.Create(questNode.attribute("description").as_string());
 		//quest->objective = questNode.attribute("objective").as_string();
 		//quest->quantity = questNode.attribute("quantity").as_int();
 		//quest->demandingNPC = questNode.attribute("demandingNPC").as_string();
@@ -487,8 +487,8 @@ bool QuestManager::Load(pugi::xml_node& savegame)
 		
 		quest->id = questNode.attribute("id").as_int();
 		//quest->type = questNode.attribute("type").as_int();
-		quest->title = questNode.attribute("title").as_string();
-		quest->description = questNode.attribute("description").as_string();
+		quest->title.Create(questNode.attribute("title").as_string());
+		quest->description.Create(questNode.attribute("description").as_string());
 		//quest->objective = questNode.attribute("objective").as_string();
 		//quest->quantity = questNode.attribute("quantity").as_int();
 		//quest->demandingNPC = questNode.attribute("demandingNPC").as_string();

@@ -125,7 +125,6 @@ void GuiManager::ResetButtons()
 bool GuiManager::CleanUp()
 {
 	ListItem<GuiControl*>* e = controls.start;
-	ListItem<GuiControl*>* eNext;
 	while (e != nullptr)
 	{
 		if (e->next != nullptr)

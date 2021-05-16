@@ -47,7 +47,6 @@ bool Blockers::Update(float dt)
 	{
 	case BlockerId::SPIKES:
 	{
-
 		break;
 	}
 	case BlockerId::LOCKED_DOOR:

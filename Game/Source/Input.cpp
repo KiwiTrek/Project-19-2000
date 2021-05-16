@@ -202,6 +202,15 @@ bool Input::PreUpdate()
 bool Input::CleanUp()
 {
 	LOG("Quitting SDL event subsystem");
+	
+	ListItem<InputButton*>* c = controlConfig.start;
+	while (c != nullptr)
+	{
+		ListItem<InputButton*>* cNext = c->next;
+		controlConfig.Del(c);
+		c = cNext;
+	}
+	controlConfig.Clear();
 
 	if (pad.haptic != nullptr)
 	{

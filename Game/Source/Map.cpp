@@ -254,7 +254,7 @@ bool Map::LoadTileSetDetails(pugi::xml_node& node, TileSet* set)
 	LOG("Filling TileSetDetails");
 
 	set->firstgId = node.attribute("firstgid").as_int();
-	set->name = node.attribute("name").as_string();
+	set->name.Create(node.attribute("name").as_string());
 	set->tileWidth = node.attribute("tilewidth").as_int();
 	set->tileHeight = node.attribute("tileheight").as_int();
 	set->spacing = node.attribute("spacing").as_int();
@@ -313,7 +313,7 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 {
 	bool ret = true;
 
-	layer->name = node.attribute("name").as_string();
+	layer->name.Create(node.attribute("name").as_string());
 	layer->width = node.attribute("width").as_int();
 	layer->height = node.attribute("height").as_int();
 	layer->data = new uint[(data.width * data.height * sizeof(uint))];
@@ -347,7 +347,7 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 			LOG("Stop5");
 			Properties::Property* prop = new Properties::Property();
 			LOG("Stop5.1");
-			prop->name = property.attribute("name").as_string();
+			prop->name.Create(property.attribute("name").as_string());
 			LOG("Stop5.2");
 			prop->value = property.attribute("value").as_int();
 			LOG("Stop5.3");

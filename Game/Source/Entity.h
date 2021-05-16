@@ -89,8 +89,9 @@ public:
 class Attack
 {
 public:
-	Attack(SString name) : attackName(name)
+	Attack(SString name)
 	{
+		attackName.Create(name.GetString());
 		turns = -1;
 		beforeBuff1 = -1;
 		beforeBuff2 = -1;
