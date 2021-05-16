@@ -34,6 +34,7 @@ bool SceneGameplay::Load()
 {
 	app->collisions->Enable();
 	app->entities->Enable();
+	app->quests->Enable();
 
 	dialogSystem = new DialogSystem();
 	dtSave = 0.0f;
@@ -1387,6 +1388,7 @@ bool SceneGameplay::Unload()
 	app->entities->Disable();
 	app->collisions->Disable();
 	app->map->Disable();
+	app->quests->Disable();
 
 	RELEASE(dialogSystem);
 

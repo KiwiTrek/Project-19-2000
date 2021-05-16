@@ -103,6 +103,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, uint32 id, SDL_Rec
 void GuiManager::DestroyGuiControl(GuiControl* entity)
 {
 	int i = controls.Find(entity);
+	if (entity->type == GuiControlType::IMAGEBUTTON)
+	{
+		GuiImageButton* b = (GuiImageButton*)entity;
+		app->tex->UnLoad(b->tex);
+	}
 	delete controls[i];
 	controls.Del(controls.At(i));
 }

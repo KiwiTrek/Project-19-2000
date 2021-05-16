@@ -53,6 +53,7 @@ public:
 	~QuestManager();
 
 	// Called before the first frame
+	void Init();
 	bool Start();
 
 	bool Update(float dt);

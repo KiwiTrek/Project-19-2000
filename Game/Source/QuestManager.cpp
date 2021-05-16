@@ -3,16 +3,20 @@
 QuestManager::QuestManager() : Module()
 {
 	name.Create("quests");
-	active = false;
 }
 
 QuestManager::~QuestManager()
 {
 }
 
+void QuestManager::Init()
+{
+	active = false;
+}
+
 bool QuestManager::Start()
 {
-
+	bool ret = false;
 	font = new Font("Fonts/DialogueFont.xml");
 	bookTex = app->tex->Load("Textures/ScrollQuest.png");
 	bookBox = { 0,0,1280,720 };
@@ -26,6 +30,7 @@ bool QuestManager::Start()
 		questNode = questData.child("quests");
 	if (questNode == NULL)
 		LOG("Could not load <questsData> xml_document");
+	ret = parseResult;
 
 	questNode = questNode.child("quest");
 	while (questNode != NULL)
@@ -71,8 +76,9 @@ bool QuestManager::Start()
 	}
 
 	tpFlags = 0;
+	questData.reset();
 
-	return true;
+	return ret;
 }
 
 bool QuestManager::Update(float dt)
