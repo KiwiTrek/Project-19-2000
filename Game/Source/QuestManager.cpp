@@ -1,4 +1,5 @@
 #include "QuestManager.h"
+#include "AssetsManager.h"
 
 QuestManager::QuestManager() : Module()
 {
@@ -23,7 +24,11 @@ bool QuestManager::Start()
 
 	pugi::xml_node questNode;
 	pugi::xml_document questData;
-	pugi::xml_parse_result parseResult = questData.load_file("quests.xml");
+
+	char* buffer = nullptr;
+	size_t size = app->assetsManager->LoadXML("quests.xml",&buffer);
+
+	pugi::xml_parse_result parseResult = questData.load_buffer(buffer, size);
 	if (parseResult == NULL)
 		LOG("Could not load xml file <quests.xml> pugi error: %s", parseResult.description());
 	else
