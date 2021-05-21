@@ -43,9 +43,8 @@ bool SceneGameplay::Load()
 	SString tmp("%s%s", app->scene->folderFonts.GetString(), "DialogueFont.xml");
 	dialogueFont = new Font(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
-	buttonFont = new Font(tmp.GetString());
+	SString tmp1("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
+	buttonFont = new Font(tmp1.GetString());
 
 	float tmpValue = 0;
 	//MENU
@@ -59,6 +58,7 @@ bool SceneGameplay::Load()
 
 	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 400, 200, 60 }, " STATS ", 40, this);
 	statFlags = 0;
+    onceStatsFx = true;
 
 	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 90, 480, 200, 60 }, "OPTIONS", 35, this);
 	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 560, 200, 60 }, "          TITLE SCREEN", 35, this);
@@ -617,14 +617,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				app->input->GetMousePosition(x, y);
 				if (combatScene->characterFlags >= 2)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (75 + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::MC);
 					}
 				}
 				if (combatScene->characterFlags >= 6)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (85 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
 					}
@@ -729,14 +729,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				app->input->GetMousePosition(x, y);
 				if (combatScene->characterFlags >= 2)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (75 + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::MC);
 					}
 				}
 				if (combatScene->characterFlags >= 6)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (85 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
 					}
@@ -909,14 +909,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				app->input->GetMousePosition(x, y);
 				if (combatScene->characterFlags >= 2)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (75 + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::MC);
 					}
 				}
 				if (combatScene->characterFlags >= 6)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (85 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
 					}
@@ -1000,14 +1000,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				app->input->GetMousePosition(x, y);
 				if (combatScene->characterFlags >= 2)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (75 + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::MC);
 					}
 				}
 				if (combatScene->characterFlags >= 6)
 				{
-					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
+					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (85 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
 					}
@@ -1272,6 +1272,20 @@ bool SceneGameplay::DrawPauseMenu()
 				btnSkill2->Draw(-app->render->camera.x, -app->render->camera.y);
 				btnSkill3->Draw(-app->render->camera.x, -app->render->camera.y);
 				btnSkill4->Draw(-app->render->camera.x, -app->render->camera.y);
+                int x, y;
+                app->input->GetMousePosition(x, y);
+                if (onceStatsFx)
+                {
+                    onceStatsFx = false;
+                    if (y < (75 + menuCharacterBox.h))
+                    {
+                        app->audio->PlayFx(app->entities->playerFx);
+                    }
+                    else
+                    {
+                        app->audio->PlayFx(app->entities->interactGrandpa);
+                    }
+                }
 			}
 			else
 			{
@@ -1279,7 +1293,8 @@ bool SceneGameplay::DrawPauseMenu()
 				SString tmp2 = "to see its skills";
 				app->render->DrawText(dialogueFont, tmp1.GetString(), (app->render->camera.w / 2) - ((tmp1.Length() * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
 				app->render->DrawText(dialogueFont, tmp2.GetString(), (app->render->camera.w / 2) - ((tmp2.Length() * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
-			}
+                onceStatsFx = true;
+            }
 
 		}
 		else if ((flags & 1 << Flags::SKILL_TREE) != 0)
@@ -1311,6 +1326,11 @@ bool SceneGameplay::DrawPauseMenu()
 				app->render->DrawText(buttonFont, combatScene->mainChar.mDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
 				app->render->DrawText(buttonFont, combatScene->mainChar.speed.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
 
+                if (onceStatsFx)
+                {
+                    onceStatsFx = false;
+                    app->audio->PlayFx(app->entities->playerFx);
+                }
 			}
 			else if (statFlags == 1 << (int)EntityId::VIOLENT)
 			{
@@ -1329,14 +1349,21 @@ bool SceneGameplay::DrawPauseMenu()
 				app->render->DrawText(buttonFont, combatScene->grandpa.pDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
 				app->render->DrawText(buttonFont, combatScene->grandpa.mDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
 				app->render->DrawText(buttonFont, combatScene->grandpa.speed.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
-			}
+			    
+                if (onceStatsFx)
+                {
+                    onceStatsFx = false;
+                    app->audio->PlayFx(app->entities->interactGrandpa);
+                }
+            }
 			else
 			{
 				SString tmp1 = "Select a character";
 				SString tmp2 = "to see its stats";
 				app->render->DrawText(dialogueFont, tmp1.GetString(), (app->render->camera.w / 2) - ((tmp1.Length() * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
 				app->render->DrawText(dialogueFont, tmp2.GetString(), (app->render->camera.w / 2) - ((tmp2.Length() * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
-			}
+                onceStatsFx = true;
+            }
 		}
 	}
 	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)

@@ -30,9 +30,9 @@ private:
 
 	// Animation
 	Animation idle;
-	SDL_Rect stressingShadowSec;
-	SDL_Rect furiousShadowSec;
-	SDL_Rect nightmareSec;
+    SDL_Rect furiousShadowSec = { 0,0,0,0 };
+    SDL_Rect nightmareSec = { 0,0,0,0 };
+    SDL_Rect stressingShadowSec = { 0,0,0,0 };
 
 };
 

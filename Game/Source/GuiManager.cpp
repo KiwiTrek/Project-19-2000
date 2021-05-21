@@ -41,17 +41,14 @@ bool GuiManager::Start()
 	SString tmp("%s%s", folderTexture.GetString(), "gui.png");
 	atlas = app->tex->Load(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudio.GetString(), "Click.wav");
-	clickSoundId = app->audio->LoadFx(tmp.GetString());
+	SString tmp1("%s%s", folderAudio.GetString(), "Click.wav");
+	clickSoundId = app->audio->LoadFx(tmp1.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudio.GetString(), "Hover.wav");
-	hoverSoundId = app->audio->LoadFx(tmp.GetString());
+	SString tmp2("%s%s", folderAudio.GetString(), "Hover.wav");
+	hoverSoundId = app->audio->LoadFx(tmp2.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderFonts.GetString(), "ButtonFont.xml");
-	guiFontId = new Font(tmp.GetString());
+	SString tmp3("%s%s", folderFonts.GetString(), "ButtonFont.xml");
+	guiFontId = new Font(tmp3.GetString());
 
 	return true;
 }

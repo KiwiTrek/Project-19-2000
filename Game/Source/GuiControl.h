@@ -11,6 +11,7 @@
 
 enum class GuiControlType
 {
+    NONE,
 	BUTTON,
 	CHECKBOX,
 	SLIDER,
@@ -29,89 +30,90 @@ enum class GuiControlState
 class GuiControl
 {
 public:
-	// Constructors
-	GuiControl(GuiControlType type, uint32 id) : type(type), id(id), state(GuiControlState::NORMAL), white({ 255,255,255,255 }), black({0,0,0,255})
-	{}
+    // Constructors
+    GuiControl(GuiControlType type, uint32 id) : type(type), id(id), state(GuiControlState::NORMAL), white({ 255,255,255,255 }), black({ 0,0,0,255 })
+    {
+    }
 
-	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text), white({ 255,255,255,255 }), black({ 0,0,0,255 })
-	{
-		texture = NULL;
-		guiFont = nullptr;
-		hover = -1;
-		click = -1;
-	}
+    GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text), white({ 255,255,255,255 }), black({ 0,0,0,255 })
+    {
+        texture = NULL;
+        guiFont = nullptr;
+        hover = -1;
+        click = -1;
+    }
 
-	// Called each loop iteration
-	virtual bool Update(float dt)
-	{
-		return true;
-	}
-	virtual bool Update(float dt, int minId, int maxId)
-	{
-		return true;
-	}
+    // Called each loop iteration
+    virtual bool Update(float dt)
+    {
+        return true;
+    }
+    virtual bool Update(float dt, int minId, int maxId)
+    {
+        return true;
+    }
 
-	// Blit
-	virtual bool Draw() const
-	{
-		return true;
-	}
+    // Blit
+    virtual bool Draw() const
+    {
+        return true;
+    }
 
-	// Sets texture
-	void SetTexture(SDL_Texture* tex)
-	{
-		texture = tex;
-	}
+    // Sets texture
+    void SetTexture(SDL_Texture* tex)
+    {
+        texture = tex;
+    }
 
-	// Sets all fonts used in gui
-	void SetFonts(Font* defaultId)
-	{
-		guiFont = defaultId;
-	}
+    // Sets all fonts used in gui
+    void SetFonts(Font* defaultId)
+    {
+        guiFont = defaultId;
+    }
 
-	void SetSounds(int hoverSoundId, int clickSoundId)
-	{
-		hover = hoverSoundId;
-		click = clickSoundId;
-	}
+    void SetSounds(int hoverSoundId, int clickSoundId)
+    {
+        hover = hoverSoundId;
+        click = clickSoundId;
+    }
 
-	// Sets the gui control observer
-	void SetObserver(Scene* scene)
-	{
-		observer = scene;
-	}
+    // Sets the gui control observer
+    void SetObserver(Scene* scene)
+    {
+        observer = scene;
+    }
 
-	// Notifies the gui control observer
-	void NotifyObserver()
-	{
-		observer->OnGuiMouseClickEvent(this);
-	}
+    // Notifies the gui control observer
+    void NotifyObserver()
+    {
+        observer->OnGuiMouseClickEvent(this);
+    }
 
 public:
-	uint32 id;
-	GuiControlType type;
-	GuiControlState state;
-	SString text;
-	int textSize;
-	int offsetText;
+    uint32 id = 0;
+    GuiControlType type = GuiControlType::NONE;
+    GuiControlState state = GuiControlState::NORMAL;
+    SString text;
+    int textSize = 0;
+    int offsetText = 0;
 
-	// Position and size
-	SDL_Rect bounds;
+    // Position and size
+    SDL_Rect bounds = { 0,0,0,0 };
 
 	// Texture atlas reference
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 	SDL_Color white;
 	SDL_Color black;
 
 	// Fonts
-	Font* guiFont;
+	Font* guiFont = nullptr;
 
 	// Sounds
-	int click;
-	int hover;
+	int click = -1;
+	int hover = -1;
 
 	// Observer scene
-	Scene* observer;
+	Scene* observer = nullptr;
 };
 
 #endif // __GUICONTROL_H__

@@ -56,7 +56,7 @@ public:
 	int loopCount = 0;
 	bool loop = true;
 	float speed = 1.0f;
-	SDL_Rect frames[MAX_FRAMES];
+    SDL_Rect frames[MAX_FRAMES];
 };
 
 #endif //__ANIMATION_H__

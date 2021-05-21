@@ -38,7 +38,7 @@ public:
 	SString folderAudio;
 	SString folderFonts;
 
-	SDL_Texture* atlas;
+	SDL_Texture* atlas = nullptr;
 
 	// Fonts & sounds
 

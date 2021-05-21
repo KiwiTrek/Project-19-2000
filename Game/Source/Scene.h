@@ -7,15 +7,16 @@
 
 class Font;
 
-enum SceneType
+enum class SceneType
 {
+    NONE,
 	LOGO,
 	TITLE_SCREEN,
 	GAMEPLAY,
 	ENDING
 };
 
-enum CombatStateType
+enum class CombatStateType
 {
 	COMBAT_START,
 	COMBAT_MIDGAME,
@@ -34,6 +35,9 @@ public:
 		usingGamepad = false;
 		inMenu = false;
 		changeMenu = false;
+        combatState = CombatStateType::COMBAT_START;
+        currentScene = SceneType::NONE;
+        nextScene = SceneType::NONE;
 	}
 
 	virtual bool Load()

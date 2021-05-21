@@ -26,161 +26,161 @@ Collisions::Collisions()
 		colliders[i] = nullptr;
 	}
 
-	matrix[Collider::Type::AIR][Collider::Type::AIR] = false;
-	matrix[Collider::Type::AIR][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::AIR][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::AIR][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::AIR][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::AIR][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::AIR][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::AIR][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::AIR][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::AIR][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::AIR][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::AIR][Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::PLAYER] = false;
 
-	matrix[Collider::Type::SOLID][Collider::Type::AIR] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::SOLID][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::DOOR][Collider::Type::AIR] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::DOOR][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::PUZZLE][Collider::Type::AIR] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::PUZZLE][Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::PLAYER] = false;
 
-	matrix[Collider::Type::BUTTON][Collider::Type::AIR] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::MOVEABLE] = true;
-	matrix[Collider::Type::BUTTON][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::BUTTON][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::MOVEABLE] = true;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::MOVEABLE][Collider::Type::AIR] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::BUTTON] = true;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::MOVEABLE] = true;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::MOVEABLE][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::BUTTON] = true;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::MOVEABLE] = true;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::OTHER][Collider::Type::AIR] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::OTHER][Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::PLAYER] = false;
 
-	matrix[Collider::Type::EVENT][Collider::Type::AIR] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::EVENT][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::AIR] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::ENEMY_SPAWN][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::AIR] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::INTERACTABLE][Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::PLAYER] = true;
 
-	matrix[Collider::Type::DEBUG][Collider::Type::AIR] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::SOLID] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::DOOR] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::BUTTON] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::MOVEABLE] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::EVENT] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::ENEMY_SPAWN] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::INTERACTABLE] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::DEBUG][Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::PLAYER] = false;
 
-	matrix[Collider::Type::PLAYER][Collider::Type::AIR] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::SOLID] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::DOOR] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::PUZZLE] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::BUTTON] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::MOVEABLE] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::OTHER] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::EVENT] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::ENEMY_SPAWN] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::INTERACTABLE] = true;
-	matrix[Collider::Type::PLAYER][Collider::Type::DEBUG] = false;
-	matrix[Collider::Type::PLAYER][Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::SOLID] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::DOOR] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::BUTTON] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::MOVEABLE] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::EVENT] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::ENEMY_SPAWN] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::INTERACTABLE] = true;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::PLAYER] = false;
 }
 
 Collisions::~Collisions()
@@ -206,21 +206,17 @@ bool Collisions::Start()
 	SString tmp("%s%s", folderAudioFx.GetString(), "Save.wav");
 	saveFx = app->audio->LoadFx(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Toilet.wav");
-	toiletFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp1("%s%s", folderAudioFx.GetString(), "Toilet.wav");
+	toiletFx = app->audio->LoadFx(tmp1.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "TutorialWarp.wav");
-	tutorialWarpFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp2("%s%s", folderAudioFx.GetString(), "TutorialWarp.wav");
+	tutorialWarpFx = app->audio->LoadFx(tmp2.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Door.wav");
-	doorFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp3("%s%s", folderAudioFx.GetString(), "Door.wav");
+	doorFx = app->audio->LoadFx(tmp3.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "WakingUp.wav");
-	wakingUpFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp4("%s%s", folderAudioFx.GetString(), "WakingUp.wav");
+	wakingUpFx = app->audio->LoadFx(tmp4.GetString());
 
 	return true;
 }
@@ -261,7 +257,7 @@ bool Collisions::PreUpdate()
 
 			c2 = colliders[k];
 
-			if (c1->Intersects(c2->rect) && matrix[c1->type][c2->type])
+			if (c1->Intersects(c2->rect) && matrix[(uint)c1->type][(uint)c2->type])
 			{
 				if (c1->listener)
 				{
@@ -346,8 +342,8 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 
 			SDL_Rect tileRect = { tileWorldPos.x,tileWorldPos.y,app->map->data.tileWidth,app->map->data.tileHeight };
 			//LOG("Tile Pos = %d %d", tilePos.x, tilePos.y);
-			if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::SOLID
-				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::SOLID)
+			if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == (uint)Collider::Type::SOLID
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::SOLID)
 				&& collider->Intersects(tileRect))
 			{
 				int changes = 0;
@@ -374,8 +370,8 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				if (changes != 0) return ResolveCollisions(collider, nextFrame, dt);
 				//if (difference != iPoint(0, 0)) return ResolveCollisions(collider, nextFrame, dt);
 			}
-			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::DOOR
-				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::DOOR)
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == (uint)Collider::Type::DOOR
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::DOOR)
 				&& collider->Intersects(tileRect))
 			{
 				if (app->map->data.name == "tutorial.tmx")
@@ -822,8 +818,8 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 				}
 			}
-			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::ENEMY_SPAWN
-				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::ENEMY_SPAWN)
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == (uint)Collider::Type::ENEMY_SPAWN
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::ENEMY_SPAWN)
 				&& collider->Intersects(tileRect) && !app->scene->current->combat)
 			{
 				if (difference != iPoint(0, 0)) app->scene->current->combatCooldown -= dt;
@@ -839,8 +835,8 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 
 				}
 			}
-			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::EVENT
-				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::EVENT)
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == (uint)Collider::Type::EVENT
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::EVENT)
 				&& collider->Intersects(tileRect) && !app->scene->current->combat)
 			{
 				if (app->map->data.name == "tutorial.tmx")
@@ -875,8 +871,8 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 					}
 				}
 			}
-			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == Collider::Type::INTERACTABLE
-				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == Collider::Type::INTERACTABLE)
+			else if ((app->map->GetTileProperty(tilePos.x, tilePos.y, "CollisionId") == (uint)Collider::Type::INTERACTABLE
+				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::INTERACTABLE)
 				&& collider->Intersects(tileRect) && !app->scene->current->combat)
 			{
 				if (app->map->data.name == "home.tmx")

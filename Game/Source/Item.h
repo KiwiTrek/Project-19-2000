@@ -18,12 +18,12 @@ public:
 	void UpdateCountText();
 
 public:
-	ItemId id;
+	ItemId id = ItemId::NONE;
 	Attack effect;
 	SString countText;
-	int count;
+	int count = 0;
 	SDL_Rect texSec = { 288,416,32,32 };
-	GuiControl* button;
+	GuiControl* button = nullptr;
 };
 
 class ItemEntity : public Entity

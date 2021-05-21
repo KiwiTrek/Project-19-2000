@@ -44,6 +44,7 @@ public:
 
 	SString(const char *format, ...)
 	{
+        str = nullptr;
 		size = 0;
 
 		if(format != NULL)
@@ -141,6 +142,7 @@ public:
 		else
 			Clear();
 
+        if (str != 0)
 		strcpy_s(str, size, string.str);
 
 		return(*this);
@@ -346,8 +348,11 @@ public:
 				RELEASE_ARRAY(tmp);
 			}
 
-			strncpy_s(buffer.str, s, &str[start], s);
-			buffer.str[s] = '\0';
+            if (buffer.str != 0)
+            {
+                strncpy_s(buffer.str, s, &str[start], s);
+                buffer.str[s] = '\0';
+            }
 
 			return(end - start);
 		}

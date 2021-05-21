@@ -21,6 +21,51 @@ SceneTitleScreen::SceneTitleScreen()
 	for (int i = 0; i != 8; ++i) noose.PushBack({ i * 301,0,301,670 });
 	white = { 255,255,255,255 };
 	flags = 0;
+    nooseBG = nullptr;
+    titleCard = nullptr;
+    titleCardPos = {0,0,0,0};
+    titleAlpha = 0.0f;
+    onceFx = false;
+
+    btnStart = nullptr;
+    btnContinue = nullptr;
+    btnOptions = nullptr;
+    btnExit = nullptr;
+
+    //OPTIONS                      
+    sldrVolume = nullptr;
+    sldrFx = nullptr;
+    boxFullScreen = nullptr;
+    boxVSync = nullptr;
+    btnControls = nullptr;
+    btnBack = nullptr;
+
+    //CONTROLS                      
+    btnKeySelect = nullptr;
+    btnKeyCancel = nullptr;
+    btnKeyMenu = nullptr;
+    btnKeyQuest = nullptr;
+    btnKeyUp = nullptr;
+    btnKeyDown = nullptr;
+    btnKeyLeft = nullptr;
+    btnKeyRight = nullptr;
+    btnBack2 = nullptr;
+    btnPadSelect = nullptr;
+    btnPadCancel = nullptr;
+    btnPadMenu = nullptr;
+    btnPadQuest = nullptr;
+    btnPadUp = nullptr;
+    btnPadDown = nullptr;
+    btnPadLeft = nullptr;
+    btnPadRight = nullptr;
+
+    //FONTS
+    buttonFont = nullptr;
+
+    //SOUND
+    titleFx = -1;
+
+    flags = 0;
 }
 
 SceneTitleScreen::~SceneTitleScreen()
@@ -32,17 +77,14 @@ bool SceneTitleScreen::Load()
 	SString tmp("%s%s", app->scene->folderTexture.GetString(), "NooseBG.png");
 	nooseBG = app->tex->Load(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderTexture.GetString(), "TitleCard.png");
-	titleCard = app->tex->Load(tmp.GetString());
+	SString tmp1("%s%s", app->scene->folderTexture.GetString(), "TitleCard.png");
+	titleCard = app->tex->Load(tmp1.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
-	buttonFont = new Font(tmp.GetString());
+	SString tmp2("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
+	buttonFont = new Font(tmp2.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "TitleFX.wav");
-	titleFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp3("%s%s", app->scene->folderAudioFx.GetString(), "TitleFX.wav");
+	titleFx = app->audio->LoadFx(tmp3.GetString());
 
 	app->audio->SetMusicVolume(app->audio->auxVolume);
 	app->audio->PlayMusic("Audio/Music/Title.ogg");

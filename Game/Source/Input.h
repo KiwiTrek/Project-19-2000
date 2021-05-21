@@ -67,24 +67,24 @@ struct GamePad
 	//bool up, down, left, right;
 	//bool l2, r2;
 	//bool l_x, l_y, r_x, r_y;
-	float l2_dz, r2_dz, l_dz, r_dz;
+	float l2_dz = 0.0f, r2_dz = 0.0f, l_dz = 0.0f, r_dz = 0.0f;
 
 	//Controller data
 	bool enabled = false;
-	int index;
-	_SDL_GameController* controller;
-	_SDL_Haptic* haptic;
+	int index = 0;
+	_SDL_GameController* controller = nullptr;
+	_SDL_Haptic* haptic = nullptr;
 
 	//Rumble controller
-	int rumble_countdown;
-	float rumble_strength;
+	int rumble_countdown = 0;
+	float rumble_strength = 0.0f;
 };
 
 struct InputButton
 {
 	SString name;
-	int keyId;
-	int gamePadId;
+	int keyId = 0;
+	int gamePadId = 0;
 };
 
 class Input : public Module
@@ -122,7 +122,6 @@ public:
 
 	bool CheckButton(const char* c, KeyState state) const
 	{
-		int padId, keyId;
 		ListItem<InputButton*>* b = controlConfig.start;
 		while (b != nullptr)
 		{

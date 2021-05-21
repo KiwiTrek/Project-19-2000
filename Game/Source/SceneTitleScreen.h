@@ -9,78 +9,78 @@
 class SceneTitleScreen : public Scene
 {
 public:
-	enum Flags
-	{
-		OPTIONS,
-		CONTROLS
-	};
+    enum Flags
+    {
+        OPTIONS,
+        CONTROLS
+    };
 
-	SceneTitleScreen();
-	virtual ~SceneTitleScreen();
+    SceneTitleScreen();
+    virtual ~SceneTitleScreen();
 
-	bool Load();
+    bool Load();
 
-	bool Update(float dt);
+    bool Update(float dt);
 
-	bool Draw();
+    bool Draw();
 
-	bool Unload();
+    bool Unload();
 
-	// Declare on mouse click event
-	bool OnGuiMouseClickEvent(GuiControl* control);
+    // Declare on mouse click event
+    bool OnGuiMouseClickEvent(GuiControl* control);
 
 
 private:
 
-	SDL_Texture* nooseBG;
-	SDL_Texture* titleCard;
-	SDL_Rect titleCardPos;
-	SDL_Color white;
-	float titleAlpha;
-	bool onceFx;
+    SDL_Texture* nooseBG = nullptr;
+    SDL_Texture* titleCard = nullptr;
+    SDL_Rect titleCardPos;
+    SDL_Color white;
+    float titleAlpha = 0.0f;
+    bool onceFx = false;
 
-	Animation noose;
+    Animation noose;
 
-	//MAIN MENU
-	GuiButton* btnStart;
-	GuiButton* btnContinue;
-	GuiButton* btnOptions;
-	GuiButton* btnExit;
+    //MAIN MENU
+    GuiButton* btnStart = nullptr;
+    GuiButton* btnContinue = nullptr;
+    GuiButton* btnOptions = nullptr;
+    GuiButton* btnExit = nullptr;
 
-	//OPTIONS
-	GuiSlider* sldrVolume;
-	GuiSlider* sldrFx;
-	GuiCheckBox* boxFullScreen;
-	GuiCheckBox* boxVSync;
-	GuiButton* btnControls;
-	GuiButton* btnBack;
+    //OPTIONS                      
+    GuiSlider* sldrVolume = nullptr;
+    GuiSlider* sldrFx = nullptr;
+    GuiCheckBox* boxFullScreen = nullptr;
+    GuiCheckBox* boxVSync = nullptr;
+    GuiButton* btnControls = nullptr;
+    GuiButton* btnBack = nullptr;
 
-	//CONTROLS
-	GuiButton* btnKeySelect;
-	GuiButton* btnKeyCancel;
-	GuiButton* btnKeyMenu;
-	GuiButton* btnKeyQuest;
-	GuiButton* btnKeyUp;
-	GuiButton* btnKeyDown;
-	GuiButton* btnKeyLeft;
-	GuiButton* btnKeyRight;
-	GuiButton* btnBack2;
-	GuiButton* btnPadSelect;
-	GuiButton* btnPadCancel;
-	GuiButton* btnPadMenu;
-	GuiButton* btnPadQuest;
-	GuiButton* btnPadUp;
-	GuiButton* btnPadDown;
-	GuiButton* btnPadLeft;
-	GuiButton* btnPadRight;
+    //CONTROLS                      
+    GuiButton* btnKeySelect = nullptr;
+    GuiButton* btnKeyCancel = nullptr;
+    GuiButton* btnKeyMenu = nullptr;
+    GuiButton* btnKeyQuest = nullptr;
+    GuiButton* btnKeyUp = nullptr;
+    GuiButton* btnKeyDown = nullptr;
+    GuiButton* btnKeyLeft = nullptr;
+    GuiButton* btnKeyRight = nullptr;
+    GuiButton* btnBack2 = nullptr;
+    GuiButton* btnPadSelect = nullptr;
+    GuiButton* btnPadCancel = nullptr;
+    GuiButton* btnPadMenu = nullptr;
+    GuiButton* btnPadQuest = nullptr;
+    GuiButton* btnPadUp = nullptr;
+    GuiButton* btnPadDown = nullptr;
+    GuiButton* btnPadLeft = nullptr;
+    GuiButton* btnPadRight = nullptr;
 
-	//FONTS
-	Font* buttonFont = nullptr;
+    //FONTS
+    Font* buttonFont = nullptr;
 
-	//SOUND
-	int titleFx;
+    //SOUND
+    int titleFx = -1;
 
-	unsigned char flags;
+    unsigned char flags = 0;
 };
 
 #endif // __SCENETITLE_H__

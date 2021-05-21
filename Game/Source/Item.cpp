@@ -118,7 +118,11 @@ Item::Item(ItemId id, Attack effect, int count) : id(id), effect(effect), count(
 }
 
 Item::Item()
-{}
+{
+    this->button = nullptr;
+    this->count = 0;
+    this->id = ItemId::NONE;
+}
 
 void Item::Use(CombatEntity* target)
 {

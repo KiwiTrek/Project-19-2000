@@ -85,14 +85,17 @@ struct TileSet
 struct MapLayer
 {
 	SString	name;
-	int width;
-	int height;
-	uint* data;
+	int width = 0;
+	int height = 0;
+	uint* data = nullptr;
 	Properties properties;
 
 	// Constructor
 	MapLayer() : data(NULL)
-	{}
+    {
+        this->width = 0;
+        this->height = 0;
+    }
 
 	// Destructor
 	~MapLayer()
@@ -111,10 +114,10 @@ struct MapLayer
 struct MapData
 {
 	SString name;
-	int width;
-	int height;
-	int tileWidth;
-	int tileHeight;
+	int width = 0;
+	int height = 0;
+	int tileWidth = 0;
+	int tileHeight = 0;
 	SDL_Color backgroundColor;
 	MapTypes type = MAPTYPE_UNKNOWN;
 	List<TileSet*> tileSets;

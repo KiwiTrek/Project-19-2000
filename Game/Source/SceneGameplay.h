@@ -146,6 +146,7 @@ private:
 	//STATE FLAGS
 	int flags;
 	int statFlags;
+    bool onceStatsFx;
 
 	//DIALOG
 	DialogSystem* dialogSystem = nullptr;

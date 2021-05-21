@@ -115,12 +115,11 @@ private:
 	List<Quest*> questsActive;
 	List<Quest*> questsFinished;
 
-	Font* font;
-	SDL_Texture *bookTex;
-	SDL_Rect bookBox;
+	Font* font = nullptr;
+	SDL_Texture *bookTex = nullptr;
+    SDL_Rect bookBox = { 0,0,0,0 };
 
 };
 
 
 #endif
-

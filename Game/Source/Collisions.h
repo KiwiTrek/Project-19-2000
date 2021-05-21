@@ -11,7 +11,7 @@ class Collider
 {
 public:
 	// Collision Type enum
-	enum Type
+	enum class Type
 	{
 		NONE = -1,
 		AIR,
@@ -89,7 +89,7 @@ private:
 
 	// The collision matrix. Defines the interaction for two collider types
 	// If set to false, collider 1 will ignore collider 2
-	bool matrix[Collider::Type::MAX][Collider::Type::MAX];
+	bool matrix[(uint)Collider::Type::MAX][(uint)Collider::Type::MAX];
 
 	bool onceNightmare;
 	bool saveOnce;

@@ -80,7 +80,19 @@ public:
 	{}
 
 	Stats()
-	{}
+	{
+        pAtk = 0;
+        mAtk = 0;
+        pDef = 0;
+        mDef = 0;
+        hPoints = 1;
+        hPointsMax = 1;
+        speed = 0;
+        mPoints = 1;
+        mPointsMax = 1;
+        stress = 0;
+        stressMax = 0;
+    }
 
 public:
 	int pAtk, mAtk, pDef, mDef, hPoints, hPointsMax, speed, mPoints, mPointsMax, stress, stressMax; // stress is only for MC
@@ -98,7 +110,12 @@ public:
 	}
 
 	Attack()
-	{}
+	{
+        attackName.Clear();
+        turns = -1;
+        beforeBuff1 = -1;
+        beforeBuff2 = -1;
+    }
 
 public:
 	SString attackName;
@@ -111,10 +128,19 @@ class Entity
 public:
 	// Constructor
 	Entity(int x, int y, EntityType type, EntityId id, Stats stats/*, EnemyType eType = EnemyType::NO_TYPE*/) : type(type), id(id), stats(stats)/*, eType(eType)*/
-	{}
+	{
+        collider = nullptr;
+        destroyedFx = -1;
+        entityRect = { 0,0,0,0 };
+    }
 
 	Entity(int x, int y, EntityType type) : type(type)
-	{}
+	{
+        collider = nullptr;
+        destroyedFx = -1;
+        entityRect = { 0,0,0,0 };
+        id = EntityId::NOT_COMBAT;
+    }
 
 	// Called each loop iteration
 	virtual bool Update(float dt)

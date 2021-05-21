@@ -38,6 +38,7 @@ Player::Player(int x, int y, int footstepFx) : Entity(x, y, EntityType::PLAYER)
 
 	pendingToDelete = false;
 	godMode = false;
+    inDialog = false;
 
 	// Animation
 	

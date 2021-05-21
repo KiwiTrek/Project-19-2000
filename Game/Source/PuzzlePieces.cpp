@@ -318,7 +318,7 @@ bool PuzzlePieces::CheckUp()
 		}
 		e = e->next;
 	}
-	if (app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) - 1, "CollisionId") == Collider::Type::PUZZLE || app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) - 1, "CollisionId") == Collider::Type::MOVEABLE)
+	if (app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) - 1, "CollisionId") == (int)Collider::Type::PUZZLE || app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) - 1, "CollisionId") == (int)Collider::Type::MOVEABLE)
 	{
 		return true;
 	}
@@ -339,7 +339,7 @@ bool PuzzlePieces::CheckDown()
 		}
 		e = e->next;
 	}
-	if (app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) + 1, "CollisionId") == Collider::Type::PUZZLE)
+	if (app->map->GetTileProperty((entityRect.x / 64), (entityRect.y / 64) + 1, "CollisionId") == (int)Collider::Type::PUZZLE)
 	{
 		return true;
 	}
@@ -360,7 +360,7 @@ bool PuzzlePieces::CheckLeft()
 		}
 		e = e->next;
 	}
-	if (app->map->GetTileProperty((entityRect.x / 64) - 1, (entityRect.y / 64), "CollisionId") == Collider::Type::PUZZLE)
+	if (app->map->GetTileProperty((entityRect.x / 64) - 1, (entityRect.y / 64), "CollisionId") == (int)Collider::Type::PUZZLE)
 	{
 		return true;
 	}
@@ -381,7 +381,7 @@ bool PuzzlePieces::CheckRight()
 		}
 		e = e->next;
 	}
-	if (app->map->GetTileProperty((entityRect.x / 64) + 1, (entityRect.y / 64), "CollisionId") == Collider::Type::PUZZLE)
+	if (app->map->GetTileProperty((entityRect.x / 64) + 1, (entityRect.y / 64), "CollisionId") == (int)Collider::Type::PUZZLE)
 	{
 		return true;
 	}

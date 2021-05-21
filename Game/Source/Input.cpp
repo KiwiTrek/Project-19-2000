@@ -15,8 +15,8 @@ Input::Input() : Module()
 
 	keyboard = new KeyState[MAX_KEYS];
 	gamePad = new KeyState[NUM_PAD_BUTTONS];
-	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
-	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
+	memset(keyboard, KeyState::KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
+	memset(mouseButtons, KeyState::KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 	memset(gamePad, 0, sizeof(KeyState) * NUM_PAD_BUTTONS);
 }
 

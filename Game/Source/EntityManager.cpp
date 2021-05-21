@@ -65,65 +65,53 @@ bool EntityManager::Start()
 	SString tmp("%s%s", folderTexture.GetString(), "Characters/MCSpriteSheet.png");
 	playerTex = app->tex->Load(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "Characters/GrandpaSpriteSheet.png");
-	grandpaTex = app->tex->Load(tmp.GetString());
+    SString tmp1("%s%s", folderTexture.GetString(), "Characters/GrandpaSpriteSheet.png");
+	grandpaTex = app->tex->Load(tmp1.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "Characters/NPCs.png");
-	NPCTex = app->tex->Load(tmp.GetString());
+	SString tmp2("%s%s", folderTexture.GetString(), "Characters/NPCs.png");
+	NPCTex = app->tex->Load(tmp2.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
-	enemiesTex = app->tex->Load(tmp.GetString());
+	SString tmp3("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
+	enemiesTex = app->tex->Load(tmp3.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderMap.GetString(), "tutorial_tileset.png");
-	puzzleTex = app->tex->Load(tmp.GetString());
+	SString tmp4("%s%s", folderMap.GetString(), "tutorial_tileset.png");
+	puzzleTex = app->tex->Load(tmp4.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderTexture.GetString(), "GUI/Items.png");
-	itemAtlas = app->tex->Load(tmp.GetString());
+	SString tmp5("%s%s", folderTexture.GetString(), "GUI/Items.png");
+	itemAtlas = app->tex->Load(tmp5.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Cat.wav");
-	interactCat = app->audio->LoadFx(tmp.GetString());
+	SString tmp6("%s%s", folderAudioFx.GetString(), "Cat.wav");
+	interactCat = app->audio->LoadFx(tmp6.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Grandpa.wav");
-	interactGrandpa = app->audio->LoadFx(tmp.GetString());
+	SString tmp7("%s%s", folderAudioFx.GetString(), "Grandpa.wav");
+	interactGrandpa = app->audio->LoadFx(tmp7.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Hero.wav");
-	interactHero = app->audio->LoadFx(tmp.GetString());
+	SString tmp8("%s%s", folderAudioFx.GetString(), "Hero.wav");
+	interactHero = app->audio->LoadFx(tmp8.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Shop.wav");
-	interactShop = app->audio->LoadFx(tmp.GetString());
+	SString tmp9("%s%s", folderAudioFx.GetString(), "Shop.wav");
+	interactShop = app->audio->LoadFx(tmp9.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Footstep.wav");
-	footstepFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp10("%s%s", folderAudioFx.GetString(), "Footstep.wav");
+	footstepFx = app->audio->LoadFx(tmp10.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Item.wav");
-	itemFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp11("%s%s", folderAudioFx.GetString(), "Item.wav");
+	itemFx = app->audio->LoadFx(tmp11.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "ItemCollected.wav");
-	itemCollectedFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp12("%s%s", folderAudioFx.GetString(), "ItemCollected.wav");
+	itemCollectedFx = app->audio->LoadFx(tmp12.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Rock.wav");
-	rockFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp13("%s%s", folderAudioFx.GetString(), "Rock.wav");
+	rockFx = app->audio->LoadFx(tmp13.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "IceRock.wav");
-	iceRockFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp14("%s%s", folderAudioFx.GetString(), "IceRock.wav");
+	iceRockFx = app->audio->LoadFx(tmp14.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", folderAudioFx.GetString(), "Solved.wav");
-	solvedFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp15("%s%s", folderAudioFx.GetString(), "Solved.wav");
+	solvedFx = app->audio->LoadFx(tmp15.GetString());
+
+    SString tmp16("%s%s", folderAudioFx.GetString(), "MC.wav");
+    playerFx = app->audio->LoadFx(tmp16.GetString());
 
 	doLogic = true;
 
@@ -178,6 +166,7 @@ bool EntityManager::CleanUp()
 	app->audio->UnloadFx(rockFx);
 	app->audio->UnloadFx(iceRockFx);
 	app->audio->UnloadFx(solvedFx);
+    app->audio->UnloadFx(playerFx);
 
 	itemPasser.Clear();
 

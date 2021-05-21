@@ -29,9 +29,8 @@ bool SceneLogo::Load()
 	SString tmp("%s%s", app->scene->folderTexture.GetString(), "Logo.png");
 	logo = app->tex->Load(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "LogoFX.wav");
-	logoFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp1("%s%s", app->scene->folderAudioFx.GetString(), "LogoFX.wav");
+	logoFx = app->audio->LoadFx(tmp1.GetString());
 
 	pos.x = -500;
 	pos.y = app->win->screenSurface->h / 2 - 250;

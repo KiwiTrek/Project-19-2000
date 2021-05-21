@@ -21,6 +21,7 @@ SceneCombat::SceneCombat()
 	flags = 0;
 	white = { 255,255,255,255 };
 
+    transitionTx = nullptr;
 	for (int i = 0; i != 27; ++i)
 	{
 		transition.PushBack({ 600 * i, 0, 600, 338 });
@@ -28,9 +29,15 @@ SceneCombat::SceneCombat()
 	transition.loop = false;
 	transition.speed = 10.0f;
 
+    combatTextBox = { 0,0,0,0 };
+    combatMenuBox = { 0,0,0,0 };
+    arrowCombat = { 0,0,0,0 };
+
 	characterFlags = 0;
 	characterFlags = SetBit(characterFlags, (uint)EntityId::MC);
 	characterFlags = SetBit(characterFlags, (uint)EntityId::VIOLENT);
+
+    currentEntity = nullptr;
 }
 
 SceneCombat::~SceneCombat()
@@ -44,73 +51,56 @@ bool SceneCombat::Load()
 	SString tmp("%s%s", app->scene->folderTexture.GetString(), "GUI/combatGui.png");
 	combatGui = app->tex->Load(tmp.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderTexture.GetString(), "BattleTransition.png");
-	transitionTx = app->tex->Load(tmp.GetString());
+	SString tmp1("%s%s", app->scene->folderTexture.GetString(), "BattleTransition.png");
+	transitionTx = app->tex->Load(tmp1.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Smack.wav");
-	smackFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp2("%s%s", app->scene->folderAudioFx.GetString(), "Smack.wav");
+	smackFx = app->audio->LoadFx(tmp2.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Slap.wav");
-	slapFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp3("%s%s", app->scene->folderAudioFx.GetString(), "Slap.wav");
+	slapFx = app->audio->LoadFx(tmp3.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Confort.wav");
-	confortFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp4("%s%s", app->scene->folderAudioFx.GetString(), "Confort.wav");
+	confortFx = app->audio->LoadFx(tmp4.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Speech.wav");
-	speechFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp5("%s%s", app->scene->folderAudioFx.GetString(), "Speech.wav");
+	speechFx = app->audio->LoadFx(tmp5.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Smite.wav");
-	smiteFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp6("%s%s", app->scene->folderAudioFx.GetString(), "Smite.wav");
+	smiteFx = app->audio->LoadFx(tmp6.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "MagicBlow.wav");
-	magicBlowFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp7("%s%s", app->scene->folderAudioFx.GetString(), "MagicBlow.wav");
+	magicBlowFx = app->audio->LoadFx(tmp7.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "MagicBarrage.wav");
-	magicBarrageFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp8("%s%s", app->scene->folderAudioFx.GetString(), "MagicBarrage.wav");
+	magicBarrageFx = app->audio->LoadFx(tmp8.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "MagicSlap.wav");
-	magicSlapFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp9("%s%s", app->scene->folderAudioFx.GetString(), "MagicSlap.wav");
+	magicSlapFx = app->audio->LoadFx(tmp9.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Stare.wav");
-	stareFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp10("%s%s", app->scene->folderAudioFx.GetString(), "Stare.wav");
+	stareFx = app->audio->LoadFx(tmp10.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Stronger.wav");
-	strongerFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp11("%s%s", app->scene->folderAudioFx.GetString(), "Stronger.wav");
+	strongerFx = app->audio->LoadFx(tmp11.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Blades.wav");
-	bladesFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp12("%s%s", app->scene->folderAudioFx.GetString(), "Blades.wav");
+	bladesFx = app->audio->LoadFx(tmp12.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Stress.wav");
-	stressFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp13("%s%s", app->scene->folderAudioFx.GetString(), "Stress.wav");
+	stressFx = app->audio->LoadFx(tmp13.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "BadDream.wav");
-	badDreamFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp14("%s%s", app->scene->folderAudioFx.GetString(), "BadDream.wav");
+	badDreamFx = app->audio->LoadFx(tmp14.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "CloseEyes.wav");
-	closeEyesFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp15("%s%s", app->scene->folderAudioFx.GetString(), "CloseEyes.wav");
+	closeEyesFx = app->audio->LoadFx(tmp15.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Dead.wav");
-	deadFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp16("%s%s", app->scene->folderAudioFx.GetString(), "Dead.wav");
+	deadFx = app->audio->LoadFx(tmp16.GetString());
 
-	tmp.Clear();
-	tmp.Create("%s%s", app->scene->folderAudioFx.GetString(), "Grasp.wav");
-	graspFx = app->audio->LoadFx(tmp.GetString());
+	SString tmp17("%s%s", app->scene->folderAudioFx.GetString(), "Grasp.wav");
+	graspFx = app->audio->LoadFx(tmp17.GetString());
 
 	waitForTransition = TransitionStatus::NONE;
 	scripted = false;
@@ -288,7 +278,7 @@ bool SceneCombat::Update(float dt)
 
 			switch (combatState)
 			{
-			case COMBAT_START:
+            case CombatStateType::COMBAT_START:
 			{
 				//CHECK WHO IS FIRST
 				ListItem<Entity*>* e = app->entities->entities.start;
@@ -308,7 +298,7 @@ bool SceneCombat::Update(float dt)
 				combatState = CombatStateType::COMBAT_MIDGAME;
 			}
 			break;
-			case COMBAT_MIDGAME:
+            case CombatStateType::COMBAT_MIDGAME:
 			{
 				if (currentEntity == nullptr)
 				{
@@ -808,7 +798,7 @@ bool SceneCombat::Update(float dt)
 				}
 			}
 			break;
-			case COMBAT_END:
+			case CombatStateType::COMBAT_END:
 			{
 				if (enemy1 != nullptr) enemiesCount++;
 				if (enemy2 != nullptr) enemiesCount++;
@@ -1828,6 +1818,7 @@ SDL_Rect SceneCombat::SkillSec(int i, EntityId id)
 			return { 128,416,32,32 };
 			break;
 		default:
+            return { 0,0,32,32 };
 			break;
 		}
 		break;
@@ -1847,10 +1838,12 @@ SDL_Rect SceneCombat::SkillSec(int i, EntityId id)
 			return { 0,192,32,32 };
 			break;
 		default:
+            return { 0,192,32,32 };
 			break;
 		}
 		break;
 	default:
+        return { 0,0,32,32 };
 		break;
 	}
 }
