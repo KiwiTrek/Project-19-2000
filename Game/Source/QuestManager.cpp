@@ -223,7 +223,7 @@ bool QuestManager::CheckQuestsLogic()
 
 	// Quest 3: Fight
 	// It appears when completing quest 2
-	if (firstCombatWon)
+	if (((boolFlags & BoolFlags::FIRSTCOMBAT) != 0))
 		CompleteQuest(3);
 
 	// Quest 4: Big puzzle
@@ -234,19 +234,19 @@ bool QuestManager::CheckQuestsLogic()
 
 	// Quest 5: Labyrinth
 	// It appears when completing quest 4
-	if (escapedLabyrinth)
+	if ((boolFlags & BoolFlags::ESCAPEDLABYRINTH) != 0)
 		CompleteQuest(5);
 
 	// Quest 6: Boss fight
-	if (escapedLabyrinth && ((tpFlags & TpFlags::BOSS_FIGHT) != 0))
+	if (((boolFlags & BoolFlags::FIRSTBOSS) != 0) && ((tpFlags & TpFlags::BOSS_FIGHT) != 0))
 		AppearQuest(6);
-	if (firstBossDefeated)
+	if (((boolFlags & BoolFlags::FIRSTBOSS) != 0))
 		CompleteQuest(6);
 
 	// Quest 7: Diary
 	if (((tpFlags & TpFlags::BEDROOM) != 0))
 		AppearQuest(7);
-	if (/* Opened diary condition */ 0)
+	if ((boolFlags & BoolFlags::DIARY) != 0)
 		CompleteQuest(7);
 
 	// Quest 8: Shop visit
@@ -416,10 +416,8 @@ bool QuestManager::Save(pugi::xml_node& savegame)
 	bool ret = true;
 
 	savegame.append_attribute("tpFlags").set_value(tpFlags);
+	savegame.append_attribute("boolFlags").set_value(boolFlags);
 	savegame.append_attribute("drawQuests").set_value(drawQuests);
-	savegame.append_attribute("firstCombatWon").set_value(firstCombatWon);
-	savegame.append_attribute("escapedLabyrinth").set_value(escapedLabyrinth);
-	savegame.append_attribute("firstBossDefeated").set_value(firstBossDefeated);
 
 	ListItem<Quest*>* totalQuestsL = questsList.start;
 	while (totalQuestsL != nullptr)
@@ -480,10 +478,8 @@ bool QuestManager::Load(pugi::xml_node& savegame)
 	questsFinished.Clear();
 
 	tpFlags = savegame.attribute("tpFlags").as_uint();
+	boolFlags = savegame.attribute("boolFlags").as_uint();
 	drawQuests = savegame.attribute("drawQuests").as_bool();
-	firstCombatWon = savegame.attribute("firstCombatWon").as_bool();
-	escapedLabyrinth = savegame.attribute("escapedLabyrinth").as_bool();
-	firstBossDefeated = savegame.attribute("firstBossDefeated").as_bool();
 
 	pugi::xml_node questNode = savegame.child("quest");
 	while (questNode != NULL)

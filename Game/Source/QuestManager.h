@@ -95,14 +95,17 @@ public:
 		BATHROOM = 512,
 		KITCHEN = 1024
 	};
-
+	enum BoolFlags
+	{
+		FIRSTCOMBAT = 1,
+		ESCAPEDLABYRINTH = 2,
+		FIRSTBOSS = 4,
+		DIARY = 8
+	};
 	bool drawQuests = false;
 
 	unsigned int tpFlags = 0;
-
-	bool firstCombatWon = false;
-	bool escapedLabyrinth = false;
-	bool firstBossDefeated = false;
+	unsigned int boolFlags = 0;
 
 private:
 	int totalQuests = 0;

@@ -810,15 +810,17 @@ bool SceneCombat::Update(float dt)
 			break;
 			case COMBAT_END:
 			{
-				if (!heDed && ((app->quests->tpFlags & QuestManager::TpFlags::FIGHT) != 0))
-					app->quests->firstCombatWon = true;
-
-				if (!heDed && enemy2->id == EntityId::NIGHTMARE && ((app->quests->tpFlags & QuestManager::TpFlags::BOSS_FIGHT) != 0))
-					app->quests->firstBossDefeated = true;
-
 				if (enemy1 != nullptr) enemiesCount++;
 				if (enemy2 != nullptr) enemiesCount++;
 				if (enemy3 != nullptr) enemiesCount++;
+
+				if (!heDed && ((app->quests->tpFlags & QuestManager::TpFlags::FIGHT) != 0))
+					app->quests->boolFlags |= QuestManager::BoolFlags::FIRSTCOMBAT;
+
+				if (!heDed && (enemiesCount == 3) && (enemy2->id == EntityId::NIGHTMARE) && ((app->quests->tpFlags & QuestManager::TpFlags::BOSS_FIGHT) != 0))
+					app->quests->boolFlags |= QuestManager::BoolFlags::FIRSTBOSS;
+
+
 				Finish();
 				break;
 			}

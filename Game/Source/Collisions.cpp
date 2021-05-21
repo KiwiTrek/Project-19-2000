@@ -868,7 +868,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						break;
 
 					case 43:
-						app->quests->escapedLabyrinth = true;
+						app->quests->boolFlags |= QuestManager::BoolFlags::ESCAPEDLABYRINTH;
 						break;
 					default:
 						break;
