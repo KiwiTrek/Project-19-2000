@@ -22,6 +22,7 @@ class EntityManager;
 class Collisions;
 class GuiManager;
 class QuestManager;
+class ParticleSystem;
 
 class SceneManager;
 
@@ -108,6 +109,7 @@ public:
 	GuiManager* gui;
 
 	QuestManager* quests;
+	ParticleSystem* particles;
 
 	SceneManager* scene;
 

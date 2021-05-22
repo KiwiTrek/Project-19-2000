@@ -46,4 +46,7 @@
     <folderAudioFx>Audio/Fx/</folderAudioFx>
     <folderMap>Maps/</folderMap>
   </entityManager>
+  <particleManager>
+    <folder>Textures/</folder>
+  </particleManager>
 </config>

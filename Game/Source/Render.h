@@ -47,6 +47,7 @@ public:
 	bool DrawRectangle(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool filled = true, bool useCamera = true) const;
 	bool DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool useCamera = true) const;
 	bool DrawCircle(int x1, int y1, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool useCamera = true) const;
+	bool DrawParticle(SDL_Texture* texture, int x, int y, const SDL_Rect* section, const SDL_Rect* rectSize, SDL_Color color, SDL_BlendMode blendMode = SDL_BLENDMODE_ADD, float speed = 1.0f, double angle = 0, int pivotX = INT_MAX, int pivotY = INT_MAX) const;
 	bool DrawText(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint);
 	bool DrawTextAnimated(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint, int timeStep);
 	void CreateSpline(int* position, const int& finalPos, const float& time, const SplineType& type);	//Time in ms

@@ -297,6 +297,55 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 	return true;
 }
 
+bool Render::DrawParticle(SDL_Texture* texture, int x, int y, const SDL_Rect* section, const SDL_Rect* rectSize, SDL_Color color, SDL_BlendMode blendMode, float speed, double angle, int pivotX, int pivotY) const
+{
+	uint scale = app->win->GetScale();
+
+	SDL_Rect rect;
+	rect.x = (int)(camera.x * speed) + x * scale;
+	rect.y = (int)(camera.y * speed) + y * scale;
+
+	if (rectSize != NULL)
+	{
+		rect.w = rectSize->w;
+		rect.h = rectSize->h;
+	}
+	else if (section != NULL)
+	{
+		rect.w = section->w;
+		rect.h = section->h;
+	}
+	else
+	{
+		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+	}
+
+	rect.w *= scale;
+	rect.h *= scale;
+
+	if (SDL_SetTextureColorMod(texture, color.r, color.g, color.b) != 0)
+	{
+		LOG("Cannot set texture color mode. SDL_SetTextureColorMod error: %s", SDL_GetError());
+	}
+	if (SDL_SetTextureAlphaMod(texture, color.a) != 0)
+	{
+		LOG("Cannot set texture alpha mode. SDL_SetTextureAlphaMod error: %s", SDL_GetError());
+	}
+	if (SDL_SetTextureBlendMode(texture, blendMode) != 0)
+	{
+		LOG("Cannot set texture blend mode. SDL_SetTextureBlendMode error: %s", SDL_GetError());
+	}
+
+
+	if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, NULL, SDL_FLIP_NONE) != 0)
+	{
+		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+		return false;
+	}
+
+	return true;
+}
+
 void Render::ToggleVsync(bool vsync, Module* restart)
 {
 	app->vsync = vsync;

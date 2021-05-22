@@ -81,9 +81,6 @@
     <ClCompile Include="Source\GuiImageButton.cpp">
       <Filter>GuiControls</Filter>
     </ClCompile>
-    <ClCompile Include="Source\QuestManager.cpp">
-      <Filter>Quests</Filter>
-    </ClCompile>
     <ClCompile Include="Source\AssetsManager.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -101,6 +98,18 @@
     </ClCompile>
     <ClCompile Include="Source\CombatEntity.cpp">
       <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\QuestManager.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ParticleSystem.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Particle.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Emitter.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,9 +241,6 @@
     <ClInclude Include="Source\GuiImageButton.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\QuestManager.h">
-      <Filter>Quests</Filter>
-    </ClInclude>
     <ClInclude Include="Source\AssetsManager.h">
       <Filter>Modules</Filter>
     </ClInclude>
@@ -249,6 +255,18 @@
     </ClInclude>
     <ClInclude Include="Source\Blockers.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\QuestManager.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ParticleSystem.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Particle.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Emitter.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

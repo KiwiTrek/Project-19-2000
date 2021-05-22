@@ -100,6 +100,7 @@
     <ClCompile Include="Source\Collisions.cpp" />
     <ClCompile Include="Source\CombatEntity.cpp" />
     <ClCompile Include="Source\DialogSystem.cpp" />
+    <ClCompile Include="Source\Emitter.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\Font.cpp" />
     <ClCompile Include="Source\GuiButton.cpp" />
@@ -114,6 +115,8 @@
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\NPC.cpp" />
+    <ClCompile Include="Source\Particle.cpp" />
+    <ClCompile Include="Source\ParticleSystem.cpp" />
     <ClCompile Include="Source\PerfTimer.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PuzzlePieces.cpp" />
@@ -138,6 +141,7 @@
     <ClInclude Include="Source\DialogSystem.h" />
     <ClInclude Include="Source\DialogUtils.h" />
     <ClInclude Include="Source\Easing.h" />
+    <ClInclude Include="Source\Emitter.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\Font.h" />
@@ -150,6 +154,8 @@
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\NPC.h" />
+    <ClInclude Include="Source\Particle.h" />
+    <ClInclude Include="Source\ParticleSystem.h" />
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\PuzzlePieces.h" />

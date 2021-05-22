@@ -10,6 +10,7 @@
 #include "GuiManager.h"
 #include "DialogSystem.h"
 #include "QuestManager.h"
+#include "ParticleSystem.h"
 
 #include "SceneManager.h"
 
@@ -39,6 +40,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	gui = new GuiManager();
 
 	quests = new QuestManager();
+	particles = new ParticleSystem();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
