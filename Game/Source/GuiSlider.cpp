@@ -16,7 +16,7 @@ GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, int widthInUnits, const char* t
 	int width = widthInUnits * 54;
 	this->limits = { bounds.x, bounds.y + (bounds.h / 2), width, 5 };
 	this->bounds.y = bounds.y + (bounds.h / 4);
-	this->text = text;
+	this->text.Create(text);
 	this->state = GuiControlState::NORMAL;
 	this->offsetText = this->text.Length() * 24 + (24 * 3);
 

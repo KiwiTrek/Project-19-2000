@@ -11,7 +11,7 @@
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
 	this->bounds = bounds;
-	this->text = text;
+	this->text.Create(text);
 	this->offsetText = this->text.Length() * 20;
 
 	normal = { 0,215,300, 60 };

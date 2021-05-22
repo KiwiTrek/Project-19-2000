@@ -242,8 +242,11 @@ bool Map::LoadMap(const char* filename)
 		data.tileWidth = map.attribute("tilewidth").as_int();
 		data.tileHeight = map.attribute("tileheight").as_int();
 		SString color(map.attribute("backgroundcolor").as_string());
-		color.Trim();
-		sscanf_s(color.GetString(), "%02x%02x%02x", (uint)&data.backgroundColor.r, (uint)&data.backgroundColor.g, (uint)&data.backgroundColor.b);
+		//color.Trim();
+		//sscanf_s(color.GetString(), "%02x%02x%02x", (uint)&data.backgroundColor.r, (uint)&data.backgroundColor.g, (uint)&data.backgroundColor.b);
+		data.backgroundColor.r = 0;
+		data.backgroundColor.g = 0;
+		data.backgroundColor.b = 0;
 		data.backgroundColor.a = 255;
 	}
 	return true;

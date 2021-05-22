@@ -28,7 +28,7 @@ GuiImageButton::GuiImageButton(uint32 id, SDL_Rect bounds, const char* text, SDL
 	clickPlay = true;
 
 	itemId = ItemId::NONE;
-	count = nullptr;
+	count.Clear();
 	sec = { 288,416,32,32 };
 }
 

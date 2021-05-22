@@ -10,7 +10,7 @@
 GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::CHECKBOX, id)
 {
 	this->bounds = bounds;
-	this->text = text;
+	this->text.Create(text);
 	this->offsetText = this->text.Length() * 24 + (24 * 3);
 
 	normal = { 0,144,60, 60 };
