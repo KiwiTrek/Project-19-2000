@@ -58,7 +58,7 @@ public:
 
 	bool Update(float dt);
 
-	bool PostUpdate();
+    bool DrawActiveQuests();
 
 	bool CleanUp();
 
@@ -70,8 +70,6 @@ public:
 	bool CompleteQuest(int id);
 	bool AppearQuest(int id);
 	bool CheckQuestCompleted(int id);
-
-	bool DrawActiveQuests();
 
 	void StringToIntArray(Quest* quest, string requiredIdString);
 	int CountRequiredIds(int requiredIds[]);
@@ -102,7 +100,6 @@ public:
 		FIRSTBOSS = 4,
 		DIARY = 8
 	};
-	bool drawQuests = false;
 
 	unsigned int tpFlags = 0;
 	unsigned int boolFlags = 0;

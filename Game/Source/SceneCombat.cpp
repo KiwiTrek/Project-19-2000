@@ -142,36 +142,36 @@ bool SceneCombat::Load()
 
 	combatTextBox = { 0,0,1280,248 };
 	combatMenuBox = { 305,249,1001,130 };
-	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 47, { 34,505,200,60 }, "ATTACK", 40, this);
-	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 48, { 234,505,200,60 }, "SKILLS", 40, this);
-	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 49, { 434,505,200,60 }, "ITEMS", 40, this);
-	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 50, { 634,505,200,60 }, "SPECIAL", 40, this);
+	btnCombatAttack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 29, { 34,505,200,60 }, "ATTACK", 40, this);
+	btnCombatSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 30, { 234,505,200,60 }, "SKILLS", 40, this);
+	btnCombatItems = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 31, { 434,505,200,60 }, "ITEMS", 40, this);
+	btnCombatSpecial = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 32, { 634,505,200,60 }, "SPECIAL", 40, this);
 	btnCombatSpecial->state = GuiControlState::DISABLED;
-	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 51, { 834,505,200,60 }, "FLEE", 40, this);
+	btnCombatFlee = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 33, { 834,505,200,60 }, "FLEE", 40, this);
 
-	btnCombatSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 52, { 84,570,300,60 }, "skill 1", 32, this, 0, app->entities->itemAtlas);
-	btnCombatSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 53, { 384,570,300,60 }, "skill 2", 32, this, 0, app->entities->itemAtlas);
-	btnCombatSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 54, { 684,570,300,60 }, "skill 3", 32, this, 0, app->entities->itemAtlas);
-	btnCombatSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 55, { 84,630,300,60 }, "skill 4", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 34, { 84,570,300,60 }, "skill 1", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 35, { 384,570,300,60 }, "skill 2", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 36, { 684,570,300,60 }, "skill 3", 32, this, 0, app->entities->itemAtlas);
+	btnCombatSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 37, { 84,630,300,60 }, "skill 4", 32, this, 0, app->entities->itemAtlas);
 	//btnCombatSkill5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 56, { 384,630,300,60 }, "skill 5", 40, this);
 	//btnCombatSkill6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 57, { 684,630,300,60 }, "skill 6", 40, this);
 
-	btnCombatItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 58, { 84,570,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 59, { 384,570,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 60, { 684,570,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 61, { 84,630,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 62, { 384,630,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 63, { 684,630,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 38, { 84,570,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 39, { 384,570,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 40, { 684,570,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 41, { 84,630,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 42, { 384,630,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 43, { 684,630,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
 
-	btnRightArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 64, { 984,605,50,50 }, "", 40, this);
-	btnLeftArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 65, { 34,605,50,50 }, "", 40, this);
+	btnRightArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 44, { 984,605,50,50 }, "", 40, this);
+	btnLeftArrow = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 45, { 34,605,50,50 }, "", 40, this);
 
-	btnCombatItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 66, { 84,570,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 67, { 384,570,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 68, { 684,570,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 69, { 84,630,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 70, { 384,630,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
-	btnCombatItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 71, { 684,630,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 46, { 84,570,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 47, { 384,570,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 48, { 684,570,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 49, { 84,630,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 50, { 384,630,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
+	btnCombatItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 51, { 684,630,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
 	LOG("%d", characterFlags);
 
@@ -2064,7 +2064,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 {
 	switch (control->id)
 	{
-	case 47: //ATTACK
+	case 29: //ATTACK
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2082,14 +2082,14 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		LOG("Who do you want to attack?");
 		NextLine("Who do you want to attack?");
 		break;
-	case 48: //SKILLS
+	case 30: //SKILLS
 		app->gui->ResetButtons();
 		btnCombatSkills->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SKILL);
 		changeMenu = true;
 		break;
-	case 49: //ITEMS
+	case 31: //ITEMS
 		app->gui->ResetButtons();
 		btnCombatItems->state = GuiControlState::DISABLED;
 		btnLeftArrow->state = GuiControlState::DISABLED;
@@ -2097,14 +2097,14 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
 		changeMenu = true;
 		break;
-	case 50: //SPECIAL
+	case 32: //SPECIAL
 		app->gui->ResetButtons();
 		btnCombatSpecial->state = GuiControlState::DISABLED;
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::SPECIAL);
 		changeMenu = true;
 		break;
-	case 51: //FLEE
+	case 33: //FLEE
 	{
 		app->gui->ResetButtons();
 		if (scripted)
@@ -2124,7 +2124,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		}
 		break;
 	}
-	case 52: //SKILL 1
+	case 34: //SKILL 1
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2142,7 +2142,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		LOG("Who do you want to attack?");
 		NextLine("Who do you want to attack?");
 		break;
-	case 53: //SKILL 2
+	case 35: //SKILL 2
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2160,7 +2160,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		LOG("Who do you want to attack?");
 		NextLine("Who do you want to attack?");
 		break;
-	case 54: //SKILL 3
+	case 36: //SKILL 3
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2178,7 +2178,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		LOG("Who do you want to attack?");
 		NextLine("Who do you want to attack?");
 		break;
-	case 55: //SKILL 4
+	case 37: //SKILL 4
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2232,7 +2232,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 	//	LOG("Who do you want to attack?");
 	//	NextLine("Who do you want to attack?");
 	//	break;
-	case 58: //ITEM 1
+	case 38: //ITEM 1
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2240,7 +2240,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem1->text.GetString());
 		break;
-	case 59: //ITEM 2
+	case 39: //ITEM 2
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2248,7 +2248,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem2->text.GetString());
 		break;
-	case 60: //ITEM 3
+	case 40: //ITEM 3
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2256,7 +2256,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem3->text.GetString());
 		break;
-	case 61: //ITEM 4
+	case 41: //ITEM 4
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2264,7 +2264,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem4->text.GetString());
 		break;
-	case 62: //ITEM 5
+	case 42: //ITEM 5
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2272,7 +2272,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem5->text.GetString());
 		break;
-	case 63: //ITEM 6
+	case 43: //ITEM 6
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2280,17 +2280,17 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem6->text.GetString());
 		break;
-	case 64: //RIGHT ARROW
+	case 44: //RIGHT ARROW
 		pageOne = false;
 		btnLeftArrow->state = GuiControlState::NORMAL;
 		btnRightArrow->state = GuiControlState::DISABLED;
 		break;
-	case 65: //LEFT ARROW
+	case 45: //LEFT ARROW
 		pageOne = true;
 		btnLeftArrow->state = GuiControlState::DISABLED;
 		btnRightArrow->state = GuiControlState::NORMAL;
 		break;
-	case 66: //ITEM 7
+	case 46: //ITEM 7
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2298,7 +2298,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem7->text.GetString());
 		break;
-	case 67: //ITEM 8
+	case 47: //ITEM 8
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2306,7 +2306,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem8->text.GetString());
 		break;
-	case 68: //ITEM 9
+	case 48: //ITEM 9
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2314,7 +2314,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem9->text.GetString());
 		break;
-	case 69: //ITEM 10
+	case 49: //ITEM 10
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2322,7 +2322,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem10->text.GetString());
 		break;
-	case 70: //ITEM 11
+	case 50: //ITEM 11
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;
@@ -2330,7 +2330,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		targetItem = true;
 		LOG("USED %s", btnCombatItem11->text.GetString());
 		break;
-	case 71: //ITEM 12
+	case 51: //ITEM 12
 		app->gui->ResetButtons();
 		combatMenuFlags = 0;
 		characterSelected = false;

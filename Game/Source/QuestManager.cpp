@@ -96,12 +96,6 @@ bool QuestManager::Update(float dt)
 	return true;
 }
 
-bool QuestManager::PostUpdate()
-{
-	DrawActiveQuests();
-	return true;
-}
-
 bool QuestManager::CleanUp()
 {
 	// Destroy && Clean quests
@@ -288,36 +282,33 @@ bool QuestManager::DebugQuests()
 // This is the drawing quest on UI function. Looks at the active quests list and draws them with the respective offsets
 bool QuestManager::DrawActiveQuests()
 {
-	if (drawQuests)
+	// Draw back square
+	app->render->DrawTexture(bookTex, -app->render->camera.x + -app->render->camera.x + ((app->render->camera.w - bookBox.w) / 2), -app->render->camera.y, false, &bookBox);
+
+	int offsetY = 70;
+	int offsetX = (bookBox.w / 2) - (bookBox.w / 5);
+	SString auxDescription;
+	const char* cutText = "...";
+	ListItem<Quest*>* activeQuestList = questsActive.start;
+	while (activeQuestList != NULL)
 	{
-		// Draw back square
-		app->render->DrawTexture(bookTex, -app->render->camera.x, -app->render->camera.y, false, &bookBox);
-
-		int offsetY = 70;
-		int offsetX = 45;
-		SString auxDescription;
-		const char* cutText = "...";
-		ListItem<Quest*>* activeQuestList = questsActive.start;
-		while (activeQuestList != NULL)
+		// Cutting description text
+		auxDescription = activeQuestList->data->description.GetString();
+		if (activeQuestList->data->description.Length() >= 45)
 		{
-			// Cutting description text
-			auxDescription = activeQuestList->data->description.GetString();
-			if (activeQuestList->data->description.Length() >= 45)
-			{
-				auxDescription.Cut(45);
-				auxDescription += cutText;
-			}
-
-			// Draw title
-			app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 35, 2, { 0,0,0,255 });
-			offsetY += 37; // Offset the description from the title
-			offsetX += 15; // Offset the description from the title
-			app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 22, 2, { 80,80,80,255 });
-			offsetY += 40; // Offset the quest from the last one
-			offsetX -= 15; // Offset the descripton from the title
-
-			activeQuestList = activeQuestList->next;
+			auxDescription.Cut(45);
+			auxDescription += cutText;
 		}
+
+		// Draw title
+		app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 35, 2, { 0,0,0,255 });
+		offsetY += 37; // Offset the description from the title
+		offsetX += 15; // Offset the description from the title
+		app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 22, 2, { 80,80,80,255 });
+		offsetY += 40; // Offset the quest from the last one
+		offsetX -= 15; // Offset the descripton from the title
+
+		activeQuestList = activeQuestList->next;
 	}
 	return true;
 }
@@ -417,7 +408,6 @@ bool QuestManager::Save(pugi::xml_node& savegame)
 
 	savegame.append_attribute("tpFlags").set_value(tpFlags);
 	savegame.append_attribute("boolFlags").set_value(boolFlags);
-	savegame.append_attribute("drawQuests").set_value(drawQuests);
 
 	ListItem<Quest*>* totalQuestsL = questsList.start;
 	while (totalQuestsL != nullptr)
@@ -479,7 +469,6 @@ bool QuestManager::Load(pugi::xml_node& savegame)
 
 	tpFlags = savegame.attribute("tpFlags").as_uint();
 	boolFlags = savegame.attribute("boolFlags").as_uint();
-	drawQuests = savegame.attribute("drawQuests").as_bool();
 
 	pugi::xml_node questNode = savegame.child("quest");
 	while (questNode != NULL)

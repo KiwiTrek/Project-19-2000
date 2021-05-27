@@ -30,7 +30,6 @@
     <select keyId="29" padId="0">select</select>
     <cancel keyId="27" padId="1">cancel</cancel>
     <menu keyId="6" padId="6">menu</menu>
-    <quest keyId="25" padId="4">quest</quest>
     <up keyId="82" padId="11">up</up>
     <down keyId="81" padId="12">down</down>
     <left keyId="80" padId="13">left</left>

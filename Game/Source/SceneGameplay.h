@@ -23,10 +23,8 @@ public:
 		INVENTORY,
 		SKILLS,
 		SKILL_TREE,
-		EQUIPMENT,
-		STATS,
-		OPTIONS,
-		CONTROLS
+		QUESTS,
+		STATS
 	};
 
 	SceneGameplay();
@@ -82,7 +80,7 @@ private:
 	SDL_Rect menuCharacterBox;
 	GuiButton* btnSkills;
 	GuiButton* btnSkillTree;
-	GuiButton* btnEquipment;
+	GuiButton* btnQuests;
 	GuiButton* btnStats;
 	GuiButton* btnOptions;
 	GuiButton* btnTitleScreen;
@@ -92,27 +90,7 @@ private:
 	GuiSlider* sldrFx;
 	GuiCheckBox* boxFullScreen;
 	GuiCheckBox* boxVSync;
-	GuiButton* btnControls;
 	GuiButton* btnBack;
-
-	//CONTROLS
-	GuiButton* btnKeySelect;
-	GuiButton* btnKeyCancel;
-	GuiButton* btnKeyMenu;
-	GuiButton* btnKeyQuest;
-	GuiButton* btnKeyUp;
-	GuiButton* btnKeyDown;
-	GuiButton* btnKeyLeft;
-	GuiButton* btnKeyRight;
-	GuiButton* btnBack2;
-	GuiButton* btnPadSelect;
-	GuiButton* btnPadCancel;
-	GuiButton* btnPadMenu;
-	GuiButton* btnPadQuest;
-	GuiButton* btnPadUp;
-	GuiButton* btnPadDown;
-	GuiButton* btnPadLeft;
-	GuiButton* btnPadRight;
 
 	//ITEMS
 	GuiImageButton* btnItem1;
@@ -144,6 +122,7 @@ private:
 	bool onPause = false;
 
 	//STATE FLAGS
+    bool options = false;
 	int flags;
 	int statFlags;
     bool onceStatsFx;

@@ -54,7 +54,7 @@ bool SceneGameplay::Load()
 	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 80, 200, 60 }, "INVENTORY", 35, this);
 	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 160, 200, 60 }, "SKILLS", 40, this);
 	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 240, 200, 60 }, "       SKILL TREE", 35, this);
-	btnEquipment = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 320, 200, 60 }, " EQUIPMENT", 35, this);
+	btnQuests = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 320, 200, 60 }, "QUESTS", 35, this);
 
 	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 400, 200, 60 }, " STATS ", 40, this);
 	statFlags = 0;
@@ -64,6 +64,7 @@ bool SceneGameplay::Load()
 	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 560, 200, 60 }, "          TITLE SCREEN", 35, this);
 
 	//OPTIONS
+    options = false;
 	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 8, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
 	sldrVolume->value = app->audio->GetMusicVolume();
 	sldrVolume->maxValue = 128;
@@ -78,49 +79,27 @@ bool SceneGameplay::Load()
 
 	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 10, { 180, 400, 60, 60 }, "FULLSCREEN", 40, this);
 	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 11, { 800, 400, 60, 60 }, "VSync", 40, this);
-	btnControls = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 180, 600, 200, 60 }, "CONTROLS", 35, this);
-	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 13, { 800, 600, 200, 60 }, "BACK", 40, this);
-
-	//CONTROLS
-	btnKeySelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 14, { 180, 120, 300, 60 }, "SELECT", 40, this);
-	btnKeyCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 15, { 180, 188, 300, 60 }, "CANCEL", 40, this);
-	btnKeyMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 16, { 180, 256, 300, 60 }, "MENU", 40, this);
-	btnKeyQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 17, { 180, 324, 300, 60 }, "QUEST", 40, this);
-	btnKeyUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 18, { 180, 392, 300, 60 }, "UP", 40, this);
-	btnKeyDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 19, { 180, 460, 300, 60 }, "DOWN", 40, this);
-	btnKeyLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 20, { 180, 528, 300, 60 }, "LEFT", 40, this);
-	btnKeyRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 21, { 180, 596, 300, 60 }, "RIGHT", 40, this);
-
-	btnPadSelect = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 22, { 800, 120, 300, 60 }, "SELECT", 40, this);
-	btnPadCancel = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 23, { 800, 188, 300, 60 }, "CANCEL", 40, this);
-	btnPadMenu = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 24, { 800, 256, 300, 60 }, "MENU", 40, this);
-	btnPadQuest = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 25, { 800, 324, 300, 60 }, "QUEST", 40, this);
-	btnPadUp = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 26, { 800, 392, 300, 60 }, "UP", 40, this);
-	btnPadDown = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 27, { 800, 460, 300, 60 }, "DOWN", 40, this);
-	btnPadLeft = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 28, { 800, 528, 300, 60 }, "LEFT", 40, this);
-	btnPadRight = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 29, { 800, 596, 300, 60 }, "RIGHT", 40, this);
-
-	btnBack2 = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 30, { 1280 / 2 - 200 / 2, 600, 200, 60 }, "BACK", 40, this);
+	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 800, 600, 200, 60 }, "BACK", 40, this);
 
 	//ITEMS
 	itemSelected = 0;
-	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 31, { 330,120,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
-	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 32, { 646,120,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
-	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 33, { 330,200,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
-	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 34, { 646,200,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
-	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 35, { 330,280,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
-	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 36, { 646,280,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
-	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 37, { 330,360,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
-	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 38, { 646,360,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
-	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 39, { 330,440,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
-	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 40, { 646,440,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
-	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 41, { 330,520,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
-	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 42, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
+	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 13, { 330,120,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
+	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 14, { 646,120,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
+	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 15, { 330,200,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
+	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 16, { 646,200,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
+	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 17, { 330,280,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
+	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 18, { 646,280,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
+	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 19, { 330,360,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
+	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 20, { 646,360,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
+	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 21, { 330,440,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
+	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 22, { 646,440,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
+	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 23, { 330,520,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
+	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 24, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
-	btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 43, { 330,120,300,60 }, "skill one", 32, this, 0, app->entities->itemAtlas);
-	btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 44, { 646,120,300,60 }, "skill two", 32, this, 0, app->entities->itemAtlas);
-	btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 45, { 330,200,300,60 }, "skill three", 32, this, 0, app->entities->itemAtlas);
-	btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 46, { 646,200,300,60 }, "skill four", 32, this, 0, app->entities->itemAtlas);
+	btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 25, { 330,120,300,60 }, "skill one", 32, this, 0, app->entities->itemAtlas);
+	btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 26, { 646,120,300,60 }, "skill two", 32, this, 0, app->entities->itemAtlas);
+	btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 27, { 330,200,300,60 }, "skill three", 32, this, 0, app->entities->itemAtlas);
+	btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 28, { 646,200,300,60 }, "skill four", 32, this, 0, app->entities->itemAtlas);
 
 	app->entities->CreateEntity(14 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
 	app->entities->CreateEntity(33 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 2);
@@ -287,17 +266,6 @@ bool SceneGameplay::Update(float dt)
 	}
 
 	if (combatScene->heDed) TransitionToScene(SceneType::ENDING);
-
-	// Make quests draw only while on gameplay not start menu
-	if ((flags & 1 << Flags::MENU) == 0 || !combat)
-	{
-		if (app->input->CheckButton("quest", KEY_DOWN))
-		{
-			app->quests->drawQuests = !app->quests->drawQuests;
-		}
-	}
-	if (combat || (flags & 1 << Flags::MENU) != 0)
-		app->quests->drawQuests = false;
 
 	return true;
 }
@@ -544,7 +512,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	// Calls update with gamepad parameters (GUI)
 	if (usingGamepad)
 	{
-		if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		if (!options)
 		{
 			if ((flags & 1 << Flags::INVENTORY) != 0)
 			{
@@ -760,7 +728,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				app->scene->currentButton->data->Update(dt, 1, 7);
 			}
 		}
-		else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		else if (options)
 		{
 			if (changeMenu)
 			{
@@ -771,25 +739,9 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 
 			if (app->input->CheckButton("cancel", KEY_DOWN))
 			{
-				flags = ClearBit(flags, Flags::OPTIONS);
+                options = false;
 				if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 				else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
-				changeMenu = true;
-				app->gui->ResetButtons();
-				usingGamepad = true;
-			}
-		}
-		else if ((flags & 1 << Flags::CONTROLS) != 0)
-		{
-			if (changeMenu)
-			{
-				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnKeySelect));
-				changeMenu = false;
-			}
-			app->scene->currentButton->data->Update(dt, 14, 30);
-			if (app->input->CheckButton("cancel", KEY_DOWN))
-			{
-				flags = ClearBit(flags, Flags::CONTROLS);
 				changeMenu = true;
 				app->gui->ResetButtons();
 				usingGamepad = true;
@@ -799,12 +751,12 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	// Calls update for mouse parameters (GUI)
 	else
 	{
-		if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		if ((flags & 1 << Flags::MENU) != 0 && options == false)
 		{
 			btnInventory->Update(dt);
 			btnSkills->Update(dt);
 			btnSkillTree->Update(dt);
-			btnEquipment->Update(dt);
+			btnQuests->Update(dt);
 			btnStats->Update(dt);
 			btnOptions->Update(dt);
 			btnTitleScreen->Update(dt);
@@ -989,7 +941,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				// buttons for each skill in the skill tree?
 				// the skill tree lines change when you get the node?
 			}
-			else if ((flags & 1 << Flags::EQUIPMENT) != 0)
+			else if ((flags & 1 << Flags::QUESTS) != 0)
 			{
 				// buttons for every equipment??? ps: oh lord
 			}
@@ -1014,34 +966,13 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				}
 			}
 		}
-		else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		else if (options)
 		{
 			sldrVolume->Update(dt);
 			sldrFx->Update(dt);
 			boxFullScreen->Update(dt);
 			boxVSync->Update(dt);
-			btnControls->Update(dt);
 			btnBack->Update(dt);
-		}
-		else if ((flags & 1 << Flags::CONTROLS) != 0)
-		{
-			btnKeySelect->Update(dt);
-			btnKeyCancel->Update(dt);
-			btnKeyMenu->Update(dt);
-			btnKeyQuest->Update(dt);
-			btnKeyUp->Update(dt);
-			btnKeyDown->Update(dt);
-			btnKeyLeft->Update(dt);
-			btnKeyRight->Update(dt);
-			btnBack2->Update(dt);
-			btnPadSelect->Update(dt);
-			btnPadCancel->Update(dt);
-			btnPadMenu->Update(dt);
-			btnPadQuest->Update(dt);
-			btnPadUp->Update(dt);
-			btnPadDown->Update(dt);
-			btnPadLeft->Update(dt);
-			btnPadRight->Update(dt);
 		}
 	}
 	
@@ -1049,7 +980,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	{
 		// Logic to manage pause menu and menu flags bit
 		app->gui->ResetButtons();
-		if ((flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		if (!options)
 		{
 			flags = ToggleBit(flags, Flags::MENU);
 			if ((flags & 1 << Flags::MENU) == 0)
@@ -1060,12 +991,12 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		}
 
 		// Volume between pause menu and gameplay logic
-		if (app->entities->inPause && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+		if (app->entities->inPause && !options)
 		{
 			app->audio->auxVolume = app->audio->GetMusicVolume();
 			app->audio->SetMusicVolume(app->audio->GetMusicVolume() / 3);
 		}
-		else if ((flags & 1 << Flags::OPTIONS) != 0 || (flags & 1 << Flags::CONTROLS) != 0);
+		else if (options);
 		else
 		{
 			app->audio->SetMusicVolume(app->audio->auxVolume);
@@ -1163,13 +1094,13 @@ bool SceneGameplay::Draw()
 
 bool SceneGameplay::DrawPauseMenu()
 {
-	if ((flags & 1 << Flags::MENU) != 0 && (flags & 1 << Flags::OPTIONS) == 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	if ((flags & 1 << Flags::MENU) != 0 && options == false)
 	{
 		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, 200);
 		btnInventory->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnSkills->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnSkillTree->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnEquipment->Draw(-app->render->camera.x, -app->render->camera.y);
+		btnQuests->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnStats->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnOptions->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnTitleScreen->Draw(-app->render->camera.x, -app->render->camera.y);
@@ -1301,9 +1232,9 @@ bool SceneGameplay::DrawPauseMenu()
 		{
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
 		}
-		else if ((flags & 1 << Flags::EQUIPMENT) != 0)
+		else if ((flags & 1 << Flags::QUESTS) != 0)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+        app->quests->DrawActiveQuests();
 		}
 		else if ((flags & 1 << Flags::STATS) != 0)
 		{
@@ -1341,8 +1272,8 @@ bool SceneGameplay::DrawPauseMenu()
 				app->render->DrawText(buttonFont, combatScene->grandpa.lvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
 				app->render->DrawText(buttonFont, combatScene->grandpa.xp.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.lvl.Length() * 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
 				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.xp.Length() * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-
-				// XP Bar (?)
+				
+                // XP Bar (?)
 
 				app->render->DrawText(buttonFont, combatScene->grandpa.pAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
 				app->render->DrawText(buttonFont, combatScene->grandpa.mAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
@@ -1366,7 +1297,7 @@ bool SceneGameplay::DrawPauseMenu()
             }
 		}
 	}
-	else if ((flags & 1 << Flags::OPTIONS) != 0 && (flags & 1 << Flags::CONTROLS) == 0)
+	else if (options)
 	{
 		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, 200);
 		SString titleOptions = "Options";
@@ -1379,32 +1310,7 @@ bool SceneGameplay::DrawPauseMenu()
 		if (app->vsync)
 			boxVSync->checked = true;
 		boxVSync->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnControls->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnBack->Draw(-app->render->camera.x, -app->render->camera.y);
-	}
-	else if ((flags & 1 << Flags::CONTROLS) != 0)
-	{
-		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, 200);
-		SString titleControls = "Controls";
-		app->render->DrawText(buttonFont, titleControls.GetString(), /*app->render->camera.x +*/ ((app->render->camera.w - (titleControls.Length() * 24)) / 2), 100, 64, 2, white);
-
-		btnKeySelect->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyCancel->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyMenu->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyQuest->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyUp->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyDown->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyLeft->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnKeyRight->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnBack2->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadSelect->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadCancel->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadMenu->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadQuest->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadUp->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadDown->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadLeft->Draw(-app->render->camera.x, -app->render->camera.y);
-		btnPadRight->Draw(-app->render->camera.x, -app->render->camera.y);
 	}
 
 	return true;
@@ -1466,12 +1372,12 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::SKILL_TREE);
 		break;
-	case 4: //EQUIPMENT
+	case 4: //QUESTS
 		app->gui->ResetButtons();
 		itemSelected = 0;
-		btnEquipment->state = GuiControlState::DISABLED;
+		btnQuests->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
-		flags = SetBit(flags, Flags::EQUIPMENT);
+		flags = SetBit(flags, Flags::QUESTS);
 		break;
 	case 5: //STATS
 		app->gui->ResetButtons();
@@ -1483,7 +1389,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 6: //OPTIONS
 		flags = 1 << Flags::MENU;
 		itemSelected = 0;
-		flags = SetBit(flags, Flags::OPTIONS);
+        options = true;
 		app->audio->PlayMusic("Audio/Music/Options.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
@@ -1507,136 +1413,92 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 11: //VSYNC
 		//app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
-	case 12: //CONTROLS
-		flags = SetBit(flags, Flags::CONTROLS);
-		changeMenu = true;
-		app->gui->ResetButtons();
-		usingGamepad = true;
-		break;
-	case 13: //BACK (OPTIONS BACK)
-		flags = ClearBit(flags, Flags::OPTIONS);
+	case 12: //BACK (OPTIONS BACK)
+        options = false;
 		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
 		break;
-	case 14: //KEY SELECT
-		break;
-	case 15: //KEY CANCEL
-		break;
-	case 16: //KEY MENU
-		break;
-	case 17: //KEY QUEST
-		break;
-	case 18: //KEY UP
-		break;
-	case 19: //KEY DOWN
-		break;
-	case 20: //KEY LEFT
-		break;
-	case 21: //KEY RIGHT
-		break;
-	case 22: //PAD SELECT
-		break;
-	case 23: //PAD CANCEL
-		break;
-	case 24: //PAD MENU
-		break;
-	case 25: //PAD QUEST
-		break;
-	case 26: //PAD UP
-		break;
-	case 27: //PAD DOWN
-		break;
-	case 28: //PAD LEFT
-		break;
-	case 29: //PAD RIGHT
-		break;
-	case 30: //BACK 2 (CONTROLS BACK)
-		flags = ClearBit(flags, Flags::CONTROLS);
-		changeMenu = true;
-		app->gui->ResetButtons();
-		usingGamepad = true;
-		break;
-	case 31: //ITEM 1
+	case 13: //ITEM 1
 		app->gui->ResetButtons();
 		btnItem1->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem1->text.GetString());
 		itemSelected = 1;
 		break;
-	case 32: //ITEM 2
+	case 14: //ITEM 2
 		app->gui->ResetButtons();
 		btnItem2->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem2->text.GetString());
 		itemSelected = 2;
 		break;
-	case 33: //ITEM 3
+	case 15: //ITEM 3
 		app->gui->ResetButtons();
 		btnItem3->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem3->text.GetString());
 		itemSelected = 3;
 		break;
-	case 34: //ITEM 4
+	case 16: //ITEM 4
 		app->gui->ResetButtons();
 		btnItem4->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem4->text.GetString());
 		itemSelected = 4;
 		break;
-	case 35: //ITEM 5
+	case 17: //ITEM 5
 		app->gui->ResetButtons();
 		btnItem5->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem5->text.GetString());
 		itemSelected = 5;
 		break;
-	case 36: //ITEM 6
+	case 18: //ITEM 6
 		app->gui->ResetButtons();
 		btnItem6->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem6->text.GetString());
 		itemSelected = 6;
 		break;
-	case 37: //ITEM 7
+	case 19: //ITEM 7
 		app->gui->ResetButtons();
 		btnItem7->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem7->text.GetString());
 		itemSelected = 7;
 		break;
-	case 38: //ITEM 8
+	case 20: //ITEM 8
 		app->gui->ResetButtons();
 		btnItem8->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem8->text.GetString());
 		itemSelected = 8;
 		break;
-	case 39: //ITEM 9
+	case 21: //ITEM 9
 		app->gui->ResetButtons();
 		btnItem9->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem9->text.GetString());
 		itemSelected = 9;
 		break;
-	case 40: //ITEM 10
+	case 22: //ITEM 10
 		app->gui->ResetButtons();
 		btnItem10->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem10->text.GetString());
 		itemSelected = 10;
 		break;
-	case 41: //ITEM 11
+	case 23: //ITEM 11
 		app->gui->ResetButtons();
 		btnItem11->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
 		LOG("USED %s", btnItem11->text.GetString());
 		itemSelected = 11;
 		break;
-	case 42: //ITEM 12
+	case 24: //ITEM 12
 		app->gui->ResetButtons();
 		btnItem12->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;

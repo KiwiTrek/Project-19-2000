@@ -9,11 +9,6 @@
 class SceneTitleScreen : public Scene
 {
 public:
-    enum Flags
-    {
-        OPTIONS,
-        CONTROLS
-    };
 
     SceneTitleScreen();
     virtual ~SceneTitleScreen();
@@ -52,27 +47,7 @@ private:
     GuiSlider* sldrFx = nullptr;
     GuiCheckBox* boxFullScreen = nullptr;
     GuiCheckBox* boxVSync = nullptr;
-    GuiButton* btnControls = nullptr;
     GuiButton* btnBack = nullptr;
-
-    //CONTROLS                      
-    GuiButton* btnKeySelect = nullptr;
-    GuiButton* btnKeyCancel = nullptr;
-    GuiButton* btnKeyMenu = nullptr;
-    GuiButton* btnKeyQuest = nullptr;
-    GuiButton* btnKeyUp = nullptr;
-    GuiButton* btnKeyDown = nullptr;
-    GuiButton* btnKeyLeft = nullptr;
-    GuiButton* btnKeyRight = nullptr;
-    GuiButton* btnBack2 = nullptr;
-    GuiButton* btnPadSelect = nullptr;
-    GuiButton* btnPadCancel = nullptr;
-    GuiButton* btnPadMenu = nullptr;
-    GuiButton* btnPadQuest = nullptr;
-    GuiButton* btnPadUp = nullptr;
-    GuiButton* btnPadDown = nullptr;
-    GuiButton* btnPadLeft = nullptr;
-    GuiButton* btnPadRight = nullptr;
 
     //FONTS
     Font* buttonFont = nullptr;
@@ -80,7 +55,7 @@ private:
     //SOUND
     int titleFx = -1;
 
-    unsigned char flags = 0;
+    bool options = false;
 };
 
 #endif // __SCENETITLE_H__

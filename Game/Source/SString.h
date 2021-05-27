@@ -360,7 +360,6 @@ public:
 	}
 
 private:
-
 	void Alloc(unsigned int requiered_memory)
 	{
 		size = requiered_memory;
