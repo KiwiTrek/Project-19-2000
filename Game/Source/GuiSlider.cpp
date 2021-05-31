@@ -16,9 +16,9 @@ GuiSlider::GuiSlider(uint32 id, SDL_Rect bounds, int widthInUnits, const char* t
 	int width = widthInUnits * 54;
 	this->limits = { bounds.x, bounds.y + (bounds.h / 2), width, 5 };
 	this->bounds.y = bounds.y + (bounds.h / 4);
-	this->text.Create(text);
+	strcpy_s(this->text, TEXT_LEN, text);
 	this->state = GuiControlState::NORMAL;
-	this->offsetText = this->text.Length() * 24 + (24 * 3);
+	this->offsetText = strlen(text) * 24 + (24 * 3);
 
 	normal = { 0,95,69,42 };
 	focused = { 72,95,69,42 };
@@ -173,7 +173,7 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 
 bool GuiSlider::Draw(int cPosX, int cPosY)
 {
-	app->render->DrawText(guiFont, text.GetString(), /*cPosX +*/ limits.x,/* cPosY +*/ limits.y - bounds.h, textSize, 2, white);
+	app->render->DrawText(guiFont, text, /*cPosX +*/ limits.x,/* cPosY +*/ limits.y - bounds.h, textSize, 2, white);
 
 	//SLIDER BAR
 	if (state != GuiControlState::DISABLED)

@@ -11,7 +11,8 @@ Window::Window() : Module()
 {
 	window = NULL;
 	screenSurface = NULL;
-	name.Create("window");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "window");
 }
 
 // Destructor

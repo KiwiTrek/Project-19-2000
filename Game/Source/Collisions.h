@@ -95,6 +95,6 @@ private:
 	bool saveOnce;
 	bool onceDoor;
 
-	SString folderAudioFx;
+	char folderAudioFx[TEXT_LEN] = { 0 };
 };
 #endif // !__COLLISIONS_H__

@@ -71,9 +71,9 @@ public:
 
     bool doLogic = false;
 
-    SString folderTexture;
-    SString folderAudioFx;
-    SString folderMap;
+    char folderTexture[TEXT_LEN] = { 0 };
+    char folderAudioFx[TEXT_LEN] = { 0 };
+    char folderMap[TEXT_LEN] = { 0 };
 
     // textures
     SDL_Texture* playerTex = nullptr;
@@ -107,7 +107,7 @@ public:
 
     bool takingItem = false;
     float dialogCounter = 0.0f;
-    SString itemPasser;
+    char itemPasser[TEXT_LEN] = { 0 };
 };
 
 #endif // __MODULE_ENTITY_MANAGER_H__

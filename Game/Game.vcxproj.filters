@@ -129,9 +129,6 @@
     <ClInclude Include="Source\Point.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SString.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\External\PugiXml\src\pugiconfig.hpp">
       <Filter>External\PugiXml</Filter>
     </ClInclude>

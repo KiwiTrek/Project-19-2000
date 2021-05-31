@@ -11,7 +11,8 @@
 
 Textures::Textures() : Module()
 {
-	name.Create("textures");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "textures");
 }
 
 // Destructor

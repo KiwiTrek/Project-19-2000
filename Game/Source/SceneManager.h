@@ -44,9 +44,9 @@ public:
 	bool continueLoadRequest;
 	float transitionAlpha;
 
-	SString folderAudioFx;
-	SString folderTexture;
-	SString folderFonts;
+	char folderAudioFx[TEXT_LEN] = { 0 };
+	char folderTexture[TEXT_LEN] = { 0 };
+	char folderFonts[TEXT_LEN] = { 0 };
 
 private:
 	Scene* next;

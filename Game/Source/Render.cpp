@@ -11,7 +11,8 @@
 
 Render::Render() : Module()
 {
-	name.Create("renderer");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "renderer");
 	background.r = 0;
 	background.g = 0;
 	background.b = 0;

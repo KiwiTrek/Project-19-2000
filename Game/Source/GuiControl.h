@@ -3,8 +3,8 @@
 
 #include "Scene.h"
 #include "Point.h"
-#include "SString.h"
 #include "SDL.h"
+#include "Defs.h"
 
 #include "App.h"
 #include "Audio.h"
@@ -35,12 +35,13 @@ public:
     {
     }
 
-    GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), text(text), white({ 255,255,255,255 }), black({ 0,0,0,255 })
+    GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) : type(type), state(GuiControlState::NORMAL), bounds(bounds), white({ 255,255,255,255 }), black({ 0,0,0,255 })
     {
         texture = NULL;
         guiFont = nullptr;
         hover = -1;
         click = -1;
+        strcpy_s(this->text, TEXT_LEN, text);
     }
 
     // Called each loop iteration
@@ -93,7 +94,7 @@ public:
     uint32 id = 0;
     GuiControlType type = GuiControlType::NONE;
     GuiControlState state = GuiControlState::NORMAL;
-    SString text;
+    char text[TEXT_LEN] = { 0 };
     int textSize = 0;
     int offsetText = 0;
 

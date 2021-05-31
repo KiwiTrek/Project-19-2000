@@ -10,8 +10,8 @@
 GuiCheckBox::GuiCheckBox(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::CHECKBOX, id)
 {
 	this->bounds = bounds;
-	this->text.Create(text);
-	this->offsetText = this->text.Length() * 24 + (24 * 3);
+	strcpy_s(this->text, TEXT_LEN, text);
+	this->offsetText = strlen(this->text) * 24 + (24 * 3);
 
 	normal = { 0,144,60, 60 };
 	focused = { 61,144,60, 60 };
@@ -112,7 +112,7 @@ bool GuiCheckBox::Update(float dt, int minId, int maxId)
 bool GuiCheckBox::Draw(int cPosX, int cPosY)
 {
 	// Draw the right button depending on state
-	app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x, /*cPosY + */bounds.y + (bounds.h / 8) - bounds.h, textSize, 2, white);
+	app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x, /*cPosY + */bounds.y + (bounds.h / 8) - bounds.h, textSize, 2, white);
 
 	switch (state)
 	{

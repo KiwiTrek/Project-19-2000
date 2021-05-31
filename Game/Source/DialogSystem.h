@@ -56,7 +56,7 @@ public:
 	SDL_Rect hatsunePortrait;
 
 
-	SString savingText;
+	char savingText[TEXT_LEN] = { 0 };
 	float savingCounter;
 	bool savingBool = false;
 	float itemCounter;

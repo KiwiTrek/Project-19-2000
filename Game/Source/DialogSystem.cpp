@@ -79,7 +79,8 @@ DialogSystem::DialogSystem()
 	hatsunePortrait = { 1400,346,84,100 };
 
 	// Saving dialog thingies
-	savingText = { "Game saved succsessfully." };
+	memset(savingText, 0, TEXT_LEN);
+	strcpy_s(savingText, TEXT_LEN, "Game saved succsessfully.");
 	savingBool = false;
 	savingCounter = 0.0f;
 
@@ -93,7 +94,7 @@ DialogSystem::~DialogSystem()
 	dialogues.clear();
 
 	app->tex->UnLoad(dialogGui);
-	savingText.Clear();
+	memset(savingText, 0, TEXT_LEN);
 }
 
 void DialogSystem::DrawDialogAnimated(Font* dialogueFont)

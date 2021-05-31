@@ -26,11 +26,13 @@ SceneLogo::~SceneLogo()
 
 bool SceneLogo::Load()
 {
-	SString tmp("%s%s", app->scene->folderTexture.GetString(), "Logo.png");
-	logo = app->tex->Load(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderTexture, "Logo.png");
+	logo = app->tex->Load(tmp);
 
-	SString tmp1("%s%s", app->scene->folderAudioFx.GetString(), "LogoFX.wav");
-	logoFx = app->audio->LoadFx(tmp1.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderAudioFx, "LogoFX.wav");
+	logoFx = app->audio->LoadFx(tmp);
 
 	pos.x = -500;
 	pos.y = app->win->screenSurface->h / 2 - 250;

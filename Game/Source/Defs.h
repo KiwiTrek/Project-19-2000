@@ -73,8 +73,9 @@ inline unsigned char ToggleBit(unsigned char bitfield, uint index)
 
 // Standard string size
 #define SHORT_STR	 32
-#define MID_STR	    255
+#define MID_STR		255
 #define HUGE_STR   8192
+#define TEXT_LEN	512
 
 // Joins a path and file
 inline const char* const PATH(const char* folder, const char* file)

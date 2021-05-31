@@ -20,7 +20,7 @@ public:
 public:
 	ItemId id = ItemId::NONE;
 	Attack effect;
-	SString countText;
+	char countText[TEXT_LEN] = { 0 };
 	int count = 0;
 	SDL_Rect texSec = { 288,416,32,32 };
 	GuiControl* button = nullptr;

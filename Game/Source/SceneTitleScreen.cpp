@@ -54,17 +54,21 @@ SceneTitleScreen::~SceneTitleScreen()
 
 bool SceneTitleScreen::Load()
 {
-	SString tmp("%s%s", app->scene->folderTexture.GetString(), "NooseBG.png");
-	nooseBG = app->tex->Load(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderTexture, "NooseBG.png");
+	nooseBG = app->tex->Load(tmp);
 
-	SString tmp1("%s%s", app->scene->folderTexture.GetString(), "TitleCard.png");
-	titleCard = app->tex->Load(tmp1.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderTexture, "TitleCard.png");
+	titleCard = app->tex->Load(tmp);
 
-	SString tmp2("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
-	buttonFont = new Font(tmp2.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderFonts, "ButtonFont.xml");
+	buttonFont = new Font(tmp);
 
-	SString tmp3("%s%s", app->scene->folderAudioFx.GetString(), "TitleFX.wav");
-	titleFx = app->audio->LoadFx(tmp3.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderAudioFx, "TitleFX.wav");
+	titleFx = app->audio->LoadFx(tmp);
 
 	app->audio->SetMusicVolume(app->audio->auxVolume);
 	app->audio->PlayMusic("Audio/Music/Title.ogg");
@@ -87,7 +91,7 @@ bool SceneTitleScreen::Load()
 	btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -300, 600, 300, 60 }, "EXIT", 40, this);
 	app->render->CreateSpline(&btnExit->bounds.x, 90, 2000, SplineType::QUART);
     options = false;
-	/*if (app->input->GetControllerName() != "unplugged") btnStart->state = GuiControlState::FOCUSED;*/
+	/*if (strcmp(app->input->GetControllerName(), "unplugged") != 0) btnStart->state = GuiControlState::FOCUSED;*/
 
 	//OPTIONS
 	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
@@ -110,7 +114,7 @@ bool SceneTitleScreen::Load()
 	app->scene->currentButton = app->gui->controls.start;
 	changeMenu = false;
 	usingGamepad = false;
-	if (app->input->GetControllerName() != "unplugged") usingGamepad = false;
+	if (strcmp(app->input->GetControllerName(), "unplugged") != 0) usingGamepad = false;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;
 	app->scene->continueLoadRequest = false;
@@ -220,8 +224,9 @@ bool SceneTitleScreen::Draw()
 	if (options)
 	{
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
-        SString titleOptions = "Options";
-        app->render->DrawText(buttonFont, titleOptions.GetString(), /*app->render->camera.x + */((app->render->camera.w - (titleOptions.Length() * 24)) / 2), 100, 64, 2, white);
+		char titleOptions[TEXT_LEN] = { 0 };
+		strcpy_s(titleOptions, TEXT_LEN, "Options");
+        app->render->DrawText(buttonFont, titleOptions, /*app->render->camera.x + */((app->render->camera.w - (strlen(titleOptions) * 24)) / 2), 100, 64, 2, white);
 
         sldrVolume->Draw();
         sldrFx->Draw();

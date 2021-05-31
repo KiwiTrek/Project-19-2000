@@ -22,7 +22,8 @@
 
 SceneManager::SceneManager() : Module()
 {
-	name.Create("scenemanager");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "scenemanager");
 
 	onTransition = false;
 	fadeOutCompleted = false;
@@ -41,9 +42,9 @@ bool SceneManager::Awake(pugi::xml_node& config)
 	LOG("Loading Scene Manager");
 	bool ret = true;
 
-	folderAudioFx.Create(config.child("folderAudioFx").child_value());
-	folderTexture.Create(config.child("folderTexture").child_value());
-	folderFonts.Create(config.child("folderFonts").child_value());
+	strcpy_s(folderAudioFx, TEXT_LEN, config.child("folderAudioFx").child_value());
+	strcpy_s(folderTexture, TEXT_LEN, config.child("folderTexture").child_value());
+	strcpy_s(folderFonts, TEXT_LEN, config.child("folderFonts").child_value());
 
 	return ret;
 }
@@ -196,7 +197,7 @@ bool SceneManager::Save(pugi::xml_node& save)
 		pugi::xml_node item = save.append_child("item");
 		item.append_attribute("id").set_value((int)i->data->id);
 		pugi::xml_node effect = item.append_child("effect");
-		effect.append_attribute("name").set_value(i->data->effect.attackName.GetString());
+		effect.append_attribute("name").set_value(i->data->effect.attackName);
 		effect.append_attribute("turns").set_value(i->data->effect.turns);
 		item.append_attribute("count").set_value(i->data->count);
 		i = i->next;

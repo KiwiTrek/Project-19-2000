@@ -42,7 +42,7 @@ public:
 	bool fullscreenWindow;
 
 private:
-	SString title;
+	char title[TEXT_LEN] = { 0 };
 	uint width;
 	uint height;
 	uint scale;

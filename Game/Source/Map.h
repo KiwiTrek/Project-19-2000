@@ -20,11 +20,11 @@ struct Properties
 	{
 		Property()
 		{
-			name.Clear();
+			memset(name, 0, TEXT_LEN);
 			value = 0;
 		}
 
-		SString name;
+		char name[TEXT_LEN] = { 0 };
 		int value;
 	};
 
@@ -59,7 +59,7 @@ struct Tile
 struct TileSet
 {
 	int firstgId;
-	SString name;
+	char name[TEXT_LEN] = { 0 };
 	int tileWidth;
 	int tileHeight;
 	int spacing;
@@ -84,7 +84,7 @@ struct TileSet
 
 struct MapLayer
 {
-	SString	name;
+	char name[TEXT_LEN] = { 0 };
 	int width = 0;
 	int height = 0;
 	uint* data = nullptr;
@@ -113,7 +113,7 @@ struct MapLayer
 
 struct MapData
 {
-	SString name;
+	char name[TEXT_LEN] = { 0 };
 	int width = 0;
 	int height = 0;
 	int tileWidth = 0;
@@ -180,13 +180,13 @@ private:
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
-	MapTypes StrToMapType(SString str);
+	MapTypes StrToMapType(const char* str);
 	TileSet* GetTileSetFromTileId(int id) const;
 	bool StoreId(pugi::xml_node& node, MapLayer* layer, int index);
 	void LogInfo();
 
 	pugi::xml_document mapFile;
-	SString folder;
+	char folder[TEXT_LEN] = { 0 };
 	bool mapLoaded;
 };
 

@@ -11,8 +11,8 @@
 GuiButton::GuiButton(uint32 id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
 	this->bounds = bounds;
-	this->text.Create(text);
-	this->offsetText = this->text.Length() * 20;
+	strcpy_s(this->text, TEXT_LEN, text);
+	this->offsetText = strlen(this->text) * 20;
 
 	normal = { 0,215,300, 60 };
 	focused = { 0,281,300, 60 };
@@ -137,12 +137,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabledSmall);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY + */bounds.y + (bounds.h / 8), textSize, 2, black);
+			app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY + */bounds.y + (bounds.h / 8), textSize, 2, black);
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &disabled);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, black);
+			app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, black);
 		}
 		else if (bounds.w == 50)
 		{
@@ -167,12 +167,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normalSmall);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
+			app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &normal);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
+			app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
 		}
 		else if (bounds.w == 50)
 		{
@@ -198,12 +198,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focusedSmall);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY + */bounds.y + (bounds.h / 8), textSize, 2, white);
+			app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY + */bounds.y + (bounds.h / 8), textSize, 2, white);
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &focused);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX + */bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
+			app->render->DrawText(guiFont, text,/* cPosX + */bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
 		}
 		else if (bounds.w == 50)
 		{
@@ -228,12 +228,12 @@ bool GuiButton::Draw(int cPosX, int cPosY)
 		if (bounds.w == 200)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressedSmall);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
+			app->render->DrawText(guiFont, text,/* cPosX +*/ bounds.x + 6 + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
 		}
 		else if (bounds.w == 300)
 		{
 			app->render->DrawTexture(texture, cPosX + bounds.x, cPosY + bounds.y, false, &pressed);
-			app->render->DrawText(guiFont, text.GetString(),/* cPosX + */bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
+			app->render->DrawText(guiFont, text,/* cPosX + */bounds.x + (bounds.w - offsetText) / 2,/* cPosY +*/ bounds.y + (bounds.h / 8), textSize, 2, white);
 		}
 		else if (bounds.w == 50)
 		{

@@ -3,7 +3,8 @@
 
 QuestManager::QuestManager() : Module()
 {
-	name.Create("quests");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "quests");
 }
 
 QuestManager::~QuestManager()
@@ -44,8 +45,10 @@ bool QuestManager::Start()
 
 		quest->id = questNode.attribute("id").as_int();
 		//quest->type = questNode.attribute("type").as_int();
-		quest->title.Create(questNode.attribute("title").as_string());
-		quest->description.Create(questNode.attribute("description").as_string());
+		memset(quest->title, 0, TEXT_LEN);
+		strcpy_s(quest->title,TEXT_LEN, questNode.attribute("title").as_string());
+		memset(quest->description, 0, TEXT_LEN);
+		strcpy_s(quest->description,TEXT_LEN, questNode.attribute("description").as_string());
 		//quest->objective = questNode.attribute("objective").as_string();
 		//quest->quantity = questNode.attribute("quantity").as_int();
 		//quest->demandingNPC = questNode.attribute("demandingNPC").as_string();
@@ -283,28 +286,31 @@ bool QuestManager::DebugQuests()
 bool QuestManager::DrawActiveQuests()
 {
 	// Draw back square
-	app->render->DrawTexture(bookTex, -app->render->camera.x + -app->render->camera.x + ((app->render->camera.w - bookBox.w) / 2), -app->render->camera.y, false, &bookBox);
+	app->render->DrawTexture(bookTex, -app->render->camera.x + app->render->camera.w / 4, -app->render->camera.y, false, &bookBox);
 
 	int offsetY = 70;
 	int offsetX = (bookBox.w / 2) - (bookBox.w / 5);
-	SString auxDescription;
+	char auxDescription[TEXT_LEN] = { 0 };
 	const char* cutText = "...";
 	ListItem<Quest*>* activeQuestList = questsActive.start;
 	while (activeQuestList != NULL)
 	{
 		// Cutting description text
-		auxDescription = activeQuestList->data->description.GetString();
-		if (activeQuestList->data->description.Length() >= 45)
+		strcpy_s(auxDescription, TEXT_LEN, activeQuestList->data->description);
+		if (strlen(activeQuestList->data->description) >= 45)
 		{
-			auxDescription.Cut(45);
-			auxDescription += cutText;
+			char tmp[TEXT_LEN] = { 0 };
+			memcpy_s(tmp, TEXT_LEN, auxDescription, sizeof(char)*45);
+			strcat_s(tmp, TEXT_LEN, cutText);
+			memset(auxDescription, 0, TEXT_LEN);
+			strcpy_s(auxDescription, TEXT_LEN, tmp);
 		}
 
 		// Draw title
-		app->render->DrawText(font, activeQuestList->data->title.GetString(), offsetX, offsetY, 35, 2, { 0,0,0,255 });
+		app->render->DrawText(font, activeQuestList->data->title, offsetX, offsetY, 35, 2, { 0,0,0,255 });
 		offsetY += 37; // Offset the description from the title
 		offsetX += 15; // Offset the description from the title
-		app->render->DrawText(font, auxDescription.GetString(), offsetX, offsetY, 22, 2, { 80,80,80,255 });
+		app->render->DrawText(font, auxDescription, offsetX, offsetY, 22, 2, { 80,80,80,255 });
 		offsetY += 40; // Offset the quest from the last one
 		offsetX -= 15; // Offset the descripton from the title
 
@@ -414,8 +420,8 @@ bool QuestManager::Save(pugi::xml_node& savegame)
 	{
 		pugi::xml_node quest = savegame.append_child("quest");
 		quest.append_attribute("id").set_value(totalQuestsL->data->id);
-		quest.append_attribute("title").set_value(totalQuestsL->data->title.GetString());
-		quest.append_attribute("description").set_value(totalQuestsL->data->description.GetString());
+		quest.append_attribute("title").set_value(totalQuestsL->data->title);
+		quest.append_attribute("description").set_value(totalQuestsL->data->description);
 		quest.append_attribute("rewardXP").set_value(totalQuestsL->data->rewardXP);
 		quest.append_attribute("rewardGold").set_value(totalQuestsL->data->rewardGold);
 		quest.append_attribute("requiredId").set_value(totalQuestsL->data->requiredIdString.c_str());
@@ -477,8 +483,10 @@ bool QuestManager::Load(pugi::xml_node& savegame)
 		
 		quest->id = questNode.attribute("id").as_int();
 		//quest->type = questNode.attribute("type").as_int();
-		quest->title.Create(questNode.attribute("title").as_string());
-		quest->description.Create(questNode.attribute("description").as_string());
+		memset(quest->title, 0, TEXT_LEN);
+		strcpy_s(quest->title,TEXT_LEN, questNode.attribute("title").as_string());
+		memset(quest->description, 0, TEXT_LEN);
+		strcpy_s(quest->description,TEXT_LEN, questNode.attribute("description").as_string());
 		//quest->objective = questNode.attribute("objective").as_string();
 		//quest->quantity = questNode.attribute("quantity").as_int();
 		//quest->demandingNPC = questNode.attribute("demandingNPC").as_string();

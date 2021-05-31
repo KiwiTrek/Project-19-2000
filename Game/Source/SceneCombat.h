@@ -21,14 +21,18 @@ struct  CombatCharacter
     int x = 0, y = 0;
     SDL_Rect box = { 0,0,0,0 };
     SDL_Rect characterTex = { 0,0,0,0 };
-    SString hp;
-    SString mp;
-    SString stress;
+    char hp[TEXT_LEN] = { 0 };
+    char mp[TEXT_LEN] = { 0 };
+    char stress[TEXT_LEN] = { 0 };
 
-    SString lvl;
-    SString xp;
-    SString nextLvl;
-    SString pAtk, mAtk, pDef, mDef, speed;
+    char lvl[TEXT_LEN] = { 0 };
+    char xp[TEXT_LEN] = { 0 };
+    char nextLvl[TEXT_LEN] = { 0 };
+    char pAtk[TEXT_LEN] = { 0 };
+    char mAtk[TEXT_LEN] = { 0 };
+    char pDef[TEXT_LEN] = { 0 };
+    char mDef[TEXT_LEN] = { 0 };
+    char speed[TEXT_LEN] = { 0 };
 };
 
 enum class StressStatus
@@ -122,7 +126,7 @@ private:
     bool finishedAction = false;
     bool hasTicked = false;
     bool scripted = false;
-    SString attackSelected;
+    char attackSelected[TEXT_LEN] = { 0 };
     bool once = false;
     bool wait = false;
 
@@ -170,9 +174,9 @@ private:
     bool pageOne = true;
     bool targetItem = false;
 
-    SString firstLine;
-    SString secondLine;
-    SString thirdLine;
+    char firstLine[TEXT_LEN] = { 0 };
+    char secondLine[TEXT_LEN] = { 0 };
+    char thirdLine[TEXT_LEN] = { 0 };
     SDL_Rect arrowCombat;
     bool blink = false;
     float blinkTimer = 0.0f;

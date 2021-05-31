@@ -13,7 +13,8 @@
 
 GuiManager::GuiManager() : Module()
 {
-	name.Create("guiManager");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name, TEXT_LEN, "guiManager");
 }
 
 GuiManager::~GuiManager()
@@ -28,9 +29,9 @@ bool GuiManager::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Gui Manager");
 
-	folderTexture.Create(config.child("folderTexture").child_value());
-	folderAudio.Create(config.child("folderAudio").child_value());
-	folderFonts.Create(config.child("folderFonts").child_value());
+	strcpy_s(folderTexture, TEXT_LEN, config.child("folderTexture").child_value());
+	strcpy_s(folderAudio, TEXT_LEN, config.child("folderAudio").child_value());
+	strcpy_s(folderFonts, TEXT_LEN, config.child("folderFonts").child_value());
 
 	return true;
 }
@@ -38,17 +39,21 @@ bool GuiManager::Awake(pugi::xml_node& config)
 bool GuiManager::Start()
 {
 	// Load texture fonts & fx
-	SString tmp("%s%s", folderTexture.GetString(), "gui.png");
-	atlas = app->tex->Load(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderTexture, "gui.png");
+	atlas = app->tex->Load(tmp);
 
-	SString tmp1("%s%s", folderAudio.GetString(), "Click.wav");
-	clickSoundId = app->audio->LoadFx(tmp1.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudio, "Click.wav");
+	clickSoundId = app->audio->LoadFx(tmp);
 
-	SString tmp2("%s%s", folderAudio.GetString(), "Hover.wav");
-	hoverSoundId = app->audio->LoadFx(tmp2.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudio, "Hover.wav");
+	hoverSoundId = app->audio->LoadFx(tmp);
 
-	SString tmp3("%s%s", folderFonts.GetString(), "ButtonFont.xml");
-	guiFontId = new Font(tmp3.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderFonts, "ButtonFont.xml");
+	guiFontId = new Font(tmp);
 
 	return true;
 }

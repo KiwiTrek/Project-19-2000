@@ -6,7 +6,6 @@
 #include "GuiSlider.h"
 #include "GuiCheckBox.h"
 #include "GuiImageButton.h"
-#include "SString.h"
 
 class Entity;
 class SceneCombat;

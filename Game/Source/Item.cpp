@@ -83,12 +83,13 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 	if (app->input->CheckButton("select", KeyState::KEY_DOWN) && app->scene->current->currentScene == SceneType::GAMEPLAY)
 	{
 		app->audio->PlayFx(app->entities->itemCollectedFx);
-		LOG("You picked up %s item.", item.effect.attackName.GetString());
+		LOG("You picked up %s item.", item.effect.attackName);
 
 		app->entities->takingItem = true;
-		SString start = ("You picked up ");
-		start += item.effect.attackName.GetString();
-		app->entities->itemPasser = start.GetString();
+		char start[TEXT_LEN] = { 0 };
+		strcpy_s(start,TEXT_LEN, "You picked up ");
+		strcat_s(start, TEXT_LEN, item.effect.attackName);
+		strcpy_s(app->entities->itemPasser, TEXT_LEN, start);
 
 		bool added = false;
 		SceneGameplay* gameplay = (SceneGameplay*)app->scene->current;
@@ -126,7 +127,7 @@ Item::Item()
 
 void Item::Use(CombatEntity* target)
 {
-	LOG("ITEM USE %s", effect.attackName.GetString());
+	LOG("ITEM USE %s", effect.attackName);
 	switch (id)
 	{
 	case ItemId::HP_POTION:
@@ -180,11 +181,16 @@ void Item::Use(CombatEntity* target)
 	if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 	{
 		SceneGameplay* s = (SceneGameplay*)app->scene->current;
-		s->combatScene->mainChar.hp.Create("HP: %d/%d", s->combatScene->mainChar.character->stats.hPoints, s->combatScene->mainChar.character->stats.hPointsMax);
-		s->combatScene->mainChar.mp.Create("MP: %d/%d", s->combatScene->mainChar.character->stats.mPoints, s->combatScene->mainChar.character->stats.mPointsMax);
-		s->combatScene->mainChar.stress.Create("ST: %d/%d", s->combatScene->mainChar.character->stats.stress, s->combatScene->mainChar.character->stats.stressMax);
-		s->combatScene->grandpa.hp.Create("HP: %d/%d", s->combatScene->grandpa.character->stats.hPoints, s->combatScene->grandpa.character->stats.hPointsMax);
-		s->combatScene->grandpa.mp.Create("MP: %d/%d", s->combatScene->grandpa.character->stats.mPoints, s->combatScene->grandpa.character->stats.mPointsMax);
+		memset(s->combatScene->mainChar.hp, 0, TEXT_LEN);
+		sprintf_s(s->combatScene->mainChar.hp, TEXT_LEN, "HP: %d/%d", s->combatScene->mainChar.character->stats.hPoints, s->combatScene->mainChar.character->stats.hPointsMax);
+		memset(s->combatScene->mainChar.mp, 0, TEXT_LEN);
+		sprintf_s(s->combatScene->mainChar.mp, TEXT_LEN, "MP: %d/%d", s->combatScene->mainChar.character->stats.mPoints, s->combatScene->mainChar.character->stats.mPointsMax);
+		memset(s->combatScene->mainChar.stress, 0, TEXT_LEN);
+		sprintf_s(s->combatScene->mainChar.stress, TEXT_LEN, "ST: %d/%d", s->combatScene->mainChar.character->stats.stress, s->combatScene->mainChar.character->stats.stressMax);
+		memset(s->combatScene->grandpa.hp, 0, TEXT_LEN);
+		sprintf_s(s->combatScene->grandpa.hp, TEXT_LEN, "HP: %d/%d", s->combatScene->grandpa.character->stats.hPoints, s->combatScene->grandpa.character->stats.hPointsMax);
+		memset(s->combatScene->grandpa.mp, 0, TEXT_LEN);
+		sprintf_s(s->combatScene->grandpa.mp, TEXT_LEN, "MP: %d/%d", s->combatScene->grandpa.character->stats.mPoints, s->combatScene->grandpa.character->stats.mPointsMax);
 		//Should add the rest of the characters
 	}
 	app->audio->PlayFx(app->entities->itemFx);
@@ -192,6 +198,6 @@ void Item::Use(CombatEntity* target)
 
 void Item::UpdateCountText()
 {
-	countText.Clear();
-	countText.Create("x%d", count);
+	memset(countText, 0, TEXT_LEN);
+	sprintf_s(countText,TEXT_LEN, "x%d", count);
 }

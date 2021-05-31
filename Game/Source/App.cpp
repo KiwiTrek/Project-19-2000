@@ -102,8 +102,10 @@ bool App::Awake()
 		ret = true;
 		configApp = config.child("app");
 
-		title.Create(configApp.child("title").child_value());
-		organization.Create(configApp.child("organization").child_value());
+		memset(title, 0, TEXT_LEN);
+		strcpy_s(title,TEXT_LEN, configApp.child("title").child_value());
+		memset(organization, 0, TEXT_LEN);
+		strcpy_s(organization,TEXT_LEN, configApp.child("organization").child_value());
 
 		// Read from config file your framerate cap
 		cap = configApp.attribute("framerateCap").as_int(-1);
@@ -118,7 +120,7 @@ bool App::Awake()
 
 		while (item != NULL && ret == true)
 		{
-			ret = item->data->Awake(config.child(item->data->name.GetString()));
+			ret = item->data->Awake(config.child(item->data->name));
 			item = item->next;
 		}
 
@@ -356,13 +358,13 @@ const char* App::GetArgv(int index) const
 // ---------------------------------------
 const char* App::GetTitle() const
 {
-	return title.GetString();
+	return title;
 }
 
 // ---------------------------------------
 const char* App::GetOrganization() const
 {
-	return organization.GetString();
+	return organization;
 }
 
 void App::LoadRequest()
@@ -410,7 +412,7 @@ bool App::LoadGame()
 
 		while (item != NULL && ret == true)
 		{
-			ret = item->data->Load(save.child(item->data->name.GetString()));
+			ret = item->data->Load(save.child(item->data->name));
 			item = item->next;
 		}
 	}
@@ -429,7 +431,7 @@ bool App::SaveGame()
 	item = modules.start;
 	while (item != NULL && ret == true)
 	{
-		ret = item->data->Save(saveState.append_child(item->data->name.GetString()));
+		ret = item->data->Save(saveState.append_child(item->data->name));
 		item = item->next;
 	}
 

@@ -7,7 +7,8 @@
 
 ParticleSystem::ParticleSystem()
 {
-	name.Create("particles");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "particles");
 }
 
 ParticleSystem::~ParticleSystem()
@@ -16,7 +17,7 @@ ParticleSystem::~ParticleSystem()
 bool ParticleSystem::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Particle System");
-	folder.Create(config.child("folder").child_value());
+	strcpy_s(folder,TEXT_LEN, config.child("folder").child_value());
 	LoadEmittersData();
 	return true;
 }
@@ -24,8 +25,9 @@ bool ParticleSystem::Awake(pugi::xml_node& config)
 bool ParticleSystem::Start()
 {
 	// Loads the particle atlas
-	SString tmp("%s%s", folder.GetString(), "ParticlesAtlas.png");
-	particleAtlas = app->tex->Load(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp,TEXT_LEN, "%s%s", folder, "ParticlesAtlas.png");
+	particleAtlas = app->tex->Load(tmp);
 
 	// Clear the particle list
 	ListItem<Emitter*>* e = emittersList.start;

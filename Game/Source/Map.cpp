@@ -15,7 +15,8 @@
 
 Map::Map() : Module(), mapLoaded(false)
 {
-	name.Create("map");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name, TEXT_LEN, "map");
 }
 
 Map::~Map()
@@ -30,7 +31,7 @@ bool Map::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Map Parser");
 
-	folder.Create(config.child("folder").child_value());
+	strcpy_s(folder,TEXT_LEN, config.child("folder").child_value());
 
 	return true;
 }
@@ -42,7 +43,7 @@ bool Map::Start()
 	data.backgroundColor = { 0, 0, 0, 0 };
 	data.height = 0;
 	data.mapLayer.Clear();
-	data.name.Clear();
+	memset(data.name, 0, TEXT_LEN);
 	data.tileHeight = 0;
 	data.tileSets.Clear();
 	data.tileWidth = 0;
@@ -147,7 +148,7 @@ bool Map::CleanUp()
 	}
 	data.mapLayer.Clear();
 
-	data.name.Clear();
+	memset(name, 0, TEXT_LEN);
 	data.width = 0;
 	data.height = 0;
 	data.tileWidth = 0;
@@ -163,10 +164,11 @@ bool Map::LoadNewMap(const char* filename)
 {
 	bool ret = true;
 
-	SString tmp("%s%s", folder.GetString(), filename);
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folder, filename);
 
 	char* buffer = nullptr;
-	size_t size = app->assetsManager->LoadXML(tmp.GetString(), &buffer);
+	size_t size = app->assetsManager->LoadXML(tmp, &buffer);
 
 	pugi::xml_parse_result result = mapFile.load_buffer(buffer, size);
 	RELEASE_ARRAY(buffer);
@@ -234,14 +236,16 @@ bool Map::LoadMap(const char* filename)
 	else
 	{
 		LOG("Filling map info");
-		SString strType(map.attribute("orientation").as_string());
-		data.name.Create(filename);
+		char strType[TEXT_LEN] = { 0 };
+		strcpy_s(strType, TEXT_LEN, map.attribute("orientation").as_string());
+		strcpy_s(data.name, filename);
 		data.type = StrToMapType(strType);
 		data.width = map.attribute("width").as_int();
 		data.height = map.attribute("height").as_int();
 		data.tileWidth = map.attribute("tilewidth").as_int();
 		data.tileHeight = map.attribute("tileheight").as_int();
-		SString color(map.attribute("backgroundcolor").as_string());
+		char color[TEXT_LEN] = { 0 };
+		strcpy_s(color, TEXT_LEN, map.attribute("backgroundcolor").as_string());
 		//color.Trim();
 		//sscanf_s(color.GetString(), "%02x%02x%02x", (uint)&data.backgroundColor.r, (uint)&data.backgroundColor.g, (uint)&data.backgroundColor.b);
 		data.backgroundColor.r = 0;
@@ -257,7 +261,7 @@ bool Map::LoadTileSetDetails(pugi::xml_node& node, TileSet* set)
 	LOG("Filling TileSetDetails");
 
 	set->firstgId = node.attribute("firstgid").as_int();
-	set->name.Create(node.attribute("name").as_string());
+	strcpy_s(set->name,TEXT_LEN, node.attribute("name").as_string());
 	set->tileWidth = node.attribute("tilewidth").as_int();
 	set->tileHeight = node.attribute("tileheight").as_int();
 	set->spacing = node.attribute("spacing").as_int();
@@ -278,8 +282,9 @@ bool Map::LoadTileSetImage(pugi::xml_node& node, TileSet* set)
 	else
 	{
 		LOG("Filling TileSetDetails");
-		SString tmp("%s%s", folder.GetString(), image.attribute("source").as_string());
-		set->texture = app->tex->Load(tmp.GetString());
+		char tmp[TEXT_LEN] = { 0 };
+		sprintf_s(tmp, TEXT_LEN, "%s%s", folder, image.attribute("source").as_string());
+		set->texture = app->tex->Load(tmp);
 		set->texWidth = image.attribute("width").as_int();
 		set->texHeight = image.attribute("height").as_int();
 
@@ -316,7 +321,7 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 {
 	bool ret = true;
 
-	layer->name.Create(node.attribute("name").as_string());
+	strcpy_s(layer->name,TEXT_LEN, node.attribute("name").as_string());
 	layer->width = node.attribute("width").as_int();
 	layer->height = node.attribute("height").as_int();
 	layer->data = new uint[(data.width * data.height * sizeof(uint))];
@@ -333,7 +338,7 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 		++i;
 	}
 
-	LOG("Layer [%s] has loaded %d tiles", layer->name.GetString(), i);
+	LOG("Layer [%s] has loaded %d tiles", layer->name, i);
 
 	ret = LoadProperties(node.child("properties"), layer->properties);
 
@@ -350,7 +355,7 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 			LOG("Stop5");
 			Properties::Property* prop = new Properties::Property();
 			LOG("Stop5.1");
-			prop->name.Create(property.attribute("name").as_string());
+			strcpy_s(prop->name,TEXT_LEN, property.attribute("name").as_string());
 			LOG("Stop5.2");
 			prop->value = property.attribute("value").as_int();
 			LOG("Stop5.3");
@@ -420,20 +425,23 @@ MapTypes operator++(MapTypes& mode)
 	return mode;
 }
 
-MapTypes Map::StrToMapType(SString s)
+MapTypes Map::StrToMapType(const char* s)
 {
-	SString StrType[4];
-	StrType[0] = "unknown", StrType[1] = "orthogonal", StrType[2] = "isometric", StrType[3] = "staggered";
-	MapTypes type = MapTypes::MAPTYPE_UNKNOWN;
-	for (int i = 0; i < 4; ++i)
-	{
-		if (s == StrType[i])
-		{
-			return type;
-		}
-		++type;
-	}
-	return MAPTYPE_UNKNOWN;
+	char strType1[TEXT_LEN] = { 0 };
+	char strType2[TEXT_LEN] = { 0 };
+	char strType3[TEXT_LEN] = { 0 };
+	char strType4[TEXT_LEN] = { 0 };
+	strcpy_s(strType1, TEXT_LEN, "unknown");
+	strcpy_s(strType2, TEXT_LEN, "orthogonal");
+	strcpy_s(strType3, TEXT_LEN, "isometric");
+	strcpy_s(strType4, TEXT_LEN, "staggered");
+
+	if (strcmp(s, strType1) == 0) return MapTypes::MAPTYPE_UNKNOWN;
+	if (strcmp(s, strType2) == 0) return MapTypes::MAPTYPE_ORTHOGONAL;
+	if (strcmp(s, strType3) == 0) return MapTypes::MAPTYPE_ISOMETRIC;
+	if (strcmp(s, strType4) == 0) return MapTypes::MAPTYPE_STAGGERED;
+	
+	return MapTypes::MAPTYPE_UNKNOWN;
 }
 
 TileSet* Map::GetTileSetFromTileId(int id) const
@@ -476,7 +484,7 @@ void Map::LogInfo()
 {
 	LOG("--------------------------------------------------------------------------");
 	LOG("#Map Data: ");
-	LOG("Name=%s", data.name.GetString());
+	LOG("Name=%s", data.name);
 	LOG("Width=%d", data.width);
 	LOG("Height=%d", data.height);
 	LOG("TileWidth=%d", data.tileWidth);
@@ -488,7 +496,7 @@ void Map::LogInfo()
 	while (infoList != NULL)
 	{
 		LOG("#TileSet");
-		LOG("Name=%s", infoList->data->name.GetString());
+		LOG("Name=%s", infoList->data->name);
 		LOG("Firstgid=%d", infoList->data->firstgId);
 		LOG("Margin=%d", infoList->data->margin);
 		LOG("Spacing=%d", infoList->data->spacing);
@@ -513,14 +521,14 @@ void Map::LogInfo()
 	while (layerList != NULL)
 	{
 		LOG("#Layer");
-		LOG("Name=%s", layerList->data->name.GetString());
+		LOG("Name=%s", layerList->data->name);
 		LOG("Width=%d", layerList->data->width);
 		LOG("Height=%d", layerList->data->height);
 
 		while (propertyList != NULL)
 		{
 			LOG("#Property");
-			LOG("Name=%s", propertyList->data->name.GetString());
+			LOG("Name=%s", propertyList->data->name);
 			LOG("Value=%d", propertyList->data->value);
 			propertyList = propertyList->next;
 		}
@@ -536,11 +544,12 @@ int Properties::GetProperty(const char* value, int defaultValue) const
 	ListItem<Property*>* property;
 	property = list.start;
 
-	SString prop = value;
+	char prop[TEXT_LEN] = { 0 };
+	strcpy_s(prop, TEXT_LEN, value);
 
 	while (property != NULL)
 	{
-		if (property->data->name == prop)
+		if (strcmp(property->data->name, prop) == 0)
 		{
 			return property->data->value;
 		}
@@ -555,11 +564,12 @@ void Properties::SetProperty(const char* name, int value)
 	ListItem<Property*>* property;
 	property = list.start;
 
-	SString prop = name;
+	char prop[TEXT_LEN] = { 0 };
+	strcpy_s(prop, TEXT_LEN, name);
 
 	while (property != NULL)
 	{
-		if (property->data->name == prop)
+		if (strcmp(property->data->name, prop) == 0)
 		{
 			property->data->value = value;
 			return;
@@ -626,10 +636,11 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 	if (data.type == MapTypes::MAPTYPE_UNKNOWN) return ret;
 	// MapLayer
 	ListItem<MapLayer*>* mapLayer = data.mapLayer.start;
-	SString layerName = "MetaData";
+	char layerName[TEXT_LEN] = { 0 };
+	strcpy_s(layerName, TEXT_LEN, "MetaData");
 	while (mapLayer != nullptr)
 	{
-		if (mapLayer->data->name == layerName)
+		if (strcmp(mapLayer->data->name,layerName) == 0)
 		{
 			break;
 		}
@@ -640,10 +651,11 @@ int Map::GetTileProperty(int x, int y, const char* property) const
 
 	// TileSet
 	ListItem<TileSet*>* tileSet = data.tileSets.start;
-	SString tileSetName = "meta_data";
+	char tileSetName[TEXT_LEN] = { 0 };
+	strcpy_s(tileSetName, TEXT_LEN, "meta_data");
 	while (tileSet != nullptr)
 	{
-		if (tileSet->data->name == tileSetName)
+		if (strcmp(tileSet->data->name,tileSetName) == 0)
 		{
 			break;
 		}
@@ -670,11 +682,11 @@ bool Map::Load(pugi::xml_node& save)
 	ret = LoadNewMap(save.child("data").attribute("name").as_string());
 	if (ret && data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
-		if (data.name == "tutorial.tmx")
+		if (strcmp(data.name, "tutorial.tmx") == 0)
 		{
 			app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 		}
-		else if (data.name == "home.tmx")
+		else if (strcmp(data.name, "home.tmx") == 0)
 		{
 			app->audio->PlayMusic("Audio/Music/Home.ogg");
 		}
@@ -688,7 +700,7 @@ bool Map::Save(pugi::xml_node& save)
 	if (data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
 		pugi::xml_node mapName = save.append_child("data");
-		ret = mapName.append_attribute("name").set_value(data.name.GetString());
+		ret = mapName.append_attribute("name").set_value(data.name);
 	}
 	else ret = false;
 	return ret;

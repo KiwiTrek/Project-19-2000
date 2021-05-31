@@ -11,7 +11,8 @@
 
 Input::Input() : Module()
 {
-	name.Create("input");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "input");
 
 	keyboard = new KeyState[MAX_KEYS];
 	gamePad = new KeyState[NUM_PAD_BUTTONS];
@@ -57,7 +58,8 @@ bool Input::Awake(pugi::xml_node& config)
 		InputButton* c = new InputButton;
 		c->keyId = a.attribute("keyId").as_int(-1);
 		c->gamePadId = a.attribute("padId").as_int(-1);
-		c->name.Create(a.child_value());
+		memset(c->name, 0, TEXT_LEN);
+		strcpy_s(c->name,TEXT_LEN, a.child_value());
 		controlConfig.Add(c);
 	}
 

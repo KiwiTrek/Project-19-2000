@@ -25,7 +25,7 @@ public:
 
 public:
 	// GUI Image Button specific properties
-	SString count;
+	char count[TEXT_LEN] = { 0 };
 	SDL_Texture* tex;
 	SDL_Rect sec;
 	ItemId itemId;

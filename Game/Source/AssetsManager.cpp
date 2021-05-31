@@ -9,7 +9,8 @@
 
 AssetsManager::AssetsManager() : Module()
 {
-	name.Create("assetsManager");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "assetsManager");
 }
 
 // Destructor

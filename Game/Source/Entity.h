@@ -2,7 +2,6 @@
 #define __ENTITY_H__
 
 #include "Point.h"
-#include "SString.h"
 #include "Animation.h"
 #include "Collisions.h"
 #include "DynArray.h"
@@ -101,9 +100,9 @@ public:
 class Attack
 {
 public:
-	Attack(SString name)
+	Attack(const char* name)
 	{
-		attackName.Create(name.GetString());
+		strcpy_s(attackName, TEXT_LEN, name);
 		turns = -1;
 		beforeBuff1 = -1;
 		beforeBuff2 = -1;
@@ -111,14 +110,14 @@ public:
 
 	Attack()
 	{
-        attackName.Clear();
+		memset(attackName, 0, TEXT_LEN);
         turns = -1;
         beforeBuff1 = -1;
         beforeBuff2 = -1;
     }
 
 public:
-	SString attackName;
+	char attackName[TEXT_LEN] = { 0 };
 	int beforeBuff1, beforeBuff2;
 	int turns;
 };

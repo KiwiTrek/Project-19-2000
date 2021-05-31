@@ -181,7 +181,6 @@
     <ClInclude Include="Source\Log.h" />
     <ClCompile Include="Source\Log.cpp" />
     <ClInclude Include="Source\Point.h" />
-    <ClInclude Include="Source\SString.h" />
     <ClInclude Include="Source\DynArray.h" />
     <ClInclude Include="Source\External\PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="Source\External\PugiXml\src\pugixml.hpp" />

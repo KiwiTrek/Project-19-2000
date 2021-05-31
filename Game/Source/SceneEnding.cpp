@@ -28,8 +28,9 @@ bool SceneEnding::Load()
 	app->render->camera.x = 0;
 	app->render->camera.y = 0;
 
-	SString tmp("%s%s", app->scene->folderTexture.GetString(), "Ending.png");
-	bg = app->tex->Load(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderTexture, "Ending.png");
+	bg = app->tex->Load(tmp);
 
 	app->gui->Enable();
 	btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -300, 400, 300, 60 }, "RETRY", 40, this);

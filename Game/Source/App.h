@@ -121,8 +121,8 @@ private:
 
 	int argc;
 	char** args;
-	SString title;
-	SString organization;
+	char title[TEXT_LEN] = { 0 };
+	char organization[TEXT_LEN] = { 0 };
 
 	List<Module *> modules;
 

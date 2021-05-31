@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "List.h"
-#include "SString.h"
 #include "App.h"
 #include "Log.h"
 #include "Input.h"
@@ -31,8 +30,8 @@ public:
 public:
 	int id; // Quest ID (unique for each quest)
 	//int type; // Quest type: 0 --> gather 1 --> kill 2 --> delivery 3 --> dialogue
-	SString title; // Quest title
-	SString description; // Quest description
+	char title[TEXT_LEN] = { 0 }; // Quest title
+	char description[TEXT_LEN] = { 0 }; // Quest description
 	//SString objective; // Object gathered or monster killer or NPC talked
 	//int quantity; // Amount of objective required for the quest
 	//SString demandingNPC; // Name of NPC quest giver
@@ -117,6 +116,5 @@ private:
     SDL_Rect bookBox = { 0,0,0,0 };
 
 };
-
 
 #endif

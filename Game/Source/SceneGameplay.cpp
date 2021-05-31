@@ -40,11 +40,13 @@ bool SceneGameplay::Load()
 	dtSave = 0.0f;
 	dtItem = 0.0f;
 
-	SString tmp("%s%s", app->scene->folderFonts.GetString(), "DialogueFont.xml");
-	dialogueFont = new Font(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderFonts, "DialogueFont.xml");
+	dialogueFont = new Font(tmp);
 
-	SString tmp1("%s%s", app->scene->folderFonts.GetString(), "ButtonFont.xml");
-	buttonFont = new Font(tmp1.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderFonts, "ButtonFont.xml");
+	buttonFont = new Font(tmp);
 
 	float tmpValue = 0;
 	//MENU
@@ -165,7 +167,7 @@ bool SceneGameplay::Load()
 	changeMenu = false;
 	enteringCombat = false;
 	usingGamepad = false;
-	if (app->input->GetControllerName() != "unplugged") usingGamepad = true;
+	if (strcmp(app->input->GetControllerName(), "unplugged") != 0) usingGamepad = true;
 	app->input->mouseMotionX = 0;
 	app->input->mouseMotionY = 0;
 	flags = 0;
@@ -398,109 +400,109 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		{
 		case 0:
 			btnItem1->itemId = combatScene->items.At(i)->data->id;
-			btnItem1->text.Clear();
-			btnItem1->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem1->count.Clear();
-			btnItem1->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem1->text, 0, TEXT_LEN);
+			strcpy_s(btnItem1->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem1->count, 0, TEXT_LEN);
+			strcpy_s(btnItem1->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem1->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem1;
 			break;
 		case 1:
 			btnItem2->itemId = combatScene->items.At(i)->data->id;
-			btnItem2->text.Clear();
-			btnItem2->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem2->count.Clear();
-			btnItem2->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem2->text, 0, TEXT_LEN);
+			strcpy_s(btnItem2->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem2->count, 0, TEXT_LEN);
+			strcpy_s(btnItem2->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem2->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem2;
 			break;
 		case 2:
 			btnItem3->itemId = combatScene->items.At(i)->data->id;
-			btnItem3->text.Clear();
-			btnItem3->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem3->count.Clear();
-			btnItem3->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem3->text, 0, TEXT_LEN);
+			strcpy_s(btnItem3->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem3->count, 0, TEXT_LEN);
+			strcpy_s(btnItem3->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem3->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem3;
 			break;
 		case 3:
 			btnItem4->itemId = combatScene->items.At(i)->data->id;
-			btnItem4->text.Clear();
-			btnItem4->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem4->count.Clear();
-			btnItem4->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem4->text, 0, TEXT_LEN);
+			strcpy_s(btnItem4->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem4->count, 0, TEXT_LEN);
+			strcpy_s(btnItem4->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem4->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem4;
 			break;
 		case 4:
 			btnItem5->itemId = combatScene->items.At(i)->data->id;
-			btnItem5->text.Clear();
-			btnItem5->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem5->count.Clear();
-			btnItem5->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem5->text, 0, TEXT_LEN);
+			strcpy_s(btnItem5->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem5->count, 0, TEXT_LEN);
+			strcpy_s(btnItem5->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem5->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem5;
 			break;
 		case 5:
 			btnItem6->itemId = combatScene->items.At(i)->data->id;
-			btnItem6->text.Clear();
-			btnItem6->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem6->count.Clear();
-			btnItem6->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem6->text, 0, TEXT_LEN);
+			strcpy_s(btnItem6->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem6->count, 0, TEXT_LEN);
+			strcpy_s(btnItem6->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem6->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem6;
 			break;
 		case 6:
 			btnItem7->itemId = combatScene->items.At(i)->data->id;
-			btnItem7->text.Clear();
-			btnItem7->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem7->count.Clear();
-			btnItem7->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem7->text, 0, TEXT_LEN);
+			strcpy_s(btnItem7->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem7->count, 0, TEXT_LEN);
+			strcpy_s(btnItem7->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem7->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem7;
 			break;
 		case 7:
 			btnItem8->itemId = combatScene->items.At(i)->data->id;
-			btnItem8->text.Clear();
-			btnItem8->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem8->count.Clear();
-			btnItem8->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem8->text, 0, TEXT_LEN);
+			strcpy_s(btnItem8->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem8->count, 0, TEXT_LEN);
+			strcpy_s(btnItem8->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem8->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem8;
 			break;
 		case 8:
 			btnItem9->itemId = combatScene->items.At(i)->data->id;
-			btnItem9->text.Clear();
-			btnItem9->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem9->count.Clear();
-			btnItem9->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem9->text, 0, TEXT_LEN);
+			strcpy_s(btnItem9->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem9->count, 0, TEXT_LEN);
+			strcpy_s(btnItem9->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem9->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem9;
 			break;
 		case 9:
 			btnItem10->itemId = combatScene->items.At(i)->data->id;
-			btnItem10->text.Clear();
-			btnItem10->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem10->count.Clear();
-			btnItem10->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem10->text, 0, TEXT_LEN);
+			strcpy_s(btnItem10->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem10->count, 0, TEXT_LEN);
+			strcpy_s(btnItem10->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem10->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem10;
 			break;
 		case 10:
 			btnItem11->itemId = combatScene->items.At(i)->data->id;
-			btnItem11->text.Clear();
-			btnItem11->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem11->count.Clear();
-			btnItem11->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem11->text, 0, TEXT_LEN);
+			strcpy_s(btnItem11->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem11->count, 0, TEXT_LEN);
+			strcpy_s(btnItem11->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem11->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem11;
 			break;
 		case 11:
 			btnItem12->itemId = combatScene->items.At(i)->data->id;
-			btnItem12->text.Clear();
-			btnItem12->text.Create(combatScene->items.At(i)->data->effect.attackName.GetString());
-			btnItem12->count.Clear();
-			btnItem12->count.Create(combatScene->items.At(i)->data->countText.GetString());
+			memset(btnItem12->text, 0, TEXT_LEN);
+			strcpy_s(btnItem12->text, TEXT_LEN, combatScene->items.At(i)->data->effect.attackName);
+			memset(btnItem12->count, 0, TEXT_LEN);
+			strcpy_s(btnItem12->count, TEXT_LEN, combatScene->items.At(i)->data->countText);
 			btnItem12->sec = combatScene->items.At(i)->data->texSec;
 			combatScene->items.At(i)->data->button = btnItem12;
 			break;
@@ -607,42 +609,42 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 1:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill1->text.Clear();
-							btnSkill1->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill1->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill1->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill1->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill1->text.Clear();
-							btnSkill1->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill1->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill1->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill1->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						break;
 					case 2:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill2->text.Clear();
-							btnSkill2->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill2->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill2->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill2->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill2->text.Clear();
-							btnSkill2->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill2->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill2->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill2->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						break;
 					case 3:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill3->text.Clear();
-							btnSkill3->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill3->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill3->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill3->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill3->text.Clear();
-							btnSkill3->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill3->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill3->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill3->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 
@@ -650,27 +652,45 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 4:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill4->text.Clear();
-							btnSkill4->text.Create(combatScene->mainChar.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill4->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill4->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill4->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill4->text.Clear();
-							btnSkill4->text.Create(combatScene->grandpa.character->attackPool.At(i)->data->attackName.GetString());
+							memset(btnSkill4->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill4->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill4->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						break;
-						//case 5:
-						//	btnCombatSkill5->text = currentEntity->data->attackPool.At(i)->data->attackName;
-						//	btnCombatSkill5->sec = SkillSec(i);
-						//	btnCombatSkill5->Update(dt);
-						//	break;
-						//case 6:
-						//	btnCombatSkill6->text = currentEntity->data->attackPool.At(i)->data->attackName;
-						//	btnCombatSkill6->sec = SkillSec(i);
-						//	btnCombatSkill6->Update(dt);
-						//	break;
+					//case 5:
+					//	if (statFlags == 1 << (int)EntityId::MC)
+					//	{
+					//		memset(btnSkill5->text, 0, TEXT_LEN);
+					//		strcpy_s(btnSkill5->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
+					//		btnSkill5->sec = combatScene->SkillSec(i, EntityId::MC);
+					//	}
+					//	else if (statFlags == 1 << (int)EntityId::VIOLENT)
+					//	{
+					//		memset(btnSkill5->text, 0, TEXT_LEN);
+					//		strcpy_s(btnSkill5->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
+					//		btnSkill5->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+					//	}
+					//	break;
+					//case 6:
+					//	if (statFlags == 1 << (int)EntityId::MC)
+					//	{
+					//		memset(btnSkill6->text, 0, TEXT_LEN);
+					//		strcpy_s(btnSkill6->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
+					//		btnSkill6->sec = combatScene->SkillSec(i, EntityId::MC);
+					//	}
+					//	else if (statFlags == 1 << (int)EntityId::VIOLENT)
+					//	{
+					//		memset(btnSkill6->text, 0, TEXT_LEN);
+					//		strcpy_s(btnSkill6->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
+					//		btnSkill6->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
+					//	}
+					//	break;
 					}
 				}
 				if (statFlags == 1 << (int)EntityId::MC || statFlags == 1 << (int)EntityId::VIOLENT)
@@ -740,8 +760,8 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			if (app->input->CheckButton("cancel", KEY_DOWN))
 			{
                 options = false;
-				if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
-				else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
+				if (strcmp(app->map->data.name, "tutorial.tmx") == 0) app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+				else if (strcmp(app->map->data.name, "home.tmx") == 0) app->audio->PlayMusic("Audio/Music/Home.ogg");
 				changeMenu = true;
 				app->gui->ResetButtons();
 				usingGamepad = true;
@@ -883,12 +903,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 1:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill1->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill1->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill1->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill1->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill1->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill1->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill1->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill1->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						btnSkill1->Update(dt);
@@ -896,12 +918,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 2:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill2->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill2->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill2->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill2->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill2->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill2->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill2->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill2->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						btnSkill2->Update(dt);
@@ -909,12 +933,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 3:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill3->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill3->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill3->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill2->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill3->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill3->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill3->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill3->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						btnSkill3->Update(dt);
@@ -922,12 +948,14 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					case 4:
 						if (statFlags == 1 << (int)EntityId::MC)
 						{
-							btnSkill4->text = combatScene->mainChar.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill4->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill4->text, TEXT_LEN, combatScene->mainChar.character->attackPool.At(i)->data->attackName);
 							btnSkill4->sec = combatScene->SkillSec(i, EntityId::MC);
 						}
 						else if (statFlags == 1 << (int)EntityId::VIOLENT)
 						{
-							btnSkill4->text = combatScene->grandpa.character->attackPool.At(i)->data->attackName;
+							memset(btnSkill4->text, 0, TEXT_LEN);
+							strcpy_s(btnSkill4->text, TEXT_LEN, combatScene->grandpa.character->attackPool.At(i)->data->attackName);
 							btnSkill4->sec = combatScene->SkillSec(i, EntityId::VIOLENT);
 						}
 						btnSkill4->Update(dt);
@@ -1062,7 +1090,7 @@ bool SceneGameplay::Draw()
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &dialogSystem->portraitBox);
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->hatsunePortrait);
-		app->render->DrawText(dialogueFont, dialogSystem->savingText.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
+		app->render->DrawText(dialogueFont, dialogSystem->savingText, 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
 
 	// Textbox when taking an item
@@ -1081,7 +1109,7 @@ bool SceneGameplay::Draw()
 	if (app->entities->takingItem == true)
 	{
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
-		app->render->DrawText(dialogueFont, app->entities->itemPasser.GetString(), 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
+		app->render->DrawText(dialogueFont, app->entities->itemPasser, 60, (app->render->camera.h / 3) * 2 + 30, 34, 1, white);
 	}
 
 	if (combatScene->backToGameplay)
@@ -1110,16 +1138,16 @@ bool SceneGameplay::DrawPauseMenu()
 		{
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + 80, false, &menuCharacterBox);
 			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + 80 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.hp.GetString(), /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20, 28, 1, white);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.mp.GetString(), /*-app->render->camera.x + */984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 30, 28, 1, white);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.stress.GetString(), /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 60, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.hp, /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.mp, /*-app->render->camera.x + */984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 30, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.stress, /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 60, 28, 1, white);
 		}
 		if (combatScene->characterFlags >= 6)
 		{
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, false, &menuCharacterBox);
 			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + menuCharacterBox.h + 80 + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
-			app->render->DrawText(dialogueFont, combatScene->grandpa.hp.GetString(),/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20, 28, 1, white);
-			app->render->DrawText(dialogueFont, combatScene->grandpa.mp.GetString(),/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20 + 30, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->grandpa.hp,/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->grandpa.mp,/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20 + 30, 28, 1, white);
 		}
 		/*
 		if (characterFlags >= 7)
@@ -1220,10 +1248,12 @@ bool SceneGameplay::DrawPauseMenu()
 			}
 			else
 			{
-				SString tmp1 = "Select a character";
-				SString tmp2 = "to see its skills";
-				app->render->DrawText(dialogueFont, tmp1.GetString(), (app->render->camera.w / 2) - ((tmp1.Length() * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
-				app->render->DrawText(dialogueFont, tmp2.GetString(), (app->render->camera.w / 2) - ((tmp2.Length() * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
+				char tmp1[TEXT_LEN] = { 0 };
+				strcpy_s(tmp1, TEXT_LEN, "Select a character");
+				char tmp2[TEXT_LEN] = { 0 };
+				strcpy_s(tmp2, TEXT_LEN, "to see its skills");
+				app->render->DrawText(dialogueFont, tmp1, (app->render->camera.w / 2) - ((strlen(tmp1) * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp2, (app->render->camera.w / 2) - ((strlen(tmp2) * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
                 onceStatsFx = true;
             }
 
@@ -1245,17 +1275,17 @@ bool SceneGameplay::DrawPauseMenu()
 				
 				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 292 + 40, -app->render->camera.y + 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
 				app->render->DrawText(dialogueFont, "Main Character", 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.lvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.xp.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.lvl.Length()* 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.nextLvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.xp.Length() * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.lvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.xp, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl)* 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.nextLvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
 				
 				// XP Bar (?)
 
-				app->render->DrawText(buttonFont, combatScene->mainChar.pAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.mAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.pDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.mDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.speed.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.pAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.mAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.pDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.mDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.speed, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
 
                 if (onceStatsFx)
                 {
@@ -1269,17 +1299,17 @@ bool SceneGameplay::DrawPauseMenu()
 
 				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 292 + 40, -app->render->camera.y + 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
 				app->render->DrawText(dialogueFont, "Grandpa", 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.lvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.xp.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.lvl.Length() * 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (combatScene->mainChar.xp.Length() * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.lvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.xp, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl) * 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
 				
                 // XP Bar (?)
 
-				app->render->DrawText(buttonFont, combatScene->grandpa.pAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.mAtk.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.pDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.mDef.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.speed.GetString(), 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.pAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.mAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.pDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.mDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.speed, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
 			    
                 if (onceStatsFx)
                 {
@@ -1289,10 +1319,12 @@ bool SceneGameplay::DrawPauseMenu()
             }
 			else
 			{
-				SString tmp1 = "Select a character";
-				SString tmp2 = "to see its stats";
-				app->render->DrawText(dialogueFont, tmp1.GetString(), (app->render->camera.w / 2) - ((tmp1.Length() * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
-				app->render->DrawText(dialogueFont, tmp2.GetString(), (app->render->camera.w / 2) - ((tmp2.Length() * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
+				char tmp1[TEXT_LEN] = { 0 };
+				strcpy_s(tmp1, TEXT_LEN, "Select a character");
+				char tmp2[TEXT_LEN] = { 0 };
+				strcpy_s(tmp2, TEXT_LEN, "to see its stats");
+				app->render->DrawText(dialogueFont, tmp1, (app->render->camera.w / 2) - ((strlen(tmp1) * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp2, (app->render->camera.w / 2) - ((strlen(tmp2) * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
                 onceStatsFx = true;
             }
 		}
@@ -1300,8 +1332,9 @@ bool SceneGameplay::DrawPauseMenu()
 	else if (options)
 	{
 		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, 200);
-		SString titleOptions = "Options";
-		app->render->DrawText(buttonFont, titleOptions.GetString(), /*-app->render->camera.x +*/ ((app->render->camera.w - (titleOptions.Length() * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
+		char titleOptions[TEXT_LEN] = { 0 };
+		strcpy_s(titleOptions, TEXT_LEN, "Options");
+		app->render->DrawText(buttonFont, titleOptions, /*-app->render->camera.x +*/ ((app->render->camera.w - (strlen(titleOptions) * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
 		sldrVolume->Draw(-app->render->camera.x, -app->render->camera.y);
 		sldrFx->Draw(-app->render->camera.x, -app->render->camera.y);
 		if (app->win->fullscreenWindow)
@@ -1415,8 +1448,8 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 12: //BACK (OPTIONS BACK)
         options = false;
-		if (app->map->data.name == "tutorial.tmx") app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
-		else if (app->map->data.name == "home.tmx") app->audio->PlayMusic("Audio/Music/Home.ogg");
+		if (strcmp(app->map->data.name, "tutorial.tmx") == 0) app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
+		else if (strcmp(app->map->data.name, "home.tmx") == 0) app->audio->PlayMusic("Audio/Music/Home.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
@@ -1425,84 +1458,84 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		app->gui->ResetButtons();
 		btnItem1->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem1->text.GetString());
+		LOG("USED %s", btnItem1->text);
 		itemSelected = 1;
 		break;
 	case 14: //ITEM 2
 		app->gui->ResetButtons();
 		btnItem2->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem2->text.GetString());
+		LOG("USED %s", btnItem2->text);
 		itemSelected = 2;
 		break;
 	case 15: //ITEM 3
 		app->gui->ResetButtons();
 		btnItem3->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem3->text.GetString());
+		LOG("USED %s", btnItem3->text);
 		itemSelected = 3;
 		break;
 	case 16: //ITEM 4
 		app->gui->ResetButtons();
 		btnItem4->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem4->text.GetString());
+		LOG("USED %s", btnItem4->text);
 		itemSelected = 4;
 		break;
 	case 17: //ITEM 5
 		app->gui->ResetButtons();
 		btnItem5->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem5->text.GetString());
+		LOG("USED %s", btnItem5->text);
 		itemSelected = 5;
 		break;
 	case 18: //ITEM 6
 		app->gui->ResetButtons();
 		btnItem6->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem6->text.GetString());
+		LOG("USED %s", btnItem6->text);
 		itemSelected = 6;
 		break;
 	case 19: //ITEM 7
 		app->gui->ResetButtons();
 		btnItem7->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem7->text.GetString());
+		LOG("USED %s", btnItem7->text);
 		itemSelected = 7;
 		break;
 	case 20: //ITEM 8
 		app->gui->ResetButtons();
 		btnItem8->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem8->text.GetString());
+		LOG("USED %s", btnItem8->text);
 		itemSelected = 8;
 		break;
 	case 21: //ITEM 9
 		app->gui->ResetButtons();
 		btnItem9->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem9->text.GetString());
+		LOG("USED %s", btnItem9->text);
 		itemSelected = 9;
 		break;
 	case 22: //ITEM 10
 		app->gui->ResetButtons();
 		btnItem10->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem10->text.GetString());
+		LOG("USED %s", btnItem10->text);
 		itemSelected = 10;
 		break;
 	case 23: //ITEM 11
 		app->gui->ResetButtons();
 		btnItem11->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem11->text.GetString());
+		LOG("USED %s", btnItem11->text);
 		itemSelected = 11;
 		break;
 	case 24: //ITEM 12
 		app->gui->ResetButtons();
 		btnItem12->state = GuiControlState::DISABLED;
 		btnInventory->state = GuiControlState::DISABLED;
-		LOG("USED %s", btnItem12->text.GetString());
+		LOG("USED %s", btnItem12->text);
 		itemSelected = 12;
 		break;
 	default:

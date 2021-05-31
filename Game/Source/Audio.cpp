@@ -12,7 +12,8 @@
 Audio::Audio() : Module()
 {
 	music = NULL;
-	name.Create("audio");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "audio");
 }
 
 Audio::~Audio()

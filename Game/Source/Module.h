@@ -1,9 +1,8 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
-#include "SString.h"
-
 #include "pugixml.hpp"
+#include "Defs.h"
 
 class App;
 class Collider;
@@ -100,7 +99,7 @@ public:
 	}
 
 public:
-	SString name;
+	char name[TEXT_LEN] = { 0 };
 	bool active;
 };
 

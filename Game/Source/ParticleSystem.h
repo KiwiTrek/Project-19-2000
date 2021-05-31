@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "List.h"
-#include "SString.h"
 #include "SDL.h"
 #include "Emitter.h"
 
@@ -55,7 +54,7 @@ private:
 	// Loads all different types of emitters
 	void LoadEmittersData();
 
-	SString folder;
+	char folder[TEXT_LEN] = { 0 };
 
 	EmitterData emittersData[MAX_NUM_EMITTERS_TYPE];
 	List<Emitter*> emittersList;

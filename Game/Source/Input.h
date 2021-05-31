@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "List.h"
-#include "SString.h"
 
 //#define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
@@ -82,7 +81,7 @@ struct GamePad
 
 struct InputButton
 {
-	SString name;
+	char name[TEXT_LEN] = { 0 };
 	int keyId = 0;
 	int gamePadId = 0;
 };
@@ -125,7 +124,7 @@ public:
 		ListItem<InputButton*>* b = controlConfig.start;
 		while (b != nullptr)
 		{
-			if (b->data->name == c)
+			if (strcmp(b->data->name, c) == 0)
 			{
 				break;
 			}

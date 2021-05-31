@@ -22,7 +22,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	{
 	case EntityId::MC:
 	{
-		name = "MC";
+		strcpy_s(name, TEXT_LEN, "MC");
 
 		Attack* a = new Attack("Smack");
 		this->attackPool.Add(a);
@@ -42,7 +42,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	}
 	case EntityId::VIOLENT:
 	{
-		name = "Grandpa";
+		strcpy_s(name, TEXT_LEN, "Grandpa");
 
 		Attack* a = new Attack("Smite foes");
 		this->attackPool.Add(a);
@@ -67,7 +67,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	case EntityId::STRESSING_SHADOW:
 	{
 		stressingShadowSec = { 128,0,128,128 };
-		name = "Stressing Shadow";
+		strcpy_s(name, TEXT_LEN, "Stressing Shadow");
 
 		Attack* a = new Attack("Magical blow");
 		this->attackPool.Add(a);
@@ -79,7 +79,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	case EntityId::FURIOUS_SHADOW:
 	{
 		furiousShadowSec = { 0,0,128,128 };
-		name = "Furious Shadow";
+		strcpy_s(name, TEXT_LEN, "Furious Shadow");
 
 		Attack* a = new Attack("Getting stronger");
 		this->attackPool.Add(a);
@@ -91,7 +91,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 	case EntityId::NIGHTMARE:
 	{
 		nightmareSec = { 256,0,128,128 };
-		name = "Nightmare";
+		strcpy_s(name, TEXT_LEN, "Nightmare");
 
 		Attack* a = new Attack("Bad dream");
 		this->attackPool.Add(a);
@@ -110,7 +110,7 @@ CombatEntity::CombatEntity(int x, int y, EntityId id, Stats stats) : Entity(x, y
 		break;
 	}
 
-	LOG("Init Combat Entity: %s", name.GetString());
+	LOG("Init Combat Entity: %s", name);
 }
 
 bool CombatEntity::Update(float dt)

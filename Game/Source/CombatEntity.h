@@ -21,7 +21,7 @@ public:
 public:
 
 	List<Attack*> attackPool;
-	SString name;
+	char name[TEXT_LEN] = { 0 };
 	int isStunned;
 	int isTaunted;
 	CombatEntity* tauntedBy;

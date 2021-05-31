@@ -26,7 +26,8 @@
 
 EntityManager::EntityManager() : Module()
 {
-	name.Create("entityManager");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "entityManager");
 }
 
 EntityManager::~EntityManager()
@@ -41,9 +42,9 @@ bool EntityManager::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Entity Manager");
 
-	folderAudioFx.Create(config.child("folderAudioFx").child_value());
-	folderTexture.Create(config.child("folderTexture").child_value());
-	folderMap.Create(config.child("folderMap").child_value());
+	strcpy_s(folderAudioFx, TEXT_LEN, config.child("folderAudioFx").child_value());
+	strcpy_s(folderTexture, TEXT_LEN, config.child("folderTexture").child_value());
+	strcpy_s(folderMap, TEXT_LEN, config.child("folderMap").child_value());
 
 	return true;
 }
@@ -52,7 +53,7 @@ bool EntityManager::Start()
 {
 	// Initializing dialogue bools
 	dialogCounter = 0.0f;
-	itemPasser.Clear();
+	memset(itemPasser, 0, TEXT_LEN);
 	takingItem = false;
 
 	flagsShopkeeper = 0;
@@ -62,56 +63,74 @@ bool EntityManager::Start()
 
 	// Loading entities textures
 
-	SString tmp("%s%s", folderTexture.GetString(), "Characters/MCSpriteSheet.png");
-	playerTex = app->tex->Load(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
 
-    SString tmp1("%s%s", folderTexture.GetString(), "Characters/GrandpaSpriteSheet.png");
-	grandpaTex = app->tex->Load(tmp1.GetString());
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderTexture, "Characters/MCSpriteSheet.png");
+	playerTex = app->tex->Load(tmp);
 
-	SString tmp2("%s%s", folderTexture.GetString(), "Characters/NPCs.png");
-	NPCTex = app->tex->Load(tmp2.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderTexture, "Characters/GrandpaSpriteSheet.png");
+	grandpaTex = app->tex->Load(tmp);
 
-	SString tmp3("%s%s", folderTexture.GetString(), "EnemyAtlas.png");
-	enemiesTex = app->tex->Load(tmp3.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderTexture, "Characters/NPCs.png");
+	NPCTex = app->tex->Load(tmp);
 
-	SString tmp4("%s%s", folderMap.GetString(), "tutorial_tileset.png");
-	puzzleTex = app->tex->Load(tmp4.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderTexture, "EnemyAtlas.png");
+	enemiesTex = app->tex->Load(tmp);
 
-	SString tmp5("%s%s", folderTexture.GetString(), "GUI/Items.png");
-	itemAtlas = app->tex->Load(tmp5.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderMap, "tutorial_tileset.png");
+	puzzleTex = app->tex->Load(tmp);
 
-	SString tmp6("%s%s", folderAudioFx.GetString(), "Cat.wav");
-	interactCat = app->audio->LoadFx(tmp6.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderTexture, "GUI/Items.png");
+	itemAtlas = app->tex->Load(tmp);
 
-	SString tmp7("%s%s", folderAudioFx.GetString(), "Grandpa.wav");
-	interactGrandpa = app->audio->LoadFx(tmp7.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Cat.wav");
+	interactCat = app->audio->LoadFx(tmp);
 
-	SString tmp8("%s%s", folderAudioFx.GetString(), "Hero.wav");
-	interactHero = app->audio->LoadFx(tmp8.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Grandpa.wav");
+	interactGrandpa = app->audio->LoadFx(tmp);
 
-	SString tmp9("%s%s", folderAudioFx.GetString(), "Shop.wav");
-	interactShop = app->audio->LoadFx(tmp9.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Hero.wav");
+	interactHero = app->audio->LoadFx(tmp);
 
-	SString tmp10("%s%s", folderAudioFx.GetString(), "Footstep.wav");
-	footstepFx = app->audio->LoadFx(tmp10.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Shop.wav");
+	interactShop = app->audio->LoadFx(tmp);
 
-	SString tmp11("%s%s", folderAudioFx.GetString(), "Item.wav");
-	itemFx = app->audio->LoadFx(tmp11.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Footstep.wav");
+	footstepFx = app->audio->LoadFx(tmp);
 
-	SString tmp12("%s%s", folderAudioFx.GetString(), "ItemCollected.wav");
-	itemCollectedFx = app->audio->LoadFx(tmp12.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Item.wav");
+	itemFx = app->audio->LoadFx(tmp);
 
-	SString tmp13("%s%s", folderAudioFx.GetString(), "Rock.wav");
-	rockFx = app->audio->LoadFx(tmp13.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "ItemCollected.wav");
+	itemCollectedFx = app->audio->LoadFx(tmp);
 
-	SString tmp14("%s%s", folderAudioFx.GetString(), "IceRock.wav");
-	iceRockFx = app->audio->LoadFx(tmp14.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Rock.wav");
+	rockFx = app->audio->LoadFx(tmp);
 
-	SString tmp15("%s%s", folderAudioFx.GetString(), "Solved.wav");
-	solvedFx = app->audio->LoadFx(tmp15.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "IceRock.wav");
+	iceRockFx = app->audio->LoadFx(tmp);
 
-    SString tmp16("%s%s", folderAudioFx.GetString(), "MC.wav");
-    playerFx = app->audio->LoadFx(tmp16.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Solved.wav");
+	solvedFx = app->audio->LoadFx(tmp);
+
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "MC.wav");
+	playerFx = app->audio->LoadFx(tmp);
 
 	doLogic = true;
 
@@ -166,9 +185,9 @@ bool EntityManager::CleanUp()
 	app->audio->UnloadFx(rockFx);
 	app->audio->UnloadFx(iceRockFx);
 	app->audio->UnloadFx(solvedFx);
-    app->audio->UnloadFx(playerFx);
+	app->audio->UnloadFx(playerFx);
 
-	itemPasser.Clear();
+	memset(itemPasser, 0, TEXT_LEN);
 
 	return true;
 }
@@ -253,7 +272,7 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 		ListItem<Entity*>* e = entities.start;
 		while (e != nullptr)
 		{
-			if (app->map->data.name == "home.tmx")
+			if (strcmp(app->map->data.name, "home.tmx") == 0)
 			{
 				if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE && e->data->type != EntityType::BLOCKER) e->data->Update(dt); //Should also not draw spikes, just overall entities
 			}
@@ -308,7 +327,7 @@ bool EntityManager::PostUpdate()
 				{
 					if (cbt->waitForTransition == TransitionStatus::NONE)
 					{
-						if (app->map->data.name == "home.tmx")
+						if (strcmp(app->map->data.name, "home.tmx") == 0)
 						{
 							if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE && e->data->type != EntityType::BLOCKER) e->data->Draw(); //Should also not draw spikes, just overall entities
 						}
@@ -381,7 +400,7 @@ bool EntityManager::Load(pugi::xml_node& save)
 	pugi::xml_node coordsNode = player.child("coordinates");
 	coords = { coordsNode.attribute("x").as_int(-1),coordsNode.attribute("y").as_int(-1) };
 	s->player = app->entities->CreateEntity(coords.x, coords.y, EntityType::PLAYER, EntityId::NOT_COMBAT, NULL);
-	if (app->map->data.name == "home.tmx")
+	if (strcmp(app->map->data.name, "home.tmx") == 0)
 	{
 		s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
 		s->grandpa = app->entities->CreateEntity((31 * 64) + 48, 7 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA, s->player);
@@ -403,24 +422,26 @@ bool EntityManager::Load(pugi::xml_node& save)
 		newChar.speed = player.next_sibling().child("stats").attribute("speed").as_int(0);
 		newChar.stress = player.next_sibling().child("stats").attribute("stress").as_int(0);
 		newChar.stressMax = player.next_sibling().child("stats").attribute("stressMax").as_int(0);
-		SString name = player.next_sibling().name();
-		if (name == "MC")
+		char name[TEXT_LEN] = { 0 };
+		strcpy_s(name, TEXT_LEN, player.next_sibling().name());
+		if (strcmp(name, "MC") == 0)
 		{
 			cbt->mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - cbt->mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, newChar);
-			cbt->mainChar.hp.Clear();
-			cbt->mainChar.hp.Create("HP: %d/%d", cbt->mainChar.character->stats.hPoints, cbt->mainChar.character->stats.hPointsMax);
-			cbt->mainChar.mp.Clear();
-			cbt->mainChar.mp.Create("MP: %d/%d", cbt->mainChar.character->stats.mPoints, cbt->mainChar.character->stats.mPointsMax);
-			cbt->mainChar.stress.Clear();
-			cbt->mainChar.stress.Create("ST: %d/%d", cbt->mainChar.character->stats.stress, cbt->mainChar.character->stats.stressMax);
+			memset(cbt->mainChar.hp, 0, TEXT_LEN);
+			sprintf_s(cbt->mainChar.hp, TEXT_LEN, "HP: %d/%d", cbt->mainChar.character->stats.hPoints, cbt->mainChar.character->stats.hPointsMax);
+			memset(cbt->mainChar.mp, 0, TEXT_LEN);
+			sprintf_s(cbt->mainChar.mp, TEXT_LEN, "MP: %d/%d", cbt->mainChar.character->stats.mPoints, cbt->mainChar.character->stats.mPointsMax);
+			memset(cbt->mainChar.stress, 0, TEXT_LEN);
+			sprintf_s(cbt->mainChar.stress, TEXT_LEN, "ST: %d/%d", cbt->mainChar.character->stats.stress, cbt->mainChar.character->stats.stressMax);
+
 		}
-		else if (name == "Grandpa")
+		else if (strcmp(name, "Grandpa") == 0)
 		{
 			cbt->grandpa.character = (CombatEntity*)app->entities->CreateEntity(cbt->grandpa.box.w + 36, app->render->camera.h - cbt->grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, newChar);
-			cbt->grandpa.hp.Clear();
-			cbt->grandpa.hp.Create("HP: %d/%d", cbt->grandpa.character->stats.hPoints, cbt->grandpa.character->stats.hPointsMax);
-			cbt->grandpa.mp.Clear();
-			cbt->grandpa.mp.Create("MP: %d/%d", cbt->grandpa.character->stats.mPoints, cbt->grandpa.character->stats.mPointsMax);
+			memset(cbt->grandpa.hp, 0, TEXT_LEN);
+			sprintf_s(cbt->grandpa.hp, TEXT_LEN, "HP: %d/%d", cbt->grandpa.character->stats.hPoints, cbt->grandpa.character->stats.hPointsMax);
+			memset(cbt->grandpa.mp, 0, TEXT_LEN);
+			sprintf_s(cbt->grandpa.mp, TEXT_LEN, "MP: %d/%d", cbt->grandpa.character->stats.mPoints, cbt->grandpa.character->stats.mPointsMax);
 		}
 		player = player.next_sibling();
 	}
@@ -449,7 +470,7 @@ bool EntityManager::Save(pugi::xml_node& save)
 		if (e->data->type == EntityType::COMBAT_ENTITY)
 		{
 			c = (CombatEntity*)e->data;
-			pugi::xml_node character = save.append_child(c->name.GetString());
+			pugi::xml_node character = save.append_child(c->name);
 			pugi::xml_node stats = character.append_child("stats");
 			stats.append_attribute("pAtk").set_value(c->stats.pAtk);
 			stats.append_attribute("mAtk").set_value(c->stats.mAtk);

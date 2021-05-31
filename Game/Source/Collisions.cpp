@@ -19,7 +19,8 @@
 
 Collisions::Collisions()
 {
-	name.Create("collisions");
+	memset(name, 0, TEXT_LEN);
+	strcpy_s(name,TEXT_LEN, "collisions");
 
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
@@ -193,7 +194,7 @@ void Collisions::Init()
 
 bool Collisions::Awake(pugi::xml_node& config)
 {
-	folderAudioFx.Create(config.child("folderAudioFx").child_value());
+	strcpy_s(folderAudioFx, TEXT_LEN, config.child("folderAudioFx").child_value());
 	return true;
 }
 
@@ -203,20 +204,25 @@ bool Collisions::Start()
 	saveOnce = false;
 	onceDoor = false;
 
-	SString tmp("%s%s", folderAudioFx.GetString(), "Save.wav");
-	saveFx = app->audio->LoadFx(tmp.GetString());
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp,TEXT_LEN, "%s%s", folderAudioFx, "Save.wav");
+	saveFx = app->audio->LoadFx(tmp);
 
-	SString tmp1("%s%s", folderAudioFx.GetString(), "Toilet.wav");
-	toiletFx = app->audio->LoadFx(tmp1.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Toilet.wav");
+	toiletFx = app->audio->LoadFx(tmp);
 
-	SString tmp2("%s%s", folderAudioFx.GetString(), "TutorialWarp.wav");
-	tutorialWarpFx = app->audio->LoadFx(tmp2.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "TutorialWarp.wav");
+	tutorialWarpFx = app->audio->LoadFx(tmp);
 
-	SString tmp3("%s%s", folderAudioFx.GetString(), "Door.wav");
-	doorFx = app->audio->LoadFx(tmp3.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "Door.wav");
+	doorFx = app->audio->LoadFx(tmp);
 
-	SString tmp4("%s%s", folderAudioFx.GetString(), "WakingUp.wav");
-	wakingUpFx = app->audio->LoadFx(tmp4.GetString());
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "WakingUp.wav");
+	wakingUpFx = app->audio->LoadFx(tmp);
 
 	return true;
 }
@@ -374,7 +380,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::DOOR)
 				&& collider->Intersects(tileRect))
 			{
-				if (app->map->data.name == "tutorial.tmx")
+				if (strcmp(app->map->data.name,"tutorial.tmx") == 0)
 				{
 					if (onceDoor)
 					{
@@ -558,7 +564,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 						break;
 					}
 				}
-				else if (app->map->data.name == "home.tmx")
+				else if (strcmp(app->map->data.name, "home.tmx") == 0)
 				{
 					if (onceDoor)
 					{
@@ -839,7 +845,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::EVENT)
 				&& collider->Intersects(tileRect) && !app->scene->current->combat)
 			{
-				if (app->map->data.name == "tutorial.tmx")
+				if (strcmp(app->map->data.name, "tutorial.tmx") == 0)
 				{
 					switch (tilePos.y)
 					{
@@ -875,7 +881,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 				|| app->map->GetTileProperty(tilePosLowerRight.x, tilePosLowerRight.y, "CollisionId") == (uint)Collider::Type::INTERACTABLE)
 				&& collider->Intersects(tileRect) && !app->scene->current->combat)
 			{
-				if (app->map->data.name == "home.tmx")
+				if (strcmp(app->map->data.name, "home.tmx") == 0)
 				{
 					switch (tilePos.y)
 					{

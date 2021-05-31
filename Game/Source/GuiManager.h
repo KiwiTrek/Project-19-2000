@@ -34,9 +34,9 @@ public:
 	void ResetButtons();
 
 public:
-	SString folderTexture;
-	SString folderAudio;
-	SString folderFonts;
+	char folderTexture[TEXT_LEN] = { 0 };
+	char folderAudio[TEXT_LEN] = { 0 };
+	char folderFonts[TEXT_LEN] = { 0 };
 
 	SDL_Texture* atlas = nullptr;
 

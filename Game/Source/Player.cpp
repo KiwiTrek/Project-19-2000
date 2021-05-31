@@ -18,7 +18,7 @@ Player::Player(int x, int y, int footstepFx) : Entity(x, y, EntityType::PLAYER)
 {
 	if (app->map->data.type != MapTypes::MAPTYPE_UNKNOWN)
 	{
-		if (app->map->data.name == "tutorial.tmx") spawnPos = { 15,90 };
+		if (strcmp(app->map->data.name, "tutorial.tmx") == 0) spawnPos = { 15,90 };
 		spawnPos.x *= app->map->data.tileWidth;
 		spawnPos.y *= app->map->data.tileHeight;
 	}
