@@ -14,12 +14,15 @@ struct EmitterData
 	{
 		NONE = -1,
 		FIRE,
-		SMOKE,
+		STUN,
 		NOVA,
 		SLASH,
 		BUBBLE,
 		HEAL,
-		BLESS
+		BLESS,
+		BUFF,
+		DEBUFF,
+		TAUNT
 	};
 
 	double rotSpeed;

@@ -513,7 +513,7 @@ bool SceneCombat::Update(float dt)
 											target->stats.pAtk += (target->stats.pAtk * 25) / 100;
 											target->stats.mAtk += (target->stats.mAtk * 25) / 100;
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Boring Speech") == 0)
@@ -531,7 +531,7 @@ bool SceneCombat::Update(float dt)
 											target->stats.pDef -= (target->stats.pDef * 10) / 100;
 											target->stats.mDef -= (target->stats.mDef * 10) / 100;
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::DEBUFF);
 											ManaCost(10);
 										}
 										finishedAction = true;
@@ -617,6 +617,8 @@ bool SceneCombat::Update(float dt)
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
 											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Magic Hand Slap") == 0)
@@ -625,6 +627,7 @@ bool SceneCombat::Update(float dt)
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											ManaCost(10);
 										}
@@ -717,7 +720,7 @@ bool SceneCombat::Update(float dt)
 									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
 									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
 									fPoint targetPos(currentEntity->data->collider->rect.x + currentEntity->data->collider->rect.w / 2, currentEntity->data->collider->rect.y + currentEntity->data->collider->rect.h / 2);
-									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
 								}
 								else //Fury of blades
 								{
@@ -778,9 +781,9 @@ bool SceneCombat::Update(float dt)
 									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef / 10) * 100;
 									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef / 10) * 100;
 									fPoint targetPos(currentEntity->data->collider->rect.x + currentEntity->data->collider->rect.w / 2, currentEntity->data->collider->rect.y + currentEntity->data->collider->rect.h / 2);
-									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
 								}
-								else if (p >= 5) //Close your eyes
+								else if (p >= 10) //Close your eyes
 								{
 									app->audio->PlayFx(closeEyesFx);
 
@@ -794,7 +797,7 @@ bool SceneCombat::Update(float dt)
 										mainChar.character->isTaunted = 1;
 										mainChar.character->tauntedBy = currentEntity->data;
 										fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
-										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::TAUNT);
 										break;
 									}
 									case 2: //GRANDPA
@@ -804,7 +807,7 @@ bool SceneCombat::Update(float dt)
 										grandpa.character->isTaunted = 1;
 										grandpa.character->tauntedBy = currentEntity->data;
 										fPoint targetPos(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
-										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::TAUNT);
 										break;
 									}
 									//case 3:
@@ -833,7 +836,7 @@ bool SceneCombat::Update(float dt)
 										mainChar.character->stats.pDef -= (mainChar.character->stats.pDef / 10) * 100;
 										mainChar.character->stats.mDef -= (mainChar.character->stats.mDef / 10) * 100;
 										fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
-										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::STUN);
 										break;
 									}
 									case 2: //GRANDPA
@@ -847,7 +850,7 @@ bool SceneCombat::Update(float dt)
 										grandpa.character->stats.pDef -= (grandpa.character->stats.pDef / 10) * 100;
 										grandpa.character->stats.mDef -= (grandpa.character->stats.mDef / 10) * 100;
 										fPoint targetPos(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
-										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::STUN);
 										break;
 									}
 									//case 3:
