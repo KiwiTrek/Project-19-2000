@@ -5,14 +5,19 @@
 #include "Defs.h"
 #include "Log.h"
 
-ParticleSystem::ParticleSystem()
+ParticleSystem::ParticleSystem() : Module()
 {
 	memset(name, 0, TEXT_LEN);
-	strcpy_s(name,TEXT_LEN, "particles");
+	strcpy_s(name,TEXT_LEN, "particleManager");
 }
 
 ParticleSystem::~ParticleSystem()
 {}
+
+void ParticleSystem::Init()
+{
+	active = false;
+}
 
 bool ParticleSystem::Awake(pugi::xml_node& config)
 {

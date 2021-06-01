@@ -18,6 +18,7 @@
 #include "PuzzlePieces.h"
 #include "QuestManager.h"
 #include "Blockers.h"
+#include "ParticleSystem.h"
 
 
 SceneGameplay::SceneGameplay()

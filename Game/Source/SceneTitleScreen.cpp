@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "List.h"
 #include "SceneManager.h"
+#include "ParticleSystem.h"
 
 #include "EntityManager.h"
 
@@ -79,6 +80,8 @@ bool SceneTitleScreen::Load()
 
 	// GUI: Initialize required controls for the screen
 	float tmpValue = 0;
+
+	app->particles->Enable();
 
 	//MAIN MENU
 	app->gui->Enable();

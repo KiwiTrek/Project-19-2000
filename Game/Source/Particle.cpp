@@ -83,7 +83,7 @@ bool Particle::Draw()
 	SDL_Color resColor = InterpolateColor(initialColor, timeStep, finalColor);
 
 	// Drawing particle on the screen
-	ret = app->render->DrawParticle(app->particles->GetParticleAtlas(), (int)center.x, (int)center.y, &pRect, &rectSize, resColor, blendMode, 1.0f, curRotSpeed);
+	ret = app->render->DrawParticle(app->particles->GetParticleAtlas(), (int)center.x - app->render->camera.x, (int)center.y - app->render->camera.y, &pRect, &rectSize, resColor, blendMode, 1.0f, curRotSpeed);
 
 	// Debug drawing rect
 	if (app->render->debug)

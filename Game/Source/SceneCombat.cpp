@@ -15,6 +15,7 @@
 #include "Window.h"
 #include "Item.h"
 #include "QuestManager.h"
+#include "ParticleSystem.h"
 
 SceneCombat::SceneCombat()
 {
@@ -477,18 +478,24 @@ bool SceneCombat::Update(float dt)
 											LOG("%d", currentEntity->data->stats.pAtk);
 											app->audio->PlayFx(smackFx);
 											Damage(target, currentEntity->data->stats.pAtk, false);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h/2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 										}
 										else if (strcmp(attackSelected, "Comfort") == 0)
 										{
 											app->audio->PlayFx(confortFx);
 											float p = rand() % 10 + 11;
 											Heal(target, p/100);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Slap") == 0)
 										{
 											app->audio->PlayFx(slapFx);
 											Damage(target, currentEntity->data->stats.pAtk, false);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Encourage") == 0)
@@ -505,6 +512,8 @@ bool SceneCombat::Update(float dt)
 											target->attackPool.Add(a);
 											target->stats.pAtk += (target->stats.pAtk * 25) / 100;
 											target->stats.mAtk += (target->stats.mAtk * 25) / 100;
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Boring Speech") == 0)
@@ -521,6 +530,8 @@ bool SceneCombat::Update(float dt)
 											target->attackPool.Add(a);
 											target->stats.pDef -= (target->stats.pDef * 10) / 100;
 											target->stats.mDef -= (target->stats.mDef * 10) / 100;
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
 											ManaCost(10);
 										}
 										finishedAction = true;
@@ -562,7 +573,12 @@ bool SceneCombat::Update(float dt)
 										ListItem<CombatEntity*>* e = turnOrder.start;
 										while (e != nullptr)
 										{
-											if (!IsCharacter(e->data)) Damage(e->data, currentEntity->data->stats.mAtk / 1.4f, true);
+											if (!IsCharacter(e->data))
+											{
+												Damage(e->data, currentEntity->data->stats.mAtk / 1.4f, true);
+												fPoint targetPos(e->data->collider->rect.x + e->data->collider->rect.w / 2, e->data->collider->rect.y + e->data->collider->rect.h / 2);
+												app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											}
 											e = e->next;
 										}
 										ManaCost(10);
@@ -590,6 +606,8 @@ bool SceneCombat::Update(float dt)
 											LOG("%d", currentEntity->data->stats.mAtk);
 											app->audio->PlayFx(smiteFx);
 											Damage(target, currentEntity->data->stats.mAtk, true);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 										}
 										else if (strcmp(attackSelected, "W. Magic missile") == 0)
 										{
@@ -597,6 +615,8 @@ bool SceneCombat::Update(float dt)
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Magic Hand Slap") == 0)
@@ -604,12 +624,16 @@ bool SceneCombat::Update(float dt)
 											app->audio->PlayFx(magicSlapFx);
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Judgemental Stare") == 0)
 										{
 											app->audio->PlayFx(stareFx);
 											Damage(target, currentEntity->data->stats.mAtk * 1.5f, true);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 											ManaCost(10);
 										}
 										finishedAction = true;
@@ -643,20 +667,30 @@ bool SceneCombat::Update(float dt)
 								int p = rand() % 10 + 1;
 								if (p >= 6) //Stressing attack
 								{
-									Stress(10);
 									app->audio->PlayFx(stressFx);
+									Stress(10);
 								}
 								else //Magical blow
 								{
+									app->audio->PlayFx(magicBlowFx);
+
 									int t = EnemyTarget();
 									switch (t)
 									{
 									case 1: //MC
+									{
 										Damage(mainChar.character, currentEntity->data->stats.mAtk, true);
+										fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 										break;
+									}
 									case 2: //GRANDPA
+									{
 										Damage(grandpa.character, currentEntity->data->stats.mAtk, true);
+										fPoint targetPos(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 										break;
+									}
 									//case 3:
 									//	break;
 									//case 4:
@@ -664,7 +698,6 @@ bool SceneCombat::Update(float dt)
 									default:
 										break;
 									}
-									app->audio->PlayFx(magicBlowFx);
 								}
 								finishedAction = true;
 								wait = true;
@@ -675,6 +708,7 @@ bool SceneCombat::Update(float dt)
 								int p = rand() % 10 + 1;
 								if (p >= 5) //Getting stronger
 								{
+									app->audio->PlayFx(strongerFx);
 									LOG("Furious Shadow got stronger!");
 									NextLine("Furious Shadow got stronger!");
 									Attack* a = new Attack("5 buff defenses");
@@ -682,15 +716,20 @@ bool SceneCombat::Update(float dt)
 									currentEntity->data->attackPool.Add(a);
 									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef * 5) / 100;
 									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef * 5) / 100;
-									app->audio->PlayFx(strongerFx);
+									fPoint targetPos(currentEntity->data->collider->rect.x + currentEntity->data->collider->rect.w / 2, currentEntity->data->collider->rect.y + currentEntity->data->collider->rect.h / 2);
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
 								}
 								else //Fury of blades
 								{
+									app->audio->PlayFx(bladesFx);
 									Damage(mainChar.character, currentEntity->data->stats.pAtk, false);
 									Damage(grandpa.character, currentEntity->data->stats.pAtk, false);
 									LOG("Furious Shadow attack to all!\n");
 									NextLine("Furious Shadow attack to all!");
-									app->audio->PlayFx(bladesFx);
+									fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+									fPoint targetPos2(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
+									app->particles->AddEmitter(targetPos2, EmitterData::EmitterType::SLASH);
 								}
 								finishedAction = true;
 								wait = true;
@@ -701,15 +740,25 @@ bool SceneCombat::Update(float dt)
 								int p = rand() % 100 + 1;
 								if (p >= 60) //Bad dream
 								{
+									app->audio->PlayFx(badDreamFx);
+
 									int t = EnemyTarget();
 									switch (t)
 									{
 									case 1: //MC
+									{
 										Damage(mainChar.character, currentEntity->data->stats.pAtk, false);
+										fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 										break;
+									}
 									case 2: //GRANDPA
+									{
 										Damage(grandpa.character, currentEntity->data->stats.pAtk, false);
+										fPoint targetPos2(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos2, EmitterData::EmitterType::SLASH);
 										break;
+									}
 									//case 3:
 									//	break;
 									//case 4:
@@ -717,10 +766,10 @@ bool SceneCombat::Update(float dt)
 									default:
 										break;
 									}
-									app->audio->PlayFx(badDreamFx);
 								}
 								else if (p >= 30) //Nightmarish
 								{
+									app->audio->PlayFx(strongerFx);
 									LOG("Nightmarish got stronger!");
 									NextLine("Nightmarish got stronger!");
 									Attack* a = new Attack("10 buff defenses");
@@ -728,25 +777,36 @@ bool SceneCombat::Update(float dt)
 									currentEntity->data->attackPool.Add(a);
 									currentEntity->data->stats.pDef += (currentEntity->data->stats.pDef / 10) * 100;
 									currentEntity->data->stats.mDef += (currentEntity->data->stats.mDef / 10) * 100;
-									app->audio->PlayFx(strongerFx);
+									fPoint targetPos(currentEntity->data->collider->rect.x + currentEntity->data->collider->rect.w / 2, currentEntity->data->collider->rect.y + currentEntity->data->collider->rect.h / 2);
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
 								}
 								else if (p >= 5) //Close your eyes
 								{
+									app->audio->PlayFx(closeEyesFx);
+
 									int t = EnemyTarget();
 									switch (t)
 									{
 									case 1: //MC
+									{
 										LOG("Nightmarish used Close Your Eyes on You!");
 										NextLine("Nightmarish used Close Your Eyes on You!");
 										mainChar.character->isTaunted = 1;
 										mainChar.character->tauntedBy = currentEntity->data;
+										fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
 										break;
+									}
 									case 2: //GRANDPA
+									{
 										LOG("Nightmarish used Close Your Eyes on Grandpa!");
 										NextLine("Nightmarish used Close Your Eyes on Grandpa!");
 										grandpa.character->isTaunted = 1;
 										grandpa.character->tauntedBy = currentEntity->data;
+										fPoint targetPos(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
 										break;
+									}
 									//case 3:
 									//	break;
 									//case 4:
@@ -754,10 +814,11 @@ bool SceneCombat::Update(float dt)
 									default:
 										break;
 									}
-									app->audio->PlayFx(closeEyesFx);
 								}
 								else //Grasp of depression
 								{
+									app->audio->PlayFx(graspFx);
+
 									int t = EnemyTarget();
 									switch (t)
 									{
@@ -771,6 +832,8 @@ bool SceneCombat::Update(float dt)
 										mainChar.character->attackPool.Add(a);
 										mainChar.character->stats.pDef -= (mainChar.character->stats.pDef / 10) * 100;
 										mainChar.character->stats.mDef -= (mainChar.character->stats.mDef / 10) * 100;
+										fPoint targetPos(mainChar.character->collider->rect.x + mainChar.character->collider->rect.w / 2, mainChar.character->collider->rect.y + mainChar.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
 										break;
 									}
 									case 2: //GRANDPA
@@ -783,6 +846,8 @@ bool SceneCombat::Update(float dt)
 										grandpa.character->attackPool.Add(a);
 										grandpa.character->stats.pDef -= (grandpa.character->stats.pDef / 10) * 100;
 										grandpa.character->stats.mDef -= (grandpa.character->stats.mDef / 10) * 100;
+										fPoint targetPos(grandpa.character->collider->rect.x + grandpa.character->collider->rect.w / 2, grandpa.character->collider->rect.y + grandpa.character->collider->rect.h / 2);
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
 										break;
 									}
 									//case 3:
@@ -792,7 +857,6 @@ bool SceneCombat::Update(float dt)
 									default:
 										break;
 									}
-									app->audio->PlayFx(graspFx);
 								}
 								finishedAction = true;
 								wait = true;
@@ -1104,7 +1168,7 @@ bool SceneCombat::Update(float dt)
 							break;
 						}
 					}
-					if (items.Count() <= 6)
+					if (items.Count() >= 6)
 					{
 						btnLeftArrow->Update(dt);
 						btnRightArrow->Update(dt);
@@ -1293,7 +1357,7 @@ bool SceneCombat::Draw(Font* dialogueFont)
 						break;
 					}
 				}
-				if (items.Count() <= 6)
+				if (items.Count() >= 6)
 				{
 					btnLeftArrow->Draw(-app->render->camera.x, -app->render->camera.y);
 					btnRightArrow->Draw(-app->render->camera.x, -app->render->camera.y);

@@ -56,6 +56,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(entities);
 	AddModule(collisions);
 	AddModule(gui);
+	AddModule(particles);
 
 	AddModule(quests);
 

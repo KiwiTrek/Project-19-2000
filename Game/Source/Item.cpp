@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "SceneGameplay.h"
 #include "SceneCombat.h"
+#include "ParticleSystem.h"
 
 
 ItemEntity::ItemEntity(int x, int y, ItemId id, int count) : Entity(x, y, EntityType::ITEM)
@@ -84,6 +85,12 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 	{
 		app->audio->PlayFx(app->entities->itemCollectedFx);
 		LOG("You picked up %s item.", item.effect.attackName);
+		if (app->scene->current->currentScene == SceneType::GAMEPLAY)
+		{
+			SceneGameplay* s = (SceneGameplay*)app->scene->current;
+			fPoint targetPos(s->player->collider->rect.x + s->player->collider->rect.w / 2, s->player->collider->rect.y + s->player->collider->rect.h / 2);
+			app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
+		}
 
 		app->entities->takingItem = true;
 		char start[TEXT_LEN] = { 0 };
