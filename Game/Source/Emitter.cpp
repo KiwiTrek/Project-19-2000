@@ -78,12 +78,9 @@ bool Emitter::Update(float dt)
 			fPoint pRandFinalSize;
 			pRandFinalSize.x = data.finalSize.x * GenerateRandNum(data.randFinalSize.x, data.randFinalSize.y);
 			pRandFinalSize.y = data.finalSize.y * GenerateRandNum(data.randFinalSize.x, data.randFinalSize.y);
-			fPoint pStartingSize;
-			pStartingSize.x = GenerateRandNum(pRandInitialSize.x, pRandFinalSize.x);
-			pStartingSize.y = GenerateRandNum(pRandInitialSize.y, pRandFinalSize.y);
 			double randRotationSpeed = data.rotSpeed * GenerateRandNum(data.randRotSpeed.x, data.randRotSpeed.y);
 
-			Particle* p = new Particle(pos, pRandInitialSpeed, pRandFinalSpeed, pRandAngle, randRotationSpeed, pStartingSize, data.finalSize, data.maxParticleLife, data.texRect, data.initialColor, data.finalColor, data.blendMode, data.vortexActive, data.halfTex);
+			Particle* p = new Particle(pos, pRandInitialSpeed, pRandFinalSpeed, pRandAngle, randRotationSpeed, pRandInitialSize, pRandFinalSize, data.maxParticleLife, data.texRect, data.initialColor, data.finalColor, data.blendMode, data.vortexActive, data.halfTex);
 			particlePool.Add(p);
 		}
 	}

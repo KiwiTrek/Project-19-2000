@@ -577,7 +577,7 @@ bool SceneCombat::Update(float dt)
 											{
 												Damage(e->data, currentEntity->data->stats.mAtk / 1.4f, true);
 												fPoint targetPos(e->data->collider->rect.x + e->data->collider->rect.w / 2, e->data->collider->rect.y + e->data->collider->rect.h / 2);
-												app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+												app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
 											}
 											e = e->next;
 										}
@@ -607,7 +607,7 @@ bool SceneCombat::Update(float dt)
 											app->audio->PlayFx(smiteFx);
 											Damage(target, currentEntity->data->stats.mAtk, true);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
 										}
 										else if (strcmp(attackSelected, "W. Magic missile") == 0)
 										{
@@ -616,9 +616,9 @@ bool SceneCombat::Update(float dt)
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.3f, true);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Magic Hand Slap") == 0)
@@ -627,8 +627,8 @@ bool SceneCombat::Update(float dt)
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
 											Damage(target, currentEntity->data->stats.mAtk / 1.1f, true);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
 											ManaCost(10);
 										}
 										else if (strcmp(attackSelected, "Judgemental Stare") == 0)
@@ -636,7 +636,7 @@ bool SceneCombat::Update(float dt)
 											app->audio->PlayFx(stareFx);
 											Damage(target, currentEntity->data->stats.mAtk * 1.5f, true);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
-											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
+											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::MAGIC);
 											ManaCost(10);
 										}
 										finishedAction = true;
@@ -991,38 +991,38 @@ bool SceneCombat::Update(float dt)
 						{
 						case 1:
 							memset(btnCombatSkill1->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill1->text, TEXT_LEN, currentEntity->data->attackPool.At(i)->data->attackName);
-							btnCombatSkill1->sec = SkillSec(i, currentEntity->data->id);
+							strcpy_s(btnCombatSkill1->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							btnCombatSkill1->sec = SkillSec(i, currentChar->character->id);
 							btnCombatSkill1->Update(dt);
 							break;
 						case 2:
 							memset(btnCombatSkill2->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill2->text, TEXT_LEN, currentEntity->data->attackPool.At(i)->data->attackName);
-							btnCombatSkill2->sec = SkillSec(i, currentEntity->data->id);
+							strcpy_s(btnCombatSkill2->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							btnCombatSkill2->sec = SkillSec(i, currentChar->character->id);
 							btnCombatSkill2->Update(dt);
 							break;
 						case 3:
 							memset(btnCombatSkill3->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill3->text, TEXT_LEN, currentEntity->data->attackPool.At(i)->data->attackName);
-							btnCombatSkill3->sec = SkillSec(i, currentEntity->data->id);
+							strcpy_s(btnCombatSkill3->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							btnCombatSkill3->sec = SkillSec(i, currentChar->character->id);
 							btnCombatSkill3->Update(dt);
 							break;
 						case 4:
 							memset(btnCombatSkill4->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill4->text, TEXT_LEN, currentEntity->data->attackPool.At(i)->data->attackName);
-							btnCombatSkill4->sec = SkillSec(i, currentEntity->data->id);
+							strcpy_s(btnCombatSkill4->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							btnCombatSkill4->sec = SkillSec(i, currentChar->character->id);
 							btnCombatSkill4->Update(dt);
 							break;
 						//case 5:
 							//memset(btnCombatSkill5->text, 0, TEXT_LEN);
-							//strcpy_s(btnCombatSkill5->text, TEXT_LEN, currentEntity->data->attackPool.At(i)->data->attackName);
-							//btnCombatSkill5->sec = SkillSec(i);
+							//strcpy_s(btnCombatSkill5->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							//btnCombatSkill5->sec = SkillSec(i, currentChar->character->id);
 							//btnCombatSkill5->Update(dt);
 							//break;
 						//case 6:
 							//memset(btnCombatSkill6->text, 0, TEXT_LEN);
-							//strcpy_s(btnCombatSkill6->text, TEXT_LEN, currentEntity->data->attackPool.At(i)->data->attackName);
-							//btnCombatSkill6->sec = SkillSec(i);
+							//strcpy_s(btnCombatSkill6->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							//btnCombatSkill6->sec = SkillSec(i, currentChar->character->id);
 							//btnCombatSkill6->Update(dt);
 							//break;
 						}

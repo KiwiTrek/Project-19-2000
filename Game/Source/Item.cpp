@@ -88,8 +88,8 @@ void ItemEntity::OnCollision(Collider* c1, Collider* c2)
 		if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 		{
 			SceneGameplay* s = (SceneGameplay*)app->scene->current;
-			fPoint targetPos(s->player->collider->rect.x + s->player->collider->rect.w / 2, s->player->collider->rect.y + s->player->collider->rect.h / 2);
-			app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BLESS);
+			fPoint targetPos(s->player->collider->rect.x + s->player->collider->rect.w / 2 + app->render->camera.x, s->player->collider->rect.y + s->player->collider->rect.h + app->render->camera.y);
+			app->particles->AddEmitter(targetPos, EmitterData::EmitterType::ITEM);
 		}
 
 		app->entities->takingItem = true;

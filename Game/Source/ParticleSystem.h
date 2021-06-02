@@ -6,7 +6,7 @@
 #include "SDL.h"
 #include "Emitter.h"
 
-#define MAX_NUM_EMITTERS_TYPE 10
+#define MAX_NUM_EMITTERS_TYPE 12
 
 struct EmitterData;
 class Emitter;

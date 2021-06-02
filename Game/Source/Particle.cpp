@@ -88,7 +88,7 @@ bool Particle::Draw()
 	// Debug drawing rect
 	if (app->render->debug)
 	{
-		app->render->DrawRectangle({ (int)pos.x - rectSize.w / 2,(int)pos.y - rectSize.h / 2,rectSize.w,rectSize.h }, resColor.r, resColor.g, resColor.b, 100);
+		app->render->DrawRectangle({ (int)pos.x - rectSize.w / 2 - app->render->camera.x,(int)pos.y - rectSize.h / 2 - app->render->camera.y,rectSize.w,rectSize.h }, resColor.r, resColor.g, resColor.b, 100);
 	}
 
 	// Calculates the new rotation according to the rotation speed

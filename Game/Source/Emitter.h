@@ -22,7 +22,9 @@ struct EmitterData
 		BLESS,
 		BUFF,
 		DEBUFF,
-		TAUNT
+		TAUNT,
+		ITEM,
+		MAGIC
 	};
 
 	double rotSpeed;

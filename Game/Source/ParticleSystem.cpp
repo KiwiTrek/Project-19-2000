@@ -191,7 +191,7 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,1 };
 			eData.randEmitMult = { 0,1 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,1 };
+			eData.randInitialSize = { 1,1 };
 			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = true;
@@ -207,13 +207,13 @@ void ParticleSystem::LoadEmittersData()
 			eData.angleRange = { 0,180 };
 			eData.initialSpeed = 10;
 			eData.finalSpeed = 10;
-			eData.initialSize = { 100,100 };
+			eData.initialSize = { 80,80 };
 			eData.finalSize = { 100,100 };
 
 			eData.emitNumber = 1;
 			eData.emitNumMult = 0;
-			eData.maxParticleLife = 50;
-			eData.emitLifetime = 50;
+			eData.maxParticleLife = 60;
+			eData.emitLifetime = 60;
 
 			eData.texRect = { 512,768,256,256 };
 			eData.initialColor = { 255,255,100,255 };
@@ -225,7 +225,7 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,1 };
 			eData.randEmitMult = { 0,1 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,1 };
+			eData.randInitialSize = { 1,1 };
 			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
@@ -259,8 +259,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,1 };
 			eData.randEmitMult = { 0,1 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
@@ -280,7 +280,7 @@ void ParticleSystem::LoadEmittersData()
 
 			eData.emitNumber = 1;
 			eData.emitNumMult = 0;
-			eData.maxParticleLife = 14;
+			eData.maxParticleLife = 10;
 			eData.emitLifetime = 10;
 
 			eData.texRect = { 0,768,256,256 };
@@ -293,8 +293,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,1 };
 			eData.randEmitMult = { 0,1 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
@@ -327,8 +327,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,1 };
 			eData.randEmitMult = { 0,1 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = true;
 			eData.halfTex = false;
@@ -361,8 +361,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,0 };
 			eData.randEmitMult = { 0,0 };
 			eData.randLife = { 0,0 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
@@ -395,8 +395,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,0 };
 			eData.randEmitMult = { 0,0 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
@@ -411,13 +411,13 @@ void ParticleSystem::LoadEmittersData()
 			eData.angleRange = { 30,150 };
 			eData.initialSpeed = 250;
 			eData.finalSpeed = 250;
-			eData.initialSize = { 250,250 };
-			eData.finalSize = { 250,300 };
+			eData.initialSize = { 200,200 };
+			eData.finalSize = { 200,250 };
 
 			eData.emitNumber = 1;
 			eData.emitNumMult = 0;
-			eData.maxParticleLife = 35;
-			eData.emitLifetime = 35;
+			eData.maxParticleLife = 45;
+			eData.emitLifetime = 45;
 
 			eData.texRect = { 256*4,256*3,256,256 };
 			eData.initialColor = { 255,255,50,255 };
@@ -429,8 +429,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,0 };
 			eData.randEmitMult = { 0,0 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
@@ -445,13 +445,13 @@ void ParticleSystem::LoadEmittersData()
 			eData.angleRange = { 30,150 };
 			eData.initialSpeed = 250;
 			eData.finalSpeed = 250;
-			eData.initialSize = { 250,250 };
-			eData.finalSize = { 250,300 };
+			eData.initialSize = { 200,200 };
+			eData.finalSize = { 200,250 };
 
 			eData.emitNumber = 1;
 			eData.emitNumMult = 0;
-			eData.maxParticleLife = 35;
-			eData.emitLifetime = 35;
+			eData.maxParticleLife = 45;
+			eData.emitLifetime = 45;
 
 			eData.texRect = { 256 * 5,256 * 3,256,256 };
 			eData.initialColor = { 150,50,255,255 };
@@ -463,8 +463,8 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,0 };
 			eData.randEmitMult = { 0,0 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
@@ -479,16 +479,16 @@ void ParticleSystem::LoadEmittersData()
 			eData.angleRange = { 30,150 };
 			eData.initialSpeed = 0;
 			eData.finalSpeed = 0;
-			eData.initialSize = { 250,250 };
-			eData.finalSize = { 250,250 };
+			eData.initialSize = { 150,150 };
+			eData.finalSize = { 200,200 };
 
 			eData.emitNumber = 1;
 			eData.emitNumMult = 0;
-			eData.maxParticleLife = 80;
-			eData.emitLifetime = 80;
+			eData.maxParticleLife = 60;
+			eData.emitLifetime = 60;
 
 			eData.texRect = { 768,768,256,256 };
-			eData.initialColor = { 150,150,150,255 };
+			eData.initialColor = { 150,150,150,100 };
 			eData.finalColor = { 50,50,50,0 };
 			eData.blendMode = SDL_BLENDMODE_ADD;
 
@@ -497,12 +497,80 @@ void ParticleSystem::LoadEmittersData()
 			eData.randFinalSpeed = { 0,0 };
 			eData.randEmitMult = { 0,0 };
 			eData.randLife = { 0,1 };
-			eData.randInitialSize = { 0,0 };
-			eData.randFinalSize = { 0,0 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
 
 			eData.vortexActive = false;
 			eData.halfTex = false;
 			eData.eType = EmitterData::EmitterType::TAUNT;
+			emittersData[type] = eData;
+			break;
+		}
+		case EmitterData::EmitterType::ITEM:
+		{
+			EmitterData eData;
+			eData.rotSpeed = 0;
+			eData.angleRange = { 30,150 };
+			eData.initialSpeed = 0;
+			eData.finalSpeed = 0;
+			eData.initialSize = { 100,50 };
+			eData.finalSize = { 100,50 };
+
+			eData.emitNumber = 1;
+			eData.emitNumMult = 0;
+			eData.maxParticleLife = 40;
+			eData.emitLifetime = 40;
+
+			eData.texRect = { 3* 256 + 128,4*256 + 128,256,128 };
+			eData.initialColor = { 255,150,0,255 };
+			eData.finalColor = { 255,200,0,0 };
+			eData.blendMode = SDL_BLENDMODE_ADD;
+
+			eData.randRotSpeed = { -1,1 };
+			eData.randInitialSpeed = { 0,0 };
+			eData.randFinalSpeed = { 0,0 };
+			eData.randEmitMult = { 0,0 };
+			eData.randLife = { 0,1 };
+			eData.randInitialSize = { 0.6f,0.6f };
+			eData.randFinalSize = { 0.8f,0.8f };
+
+			eData.vortexActive = false;
+			eData.halfTex = false;
+			eData.eType = EmitterData::EmitterType::ITEM;
+			emittersData[type] = eData;
+			break;
+		}
+		case EmitterData::EmitterType::MAGIC:
+		{
+			EmitterData eData;
+			eData.rotSpeed = 0;
+			eData.angleRange = { 30,150 };
+			eData.initialSpeed = 0;
+			eData.finalSpeed = 0;
+			eData.initialSize = { 180,180 };
+			eData.finalSize = { 200,200 };
+
+			eData.emitNumber = 1;
+			eData.emitNumMult = 0;
+			eData.maxParticleLife = 50;
+			eData.emitLifetime = 50;
+
+			eData.texRect = { 1 * 256,3 * 256 ,256,256 };
+			eData.initialColor = { 0,150,255,255 };
+			eData.finalColor = { 0,100,255,0 };
+			eData.blendMode = SDL_BLENDMODE_ADD;
+
+			eData.randRotSpeed = { -1,1 };
+			eData.randInitialSpeed = { 0,1 };
+			eData.randFinalSpeed = { 0,1 };
+			eData.randEmitMult = { 0,1 };
+			eData.randLife = { 0,1 };
+			eData.randInitialSize = { 1,1 };
+			eData.randFinalSize = { 1,1 };
+
+			eData.vortexActive = false;
+			eData.halfTex = false;
+			eData.eType = EmitterData::EmitterType::MAGIC;
 			emittersData[type] = eData;
 			break;
 		}
@@ -544,6 +612,12 @@ void ParticleSystem::LoadEmittersData()
 			break;
 		case 9:
 			type = EmitterData::EmitterType::TAUNT;
+			break;
+		case 10:
+			type = EmitterData::EmitterType::ITEM;
+			break;
+		case 11:
+			type = EmitterData::EmitterType::MAGIC;
 			break;
 		default:
 			break;
