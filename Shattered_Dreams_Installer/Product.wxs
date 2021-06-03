@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- STEP 0 -->
+	<Product Id="*" Name="Shattered Dreams" Language="1033" Version="1.0.0.0" Manufacturer="Bruhmentium Inc." UpgradeCode="E487F9B5-AAFE-4F29-AC66-02D0472C2525">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+    
+    <!-- STEP 5 -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir" />
+    <!-- STEP 5 -->
+    <WixVariable Id="WixUIBannerBmp" Value="assets\TopBanner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="assets\BackgroundBanner.bmp" />
+    <!-- STEP 5 -->
+    <WixVariable Id="WixUILicenseRtf" Value="assets\MyLicense.rtf" />
+    
+    <!-- STEP 4 -->
+    <Icon Id="icon.ico" SourceFile="assets\Icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+    <!-- FEATURE FRAGMENT -->
+		<Feature Id="ProductFeature" Title="Shattered Dreams" Level="1">
+      <!-- STEP 1 -->
+			<ComponentGroupRef Id="ProductComponents" />
+      <!-- STEP 2 -->
+      <ComponentRef Id="StartMenuShortcut" />
+      <!-- STEP 3 -->
+      <ComponentRef Id="DesktopShortcut" />
+      <!-- STEP 6 -->
+      <ComponentGroupRef Id="HeatGenerated" />
+		</Feature>
+	</Product>
+
+  <!-- SHORTCUTS FRAGMENT -->
+  <!-- STEP 2 -->
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="StartMenuShortcut" Guid="A7B7A053-4F57-4244-9881-E6707A0CB37F">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+               Name="Shattered Dreams"
+               Description="My UPC Game Description"
+               Target="[#shatered_dreams.exe]"
+               WorkingDirectory="INSTALLFOLDER"
+               Icon = "icon.ico"/><!-- STEP 4 -->
+        <RemoveFolder Id="RemoveProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\MyCompany\MyApplicationName" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- STEP 3 -->
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="276CEB3B-C306-466A-9CB1-4D4C463E637E">
+        <Shortcut Id="ApplicationDesktopShortcut"
+               Name="Shattered Dreams"
+               Description="My UPC Game Description"
+               Target="[#shatered_dreams.exe]"
+               WorkingDirectory="INSTALLFOLDER"
+               Icon = "icon.ico"/><!-- STEP 4 -->
+        <RemoveFolder Id="RemoveDesktopFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\MyCompany\MyApplicationName" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    
+  </Fragment>
+  
+  
+  <!-- DIRECTORIES FRAGMENT -->
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Shattered Dreams" />
+			</Directory>
+
+      <!-- STEP 2 -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Shattered Dreams"/>
+      </Directory>
+      
+      <!-- STEP 3 -->
+      <Directory Id="DesktopFolder" Name="Shattered Dreams" />
+
+    </Directory>
+  </Fragment>
+
+  <!-- COMPONENTS FRAGMENT -->
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- STEP 1 -->
+      <Component Id="shatered_dreams.exe" Guid="45A98019-8668-466B-83CC-C13710E9EB69">
+                <File Id="shatered_dreams.exe" Source="..\Build\Release\shatered_dreams.exe" KeyPath="yes" Checksum="yes" />
+            </Component> 
+    </ComponentGroup>
+	</Fragment>
+</Wix>
