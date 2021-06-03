@@ -78,6 +78,7 @@ public:
     void ManaCost(int value);
     void SelectTarget();
     void UpdateSelection(const SDL_Rect r);
+    void UpdateTurnArrow();
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
@@ -121,6 +122,9 @@ public:
 private:
     List<CombatEntity*> turnOrder;
     ListItem<CombatEntity*>* currentEntity = nullptr;
+    CombatEntity* pastEntity = nullptr;
+    float turnFrameTime;
+    bool increaseTurn;
     CombatEntity* target = nullptr;
     float targetFrameTime;
     bool increaseSelect;

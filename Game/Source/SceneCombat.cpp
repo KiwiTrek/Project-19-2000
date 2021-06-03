@@ -128,6 +128,7 @@ bool SceneCombat::Load()
 	currentChar = nullptr;
 	target = nullptr;
 	currentEntity = nullptr;
+	pastEntity = nullptr;
 	mainChar.box = { 1280,0,204,190 };
 	mainChar.characterTex = { 0,252,72,92 };
 	mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(15, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
@@ -207,7 +208,10 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	target = nullptr;
 	targetFrameTime = 0.0f;
 	increaseSelect = true;
+	turnFrameTime = 0.0f;
+	increaseTurn = true;
 	currentEntity = nullptr;
+	pastEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
 	finishedAction = false;
@@ -1278,6 +1282,7 @@ bool SceneCombat::Draw(Font* dialogueFont)
 
 	if (waitForTransition == TransitionStatus::END)
 	{
+		UpdateTurnArrow();
 		app->render->DrawText(dialogueFont, firstLine, 44, 52, 48, 2, white);
 		app->render->DrawText(dialogueFont, secondLine, 44, 52 + 48, 48, 2, white);
 		app->render->DrawText(dialogueFont, thirdLine, 44, 52 + 96, 48, 2, white);
@@ -1436,7 +1441,10 @@ bool SceneCombat::Finish()
 	target = nullptr;
 	targetFrameTime = 0.0f;
 	increaseSelect = true;
+	turnFrameTime = 0.0f;
+	increaseTurn = true;
 	currentEntity = nullptr;
+	pastEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
 	finishedAction = false;
@@ -1583,6 +1591,41 @@ void SceneCombat::UpdateSelection(const SDL_Rect r)
 
 	if (targetFrameTime >= 6.0f) increaseSelect = false;
 	else if (targetFrameTime <= 0.0f) increaseSelect = true;
+}
+
+void SceneCombat::UpdateTurnArrow()
+{
+	SDL_Rect sec = { 1332,192,61,54 };
+	CombatEntity* e = nullptr;
+	if (currentEntity != nullptr)
+	{
+		if (pastEntity != currentEntity->data && !wait) pastEntity = currentEntity->data;
+		e = pastEntity;
+	}
+	if (e == nullptr && turnOrder.start != nullptr) e = turnOrder.end->data;
+
+	if (e != nullptr)
+	{
+		iPoint pos;
+		if (IsCharacter(e))
+		{
+			SDL_Rect box = { 0,0,0,0 };
+			if (e->id == EntityId::MC) box = mainChar.box;
+			else if (e->id == EntityId::VIOLENT) box = grandpa.box;
+
+			pos = { e->entityRect.x + (box.w - sec.w) / 2, e->entityRect.y - sec.h };
+		}
+		else pos = { e->entityRect.x + (e->entityRect.w - sec.w) / 2, e->entityRect.y - sec.h };
+
+		if (!IsCharacter(e)) app->render->DrawTexture(combatGui, pos.x - app->render->camera.x, pos.y - (int)turnFrameTime - app->render->camera.y, false, &sec);
+		else if (!characterSelected) app->render->DrawTexture(combatGui, pos.x - app->render->camera.x, pos.y - (int)turnFrameTime - app->render->camera.y, false, &sec);
+	}
+
+	if (increaseTurn) turnFrameTime += 0.1f;
+	else turnFrameTime -= 0.1f;
+
+	if (turnFrameTime >= 7.0f) increaseTurn = false;
+	else if (turnFrameTime <= 0.0f) increaseTurn = true;
 }
 
 void SceneCombat::TickDownBuffs()
