@@ -205,6 +205,8 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 {
 	currentChar = nullptr;
 	target = nullptr;
+	targetFrameTime = 0.0f;
+	increaseSelect = true;
 	currentEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
@@ -1380,8 +1382,18 @@ bool SceneCombat::Draw(Font* dialogueFont)
 			while (e != nullptr)
 			{
 				if (e->data->collider->Intersects({ x, y, 1, 1 }))
-					app->render->DrawRectangle({ -app->render->camera.x + e->data->collider->rect.x, -app->render->camera.y + e->data->collider->rect.y,e->data->collider->rect.w,e->data->collider->rect.h }, 255, 255, 255, 150, false);
-
+				{
+					SDL_Rect r = { 0,0,0,0 };
+					if (IsCharacter(e->data))
+					{
+						if (e->data->id == EntityId::MC)
+							r = { mainChar.character->entityRect.x + 10, mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), mainChar.characterTex.w + 3, mainChar.characterTex.h };
+						else if (e->data->id == EntityId::VIOLENT)
+							r = { grandpa.character->entityRect.x + 10, grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2) - 4, grandpa.characterTex.w + 2, grandpa.characterTex.h };
+					}
+					else r = e->data->collider->rect;
+					UpdateSelection(r);
+				}
 				e = e->next;
 			}
 		}
@@ -1422,6 +1434,8 @@ bool SceneCombat::Finish()
 	enemy3 = nullptr;
 	currentChar = nullptr;
 	target = nullptr;
+	targetFrameTime = 0.0f;
+	increaseSelect = true;
 	currentEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
@@ -1553,6 +1567,22 @@ void SceneCombat::SelectTarget()
 			e = e->next;
 		}
 	}
+}
+
+void SceneCombat::UpdateSelection(const SDL_Rect r)
+{
+	app->render->DrawRectangle({ r.x - (int)targetFrameTime - app->render->camera.x,r.y - (int)targetFrameTime - app->render->camera.y,r.w + (int)targetFrameTime * 2,r.h + (int)targetFrameTime * 2 }, 255, 255, 255, 150, false);
+	app->render->DrawRectangle({ r.x - (int)(targetFrameTime + 1) - app->render->camera.x,r.y - (int)(targetFrameTime + 1) - app->render->camera.y,r.w + (int)(targetFrameTime + 1) * 2,r.h + (int)(targetFrameTime + 1) * 2 }, 255, 255, 255, 150, false);
+	app->render->DrawRectangle({ r.x - (int)(targetFrameTime + 2) - app->render->camera.x,r.y - (int)(targetFrameTime + 2) - app->render->camera.y,r.w + (int)(targetFrameTime + 2) * 2,r.h + (int)(targetFrameTime + 2) * 2 }, 255, 255, 255, 250, false);
+	app->render->DrawRectangle({ r.x - (int)(targetFrameTime + 3) - app->render->camera.x,r.y - (int)(targetFrameTime + 3) - app->render->camera.y,r.w + (int)(targetFrameTime + 3) * 2,r.h + (int)(targetFrameTime + 3) * 2 }, 255, 255, 255, 250, false);
+	app->render->DrawRectangle({ r.x - (int)(targetFrameTime + 4) - app->render->camera.x,r.y - (int)(targetFrameTime + 4) - app->render->camera.y,r.w + (int)(targetFrameTime + 4) * 2,r.h + (int)(targetFrameTime + 4) * 2 }, 255, 255, 255, 150, false);
+	app->render->DrawRectangle({ r.x - (int)(targetFrameTime + 7) - app->render->camera.x,r.y - (int)(targetFrameTime + 7) - app->render->camera.y,r.w + (int)(targetFrameTime + 7) * 2,r.h + (int)(targetFrameTime + 7) * 2 }, 255, 255, 255, 250, false);
+
+	if (increaseSelect) targetFrameTime += 0.15f;
+	else targetFrameTime -= 0.15f;
+
+	if (targetFrameTime >= 6.0f) increaseSelect = false;
+	else if (targetFrameTime <= 0.0f) increaseSelect = true;
 }
 
 void SceneCombat::TickDownBuffs()

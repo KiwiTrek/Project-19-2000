@@ -77,6 +77,7 @@ public:
     void Stress(int value);
     void ManaCost(int value);
     void SelectTarget();
+    void UpdateSelection(const SDL_Rect r);
     int EnemyTarget();
     bool IsCharacter(CombatEntity* e);
     void TickDownBuffs();
@@ -121,6 +122,8 @@ private:
     List<CombatEntity*> turnOrder;
     ListItem<CombatEntity*>* currentEntity = nullptr;
     CombatEntity* target = nullptr;
+    float targetFrameTime;
+    bool increaseSelect;
     bool characterSelected = false; // (For now, this is a temporal value for menu changing)
     bool targetAttack = false;
     bool finishedAction = false;
