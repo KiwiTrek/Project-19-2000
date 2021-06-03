@@ -181,14 +181,6 @@ bool SceneGameplay::Load()
 
 bool SceneGameplay::Update(float dt)
 {
-	if (app->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
-	{
-		int x, y;
-		app->input->GetMousePosition(x, y);
-		fPoint targetPos(x,y);
-		app->particles->AddEmitter(targetPos, EmitterData::EmitterType::ITEM);
-	}
-
 	dtSave = dt;
 	dtItem = dt;
 	UpdateDialogue(dt);
