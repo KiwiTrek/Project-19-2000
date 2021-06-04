@@ -2,7 +2,7 @@
 <!-- L01: DONE 1: Create configuration file-->
 <config>
   <app framerateCap ="60">
-    <title>Game Development Testbed</title>
+    <title>Shattered Dreams (v1.0)</title>
     <organization>UPC</organization>
   </app>
   <renderer>

@@ -289,7 +289,7 @@ bool QuestManager::DrawActiveQuests()
 	app->render->DrawTexture(bookTex, -app->render->camera.x + app->render->camera.w / 4, -app->render->camera.y, false, &bookBox);
 
 	int offsetY = 70;
-	int offsetX = (bookBox.w / 2) - (bookBox.w / 5);
+	int offsetX = (bookBox.w / 2) - (bookBox.w / 5) - 25;
 	char auxDescription[TEXT_LEN] = { 0 };
 	const char* cutText = "...";
 	ListItem<Quest*>* activeQuestList = questsActive.start;

@@ -87,31 +87,31 @@ bool SceneTitleScreen::Load()
 	app->gui->Enable();
 	btnStart = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -300, 300, 300, 60 }, "START", 40, this);
 	app->render->CreateSpline(&btnStart->bounds.x, 90, 2000, SplineType::QUART);
-	btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 400, 300, 60 }, "CONTINUE", 40, this);
-	app->render->CreateSpline(&btnContinue->bounds.x, 90, 2000, SplineType::QUART);
-	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -300, 500, 300, 60 }, "OPTIONS", 40, this);
-	app->render->CreateSpline(&btnOptions->bounds.x, 90, 2000, SplineType::QUART);
-	btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -300, 600, 300, 60 }, "EXIT", 40, this);
-	app->render->CreateSpline(&btnExit->bounds.x, 90, 2000, SplineType::QUART);
+	btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -450, 400, 300, 60 }, "CONTINUE", 40, this);
+	app->render->CreateSpline(&btnContinue->bounds.x, 90, 2250, SplineType::QUART);
+	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -600, 500, 300, 60 }, "OPTIONS", 40, this);
+	app->render->CreateSpline(&btnOptions->bounds.x, 90, 2500, SplineType::QUART);
+	btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -750, 600, 300, 60 }, "EXIT", 40, this);
+	app->render->CreateSpline(&btnExit->bounds.x, 90, 2750, SplineType::QUART);
     options = false;
 	/*if (strcmp(app->input->GetControllerName(), "unplugged") != 0) btnStart->state = GuiControlState::FOCUSED;*/
 
 	//OPTIONS
-	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
+	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 5, { -324, 200, 69, 42 }, "VOLUME", 40, this, 6);
 	sldrVolume->value = app->audio->GetMusicVolume();
 	sldrVolume->maxValue = 128;
 	tmpValue = (float)(sldrVolume->limits.w - sldrVolume->bounds.w) / (float)sldrVolume->maxValue;
 	sldrVolume->bounds.x = sldrVolume->limits.x + (tmpValue * sldrVolume->value);
 
-	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 800, 200, 69, 42 }, "FX", 40, this, 6);
+	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 6, { 1280, 200, 69, 42 }, "FX", 40, this, 6);
 	sldrFx->value = app->audio->GetFxVolume();
 	sldrFx->maxValue = 128;
 	tmpValue = (float)(sldrFx->limits.w - sldrFx->bounds.w) / (float)sldrFx->maxValue;
 	sldrFx->bounds.x = sldrFx->limits.x + (tmpValue * sldrFx->value);
 
-	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { 180, 400, 60, 60 }, "FULLSCREEN", 40, this);
-	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 800, 400, 60, 60 }, "VSync", 40, this);
-	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 800, 600, 200, 60 }, "BACK", 40, this);
+	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 7, { -324, 400, 60, 60 }, "FULLSCREEN", 40, this);
+	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 8, { 1280, 400, 60, 60 }, "VSync", 40, this);
+	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 9, { 1280, 600, 200, 60 }, "BACK", 40, this);
 	
 	// Used for the Gamepad GUI control
 	app->scene->currentButton = app->gui->controls.start;
@@ -122,7 +122,7 @@ bool SceneTitleScreen::Load()
 	app->input->mouseMotionY = 0;
 	app->scene->continueLoadRequest = false;
 
-	// Title Card easings
+	// Title easings
 	onceFx = true;
 	titleCardPos.x = 90;
 	uint tmpW;
@@ -133,6 +133,10 @@ bool SceneTitleScreen::Load()
 	titleCardPos.y = -titleCardPos.h;
 	titleAlpha = 0.0f;
 	app->render->CreateSpline(&titleCardPos.y,64,2000,SplineType::QUART);
+
+	strcpy_s(titleOptions, TEXT_LEN, "Options");
+	optionsPos.x = ((app->render->camera.w - (strlen(titleOptions) * 24)) / 2);
+	optionsPos.y = -70;
 
 	return false;
 }
@@ -227,9 +231,7 @@ bool SceneTitleScreen::Draw()
 	if (options)
 	{
         app->render->DrawRectangle(app->render->camera, 0, 0, 0, 200);
-		char titleOptions[TEXT_LEN] = { 0 };
-		strcpy_s(titleOptions, TEXT_LEN, "Options");
-        app->render->DrawText(buttonFont, titleOptions, /*app->render->camera.x + */((app->render->camera.w - (strlen(titleOptions) * 24)) / 2), 100, 64, 2, white);
+        app->render->DrawText(buttonFont, titleOptions, optionsPos.x, optionsPos.y, 64, 2, white);
 
         sldrVolume->Draw();
         sldrFx->Draw();
@@ -264,6 +266,7 @@ bool SceneTitleScreen::Unload()
 	app->gui->Disable();
 	RELEASE(buttonFont);
 	app->scene->currentButton = nullptr;
+	app->render->DestroySplines();
 
 	return true;
 }
@@ -273,6 +276,7 @@ bool SceneTitleScreen::Unload()
 //----------------------------------------------------------
 bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
 {
+	int relativePos = 0;
 	switch (control->id)
 	{
 	case 1: //START
@@ -283,12 +287,32 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
 		app->scene->continueLoadRequest = true;
 		break;
 	case 3: //OPTIONS
-        options = true;
+	{
+		options = true;
 		changeMenu = true;
 		app->audio->PlayMusic("Audio/Music/Options.ogg");
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		//Easings
+		app->render->DestroySplines();
+
+		btnStart->bounds.x = -300;
+		btnContinue->bounds.x = -450;
+		btnOptions->bounds.x = -600;
+		btnExit->bounds.x = -750;
+
+		app->render->CreateSpline(&optionsPos.y, 100, 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrVolume->limits.x, 180, 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrVolume->bounds.x, 180 + (sldrVolume->bounds.x - sldrVolume->limits.x), 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrFx->limits.x, 800, 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrFx->bounds.x, 800 + (sldrFx->bounds.x - sldrFx->limits.x), 2000, SplineType::QUART);
+		app->render->CreateSpline(&boxFullScreen->bounds.x, 180, 2000, SplineType::QUART);
+		app->render->CreateSpline(&boxVSync->bounds.x, 800, 2000, SplineType::QUART);
+		app->render->CreateSpline(&btnBack->bounds.x, 800, 2000, SplineType::QUART);
+
 		break;
+	}
 	case 4: //EXIT
 		app->exitRequest = true;
 		break;
@@ -306,12 +330,34 @@ bool SceneTitleScreen::OnGuiMouseClickEvent(GuiControl* control)
 		app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
 	case 9: //BACK
-        options = false;
+	{
+		options = false;
 		app->audio->PlayMusic("Audio/Music/Title.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		//Easings
+		app->render->DestroySplines();
+
+		optionsPos.y = -70;
+		relativePos = sldrVolume->bounds.x - sldrVolume->limits.x;
+		sldrVolume->limits.x = -324;
+		sldrVolume->bounds.x = -324 + relativePos;
+		relativePos = sldrFx->bounds.x - sldrFx->limits.x;
+		sldrFx->limits.x = 1280;
+		sldrFx->bounds.x = 1280 + relativePos;
+		boxFullScreen->bounds.x = -324;
+		boxVSync->bounds.x = 1280;
+		btnBack->bounds.x = 1280;
+
+		app->render->CreateSpline(&btnStart->bounds.x, 90, 2000, SplineType::QUART);
+		app->render->CreateSpline(&btnContinue->bounds.x, 90, 2250, SplineType::QUART);
+		app->render->CreateSpline(&btnOptions->bounds.x, 90, 2500, SplineType::QUART);
+		app->render->CreateSpline(&btnExit->bounds.x, 90, 2750, SplineType::QUART);
+
 		break;
+	}
 	default:
 		break;
 	}

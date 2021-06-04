@@ -8,6 +8,9 @@
             <Component Id="cmpFF71769B2BBCCDDA5899221C0383FF13" Guid="*">
                 <File Id="fil475044D3B362116413DCC77EDFD27780" KeyPath="yes" Source="$(var.HarvestPath)\config.xml" />
             </Component>
+            <Component Id="cmp233DA87865D8E1F7A008246AF09C57F9" Guid="*">
+                <File Id="fil234291F19DE2AB90D754479E42496D39" KeyPath="yes" Source="$(var.HarvestPath)\Game.exe" />
+            </Component>
             <Component Id="cmpCF1E215A80FB6EC3FF19F7AE9C7107E5" Guid="*">
                 <File Id="fil4F78FCCDED085E2F3CD75BF27B00F761" KeyPath="yes" Source="$(var.HarvestPath)\libogg-0.dll" />
             </Component>
@@ -44,6 +47,7 @@
         <ComponentGroup Id="HeatGenerated">
             <ComponentRef Id="cmp0AD1E85784D6D319FDEC2FC0973B2A5F" />
             <ComponentRef Id="cmpFF71769B2BBCCDDA5899221C0383FF13" />
+            <ComponentRef Id="cmp233DA87865D8E1F7A008246AF09C57F9" />
             <ComponentRef Id="cmpCF1E215A80FB6EC3FF19F7AE9C7107E5" />
             <ComponentRef Id="cmp12F0C448A405134CF5FCE8B012ED00DC" />
             <ComponentRef Id="cmpB2478D88F2CA3BDA61B643B58AD5DC07" />

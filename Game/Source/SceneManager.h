@@ -43,6 +43,7 @@ public:
 	bool onTransition;
 	bool continueLoadRequest;
 	float transitionAlpha;
+	int testFx = -1;
 
 	char folderAudioFx[TEXT_LEN] = { 0 };
 	char folderTexture[TEXT_LEN] = { 0 };

@@ -51,6 +51,7 @@ public:
 	bool DrawText(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint);
 	bool DrawTextAnimated(Font* font, const char* text, int x, int y, int size, int spacing, SDL_Color tint, int timeStep);
 	void CreateSpline(int* position, const int& finalPos, const float& time, const SplineType& type);	//Time in ms
+	void DestroySplines();
 
 	void SetBackgroundColor(SDL_Color color);
 

@@ -94,6 +94,7 @@ bool GuiSlider::Update(float dt)
 		if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
 		{
 			state = GuiControlState::NORMAL;
+			if (strcmp(this->text, "FX") == 0) { app->audio->PlayFx(app->scene->testFx); };
 		}
 	}
 

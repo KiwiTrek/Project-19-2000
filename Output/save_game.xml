@@ -10,10 +10,14 @@
 	<map>
 		<data name="tutorial.tmx" />
 	</map>
-	<scenemanager />
+	<scenemanager>
+		<item id="1" count="3">
+			<effect name="HP Potion" turns="-1" />
+		</item>
+	</scenemanager>
 	<entityManager>
 		<player>
-			<coordinates x="960" y="5760" />
+			<coordinates x="960" y="4868" />
 		</player>
 		<MC>
 			<stats pAtk="15" mAtk="0" pDef="10" mDef="10" hPoints="100" hPointsMax="100" speed="50" mPoints="100" mPointsMax="100" stress="0" stressMax="100" />
@@ -26,8 +30,9 @@
 		<flags nightmareBoss="true" />
 	</collisions>
 	<guiManager />
-	<quests tpFlags="0" boolFlags="0">
-		<quest id="1" title="Find out what is this place" description="Meet your... grandpa?" rewardXP="0" rewardGold="0" requiredId="0" isCompleted="false" status="0" />
+	<particleManager />
+	<quests tpFlags="1" boolFlags="0">
+		<quest id="1" title="Find out what is this place" description="Meet your... grandpa?" rewardXP="0" rewardGold="0" requiredId="0" isCompleted="false" status="1" />
 		<quest id="2" title="Complete your first puzzle" description="Manage your knowledge and skills and escape from the puzzle." rewardXP="0" rewardGold="0" requiredId="0" isCompleted="false" status="0" />
 		<quest id="3" title="Win your first fight" description="Now you will have to continue and fight off with several monsters." rewardXP="0" rewardGold="0" requiredId="2" isCompleted="false" status="0" />
 		<quest id="4" title="Survive the bigger puzzle" description="Now you will have to complete a bigger puzzle, now with monsters in between, take care!" rewardXP="0" rewardGold="0" requiredId="0" isCompleted="false" status="0" />

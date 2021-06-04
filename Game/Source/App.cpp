@@ -256,7 +256,8 @@ void App::FinishUpdate()
 		sprintf_s(vsyncStr, "off");
 
 	sprintf_s(title, 256, "FPS: %i Av.FPS: %.2f Last Frame Ms: %02u Vsync: %s", framesOnLastUpdate, averageFps, lastFrameMs, vsyncStr);
-	app->win->SetTitle(title);
+	if (app->render->debug) app->win->SetTitle(title);
+	else app->win->SetTitle("Shattered Dreams (v1.0)");
 
 	// Use SDL_Delay to make sure you get your capped framerate
 	PERF_START(pTimer);

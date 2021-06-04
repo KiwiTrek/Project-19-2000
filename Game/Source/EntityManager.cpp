@@ -382,7 +382,7 @@ bool EntityManager::Load(pugi::xml_node& save)
 	while (e != nullptr)
 	{
 		ListItem<Entity*>* eNext = e->next;
-		if (e->data->id == EntityId::MC || e->data->id == EntityId::VIOLENT) DestroyEntity(e->data);
+		if (e->data->id == EntityId::MC || e->data->id == EntityId::VIOLENT || e->data->type == EntityType::PLAYER) DestroyEntity(e->data);
 		e = eNext;
 	}
 

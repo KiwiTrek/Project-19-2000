@@ -126,20 +126,7 @@ bool Render::CleanUp()
 {
 	LOG("Destroying SDL render");
 
-	std::list<SplineInfo*>::iterator item = splines.begin();
-
-	for (; item != splines.end(); ++item) {
-
-		if (*item != nullptr) {
-
-			delete(*item);
-			(*item) = nullptr;
-
-		}
-
-	}
-
-	splines.clear();
+	DestroySplines();
 
 	SDL_DestroyRenderer(renderer);
 
@@ -429,4 +416,22 @@ void Render::CreateSpline(int* position, const int& finaPos, const float& time, 
 		splines.push_back(info);
 	else
 		LOG("Error when creating the spline");
+}
+
+void Render::DestroySplines()
+{
+	std::list<SplineInfo*>::iterator item = splines.begin();
+
+	for (; item != splines.end(); ++item) {
+
+		if (*item != nullptr) {
+
+			delete(*item);
+			(*item) = nullptr;
+
+		}
+
+	}
+
+	splines.clear();
 }

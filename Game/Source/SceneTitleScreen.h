@@ -42,7 +42,9 @@ private:
     GuiButton* btnOptions = nullptr;
     GuiButton* btnExit = nullptr;
 
-    //OPTIONS                      
+    //OPTIONS
+    char titleOptions[TEXT_LEN] = { 0 };
+    iPoint optionsPos;
     GuiSlider* sldrVolume = nullptr;
     GuiSlider* sldrFx = nullptr;
     GuiCheckBox* boxFullScreen = nullptr;

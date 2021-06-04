@@ -129,9 +129,13 @@ bool SceneCombat::Load()
 	target = nullptr;
 	currentEntity = nullptr;
 	pastEntity = nullptr;
+
+	menuCharacterBox = { 324,539,204,135 };
 	mainChar.box = { 1280,0,204,190 };
 	mainChar.characterTex = { 0,252,72,92 };
 	mainChar.character = (CombatEntity*)app->entities->CreateEntity(36, app->render->camera.h - mainChar.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::MC, Stats(15, 0, 10, 10, 100, 100, 50, 100, 100, 0, 100));
+	mainChar.x = 1280;
+	mainChar.y = 80;
 	sprintf_s(mainChar.hp, TEXT_LEN, "HP: %d/%d", mainChar.character->stats.hPoints, mainChar.character->stats.hPointsMax);
 	sprintf_s(mainChar.mp, TEXT_LEN, "MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
 	sprintf_s(mainChar.stress, TEXT_LEN, "ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
@@ -148,6 +152,8 @@ bool SceneCombat::Load()
 	grandpa.box = { 1280,0,204,190 };
 	grandpa.characterTex = { 73,252,68,100 };
 	grandpa.character = (CombatEntity*)app->entities->CreateEntity(grandpa.box.w + 36, app->render->camera.h - grandpa.box.h - 25, EntityType::COMBAT_ENTITY, EntityId::VIOLENT, Stats(25, 25, 0, 0, 100, 100, 25, 100, 100));
+	grandpa.x = 1880;
+	grandpa.y = 80 + menuCharacterBox.h;
 	sprintf_s(grandpa.hp, TEXT_LEN, "HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 	sprintf_s(grandpa.mp, TEXT_LEN, "MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
 
@@ -1288,6 +1294,8 @@ bool SceneCombat::Draw(Font* dialogueFont)
 		app->render->DrawText(dialogueFont, thirdLine, 44, 52 + 96, 48, 2, white);
 		if (wait && !blink)
 		{
+			app->render->DrawText(dialogueFont, "Press", combatTextBox.w - (arrowCombat.w / 2) - arrowCombat.w - 20, combatTextBox.h - arrowCombat.h - (arrowCombat.h / 2) - 46, 16, 2, white);
+			app->render->DrawText(dialogueFont, "Select", combatTextBox.w - (arrowCombat.w / 2) - arrowCombat.w - 20, combatTextBox.h - arrowCombat.h - (arrowCombat.h / 2) - 30, 16, 2, white);
 			app->render->DrawTexture(combatGui, -app->render->camera.x + combatTextBox.w - (arrowCombat.w / 2) - arrowCombat.w - 20, -app->render->camera.y + combatTextBox.h - arrowCombat.h - (arrowCombat.h / 2) - 10, false, &arrowCombat);
 		}
 

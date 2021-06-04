@@ -148,7 +148,7 @@ bool Map::CleanUp()
 	}
 	data.mapLayer.Clear();
 
-	memset(name, 0, TEXT_LEN);
+	memset(data.name, 0, TEXT_LEN);
 	data.width = 0;
 	data.height = 0;
 	data.tileWidth = 0;

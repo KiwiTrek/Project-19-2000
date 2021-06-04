@@ -46,6 +46,10 @@ bool SceneManager::Awake(pugi::xml_node& config)
 	strcpy_s(folderTexture, TEXT_LEN, config.child("folderTexture").child_value());
 	strcpy_s(folderFonts, TEXT_LEN, config.child("folderFonts").child_value());
 
+	char tmp[TEXT_LEN] = { 0 };
+	sprintf_s(tmp, TEXT_LEN, "%s%s", folderAudioFx, "ItemCollected.wav");
+	testFx = app->audio->LoadFx(tmp);
+
 	return ret;
 }
 

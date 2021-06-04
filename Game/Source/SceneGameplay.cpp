@@ -54,35 +54,40 @@ bool SceneGameplay::Load()
 	app->gui->Enable();
 	menuBox = { 324,0,692,540 };
 	menuCharacterBox = { 324,539,204,135 };
-	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 90, 80, 200, 60 }, "INVENTORY", 35, this);
-	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 90, 160, 200, 60 }, "SKILLS", 40, this);
-	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 90, 240, 200, 60 }, "       SKILL TREE", 35, this);
-	btnQuests = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { 90, 320, 200, 60 }, "QUESTS", 35, this);
+	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -200, 80, 200, 60 }, "INVENTORY", 35, this);
+	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 160, 200, 60 }, "SKILLS", 40, this);
+	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -400, 240, 200, 60 }, "       SKILL TREE", 35, this);
+	btnQuests = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 4, { -500, 320, 200, 60 }, "QUESTS", 35, this);
 
-	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { 90, 400, 200, 60 }, " STATS ", 40, this);
+	btnStats = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 5, { -600, 400, 200, 60 }, " STATS ", 40, this);
 	statFlags = 0;
     onceStatsFx = true;
 
-	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { 90, 480, 200, 60 }, "OPTIONS", 35, this);
-	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { 90, 560, 200, 60 }, "          TITLE SCREEN", 35, this);
+	btnOptions = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 6, { -700, 480, 200, 60 }, "OPTIONS", 35, this);
+	btnTitleScreen = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 7, { -800, 560, 200, 60 }, "          TITLE SCREEN", 35, this);
 
 	//OPTIONS
     options = false;
-	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 8, { 180, 200, 69, 42 }, "VOLUME", 40, this, 6);
+
+	strcpy_s(titleOptions, TEXT_LEN, "Options");
+	optionsPos.x = ((app->render->camera.w - (strlen(titleOptions) * 24)) / 2);
+	optionsPos.y = -70;
+
+	sldrVolume = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 8, { -324, 200, 69, 42 }, "VOLUME", 40, this, 6);
 	sldrVolume->value = app->audio->GetMusicVolume();
 	sldrVolume->maxValue = 128;
 	tmpValue = (float)(sldrVolume->limits.w - sldrVolume->bounds.w) / (float)sldrVolume->maxValue;
 	sldrVolume->bounds.x = sldrVolume->limits.x + (tmpValue * sldrVolume->value);
 
-	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 9, { 800, 200, 69, 42 }, "FX", 40, this, 6);
+	sldrFx = (GuiSlider*)app->gui->CreateGuiControl(GuiControlType::SLIDER, 9, { 1280, 200, 69, 42 }, "FX", 40, this, 6);
 	sldrFx->value = app->audio->GetFxVolume();
 	sldrFx->maxValue = 128;
 	tmpValue = (float)(sldrFx->limits.w - sldrFx->bounds.w) / (float)sldrFx->maxValue;
 	sldrFx->bounds.x = sldrFx->limits.x + (tmpValue * sldrFx->value);
 
-	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 10, { 180, 400, 60, 60 }, "FULLSCREEN", 40, this);
-	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 11, { 800, 400, 60, 60 }, "VSync", 40, this);
-	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 800, 600, 200, 60 }, "BACK", 40, this);
+	boxFullScreen = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 10, { -324, 400, 60, 60 }, "FULLSCREEN", 40, this);
+	boxVSync = (GuiCheckBox*)app->gui->CreateGuiControl(GuiControlType::CHECKBOX, 11, { 1280, 400, 60, 60 }, "VSync", 40, this);
+	btnBack = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 12, { 1280, 600, 200, 60 }, "BACK", 40, this);
 
 	//ITEMS
 	itemSelected = 0;
@@ -184,6 +189,11 @@ bool SceneGameplay::Update(float dt)
 	dtSave = dt;
 	dtItem = dt;
 	UpdateDialogue(dt);
+
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		TransitionToScene(SceneType::ENDING);
+	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 	{
@@ -1017,6 +1027,18 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				flags = 0;
 			}
 			app->entities->inPause = !app->entities->inPause;
+			
+			//Easings
+			app->render->DestroySplines();
+			app->render->CreateSpline(&btnInventory->bounds.x,90,300,SplineType::QUART);
+			app->render->CreateSpline(&btnSkills->bounds.x,90,325,SplineType::QUART);
+			app->render->CreateSpline(&btnSkillTree->bounds.x,90,350,SplineType::QUART);
+			app->render->CreateSpline(&btnQuests->bounds.x,90,375,SplineType::QUART);
+			app->render->CreateSpline(&btnStats->bounds.x,90,400,SplineType::QUART);
+			app->render->CreateSpline(&btnOptions->bounds.x,90,425,SplineType::QUART);
+			app->render->CreateSpline(&btnTitleScreen->bounds.x,90,450,SplineType::QUART);
+			app->render->CreateSpline(&combatScene->mainChar.x, 984, 300, SplineType::QUART);
+			app->render->CreateSpline(&combatScene->grandpa.x, 984, 400, SplineType::QUART);
 		}
 
 		// Volume between pause menu and gameplay logic
@@ -1029,6 +1051,16 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 		else
 		{
 			app->audio->SetMusicVolume(app->audio->auxVolume);
+			app->render->DestroySplines();
+			btnInventory->bounds.x = -200;
+			btnSkills->bounds.x = -300;
+			btnSkillTree->bounds.x = -400;
+			btnQuests->bounds.x = -500;
+			btnStats->bounds.x = -600;
+			btnOptions->bounds.x = -700;
+			btnTitleScreen->bounds.x = -800;
+			combatScene->mainChar.x = 1280;
+			combatScene->grandpa.x = 1880;
 		}
 	}
 
@@ -1137,18 +1169,18 @@ bool SceneGameplay::DrawPauseMenu()
 		// Character Boxes
 		if (combatScene->characterFlags >= 2)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + 80, false, &menuCharacterBox);
-			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + 80 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.hp, /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20, 28, 1, white);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.mp, /*-app->render->camera.x + */984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 30, 28, 1, white);
-			app->render->DrawText(dialogueFont, combatScene->mainChar.stress, /*-app->render->camera.x +*/ 984 + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ 80 + 20 + 60, 28, 1, white);
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + combatScene->mainChar.x, -app->render->camera.y + combatScene->mainChar.y, false, &menuCharacterBox);
+			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + combatScene->mainChar.x + 10, -app->render->camera.y + combatScene->mainChar.y + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.hp, /*-app->render->camera.x +*/combatScene->mainChar.x + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ combatScene->mainChar.y + 20, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.mp, /*-app->render->camera.x + */combatScene->mainChar.x + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ combatScene->mainChar.y + 20 + 30, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->mainChar.stress, /*-app->render->camera.x +*/combatScene->mainChar.x + combatScene->mainChar.characterTex.w + 15, /*-app->render->camera.y +*/ combatScene->mainChar.y + 20 + 60, 28, 1, white);
 		}
 		if (combatScene->characterFlags >= 6)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, false, &menuCharacterBox);
-			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 984 + 10, -app->render->camera.y + menuCharacterBox.h + 80 + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
-			app->render->DrawText(dialogueFont, combatScene->grandpa.hp,/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20, 28, 1, white);
-			app->render->DrawText(dialogueFont, combatScene->grandpa.mp,/* -app->render->camera.x +*/ 984 + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ menuCharacterBox.h + 80 + 20 + 30, 28, 1, white);
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + combatScene->grandpa.x, -app->render->camera.y + combatScene->grandpa.y, false, &menuCharacterBox);
+			app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + combatScene->grandpa.x + 10, -app->render->camera.y + combatScene->grandpa.y + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
+			app->render->DrawText(dialogueFont, combatScene->grandpa.hp,/* -app->render->camera.x +*/ combatScene->grandpa.x + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ combatScene->grandpa.y + 20, 28, 1, white);
+			app->render->DrawText(dialogueFont, combatScene->grandpa.mp,/* -app->render->camera.x +*/ combatScene->grandpa.x + combatScene->grandpa.characterTex.w + 15, /*-app->render->camera.y +*/ combatScene->grandpa.y + 20 + 30, 28, 1, white);
 		}
 		/*
 		if (characterFlags >= 7)
@@ -1333,9 +1365,7 @@ bool SceneGameplay::DrawPauseMenu()
 	else if (options)
 	{
 		app->render->DrawRectangle({ -app->render->camera.x,-app->render->camera.y,app->render->camera.w,app->render->camera.h }, 0, 0, 0, 200);
-		char titleOptions[TEXT_LEN] = { 0 };
-		strcpy_s(titleOptions, TEXT_LEN, "Options");
-		app->render->DrawText(buttonFont, titleOptions, /*-app->render->camera.x +*/ ((app->render->camera.w - (strlen(titleOptions) * 24)) / 2), 100, 64, 2, { 255, 255, 255, 255 });
+		app->render->DrawText(buttonFont, titleOptions, optionsPos.x, optionsPos.y, 64, 2, { 255, 255, 255, 255 });
 		sldrVolume->Draw(-app->render->camera.x, -app->render->camera.y);
 		sldrFx->Draw(-app->render->camera.x, -app->render->camera.y);
 		if (app->win->fullscreenWindow)
@@ -1381,6 +1411,7 @@ bool SceneGameplay::Unload()
 //----------------------------------------------------------
 bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 {
+	int relativePos = 0;
 	switch (control->id)
 	{
 	//MENU
@@ -1428,6 +1459,29 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		//Easings
+		app->render->DestroySplines();
+
+		btnInventory->bounds.x = -200;
+		btnSkills->bounds.x = -300;
+		btnSkillTree->bounds.x = -400;
+		btnQuests->bounds.x = -500;
+		btnStats->bounds.x = -600;
+		btnOptions->bounds.x = -700;
+		btnTitleScreen->bounds.x = -800;
+		combatScene->mainChar.x = 1280;
+		combatScene->grandpa.x = 1880;
+
+		app->render->CreateSpline(&optionsPos.y, 100, 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrVolume->limits.x, 180, 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrVolume->bounds.x, 180 + (sldrVolume->bounds.x - sldrVolume->limits.x), 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrFx->limits.x, 800, 2000, SplineType::QUART);
+		app->render->CreateSpline(&sldrFx->bounds.x, 800 + (sldrFx->bounds.x - sldrFx->limits.x), 2000, SplineType::QUART);
+		app->render->CreateSpline(&boxFullScreen->bounds.x, 180, 2000, SplineType::QUART);
+		app->render->CreateSpline(&boxVSync->bounds.x, 800, 2000, SplineType::QUART);
+		app->render->CreateSpline(&btnBack->bounds.x, 800, 2000, SplineType::QUART);
+
 		break;
 	case 7: //TITLE SCREEN
 		app->entities->inPause = false;
@@ -1447,13 +1501,37 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 	case 11: //VSYNC
 		//app->render->ToggleVsync(boxVSync->checked, (Module*)this);
 		break;
-	case 12: //BACK (OPTIONS BACK)
+	case 12: //BACK (OPTIONS)
         options = false;
 		if (strcmp(app->map->data.name, "tutorial.tmx") == 0) app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 		else if (strcmp(app->map->data.name, "home.tmx") == 0) app->audio->PlayMusic("Audio/Music/Home.ogg");
 		changeMenu = true;
 		app->gui->ResetButtons();
 		usingGamepad = true;
+
+		app->render->DestroySplines();
+
+		optionsPos.y = -70;
+		relativePos = sldrVolume->bounds.x - sldrVolume->limits.x;
+		sldrVolume->limits.x = -324;
+		sldrVolume->bounds.x = -324 + relativePos;
+		relativePos = sldrFx->bounds.x - sldrFx->limits.x;
+		sldrFx->limits.x = 1280;
+		sldrFx->bounds.x = 1280 + relativePos;
+		boxFullScreen->bounds.x = -324;
+		boxVSync->bounds.x = 1280;
+		btnBack->bounds.x = 1280;
+
+		app->render->CreateSpline(&btnInventory->bounds.x, 90, 300, SplineType::QUART);
+		app->render->CreateSpline(&btnSkills->bounds.x, 90, 325, SplineType::QUART);
+		app->render->CreateSpline(&btnSkillTree->bounds.x, 90, 350, SplineType::QUART);
+		app->render->CreateSpline(&btnQuests->bounds.x, 90, 375, SplineType::QUART);
+		app->render->CreateSpline(&btnStats->bounds.x, 90, 400, SplineType::QUART);
+		app->render->CreateSpline(&btnOptions->bounds.x, 90, 425, SplineType::QUART);
+		app->render->CreateSpline(&btnTitleScreen->bounds.x, 90, 450, SplineType::QUART);
+		app->render->CreateSpline(&combatScene->mainChar.x, 984, 300, SplineType::QUART);
+		app->render->CreateSpline(&combatScene->grandpa.x, 984, 400, SplineType::QUART);
+
 		break;
 	case 13: //ITEM 1
 		app->gui->ResetButtons();

@@ -85,6 +85,8 @@ private:
 	GuiButton* btnTitleScreen;
 
 	//OPTIONS
+	char titleOptions[TEXT_LEN] = { 0 };
+	iPoint optionsPos;
 	GuiSlider* sldrVolume;
 	GuiSlider* sldrFx;
 	GuiCheckBox* boxFullScreen;

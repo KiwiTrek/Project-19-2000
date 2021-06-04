@@ -33,9 +33,12 @@ bool SceneEnding::Load()
 	bg = app->tex->Load(tmp);
 
 	app->gui->Enable();
-	btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -300, 400, 300, 60 }, "RETRY", 40, this);
-	btnTitle = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 500, 300, 60 }, "TITLE", 40, this);
-	btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -300, 600, 300, 60 }, "EXIT", 40, this);
+	btnContinue = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { 0, 1020, 300, 60 }, "RETRY", 40, this);
+	btnContinue->bounds.x = app->render->camera.w / 2 - btnContinue->bounds.w / 2;
+	btnTitle = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { 0, 1020, 300, 60 }, "TITLE", 40, this);
+	btnTitle->bounds.x = app->render->camera.w / 2 - btnTitle->bounds.w / 2;
+	btnExit = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { 0, 1020, 300, 60 }, "EXIT", 40, this);
+	btnExit->bounds.x = app->render->camera.w / 2 - btnExit->bounds.w / 2;
 
 	app->scene->currentButton = app->gui->controls.start;
 
@@ -74,12 +77,12 @@ bool SceneEnding::Update(float dt)
 	{
 		timeCounter += (TIMER_SPEED * dt);
 
-		if (timeCounter > 3.0f)
+		if (timeCounter > 2.5f)
 		{
 			timeCounter = 5.0f;
-			app->render->CreateSpline(&btnContinue->bounds.x, app->render->camera.w/2 - btnContinue->bounds.w / 2, 2000, SplineType::QUART);
-			app->render->CreateSpline(&btnTitle->bounds.x, app->render->camera.w/2 - btnTitle->bounds.w / 2, 2000, SplineType::QUART);
-			app->render->CreateSpline(&btnExit->bounds.x, app->render->camera.w/2 - btnExit->bounds.w / 2, 2000, SplineType::QUART);
+			app->render->CreateSpline(&btnContinue->bounds.y, 400, 2000, SplineType::BACK);
+			app->render->CreateSpline(&btnTitle->bounds.y, 500, 2000, SplineType::BACK);
+			app->render->CreateSpline(&btnExit->bounds.y, 600, 2000, SplineType::BACK);
 			state = 2;
 		}
 	}
@@ -119,6 +122,7 @@ bool SceneEnding::Unload()
 
 	app->gui->Disable();
 	app->scene->currentButton = nullptr;
+	app->render->DestroySplines();
 
 	return false;
 }

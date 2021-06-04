@@ -106,6 +106,7 @@ public:
     SDL_Texture* combatGui = nullptr;
     SDL_Rect combatTextBox;
     SDL_Rect combatMenuBox;
+    SDL_Rect menuCharacterBox;
     int characterFlags = 0;
 
     CombatCharacter mainChar;
