@@ -6,6 +6,7 @@
 #include "Render.h"
 #include "Fonts.h"
 #include "SceneManager.h"
+#include "Collisions.h"
 
 #include "Log.h"
 
@@ -94,7 +95,10 @@ bool GuiSlider::Update(float dt)
 		if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
 		{
 			state = GuiControlState::NORMAL;
-			if (strcmp(this->text, "FX") == 0) { app->audio->PlayFx(app->scene->testFx); };
+			int x, y;
+			app->input->GetMousePosition(x, y);
+			Collider tmp = Collider({ bounds.x,bounds.y,normal.w,normal.h }, Collider::Type::OTHER);
+			if (strcmp(this->text, "FX") == 0 && tmp.Intersects({ x,y,1,1 })) app->audio->PlayFx(app->scene->testFx);
 		}
 	}
 
