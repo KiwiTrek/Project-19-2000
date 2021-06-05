@@ -442,6 +442,39 @@ bool SceneCombat::Update(float dt)
 									NextLine(tmp);
 									app->audio->PlayFx(app->entities->itemFx);
 									if (items.At(itemSelected - 1)->data->count == 0) items.Del(items.At(itemSelected - 1));
+									fPoint targetPos(target->entityRect.x + (target->entityRect.w/2), target->entityRect.y + (target->entityRect.h/2));
+									switch (items.At(itemSelected - 1)->data->id)
+									{
+									case ItemId::NONE:
+										break;
+									case ItemId::HP_POTION:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										break;
+									case ItemId::MANA_POTION:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										break;
+									case ItemId::ELIXIR:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										break;
+									case ItemId::GRANDMA_STEW:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										break;
+									case ItemId::BOTTLED_SMITE:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+										break;
+									case ItemId::HAPPILLS:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										break;
+									case ItemId::PHYS_BUFFER:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+										break;
+									case ItemId::MAGIC_BUFFER:
+										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+										break;
+									default:
+										break;
+									}
+
 
 									itemSelected = 0;
 									target = nullptr;

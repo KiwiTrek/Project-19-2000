@@ -22,6 +22,7 @@ bool QuestManager::Start()
 	font = new Font("Fonts/DialogueFont.xml");
 	bookTex = app->tex->Load("Textures/ScrollQuest.png");
 	bookBox = { 0,0,1280,720 };
+	bookPos = { app->render->camera.w / 4,1280 };
 
 	pugi::xml_node questNode;
 	pugi::xml_document questData;
@@ -133,7 +134,7 @@ bool QuestManager::CleanUp()
 	while (finishL != nullptr)
 	{
 		ListItem<Quest*>* finishLNext = finishL->next;
-		questsActive.Del(finishL);
+		questsFinished.Del(finishL);
 		finishL = finishLNext;
 	}
 	questsFinished.Clear();
@@ -286,10 +287,10 @@ bool QuestManager::DebugQuests()
 bool QuestManager::DrawActiveQuests()
 {
 	// Draw back square
-	app->render->DrawTexture(bookTex, -app->render->camera.x + app->render->camera.w / 4, -app->render->camera.y, false, &bookBox);
+	app->render->DrawTexture(bookTex, -app->render->camera.x + bookPos.x, -app->render->camera.y + bookPos.y, false, &bookBox);
 
-	int offsetY = 70;
-	int offsetX = (bookBox.w / 2) - (bookBox.w / 5) - 25;
+	int offsetY = bookPos.y + 70;
+	int offsetX = (bookPos.x - app->render->camera.w / 4) + (bookBox.w / 2) - (bookBox.w / 5) - 25;
 	char auxDescription[TEXT_LEN] = { 0 };
 	const char* cutText = "...";
 	ListItem<Quest*>* activeQuestList = questsActive.start;

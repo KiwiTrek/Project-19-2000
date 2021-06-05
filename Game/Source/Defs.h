@@ -13,20 +13,20 @@
 // Deletes a buffer
 #define RELEASE( x ) \
 	{						\
-	if( x != NULL )		\
+	if( x != nullptr )		\
 		{					  \
 	  delete x;			\
-	  x = NULL;			  \
+	  x = nullptr;			  \
 		}					  \
 	}
 
 // Deletes an array of buffers
 #define RELEASE_ARRAY( x ) \
 	{							  \
-	if( x != NULL )			  \
+	if( x != nullptr )			  \
 		{							\
 	  delete[] x;				\
-	  x = NULL;					\
+	  x = nullptr;					\
 		}							\
 							  \
 	}

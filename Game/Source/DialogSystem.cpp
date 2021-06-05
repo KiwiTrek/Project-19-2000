@@ -67,6 +67,10 @@ DialogSystem::DialogSystem()
 	timeStep = 0;
 	timeStepAnswers = 0;
 	white = { 255,255,255,255 };
+	arrowCombat = { 1280,192,50,50 };
+	blink = false;
+	blinkTimer = 0.0f;
+
 
 	currentDialog = nullptr;
 	dialogGui = app->tex->Load("Textures/GUI/combatGui.png");
@@ -169,6 +173,15 @@ void DialogSystem::DrawDialog(Font* dialogueFont)
 		SDL_Rect selectedRectangle = SDL_Rect({ 42, (app->render->camera.h / 3) * 2 + 94 + (30 * selectedOption), 6, 6 });
 		app->render->DrawRectangle(selectedRectangle, 250, 0, 0, 255, true, false);
 	}
+
+	if (!blink)
+	{
+		iPoint pos(1028 - arrowCombat.w - 10, 498 + portraitBox.h - arrowCombat.h - 10);
+		app->render->DrawTexture(dialogGui, -app->render->camera.x + pos.x, -app->render->camera.y + pos.y, false, &arrowCombat);
+		app->render->DrawText(dialogueFont, "Press", pos.x, pos.y - (arrowCombat.h / 2) - 16, 16, 2, white);
+		app->render->DrawText(dialogueFont, "Select", pos.x, pos.y - (arrowCombat.h / 2), 16, 2, white);
+	}
+
 }
 
 bool DialogSystem::LoadDialog(const char* filename)
@@ -254,7 +267,6 @@ void DialogSystem::NextDialog()
 		std::string route = currentDialog->attributes->at("route");
 		currentDialog = nodeRoutes.at(route);
 	}
-
 }
 
 DialogNode* DialogSystem::ParseDialogXML(pugi::xml_node currentNode)

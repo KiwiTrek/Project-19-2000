@@ -34,6 +34,7 @@ public:
 	bool Update(float dt);
 	bool UpdateDialogue(float dt);
 	bool UpdatePauseMenu(float dt);
+	void ResetPositions();
 
 	bool Draw();
 	bool DrawPauseMenu();
@@ -77,6 +78,7 @@ private:
 	//MENU
 	SDL_Rect menuBox;
 	SDL_Rect menuCharacterBox;
+	iPoint menuBoxPos;
 	GuiButton* btnSkills;
 	GuiButton* btnSkillTree;
 	GuiButton* btnQuests;

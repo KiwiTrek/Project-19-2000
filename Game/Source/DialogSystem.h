@@ -42,6 +42,9 @@ public:
 	float timeStep;
 	float timeStepAnswers;
 	SDL_Color white;
+	SDL_Rect arrowCombat;
+	bool blink = false;
+	float blinkTimer = 0.0f;
 
 	std::string folder;
 	pugi::xml_document dialogFile;

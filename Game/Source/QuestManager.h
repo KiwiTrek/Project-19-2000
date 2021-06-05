@@ -102,6 +102,7 @@ public:
 
 	unsigned int tpFlags = 0;
 	unsigned int boolFlags = 0;
+	iPoint bookPos = { 0,0 };
 
 private:
 	int totalQuests = 0;

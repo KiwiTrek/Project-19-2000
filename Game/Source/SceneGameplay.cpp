@@ -54,6 +54,7 @@ bool SceneGameplay::Load()
 	app->gui->Enable();
 	menuBox = { 324,0,692,540 };
 	menuCharacterBox = { 324,539,204,135 };
+	menuBoxPos = { 292,1280 };
 	btnInventory = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 1, { -200, 80, 200, 60 }, "INVENTORY", 35, this);
 	btnSkills = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 2, { -300, 160, 200, 60 }, "SKILLS", 40, this);
 	btnSkillTree = (GuiButton*)app->gui->CreateGuiControl(GuiControlType::BUTTON, 3, { -400, 240, 200, 60 }, "       SKILL TREE", 35, this);
@@ -91,23 +92,23 @@ bool SceneGameplay::Load()
 
 	//ITEMS
 	itemSelected = 0;
-	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 13, { 330,120,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
-	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 14, { 646,120,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
-	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 15, { 330,200,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
-	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 16, { 646,200,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
-	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 17, { 330,280,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
-	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 18, { 646,280,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
-	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 19, { 330,360,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
-	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 20, { 646,360,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
-	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 21, { 330,440,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
-	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 22, { 646,440,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
-	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 23, { 330,520,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
-	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 24, { 646,520,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
+	btnItem1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 13, { 330,1280,300,60 }, "item one", 40, this, 0, app->entities->itemAtlas);
+	btnItem2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 14, { 646,1280,300,60 }, "item two", 40, this, 0, app->entities->itemAtlas);
+	btnItem3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 15, { 330,1280,300,60 }, "item three", 40, this, 0, app->entities->itemAtlas);
+	btnItem4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 16, { 646,1280,300,60 }, "item four", 40, this, 0, app->entities->itemAtlas);
+	btnItem5 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 17, { 330,1280,300,60 }, "item five", 40, this, 0, app->entities->itemAtlas);
+	btnItem6 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 18, { 646,1280,300,60 }, "item six", 40, this, 0, app->entities->itemAtlas);
+	btnItem7 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 19, { 330,1280,300,60 }, "item seven", 40, this, 0, app->entities->itemAtlas);
+	btnItem8 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 20, { 646,1280,300,60 }, "item eight", 40, this, 0, app->entities->itemAtlas);
+	btnItem9 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 21, { 330,1280,300,60 }, "item nine", 40, this, 0, app->entities->itemAtlas);
+	btnItem10 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 22, { 646,1280,300,60 }, "item ten", 40, this, 0, app->entities->itemAtlas);
+	btnItem11 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 23, { 330,1280,300,60 }, "item eleven", 40, this, 0, app->entities->itemAtlas);
+	btnItem12 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 24, { 646,1280,300,60 }, "item twelve", 40, this, 0, app->entities->itemAtlas);
 
-	btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 25, { 330,120,300,60 }, "skill one", 32, this, 0, app->entities->itemAtlas);
-	btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 26, { 646,120,300,60 }, "skill two", 32, this, 0, app->entities->itemAtlas);
-	btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 27, { 330,200,300,60 }, "skill three", 32, this, 0, app->entities->itemAtlas);
-	btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 28, { 646,200,300,60 }, "skill four", 32, this, 0, app->entities->itemAtlas);
+	btnSkill1 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 25, { 330,1280,300,60 }, "skill one", 32, this, 0, app->entities->itemAtlas);
+	btnSkill2 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 26, { 646,1280,300,60 }, "skill two", 32, this, 0, app->entities->itemAtlas);
+	btnSkill3 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 27, { 330,1280,300,60 }, "skill three", 32, this, 0, app->entities->itemAtlas);
+	btnSkill4 = (GuiImageButton*)app->gui->CreateGuiControl(GuiControlType::IMAGEBUTTON, 28, { 646,1280,300,60 }, "skill four", 32, this, 0, app->entities->itemAtlas);
 
 	app->entities->CreateEntity(14 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::HP_POTION, 3);
 	app->entities->CreateEntity(33 * 64, 89 * 64, EntityType::ITEM, EntityId::NOT_COMBAT, NULL, NpcId::NONE, nullptr, ItemId::ELIXIR, 2);
@@ -375,13 +376,14 @@ bool SceneGameplay::UpdateDialogue(float dt)
 		}
 	}
 
-	// END OF DIALOG STUFF
-
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	dialogSystem->blinkTimer += dt;
+	if (dialogSystem->blinkTimer >= 0.5f)
 	{
-		combat = true;
-		enteringCombat = true;
+		dialogSystem->blinkTimer = 0.0f;
+		dialogSystem->blink = !dialogSystem->blink;
 	}
+
+	// END OF DIALOG STUFF
 
 	return true;
 }
@@ -525,7 +527,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	// Calls update with gamepad parameters (GUI)
 	if (usingGamepad)
 	{
-		if (!options)
+		if ((flags & 1 << Flags::MENU) != 0 && !options)
 		{
 			if ((flags & 1 << Flags::INVENTORY) != 0)
 			{
@@ -544,10 +546,42 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 							{
 								app->gui->ResetButtons();
 								btnInventory->state = GuiControlState::DISABLED;
-								combatScene->items.At(itemSelected - 1)->data->Use(combatScene->mainChar.character);
-								if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+								fPoint targetPos(combatScene->mainChar.x + 10 + (combatScene->mainChar.characterTex.w / 2), combatScene->mainChar.y + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + (combatScene->mainChar.characterTex.h / 2));
+								switch (combatScene->items.At(itemSelected - 1)->data->id)
 								{
-									combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+								case ItemId::NONE:
+									break;
+								case ItemId::HP_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::MANA_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::ELIXIR:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::GRANDMA_STEW:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::HAPPILLS:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::PHYS_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								case ItemId::MAGIC_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								default:
+									break;
+								}
+								if (combatScene->items.At(itemSelected - 1)->data->id != ItemId::BOTTLED_SMITE)
+								{
+									combatScene->items.At(itemSelected - 1)->data->Use(combatScene->mainChar.character);
+									if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+									{
+										combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+									}
 								}
 								itemSelected = 0;
 							}
@@ -565,10 +599,42 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 							{
 								app->gui->ResetButtons();
 								btnInventory->state = GuiControlState::DISABLED;
-								combatScene->items.At(itemSelected - 1)->data->Use(combatScene->grandpa.character);
-								if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+								fPoint targetPos(combatScene->grandpa.x + 10 + (combatScene->grandpa.characterTex.w / 2), combatScene->grandpa.y + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2) + (combatScene->mainChar.characterTex.h / 2));
+								switch (combatScene->items.At(itemSelected - 1)->data->id)
 								{
-									combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+								case ItemId::NONE:
+									break;
+								case ItemId::HP_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::MANA_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::ELIXIR:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::GRANDMA_STEW:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::HAPPILLS:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::PHYS_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								case ItemId::MAGIC_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								default:
+									break;
+								}
+								if (combatScene->items.At(itemSelected - 1)->data->id != ItemId::BOTTLED_SMITE)
+								{
+									combatScene->items.At(itemSelected - 1)->data->Use(combatScene->grandpa.character);
+									if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+									{
+										combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+									}
 								}
 								itemSelected = 0;
 							}
@@ -808,10 +874,42 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 							{
 								app->gui->ResetButtons();
 								btnInventory->state = GuiControlState::DISABLED;
-								combatScene->items.At(itemSelected - 1)->data->Use(combatScene->mainChar.character);
-								if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+								fPoint targetPos(combatScene->mainChar.x + 10 + (combatScene->mainChar.characterTex.w / 2), combatScene->mainChar.y + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + (combatScene->mainChar.characterTex.h / 2));
+								switch (combatScene->items.At(itemSelected - 1)->data->id)
 								{
-									combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+								case ItemId::NONE:
+									break;
+								case ItemId::HP_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::MANA_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::ELIXIR:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::GRANDMA_STEW:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::HAPPILLS:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::PHYS_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								case ItemId::MAGIC_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								default:
+									break;
+								}
+								if (combatScene->items.At(itemSelected - 1)->data->id != ItemId::BOTTLED_SMITE)
+								{
+									combatScene->items.At(itemSelected - 1)->data->Use(combatScene->mainChar.character);
+									if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+									{
+										combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+									}
 								}
 								itemSelected = 0;
 							}
@@ -829,10 +927,42 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 							{
 								app->gui->ResetButtons();
 								btnInventory->state = GuiControlState::DISABLED;
-								combatScene->items.At(itemSelected - 1)->data->Use(combatScene->grandpa.character);
-								if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+								fPoint targetPos(combatScene->grandpa.x + 10 + (combatScene->grandpa.characterTex.w / 2), combatScene->grandpa.y + (menuCharacterBox.h / 2 - combatScene->grandpa.characterTex.h / 2) + (combatScene->mainChar.characterTex.h / 2));
+								switch (combatScene->items.At(itemSelected - 1)->data->id)
 								{
-									combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+								case ItemId::NONE:
+									break;
+								case ItemId::HP_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::MANA_POTION:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::ELIXIR:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::GRANDMA_STEW:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::HAPPILLS:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+									break;
+								case ItemId::PHYS_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								case ItemId::MAGIC_BUFFER:
+									app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+									break;
+								default:
+									break;
+								}
+								if (combatScene->items.At(itemSelected - 1)->data->id != ItemId::BOTTLED_SMITE)
+								{
+									combatScene->items.At(itemSelected - 1)->data->Use(combatScene->grandpa.character);
+									if (combatScene->items.At(itemSelected - 1)->data->count == 0)
+									{
+										combatScene->items.Del(combatScene->items.At(itemSelected - 1));
+									}
 								}
 								itemSelected = 0;
 							}
@@ -1061,6 +1191,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			btnTitleScreen->bounds.x = -800;
 			combatScene->mainChar.x = 1280;
 			combatScene->grandpa.x = 1880;
+			app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnInventory));
 		}
 	}
 
@@ -1195,7 +1326,7 @@ bool SceneGameplay::DrawPauseMenu()
 
 		if ((flags & 1 << Flags::INVENTORY) != 0)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + menuBoxPos.x, -app->render->camera.y + menuBoxPos.y, false, &menuBox);
 
 			if (itemSelected != 0)
 			{
@@ -1257,7 +1388,7 @@ bool SceneGameplay::DrawPauseMenu()
 		}
 		else if ((flags & 1 << Flags::SKILLS) != 0)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + menuBoxPos.x, -app->render->camera.y + menuBoxPos.y, false, &menuBox);
 			if (statFlags == 1 << (int)EntityId::MC || statFlags == 1 << (int)EntityId::VIOLENT)
 			{
 				btnSkill1->Draw(-app->render->camera.x, -app->render->camera.y);
@@ -1285,15 +1416,15 @@ bool SceneGameplay::DrawPauseMenu()
 				strcpy_s(tmp1, TEXT_LEN, "Select a character");
 				char tmp2[TEXT_LEN] = { 0 };
 				strcpy_s(tmp2, TEXT_LEN, "to see its skills");
-				app->render->DrawText(dialogueFont, tmp1, (app->render->camera.w / 2) - ((strlen(tmp1) * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
-				app->render->DrawText(dialogueFont, tmp2, (app->render->camera.w / 2) - ((strlen(tmp2) * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp1, (app->render->camera.w / 2) - ((strlen(tmp1) * 48) / 2) + 200, (app->render->camera.h / 2) - 64 + (menuBoxPos.y - 80), 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp2, (app->render->camera.w / 2) - ((strlen(tmp2) * 48) / 2) + 200, (app->render->camera.h / 2) + (menuBoxPos.y - 80), 64, 1, white);
                 onceStatsFx = true;
             }
 
 		}
 		else if ((flags & 1 << Flags::SKILL_TREE) != 0)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + menuBoxPos.x, -app->render->camera.y + menuBoxPos.y, false, &menuBox);
 		}
 		else if ((flags & 1 << Flags::QUESTS) != 0)
 		{
@@ -1301,24 +1432,24 @@ bool SceneGameplay::DrawPauseMenu()
 		}
 		else if ((flags & 1 << Flags::STATS) != 0)
 		{
-			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + 292, -app->render->camera.y + 80, false, &menuBox);
+			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + menuBoxPos.x, -app->render->camera.y + menuBoxPos.y, false, &menuBox);
 			if (statFlags == 1 << (int)EntityId::MC)
 			{
 				app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + 80, menuCharacterBox.w, menuCharacterBox.h }, 255, 0, 0, 50, true);
 				
-				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 292 + 40, -app->render->camera.y + 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
-				app->render->DrawText(dialogueFont, "Main Character", 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.lvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.xp, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl)* 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.nextLvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + menuBoxPos.x + 40, -app->render->camera.y + menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
+				app->render->DrawText(dialogueFont, "Main Character", menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.lvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.xp, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl)* 8) + 90, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.nextLvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
 				
 				// XP Bar (?)
 
-				app->render->DrawText(buttonFont, combatScene->mainChar.pAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.mAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.pDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.mDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.speed, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.pAtk, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.mAtk, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.pDef, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.mDef, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->mainChar.speed, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
 
                 if (onceStatsFx)
                 {
@@ -1330,19 +1461,19 @@ bool SceneGameplay::DrawPauseMenu()
 			{
 				app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, menuCharacterBox.w, menuCharacterBox.h }, 0, 255, 255, 50, true);
 
-				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + 292 + 40, -app->render->camera.y + 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
-				app->render->DrawText(dialogueFont, "Grandpa", 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.lvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.xp, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl) * 8) + 90, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl, 292 + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, 100 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + menuBoxPos.x + 40, -app->render->camera.y + menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
+				app->render->DrawText(dialogueFont, "Grandpa", menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.lvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.xp, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl) * 8) + 90, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
 				
                 // XP Bar (?)
 
-				app->render->DrawText(buttonFont, combatScene->grandpa.pAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.mAtk, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.pDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.mDef, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.speed, 292 + 40 + combatScene->mainChar.characterTex.w + 20, 100 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.pAtk, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 1), 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.mAtk, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 2) + 5, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.pDef, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 3) + 10, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.mDef, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 4) + 15, 64, 2, white);
+				app->render->DrawText(buttonFont, combatScene->grandpa.speed, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + combatScene->mainChar.characterTex.h + (48 * 5) + 20, 64, 2, white);
 			    
                 if (onceStatsFx)
                 {
@@ -1356,8 +1487,8 @@ bool SceneGameplay::DrawPauseMenu()
 				strcpy_s(tmp1, TEXT_LEN, "Select a character");
 				char tmp2[TEXT_LEN] = { 0 };
 				strcpy_s(tmp2, TEXT_LEN, "to see its stats");
-				app->render->DrawText(dialogueFont, tmp1, (app->render->camera.w / 2) - ((strlen(tmp1) * 48) / 2) + 200, (app->render->camera.h / 2) - 64, 64, 1, white);
-				app->render->DrawText(dialogueFont, tmp2, (app->render->camera.w / 2) - ((strlen(tmp2) * 48) / 2) + 200, (app->render->camera.h / 2), 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp1, (app->render->camera.w / 2) - ((strlen(tmp1) * 48) / 2) + 200, (app->render->camera.h / 2) - 64 + (menuBoxPos.y - 80), 64, 1, white);
+				app->render->DrawText(dialogueFont, tmp2, (app->render->camera.w / 2) - ((strlen(tmp2) * 48) / 2) + 200, (app->render->camera.h / 2) + (menuBoxPos.y - 80), 64, 1, white);
                 onceStatsFx = true;
             }
 		}
@@ -1376,6 +1507,8 @@ bool SceneGameplay::DrawPauseMenu()
 		boxVSync->Draw(-app->render->camera.x, -app->render->camera.y);
 		btnBack->Draw(-app->render->camera.x, -app->render->camera.y);
 	}
+
+	app->particles->PostUpdate();
 
 	return true;
 }
@@ -1405,6 +1538,29 @@ bool SceneGameplay::Unload()
 	return false;
 }
 
+void SceneGameplay::ResetPositions()
+{
+	menuBoxPos.y = 1280;
+	btnItem1->bounds.y = 1280;
+	btnItem2->bounds.y = 1280;
+	btnItem3->bounds.y = 1280;
+	btnItem4->bounds.y = 1280;
+	btnItem5->bounds.y = 1280;
+	btnItem6->bounds.y = 1280;
+	btnItem7->bounds.y = 1280;
+	btnItem8->bounds.y = 1280;
+	btnItem9->bounds.y = 1280;
+	btnItem10->bounds.y = 1280;
+	btnItem11->bounds.y = 1280;
+	btnItem12->bounds.y = 1280;
+
+	btnSkill1->bounds.y = 1280;
+	btnSkill2->bounds.y = 1280;
+	btnSkill3->bounds.y = 1280;
+	btnSkill4->bounds.y = 1280;
+
+	app->quests->bookPos.y = 1280;
+}
 
 //----------------------------------------------------------
 // Manage GUI events for this screen
@@ -1422,6 +1578,24 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		flags = 1 << Flags::MENU;
 		changeMenu = true;
 		flags = SetBit(flags, Flags::INVENTORY);
+
+		//Easings
+		app->render->DestroySplines();
+		ResetPositions();
+
+		app->render->CreateSpline(&menuBoxPos.y, 80, 1000, SplineType::QUART);
+		app->render->CreateSpline(&btnItem1->bounds.y,120,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem2->bounds.y,120,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem3->bounds.y,200,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem4->bounds.y,200,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem5->bounds.y,280,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem6->bounds.y,280,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem7->bounds.y,360,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem8->bounds.y,360,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem9->bounds.y,440,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem10->bounds.y,440,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem11->bounds.y,520,1000,SplineType::QUART);
+		app->render->CreateSpline(&btnItem12->bounds.y,520,1000,SplineType::QUART);
 		break;
 	case 2: //SKILLS
 		app->gui->ResetButtons();
@@ -1429,6 +1603,16 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		btnSkills->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::SKILLS);
+
+		//Easings
+		app->render->DestroySplines();
+		ResetPositions();
+
+		app->render->CreateSpline(&menuBoxPos.y, 80, 1000, SplineType::QUART);
+		app->render->CreateSpline(&btnSkill1->bounds.y,120,1000, SplineType::QUART);
+		app->render->CreateSpline(&btnSkill2->bounds.y,120,1000, SplineType::QUART);
+		app->render->CreateSpline(&btnSkill3->bounds.y,200,1000, SplineType::QUART);
+		app->render->CreateSpline(&btnSkill4->bounds.y,200,1000, SplineType::QUART);
 		break;
 	case 3: //SKILL TREE
 		app->gui->ResetButtons();
@@ -1436,6 +1620,12 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		btnSkillTree->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::SKILL_TREE);
+
+		//Easings
+		app->render->DestroySplines();
+		ResetPositions();
+
+		app->render->CreateSpline(&menuBoxPos.y, 80, 1000, SplineType::QUART);
 		break;
 	case 4: //QUESTS
 		app->gui->ResetButtons();
@@ -1443,6 +1633,12 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		btnQuests->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::QUESTS);
+
+		//Easings
+		app->render->DestroySplines();
+		ResetPositions();
+
+		app->render->CreateSpline(&app->quests->bookPos.y, 0, 1000, SplineType::QUART);
 		break;
 	case 5: //STATS
 		app->gui->ResetButtons();
@@ -1450,6 +1646,12 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		btnStats->state = GuiControlState::DISABLED;
 		flags = 1 << Flags::MENU;
 		flags = SetBit(flags, Flags::STATS);
+
+		//Easings
+		app->render->DestroySplines();
+		ResetPositions();
+
+		app->render->CreateSpline(&menuBoxPos.y, 80, 1000, SplineType::QUART);
 		break;
 	case 6: //OPTIONS
 		flags = 1 << Flags::MENU;
@@ -1462,7 +1664,6 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 
 		//Easings
 		app->render->DestroySplines();
-
 		btnInventory->bounds.x = -200;
 		btnSkills->bounds.x = -300;
 		btnSkillTree->bounds.x = -400;
@@ -1472,6 +1673,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		btnTitleScreen->bounds.x = -800;
 		combatScene->mainChar.x = 1280;
 		combatScene->grandpa.x = 1880;
+		ResetPositions();
 
 		app->render->CreateSpline(&optionsPos.y, 100, 2000, SplineType::QUART);
 		app->render->CreateSpline(&sldrVolume->limits.x, 180, 2000, SplineType::QUART);
@@ -1510,6 +1712,7 @@ bool SceneGameplay::OnGuiMouseClickEvent(GuiControl* control)
 		usingGamepad = true;
 
 		app->render->DestroySplines();
+		ResetPositions();
 
 		optionsPos.y = -70;
 		relativePos = sldrVolume->bounds.x - sldrVolume->limits.x;
