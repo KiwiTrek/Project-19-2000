@@ -178,13 +178,35 @@ bool SceneTitleScreen::Update(float dt)
                 app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(sldrVolume));
                 changeMenu = false;
             }
-            app->scene->currentButton->data->Update(dt, 11, 27);
+            app->scene->currentButton->data->Update(dt, 5, 9);
             if (app->input->CheckButton("cancel", KEY_DOWN))
             {
-                options = false;
-                changeMenu = true;
-                app->gui->ResetButtons();
-                usingGamepad = true;
+				options = false;
+				app->audio->PlayMusic("Audio/Music/Title.ogg");
+				changeMenu = true;
+				app->gui->ResetButtons();
+				usingGamepad = true;
+
+				//Easings
+				app->render->DestroySplines();
+
+				int relativePos = 0;
+				optionsPos.y = -70;
+				relativePos = sldrVolume->bounds.x - sldrVolume->limits.x;
+				sldrVolume->limits.x = -324;
+				sldrVolume->bounds.x = -324 + relativePos;
+				relativePos = sldrFx->bounds.x - sldrFx->limits.x;
+				sldrFx->limits.x = 1280;
+				sldrFx->bounds.x = 1280 + relativePos;
+				boxFullScreen->bounds.x = -324;
+				boxVSync->bounds.x = 1280;
+				btnBack->bounds.x = 1280;
+
+				app->render->CreateSpline(&btnStart->bounds.x, 90, 2000, SplineType::QUART);
+				app->render->CreateSpline(&btnContinue->bounds.x, 90, 2250, SplineType::QUART);
+				app->render->CreateSpline(&btnOptions->bounds.x, 90, 2500, SplineType::QUART);
+				app->render->CreateSpline(&btnExit->bounds.x, 90, 2750, SplineType::QUART);
+
             }
 		}
 		else

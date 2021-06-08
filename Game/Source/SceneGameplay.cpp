@@ -647,7 +647,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					if (combatScene->items.Count() != 0) app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnItem1));
 					changeMenu = false;
 				}
-				if (combatScene->items.Count() != 0 && itemSelected == 0) app->scene->currentButton->data->Update(dt, 31, 31 + combatScene->items.Count());
+				if (combatScene->items.Count() != 0 && itemSelected == 0) app->scene->currentButton->data->Update(dt, 13, 12 + combatScene->items.Count());
 				if (app->input->CheckButton("cancel",KEY_DOWN))
 				{
 					flags = ClearBit(flags, Flags::INVENTORY);
@@ -836,12 +836,37 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 
 			if (app->input->CheckButton("cancel", KEY_DOWN))
 			{
-                options = false;
+				options = false;
 				if (strcmp(app->map->data.name, "tutorial.tmx") == 0) app->audio->PlayMusic("Audio/Music/Tutorial.ogg");
 				else if (strcmp(app->map->data.name, "home.tmx") == 0) app->audio->PlayMusic("Audio/Music/Home.ogg");
 				changeMenu = true;
 				app->gui->ResetButtons();
 				usingGamepad = true;
+
+				app->render->DestroySplines();
+				ResetPositions();
+
+				int relativePos = 0;
+				optionsPos.y = -70;
+				relativePos = sldrVolume->bounds.x - sldrVolume->limits.x;
+				sldrVolume->limits.x = -324;
+				sldrVolume->bounds.x = -324 + relativePos;
+				relativePos = sldrFx->bounds.x - sldrFx->limits.x;
+				sldrFx->limits.x = 1280;
+				sldrFx->bounds.x = 1280 + relativePos;
+				boxFullScreen->bounds.x = -324;
+				boxVSync->bounds.x = 1280;
+				btnBack->bounds.x = 1280;
+
+				app->render->CreateSpline(&btnInventory->bounds.x, 90, 300, SplineType::QUART);
+				app->render->CreateSpline(&btnSkills->bounds.x, 90, 325, SplineType::QUART);
+				app->render->CreateSpline(&btnSkillTree->bounds.x, 90, 350, SplineType::QUART);
+				app->render->CreateSpline(&btnQuests->bounds.x, 90, 375, SplineType::QUART);
+				app->render->CreateSpline(&btnStats->bounds.x, 90, 400, SplineType::QUART);
+				app->render->CreateSpline(&btnOptions->bounds.x, 90, 425, SplineType::QUART);
+				app->render->CreateSpline(&btnTitleScreen->bounds.x, 90, 450, SplineType::QUART);
+				app->render->CreateSpline(&combatScene->mainChar.x, 984, 300, SplineType::QUART);
+				app->render->CreateSpline(&combatScene->grandpa.x, 984, 400, SplineType::QUART);
 			}
 		}
 	}
