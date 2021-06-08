@@ -122,6 +122,8 @@ public:
 
 private:
     List<CombatEntity*> turnOrder;
+    List<CombatEntity*> enemiesList;
+    ListItem<CombatEntity*>* currentTarget = nullptr;
     ListItem<CombatEntity*>* currentEntity = nullptr;
     CombatEntity* pastEntity = nullptr;
     float turnFrameTime;

@@ -217,6 +217,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 	turnFrameTime = 0.0f;
 	increaseTurn = true;
 	currentEntity = nullptr;
+	currentTarget = nullptr;
 	pastEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
@@ -250,6 +251,7 @@ bool SceneCombat::Start(EntityId id1, EntityId id2, EntityId id3)
 		e = eNext;
 	}
 	turnOrder.Clear();
+	enemiesList.Clear();
 
 	app->audio->PlayMusic("Audio/Music/Battle.ogg");
 	SpawnEnemies(id1, id2, id3);
@@ -325,6 +327,27 @@ bool SceneCombat::Update(float dt)
 					e = e->next;
 				}
 
+				ListItem<CombatEntity*>* l = turnOrder.start;
+				while (l != nullptr)
+				{
+					//ADDS THEM TO THE LIST
+					if (!IsCharacter(l->data))
+					{
+						enemiesList.Add(l->data);
+					}
+					l = l->next;
+				}
+				l = turnOrder.start;
+				while (l != nullptr)
+				{
+					//ADDS THEM TO THE LIST
+					if (IsCharacter(l->data))
+					{
+						enemiesList.Add(l->data);
+					}
+					l = l->next;
+				}
+
 				SortSpeed(false);
 				combatState = CombatStateType::COMBAT_MIDGAME;
 			}
@@ -376,6 +399,7 @@ bool SceneCombat::Update(float dt)
 							}
 							else app->entities->DestroyEntity(e->data);
 
+							enemiesList.Del(enemiesList.At(enemiesList.Find(e->data)));
 							turnOrder.Del(turnOrder.At(turnOrder.Find(e->data)));
 							SortSpeed(false);
 							if (currentEntity == nullptr) currentEntity = eNext;
@@ -585,6 +609,7 @@ bool SceneCombat::Update(float dt)
 										{
 											target = nullptr;
 											targetAttack = false;
+											currentTarget = nullptr;
 											memset(attackSelected, 0, TEXT_LEN);
 										}
 									}
@@ -633,6 +658,7 @@ bool SceneCombat::Update(float dt)
 										{
 											target = nullptr;
 											targetAttack = false;
+											currentTarget = nullptr;
 											memset(attackSelected, 0, TEXT_LEN);
 										}
 									}
@@ -690,6 +716,7 @@ bool SceneCombat::Update(float dt)
 										{
 											target = nullptr;
 											targetAttack = false;
+											currentTarget = nullptr;
 											memset(attackSelected, 0, TEXT_LEN);
 										}
 									}
@@ -975,7 +1002,8 @@ bool SceneCombat::Update(float dt)
 			}
 			if (characterSelected)
 			{
-				app->scene->currentButton->data->Update(dt, 47, 51);
+				app->scene->currentButton->data->Update(dt, 29, 33);
+				
 				if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
 				{
 					if (changeMenu)
@@ -985,7 +1013,7 @@ bool SceneCombat::Update(float dt)
 					}
 					else
 					{
-						app->scene->currentButton->data->Update(dt, 52, 71);
+						app->scene->currentButton->data->Update(dt, 34, 37);
 						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
 						{
 							app->gui->ResetButtons();
@@ -1004,7 +1032,7 @@ bool SceneCombat::Update(float dt)
 					}
 					else
 					{
-						app->scene->currentButton->data->Update(dt, 58, 63);
+						app->scene->currentButton->data->Update(dt, 38, 51);
 						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
 						{
 							app->gui->ResetButtons();
@@ -1422,25 +1450,48 @@ bool SceneCombat::Draw(Font* dialogueFont)
 
 		if (targetAttack || targetItem) //add more as we go
 		{
-			int x, y;
-			app->input->GetMousePosition(x, y);
-			ListItem<CombatEntity*>* e = turnOrder.start;
-			while (e != nullptr)
+			if (!usingGamepad)
 			{
-				if (e->data->collider->Intersects({ x, y, 1, 1 }))
+				int x, y;
+				app->input->GetMousePosition(x, y);
+				ListItem<CombatEntity*>* e = turnOrder.start;
+				while (e != nullptr)
+				{
+					if (e->data->collider->Intersects({ x, y, 1, 1 }))
+					{
+						SDL_Rect r = { 0,0,0,0 };
+						if (IsCharacter(e->data))
+						{
+							if (e->data->id == EntityId::MC)
+								r = { mainChar.character->entityRect.x + 10, mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), mainChar.characterTex.w + 3, mainChar.characterTex.h };
+							else if (e->data->id == EntityId::VIOLENT)
+								r = { grandpa.character->entityRect.x + 10, grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2) - 4, grandpa.characterTex.w + 2, grandpa.characterTex.h };
+						}
+						else r = e->data->collider->rect;
+						UpdateSelection(r);
+					}
+					e = e->next;
+				}
+			}
+			else
+			{
+				if (currentTarget == nullptr)
+				{
+					currentTarget = enemiesList.start;
+				}
+				else
 				{
 					SDL_Rect r = { 0,0,0,0 };
-					if (IsCharacter(e->data))
+					if (IsCharacter(currentTarget->data))
 					{
-						if (e->data->id == EntityId::MC)
+						if (currentTarget->data->id == EntityId::MC)
 							r = { mainChar.character->entityRect.x + 10, mainChar.character->entityRect.y + (mainChar.box.h / 2 - mainChar.characterTex.h / 2), mainChar.characterTex.w + 3, mainChar.characterTex.h };
-						else if (e->data->id == EntityId::VIOLENT)
+						else if (currentTarget->data->id == EntityId::VIOLENT)
 							r = { grandpa.character->entityRect.x + 10, grandpa.character->entityRect.y + (grandpa.box.h / 2 - grandpa.characterTex.h / 2) - 4, grandpa.characterTex.w + 2, grandpa.characterTex.h };
 					}
-					else r = e->data->collider->rect;
+					else r = currentTarget->data->collider->rect;
 					UpdateSelection(r);
 				}
-				e = e->next;
 			}
 		}
 	}
@@ -1467,6 +1518,7 @@ bool SceneCombat::Finish()
 		e = eNext;
 	}
 	turnOrder.Clear();
+	enemiesList.Clear();
 
 	memset(firstLine, 0, TEXT_LEN);
 	memset(secondLine, 0, TEXT_LEN);
@@ -1485,6 +1537,7 @@ bool SceneCombat::Finish()
 	turnFrameTime = 0.0f;
 	increaseTurn = true;
 	currentEntity = nullptr;
+	currentTarget = nullptr;
 	pastEntity = nullptr;
 	characterSelected = false;
 	targetAttack = false;
@@ -1602,6 +1655,24 @@ void SceneCombat::SelectTarget()
 	if (usingGamepad)
 	{
 		// Select target with gamepad :)
+		if (app->input->CheckButton("right", KeyState::KEY_DOWN))
+		{
+			if (currentTarget->next != nullptr)
+				currentTarget = currentTarget->next;
+			else
+				currentTarget = enemiesList.start;
+		}
+		if (app->input->CheckButton("left", KeyState::KEY_DOWN))
+		{
+			if (currentTarget->prev != nullptr)
+				currentTarget = currentTarget->prev;
+			else
+				currentTarget = enemiesList.end;
+		}
+		if (app->input->CheckButton("select", KeyState::KEY_DOWN))
+		{
+			target = currentTarget->data;
+		}
 	}
 	else
 	{
