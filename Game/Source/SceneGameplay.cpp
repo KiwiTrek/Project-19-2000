@@ -803,8 +803,16 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			else if ((flags & 1 << Flags::STATS) != 0)
 			{
 				statFlags = 0;
-				int x, y;
-				app->input->GetMousePosition(x, y);
+				if (!onceSkills)
+				{
+					onceSkills = true;
+					x = 984;
+					y = 80;
+				}
+				if ((app->input->CheckButton("down", KEY_DOWN)) && y == 80)
+					y = 85 + menuCharacterBox.h;
+				if ((app->input->CheckButton("up", KEY_DOWN)) && y != 80)
+					y = 80;
 				if (combatScene->characterFlags >= 2)
 				{
 					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (75 + menuCharacterBox.h))
@@ -855,6 +863,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				changeMenu = true;
 				app->gui->ResetButtons();
 				usingGamepad = true;
+				onceSkills = false;
 
 				app->render->DestroySplines();
 				ResetPositions();
