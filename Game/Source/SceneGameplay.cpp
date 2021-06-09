@@ -536,14 +536,22 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 			{
 				// For now, we'll use mouse for this
 				statFlags = 0;
-				int x, y;
-				app->input->GetMousePosition(x, y);
+				if (!onceSkills)
+				{
+					onceSkills = true;
+					x = 984;
+					y = 80;
+				}
+				if ((app->input->CheckButton("down", KEY_DOWN)) && y == 80)
+					y = 85 + menuCharacterBox.h;
+				if ((app->input->CheckButton("up", KEY_DOWN)) && y != 80)
+					y = 80;
 				if (combatScene->characterFlags >= 2)
 				{
 					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (80 + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::MC);
-						if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
+						if (app->input->CheckButton("select", KEY_DOWN))
 						{
 							if (itemSelected != 0)
 							{
@@ -587,6 +595,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 									}
 								}
 								itemSelected = 0;
+								
 							}
 						}
 					}
@@ -596,7 +605,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= (80 + menuCharacterBox.h) && y < (80 + menuCharacterBox.h + menuCharacterBox.h))
 					{
 						statFlags = SetBit(statFlags, (uint)EntityId::VIOLENT);
-						if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
+						if (app->input->CheckButton("select", KEY_DOWN))
 						{
 							if (itemSelected != 0)
 							{
@@ -658,6 +667,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					app->gui->ResetButtons();
 					itemSelected = 0;
 					usingGamepad = true;
+					onceSkills = false;
 				}
 			}
 			else if ((flags & 1 << Flags::SKILLS) != 0)
