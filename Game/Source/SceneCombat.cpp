@@ -311,7 +311,7 @@ bool SceneCombat::Update(float dt)
 
 			switch (combatState)
 			{
-            case CombatStateType::COMBAT_START:
+			case CombatStateType::COMBAT_START:
 			{
 				//CHECK WHO IS FIRST
 				ListItem<Entity*>* e = app->entities->entities.start;
@@ -352,7 +352,7 @@ bool SceneCombat::Update(float dt)
 				combatState = CombatStateType::COMBAT_MIDGAME;
 			}
 			break;
-            case CombatStateType::COMBAT_MIDGAME:
+			case CombatStateType::COMBAT_MIDGAME:
 			{
 				if (currentEntity == nullptr)
 				{
@@ -466,7 +466,7 @@ bool SceneCombat::Update(float dt)
 									NextLine(tmp);
 									app->audio->PlayFx(app->entities->itemFx);
 									if (items.At(itemSelected - 1)->data->count == 0) items.Del(items.At(itemSelected - 1));
-									fPoint targetPos(target->entityRect.x + (target->entityRect.w/2), target->entityRect.y + (target->entityRect.h/2));
+									fPoint targetPos(target->entityRect.x + (target->entityRect.w / 2), target->entityRect.y + (target->entityRect.h / 2));
 									switch (items.At(itemSelected - 1)->data->id)
 									{
 									case ItemId::NONE:
@@ -547,14 +547,14 @@ bool SceneCombat::Update(float dt)
 											LOG("%d", currentEntity->data->stats.pAtk);
 											app->audio->PlayFx(smackFx);
 											Damage(target, currentEntity->data->stats.pAtk, false);
-											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h/2);
+											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
 											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::SLASH);
 										}
 										else if (strcmp(attackSelected, "Comfort") == 0)
 										{
 											app->audio->PlayFx(confortFx);
 											float p = rand() % 10 + 11;
-											Heal(target, p/100);
+											Heal(target, p / 100);
 											fPoint targetPos(target->collider->rect.x + target->collider->rect.w / 2, target->collider->rect.y + target->collider->rect.h / 2);
 											app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
 											ManaCost(10);
@@ -992,19 +992,73 @@ bool SceneCombat::Update(float dt)
 		if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
 			usingGamepad = false;
 
-		// Calls update with gamepad parameters (GUI)
-		if (usingGamepad)
+		// Calls update for both gamepad and mouse parameters (GUI)
+		if (usingGamepad && changeMenu)
 		{
-			if (changeMenu)
+			app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
+			changeMenu = false;
+		}
+
+		if (characterSelected)
+		{
+			if (usingGamepad) app->scene->currentButton->data->Update(dt, 29, 33);
+			else
 			{
-				app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
-				changeMenu = false;
+				btnCombatAttack->Update(dt);
+				btnCombatSkills->Update(dt);
+				btnCombatItems->Update(dt);
+				btnCombatSpecial->Update(dt);
+				btnCombatFlee->Update(dt);
 			}
-			if (characterSelected)
+
+			if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
 			{
-				app->scene->currentButton->data->Update(dt, 29, 33);
-				
-				if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
+				int i = 1;
+				int maxSkills = 5;
+				for (i; i < maxSkills; i++)
+				{
+					switch (i)
+					{
+					case 1:
+						memset(btnCombatSkill1->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatSkill1->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+						btnCombatSkill1->sec = SkillSec(i, currentChar->character->id);
+						if (!usingGamepad) btnCombatSkill1->Update(dt);
+						break;
+					case 2:
+						memset(btnCombatSkill2->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatSkill2->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+						btnCombatSkill2->sec = SkillSec(i, currentChar->character->id);
+						if (!usingGamepad) btnCombatSkill2->Update(dt);
+						break;
+					case 3:
+						memset(btnCombatSkill3->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatSkill3->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+						btnCombatSkill3->sec = SkillSec(i, currentChar->character->id);
+						if (!usingGamepad) btnCombatSkill3->Update(dt);
+						break;
+					case 4:
+						memset(btnCombatSkill4->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatSkill4->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+						btnCombatSkill4->sec = SkillSec(i, currentChar->character->id);
+						if (!usingGamepad) btnCombatSkill4->Update(dt);
+						break;
+						//case 5:
+							//memset(btnCombatSkill5->text, 0, TEXT_LEN);
+							//strcpy_s(btnCombatSkill5->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							//btnCombatSkill5->sec = SkillSec(i, currentChar->character->id);
+							//btnCombatSkill5->Update(dt);
+							//break;
+						//case 6:
+							//memset(btnCombatSkill6->text, 0, TEXT_LEN);
+							//strcpy_s(btnCombatSkill6->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
+							//btnCombatSkill6->sec = SkillSec(i, currentChar->character->id);
+							//btnCombatSkill6->Update(dt);
+							//break;
+					}
+				}
+
+				if (usingGamepad)
 				{
 					if (changeMenu)
 					{
@@ -1023,7 +1077,157 @@ bool SceneCombat::Update(float dt)
 						}
 					}
 				}
-				else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+			}
+			else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
+			{
+				int i = 0;
+				int maxItems = -1;
+				if (pageOne)
+				{
+					i = 0;
+					if (items.Count() > 6) maxItems = 6;
+					else maxItems = items.Count();
+				}
+				else
+				{
+					i = 6;
+					maxItems = items.Count();
+				}
+				for (i; i < maxItems; i++)
+				{
+					switch (i)
+					{
+					case 0:
+						btnCombatItem1->itemId = items.At(i)->data->id;
+						memset(btnCombatItem1->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem1->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem1->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem1->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem1->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem1;
+						if (!usingGamepad) btnCombatItem1->Update(dt);
+						break;
+					case 1:
+						btnCombatItem2->itemId = items.At(i)->data->id;
+						memset(btnCombatItem2->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem2->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem2->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem2->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem2->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem2;
+						if (!usingGamepad) btnCombatItem2->Update(dt);
+						break;
+					case 2:
+						btnCombatItem3->itemId = items.At(i)->data->id;
+						memset(btnCombatItem3->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem3->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem3->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem3->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem3->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem3;
+						if (!usingGamepad) btnCombatItem3->Update(dt);
+						break;
+					case 3:
+						btnCombatItem4->itemId = items.At(i)->data->id;
+						memset(btnCombatItem4->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem4->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem4->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem4->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem4->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem4;
+						if (!usingGamepad) btnCombatItem4->Update(dt);
+						break;
+					case 4:
+						btnCombatItem5->itemId = items.At(i)->data->id;
+						memset(btnCombatItem5->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem5->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem5->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem5->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem5->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem5;
+						if (!usingGamepad) btnCombatItem5->Update(dt);
+						break;
+					case 5:
+						btnCombatItem6->itemId = items.At(i)->data->id;
+						memset(btnCombatItem6->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem6->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem6->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem6->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem6->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem6;
+						if (!usingGamepad) btnCombatItem6->Update(dt);
+						break;
+					case 6:
+						btnCombatItem7->itemId = items.At(i)->data->id;
+						memset(btnCombatItem7->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem7->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem7->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem7->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem7->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem7;
+						if (!usingGamepad) btnCombatItem7->Update(dt);
+						break;
+					case 7:
+						btnCombatItem8->itemId = items.At(i)->data->id;
+						memset(btnCombatItem8->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem8->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem8->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem8->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem8->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem8;
+						if (!usingGamepad) btnCombatItem8->Update(dt);
+						break;
+					case 8:
+						btnCombatItem9->itemId = items.At(i)->data->id;
+						memset(btnCombatItem9->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem9->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem9->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem9->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem9->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem9;
+						if (!usingGamepad) btnCombatItem9->Update(dt);
+						break;
+					case 9:
+						btnCombatItem10->itemId = items.At(i)->data->id;
+						memset(btnCombatItem10->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem10->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem10->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem10->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem10->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem10;
+						if (!usingGamepad) btnCombatItem10->Update(dt);
+						break;
+					case 10:
+						btnCombatItem11->itemId = items.At(i)->data->id;
+						memset(btnCombatItem11->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem11->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem11->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem11->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem11->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem11;
+						if (!usingGamepad) btnCombatItem11->Update(dt);
+						break;
+					case 11:
+						btnCombatItem12->itemId = items.At(i)->data->id;
+						memset(btnCombatItem12->text, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem12->text, TEXT_LEN, items.At(i)->data->effect.attackName);
+						memset(btnCombatItem12->count, 0, TEXT_LEN);
+						strcpy_s(btnCombatItem12->count, TEXT_LEN, items.At(i)->data->countText);
+						btnCombatItem12->sec = items.At(i)->data->texSec;
+						items.At(i)->data->button = btnCombatItem12;
+						if (!usingGamepad) btnCombatItem12->Update(dt);
+						break;
+					default:
+						break;
+					}
+				}
+				if (!usingGamepad && items.Count() >= 6)
+				{
+					btnLeftArrow->Update(dt);
+					btnRightArrow->Update(dt);
+				}
+
+				if (usingGamepad)
 				{
 					if (changeMenu)
 					{
@@ -1032,7 +1236,20 @@ bool SceneCombat::Update(float dt)
 					}
 					else
 					{
-						app->scene->currentButton->data->Update(dt, 38, 51);
+						if (pageOne)
+						{
+							i = 0;
+							if (items.Count() > 6) maxItems = 6;
+							else maxItems = items.Count();
+						}
+						else
+						{
+							i = 6;
+							maxItems = items.Count();
+						}
+						app->scene->currentButton->data->Update(dt, 38 + i, 38 + i + maxItems);
+						if (items.Count() >= 6) app->scene->currentButton->data->Update(dt, 44, 45);
+
 						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
 						{
 							app->gui->ResetButtons();
@@ -1044,216 +1261,7 @@ bool SceneCombat::Update(float dt)
 				}
 			}
 		}
-		else													// Calls update for mouse parameters (GUI)
-		{
-			if (characterSelected)
-			{
-				btnCombatAttack->Update(dt);
-				btnCombatSkills->Update(dt);
-				btnCombatItems->Update(dt);
-				btnCombatSpecial->Update(dt);
-				btnCombatFlee->Update(dt);
-
-				if ((combatMenuFlags & 1 << Flags::SKILL) != 0)
-				{
-					int i = 1;
-					int maxSkills = 5;
-					for (i; i < maxSkills; i++)
-					{
-						switch (i)
-						{
-						case 1:
-							memset(btnCombatSkill1->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill1->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
-							btnCombatSkill1->sec = SkillSec(i, currentChar->character->id);
-							btnCombatSkill1->Update(dt);
-							break;
-						case 2:
-							memset(btnCombatSkill2->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill2->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
-							btnCombatSkill2->sec = SkillSec(i, currentChar->character->id);
-							btnCombatSkill2->Update(dt);
-							break;
-						case 3:
-							memset(btnCombatSkill3->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill3->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
-							btnCombatSkill3->sec = SkillSec(i, currentChar->character->id);
-							btnCombatSkill3->Update(dt);
-							break;
-						case 4:
-							memset(btnCombatSkill4->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatSkill4->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
-							btnCombatSkill4->sec = SkillSec(i, currentChar->character->id);
-							btnCombatSkill4->Update(dt);
-							break;
-						//case 5:
-							//memset(btnCombatSkill5->text, 0, TEXT_LEN);
-							//strcpy_s(btnCombatSkill5->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
-							//btnCombatSkill5->sec = SkillSec(i, currentChar->character->id);
-							//btnCombatSkill5->Update(dt);
-							//break;
-						//case 6:
-							//memset(btnCombatSkill6->text, 0, TEXT_LEN);
-							//strcpy_s(btnCombatSkill6->text, TEXT_LEN, currentChar->character->attackPool.At(i)->data->attackName);
-							//btnCombatSkill6->sec = SkillSec(i, currentChar->character->id);
-							//btnCombatSkill6->Update(dt);
-							//break;
-						}
-					}
-				}
-				else if ((combatMenuFlags & 1 << Flags::ITEMS) != 0)
-				{
-					int i = 0;
-					int maxItems = -1;
-					if (pageOne)
-					{
-						i = 0;
-						if (items.Count() > 6) maxItems = 6;
-						else maxItems = items.Count();
-					}
-					else
-					{
-						i = 6;
-						maxItems = items.Count();
-					}
-					for (i; i < maxItems; i++)
-					{
-						switch (i)
-						{
-						case 0:
-							btnCombatItem1->itemId = items.At(i)->data->id;
-							memset(btnCombatItem1->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem1->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem1->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem1->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem1->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem1;
-							btnCombatItem1->Update(dt);
-							break;
-						case 1:
-							btnCombatItem2->itemId = items.At(i)->data->id;
-							memset(btnCombatItem2->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem2->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem2->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem2->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem2->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem2;
-							btnCombatItem2->Update(dt);
-							break;
-						case 2:
-							btnCombatItem3->itemId = items.At(i)->data->id;
-							memset(btnCombatItem3->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem3->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem3->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem3->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem3->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem3;
-							btnCombatItem3->Update(dt);
-							break;
-						case 3:
-							btnCombatItem4->itemId = items.At(i)->data->id;
-							memset(btnCombatItem4->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem4->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem4->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem4->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem4->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem4;
-							btnCombatItem4->Update(dt);
-							break;
-						case 4:
-							btnCombatItem5->itemId = items.At(i)->data->id;
-							memset(btnCombatItem5->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem5->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem5->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem5->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem5->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem5;
-							btnCombatItem5->Update(dt);
-							break;
-						case 5:
-							btnCombatItem6->itemId = items.At(i)->data->id;
-							memset(btnCombatItem6->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem6->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem6->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem6->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem6->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem6;
-							btnCombatItem6->Update(dt);
-							break;
-						case 6:
-							btnCombatItem7->itemId = items.At(i)->data->id;
-							memset(btnCombatItem7->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem7->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem7->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem7->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem7->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem7;
-							btnCombatItem7->Update(dt);
-							break;
-						case 7:
-							btnCombatItem8->itemId = items.At(i)->data->id;
-							memset(btnCombatItem8->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem8->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem8->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem8->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem8->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem8;
-							btnCombatItem8->Update(dt);
-							break;
-						case 8:
-							btnCombatItem9->itemId = items.At(i)->data->id;
-							memset(btnCombatItem9->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem9->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem9->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem9->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem9->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem9;
-							btnCombatItem9->Update(dt);
-							break;
-						case 9:
-							btnCombatItem10->itemId = items.At(i)->data->id;
-							memset(btnCombatItem10->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem10->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem10->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem10->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem10->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem10;
-							btnCombatItem10->Update(dt);
-							break;
-						case 10:
-							btnCombatItem11->itemId = items.At(i)->data->id;
-							memset(btnCombatItem11->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem11->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem11->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem11->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem11->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem11;
-							btnCombatItem11->Update(dt);
-							break;
-						case 11:
-							btnCombatItem12->itemId = items.At(i)->data->id;
-							memset(btnCombatItem12->text, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem12->text, TEXT_LEN, items.At(i)->data->effect.attackName);
-							memset(btnCombatItem12->count, 0, TEXT_LEN);
-							strcpy_s(btnCombatItem12->count, TEXT_LEN, items.At(i)->data->countText);
-							btnCombatItem12->sec = items.At(i)->data->texSec;
-							items.At(i)->data->button = btnCombatItem12;
-							btnCombatItem12->Update(dt);
-							break;
-						default:
-							break;
-						}
-					}
-					if (items.Count() >= 6)
-					{
-						btnLeftArrow->Update(dt);
-						btnRightArrow->Update(dt);
-					}
-				}
-			}
-		}
 	}
-
 
 	return true;
 }
