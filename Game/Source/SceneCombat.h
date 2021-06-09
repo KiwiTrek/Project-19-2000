@@ -58,7 +58,6 @@ public:
         ATTACK,
         SKILL,
         ITEMS,
-        SPECIAL,
         FLEE
     };
 
@@ -156,7 +155,6 @@ private:
     GuiButton* btnCombatAttack = nullptr;
     GuiButton* btnCombatSkills = nullptr;
     GuiButton* btnCombatItems = nullptr;
-    GuiButton* btnCombatSpecial = nullptr;
     GuiButton* btnCombatFlee = nullptr;
 
     GuiImageButton* btnCombatSkill1 = nullptr;

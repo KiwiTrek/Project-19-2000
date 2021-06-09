@@ -21,7 +21,6 @@ public:
 		MENU,
 		INVENTORY,
 		SKILLS,
-		SKILL_TREE,
 		QUESTS,
 		STATS
 	};
@@ -80,7 +79,6 @@ private:
 	SDL_Rect menuCharacterBox;
 	iPoint menuBoxPos;
 	GuiButton* btnSkills;
-	GuiButton* btnSkillTree;
 	GuiButton* btnQuests;
 	GuiButton* btnStats;
 	GuiButton* btnOptions;
