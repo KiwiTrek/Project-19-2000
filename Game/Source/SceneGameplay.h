@@ -122,6 +122,9 @@ private:
 
 	bool onPause = false;
 
+	bool onceSkills = false;
+	int x = 0, y = 0;
+
 	//STATE FLAGS
     bool options = false;
 	int flags;

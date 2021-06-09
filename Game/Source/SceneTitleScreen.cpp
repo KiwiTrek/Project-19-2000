@@ -168,6 +168,10 @@ bool SceneTitleScreen::Update(float dt)
 	app->input->GetMouseMotion(tmpX, tmpY);
 	if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)) usingGamepad = false;
 
+	// My gamepad didn't work so I made a key to put usingGamepad to true
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN)
+		usingGamepad = true;
+
 	// Calls update with gamepad parameters (GUI)
 	if (usingGamepad)
 	{
