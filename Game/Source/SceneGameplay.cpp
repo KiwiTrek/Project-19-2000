@@ -797,6 +797,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					app->gui->ResetButtons();
 					itemSelected = 0;
 					usingGamepad = true;
+					onceSkills = false;
 				}
 			}
 			else if ((flags & 1 << Flags::STATS) != 0)
@@ -1417,6 +1418,11 @@ bool SceneGameplay::DrawPauseMenu()
 			app->render->DrawTexture(app->gui->atlas, -app->render->camera.x + menuBoxPos.x, -app->render->camera.y + menuBoxPos.y, false, &menuBox);
 			if (statFlags == 1 << (int)EntityId::MC || statFlags == 1 << (int)EntityId::VIOLENT)
 			{
+				if (statFlags == 1 << (int)EntityId::MC)
+					app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + 80, menuCharacterBox.w, menuCharacterBox.h }, 255, 0, 0, 50, true);
+				else
+					app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, menuCharacterBox.w, menuCharacterBox.h }, 0, 255, 255, 50, true);
+
 				btnSkill1->Draw(-app->render->camera.x, -app->render->camera.y);
 				btnSkill2->Draw(-app->render->camera.x, -app->render->camera.y);
 				btnSkill3->Draw(-app->render->camera.x, -app->render->camera.y);
