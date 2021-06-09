@@ -44,7 +44,7 @@ PuzzlePieces::PuzzlePieces(int x, int y, PuzzleId id, Entity* player) : Entity(x
 	else
 	{
 		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::MOVEABLE, (Module*)app->entities);
-		collision = app->collisions->AddCollider({ x + 4,y + 4,56,56 }, Collider::Type::SOLID, (Module*)app->entities);
+		collision = app->collisions->AddCollider({ x + 4,y + 4,56,56 }, Collider::Type::SOLID_ROCK, (Module*)app->entities);
 	}
 }
 

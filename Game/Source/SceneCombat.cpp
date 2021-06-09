@@ -993,7 +993,7 @@ bool SceneCombat::Update(float dt)
 			usingGamepad = false;
 
 		// Calls update for both gamepad and mouse parameters (GUI)
-		if (usingGamepad && changeMenu)
+		if (usingGamepad && changeMenu && btnCombatItems->state != GuiControlState::DISABLED)
 		{
 			app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatAttack));
 			changeMenu = false;
@@ -1236,19 +1236,21 @@ bool SceneCombat::Update(float dt)
 					}
 					else
 					{
-						if (pageOne)
+						if (items.Count() >= 6)
 						{
-							i = 0;
-							if (items.Count() > 6) maxItems = 6;
-							else maxItems = items.Count();
+							if (pageOne)
+							{
+								app->scene->currentButton->data->Update(dt, 38, 44);
+							}
+							else
+							{
+								app->scene->currentButton->data->Update(dt, 45, 45 + items.Count() - 6);
+							}
 						}
 						else
 						{
-							i = 6;
-							maxItems = items.Count();
+							app->scene->currentButton->data->Update(dt, 38, 37 + items.Count());
 						}
-						app->scene->currentButton->data->Update(dt, 38 + i, 38 + i + maxItems);
-						if (items.Count() >= 6) app->scene->currentButton->data->Update(dt, 44, 45);
 
 						if (app->input->CheckButton("cancel", KeyState::KEY_DOWN))
 						{
@@ -2376,6 +2378,7 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		combatMenuFlags = 0;
 		combatMenuFlags = SetBit(combatMenuFlags, Flags::ITEMS);
 		changeMenu = true;
+		pageOne = true;
 		break;
 	case 32: //SPECIAL
 		app->gui->ResetButtons();
@@ -2564,11 +2567,13 @@ bool SceneCombat::OnGuiMouseClickEvent(GuiControl* control)
 		pageOne = false;
 		btnLeftArrow->state = GuiControlState::NORMAL;
 		btnRightArrow->state = GuiControlState::DISABLED;
+		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatItem7));
 		break;
 	case 45: //LEFT ARROW
 		pageOne = true;
 		btnLeftArrow->state = GuiControlState::DISABLED;
 		btnRightArrow->state = GuiControlState::NORMAL;
+		app->scene->currentButton = app->gui->controls.At(app->gui->controls.Find(btnCombatItem1));
 		break;
 	case 46: //ITEM 7
 		app->gui->ResetButtons();

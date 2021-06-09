@@ -26,6 +26,7 @@ public:
 		PLAYER,
 		BUTTON,
 		MOVEABLE,
+		SOLID_ROCK,
 		MAX
 	};
 

@@ -92,6 +92,10 @@ bool GuiImageButton::Update(float dt, int minId, int maxId)
 			{
 				app->scene->currentButton->data->state = GuiControlState::NORMAL;
 				app->scene->currentButton = app->scene->currentButton->next;
+				while (app->scene->currentButton->data->state == GuiControlState::DISABLED)
+				{
+					app->scene->currentButton = app->scene->currentButton->next;
+				}
 				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
 				app->audio->PlayFx(hover);
 			}
@@ -102,6 +106,10 @@ bool GuiImageButton::Update(float dt, int minId, int maxId)
 			{
 				app->scene->currentButton->data->state = GuiControlState::NORMAL;
 				app->scene->currentButton = app->scene->currentButton->prev;
+				while (app->scene->currentButton->data->state == GuiControlState::DISABLED)
+				{
+					app->scene->currentButton = app->scene->currentButton->prev;
+				}
 				app->scene->currentButton->data->state = GuiControlState::FOCUSED;
 				app->audio->PlayFx(hover);
 			}

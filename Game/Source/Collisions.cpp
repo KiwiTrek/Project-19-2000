@@ -39,6 +39,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::AIR][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::SOLID][(uint)Collider::Type::SOLID] = false;
@@ -65,6 +66,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::DOOR][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::SOLID] = false;
@@ -78,6 +80,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::PUZZLE][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::SOLID] = false;
@@ -91,6 +94,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::BUTTON][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::SOLID] = false;
@@ -104,6 +108,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::MOVEABLE][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::SOLID] = false;
@@ -117,6 +122,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::OTHER][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::SOLID] = false;
@@ -130,6 +136,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::EVENT][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::SOLID] = false;
@@ -143,6 +150,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::ENEMY_SPAWN][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::SOLID] = false;
@@ -156,6 +164,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::INTERACTABLE][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::SOLID] = false;
@@ -169,6 +178,7 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::INTERACTABLE] = false;
 	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::DEBUG][(uint)Collider::Type::SOLID_ROCK] = false;
 
 	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::AIR] = false;
 	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::SOLID] = true;
@@ -182,6 +192,22 @@ Collisions::Collisions()
 	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::INTERACTABLE] = true;
 	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::DEBUG] = false;
 	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::PLAYER] = false;
+	matrix[(uint)Collider::Type::PLAYER][(uint)Collider::Type::SOLID_ROCK] = true;
+
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::AIR] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::SOLID] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::DOOR] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::PUZZLE] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::BUTTON] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::MOVEABLE] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::OTHER] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::EVENT] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::ENEMY_SPAWN] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::INTERACTABLE] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::DEBUG] = false;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::PLAYER] = true;
+	matrix[(uint)Collider::Type::SOLID_ROCK][(uint)Collider::Type::SOLID_ROCK] = false;
+
 }
 
 Collisions::~Collisions()

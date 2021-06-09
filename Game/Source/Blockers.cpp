@@ -25,12 +25,12 @@ Blockers::Blockers(int x, int y, BlockerId id, Entity* player) : Entity(x, y, En
 	{
 	case BlockerId::SPIKES:
 	{
-		collider = app->collisions->AddCollider({ x,y,64,576 }, Collider::Type::SOLID, (Module*)app->entities);
+		collider = app->collisions->AddCollider({ x,y,64,576 }, Collider::Type::SOLID_ROCK, (Module*)app->entities);
 		break;
 	}
 	case BlockerId::LOCKED_DOOR:
 	{
-		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::SOLID, (Module*)app->entities);
+		collider = app->collisions->AddCollider({ x,y,64,64 }, Collider::Type::SOLID_ROCK, (Module*)app->entities);
 		break;
 	}
 	}

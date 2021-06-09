@@ -274,7 +274,7 @@ bool EntityManager::UpdateAll(float dt, bool doLogic)
 		{
 			if (strcmp(app->map->data.name, "home.tmx") == 0)
 			{
-				if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE && e->data->type != EntityType::BLOCKER) e->data->Update(dt); //Should also not draw spikes, just overall entities
+				if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE && e->data->type != EntityType::BLOCKER) e->data->Update(dt);
 			}
 			else
 			{
@@ -329,7 +329,7 @@ bool EntityManager::PostUpdate()
 					{
 						if (strcmp(app->map->data.name, "home.tmx") == 0)
 						{
-							if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE && e->data->type != EntityType::BLOCKER) e->data->Draw(); //Should also not draw spikes, just overall entities
+							if (e->data->type != EntityType::ITEM && e->data->type != EntityType::PUZZLE_PIECE && e->data->type != EntityType::BLOCKER) e->data->Draw();
 						}
 						else
 						{

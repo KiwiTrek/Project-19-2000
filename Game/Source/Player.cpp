@@ -207,17 +207,36 @@ bool Player::Draw()
 
 void Player::OnCollision(Collider* c1, Collider* c2)
 {
-	if (c2->type == Collider::Type::SOLID)
+	if (strcmp(app->map->data.name, "tutorial.tmx") == 0)
 	{
-		while (c1->Intersects(c2->rect))
+		if (c2->type == Collider::Type::SOLID || c2->type == Collider::Type::SOLID_ROCK)
 		{
-			iPoint difference = { c2->rect.x + c2->rect.w/2 - c1->rect.x - c1->rect.w/2, c2->rect.y + c2->rect.h/2 - c1->rect.y - c1->rect.h / 2 };
+			while (c1->Intersects(c2->rect))
+			{
+				iPoint difference = { c2->rect.x + c2->rect.w / 2 - c1->rect.x - c1->rect.w / 2, c2->rect.y + c2->rect.h / 2 - c1->rect.y - c1->rect.h / 2 };
 
-			if (difference.x > 0) c1->rect.x--;
-			else if (difference.x < 0) c1->rect.x++;
+				if (difference.x > 0) c1->rect.x--;
+				else if (difference.x < 0) c1->rect.x++;
 
-			if (difference.y > 0) c1->rect.y--;
-			else if (difference.y < 0) c1->rect.y++;
+				if (difference.y > 0) c1->rect.y--;
+				else if (difference.y < 0) c1->rect.y++;
+			}
+		}
+	}
+	else if (strcmp(app->map->data.name, "home.tmx") == 0)
+	{
+		if (c2->type == Collider::Type::SOLID)
+		{
+			while (c1->Intersects(c2->rect))
+			{
+				iPoint difference = { c2->rect.x + c2->rect.w / 2 - c1->rect.x - c1->rect.w / 2, c2->rect.y + c2->rect.h / 2 - c1->rect.y - c1->rect.h / 2 };
+
+				if (difference.x > 0) c1->rect.x--;
+				else if (difference.x < 0) c1->rect.x++;
+
+				if (difference.y > 0) c1->rect.y--;
+				else if (difference.y < 0) c1->rect.y++;
+			}
 		}
 	}
 	
