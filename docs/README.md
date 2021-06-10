@@ -1,4 +1,4 @@
-![Title](https://github.com/WillyTrek19/Project-19-2000/blob/master/docs/Wiki%20Resources/Title.png)
+![Title](https://raw.githubusercontent.com/WillyTrek19/Project-19-2000/master/docs/Wiki%20Resources/Title.png)
 
 ## Description
 
@@ -16,7 +16,7 @@ Set in the 21th century. Shattered Dreams is about a 23 years old guy. He lost c
 - Support for both keyboard and gamepad*.
 
 ## Controls (By default)
-![Controls](https://github.com/WillyTrek19/Project-19-2000/blob/master/Screenshots/ControlsGold.png)
+![Controls](https://raw.githubusercontent.com/WillyTrek19/Project-19-2000/master/Screenshots/ControlsGold.png)
 
 ## Developers
 
@@ -27,7 +27,7 @@ Set in the 21th century. Shattered Dreams is about a 23 years old guy. He lost c
  - David Montufo Montero ([@Montuuh](https://github.com/Montuuh)) - QA/Programmer
  - Arnau Lucena Cobo ([@TitoLuce](https://github.com/TitoLuce)) - Programmer/Designer
 
-![Logo](https://github.com/WillyTrek19/Project-19-2000/blob/master/docs/Wiki%20Resources/LogoSmall.png)
+![Logo](https://raw.githubusercontent.com/WillyTrek19/Project-19-2000/master/docs/Wiki%20Resources/LogoSmall.png)
 
 ## License
 
