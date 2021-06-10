@@ -35,9 +35,6 @@
             <Component Id="cmp23267DA5F20E5C06C5B8F213F7E64543" Guid="*">
                 <File Id="fil965E1BEB465B3CA406A4B93ADE2B40D8" KeyPath="yes" Source="$(var.HarvestPath)\SDL2_mixer.dll" />
             </Component>
-            <Component Id="cmp0F969203A45849E9172BAAD193E9E571" Guid="*">
-                <File Id="fil554CEF3682E6757B97DC9BDD5CD47792" KeyPath="yes" Source="$(var.HarvestPath)\shattered_dreams.exe" />
-            </Component>
             <Component Id="cmpF4A8048A71525C11F1A3E739F4D244F4" Guid="*">
                 <File Id="filA804FE7264B6C5149D3FAFCCD50945CD" KeyPath="yes" Source="$(var.HarvestPath)\zlib1.dll" />
             </Component>
@@ -56,7 +53,6 @@
             <ComponentRef Id="cmp77F2718815C37DF1CD595A4164461B7A" />
             <ComponentRef Id="cmpD5527425E607FED29E84E1424D4A0F52" />
             <ComponentRef Id="cmp23267DA5F20E5C06C5B8F213F7E64543" />
-            <ComponentRef Id="cmp0F969203A45849E9172BAAD193E9E571" />
             <ComponentRef Id="cmpF4A8048A71525C11F1A3E739F4D244F4" />
         </ComponentGroup>
     </Fragment>

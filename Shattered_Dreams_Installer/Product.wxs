@@ -41,7 +41,7 @@
         <Shortcut Id="ApplicationStartMenuShortcut"
                Name="Shattered Dreams"
                Description="My UPC Game Description"
-               Target="[#shatered_dreams.exe]"
+               Target="[#shattered_dreams.exe]"
                WorkingDirectory="INSTALLFOLDER"
                Icon = "icon.ico"/><!-- STEP 4 -->
         <RemoveFolder Id="RemoveProgramsFolder" On="uninstall"/>
@@ -55,7 +55,7 @@
         <Shortcut Id="ApplicationDesktopShortcut"
                Name="Shattered Dreams"
                Description="My UPC Game Description"
-               Target="[#shatered_dreams.exe]"
+               Target="[#shattered_dreams.exe]"
                WorkingDirectory="INSTALLFOLDER"
                Icon = "icon.ico"/><!-- STEP 4 -->
         <RemoveFolder Id="RemoveDesktopFolder" On="uninstall"/>
@@ -89,8 +89,8 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<!-- STEP 1 -->
-      <Component Id="shatered_dreams.exe" Guid="45A98019-8668-466B-83CC-C13710E9EB69">
-                <File Id="shatered_dreams.exe" Source="..\Build\Release\shatered_dreams.exe" KeyPath="yes" Checksum="yes" />
+      <Component Id="shattered_dreams.exe" Guid="45A98019-8668-466B-83CC-C13710E9EB69">
+                <File Id="shattered_dreams.exe" Source="..\Build\Release\shattered_dreams.exe" KeyPath="yes" Checksum="yes" />
             </Component> 
     </ComponentGroup>
 	</Fragment>
