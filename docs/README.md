@@ -9,6 +9,9 @@ Turn-Based RPG game created for the "Project II" subject in the Bachelor's degre
 ### Sinopsis
 Set in the 21th century. Shattered Dreams is about a 23 years old guy. He lost control of his life, and now he is mired in depression. One night, in a dream, he met his late grandfather. He then told him that he would have to visit three of his most traumatic experiences: His time at school, a party in his adolescence and his nightmarish days of terrible jobs. All of this in order to either regain his happiness or... just let go of everything.
 
+## Trailer
+<iframe width="560" height="315" src="https://www.youtube.com/embed/1H2wFkoIIFE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> (If the video doesn't work, you can always click [here](https://www.youtube.com/watch?v=1H2wFkoIIFE))
+
 ## Key Features
 - Battle against the protagonist's inner ghost accompanied by your deceased grandfather. Watch out for your stress!
 - Explore the intrinsic and labyrinthic inner thoughts of our protagonist and complete quests and puzzles along the way.
