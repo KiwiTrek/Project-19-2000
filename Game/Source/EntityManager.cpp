@@ -221,6 +221,9 @@ Entity* EntityManager::CreateEntity(int x, int y, EntityType type, EntityId id, 
 		case NpcId::GRANDPA:
 			ret = new Npc(x, y, npcId, playerPointer, interactGrandpa);
 			break;
+		case NpcId::GRANDPA_TUTORIAL:
+			ret = new Npc(x, y, npcId, playerPointer, interactGrandpa);
+			break;
 		case NpcId::CAT:
 			ret = new Npc(x, y, npcId, playerPointer, interactCat);
 			break;

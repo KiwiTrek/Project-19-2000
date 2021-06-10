@@ -49,6 +49,14 @@ bool SceneGameplay::Load()
 	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderFonts, "ButtonFont.xml");
 	buttonFont = new Font(tmp);
 
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderTexture, "ControlsGamepad.png");
+	controlsGamepad = app->tex->Load(tmp);
+
+	memset(tmp, 0, TEXT_LEN);
+	sprintf_s(tmp, TEXT_LEN, "%s%s", app->scene->folderTexture, "ControlsKeyboard.png");
+	controlsKeyboard = app->tex->Load(tmp);
+
 	float tmpValue = 0;
 	//MENU
 	app->gui->Enable();
@@ -153,6 +161,8 @@ bool SceneGameplay::Load()
 	spikeRowTwo = (Blockers*)app->entities->CreateEntity(52 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
 	spikeRowThree = (Blockers*)app->entities->CreateEntity(60 * 64, 10 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::SPIKES);
 	lockedDoor = (Blockers*)app->entities->CreateEntity(15 * 64, 38 * 64, EntityType::BLOCKER, EntityId::NOT_COMBAT, NULL, NpcId::NONE, player, ItemId::NONE, 0, PuzzleId::NONE, BlockerId::LOCKED_DOOR);
+
+	grandpaTutorial = app->entities->CreateEntity((15 * 64) + 15, 66 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA_TUTORIAL, player);
 
 	hero = nullptr;
 	grandpa = nullptr;
@@ -297,6 +307,7 @@ bool SceneGameplay::UpdateDialogue(float dt)
 			app->entities->flagsCat = 0;
 			app->entities->flagsSuperhero = 0;
 			app->entities->flagsGrandpa = 0;
+			app->entities->flagsGrandpaTut = 0;
 		}
 	}
 
@@ -330,6 +341,10 @@ bool SceneGameplay::UpdateDialogue(float dt)
 		{
 			app->entities->flagsGrandpa = ClearBit(app->entities->flagsGrandpa, DialogueFlags::FINISHED_TALK);
 		}
+		else if ((app->entities->flagsGrandpaTut & 1 << (int)DialogueFlags::FINISHED_TALK_REQUEST) != 0)
+		{
+			app->entities->flagsGrandpaTut = ClearBit(app->entities->flagsGrandpaTut, DialogueFlags::FINISHED_TALK);
+		}
 		dialogSystem->NextDialog();
 	}
 
@@ -339,6 +354,12 @@ bool SceneGameplay::UpdateDialogue(float dt)
 		{
 			dialogSystem->StartDialog("1");
 			app->entities->flagsGrandpa = ClearBit(app->entities->flagsGrandpa, DialogueFlags::TALKING_TO);
+		}
+
+		if ((app->entities->flagsGrandpaTut & 1 << (int)DialogueFlags::TALKING_TO) != 0)
+		{
+			dialogSystem->StartDialog("6");
+			app->entities->flagsGrandpaTut = ClearBit(app->entities->flagsGrandpaTut, DialogueFlags::TALKING_TO);
 		}
 
 		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::TALKING_TO) != 0)
@@ -1252,6 +1273,18 @@ bool SceneGameplay::Draw()
 		if (!combat) app->render->background = { 0,0,0,255 };
 
 		app->map->Draw();
+
+		if (strcmp(app->map->data.name, "tutorial.tmx") == 0)
+		{
+			if (usingGamepad)
+			{
+				app->render->DrawTexture(controlsGamepad, 320, 5400, false);
+			}
+			else
+			{
+				app->render->DrawTexture(controlsKeyboard, 320, 5400, false);
+			}
+		}
 	}
 	
 	if (combat || combatScene->waitForTransition == TransitionStatus::BATTLE || combatScene->waitForTransition == TransitionStatus::END || !app->scene->transitionAlpha >= 1.0f)
@@ -1263,6 +1296,7 @@ bool SceneGameplay::Draw()
 	{
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x, -app->render->camera.y + 466, false, &dialogSystem->dialogTextBox);
 		app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1028, -app->render->camera.y + 498, false, &dialogSystem->portraitBox);
+
 		if ((app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsShopkeeper & 1 << (int)DialogueFlags::ACTIVE) != 0)
 		{
 			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->shopKeeperPortrait);
@@ -1276,6 +1310,10 @@ bool SceneGameplay::Draw()
 			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->superheroPortrait);
 		}
 		if ((app->entities->flagsGrandpa & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsGrandpa & 1 << (int)DialogueFlags::ACTIVE) != 0)
+		{
+			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->grandpaPortrait);
+		}
+		if ((app->entities->flagsGrandpaTut & 1 << (int)DialogueFlags::FINISHED_TALK) == 0 && (app->entities->flagsGrandpaTut & 1 << (int)DialogueFlags::ACTIVE) != 0)
 		{
 			app->render->DrawTexture(dialogSystem->dialogGui, -app->render->camera.x + 1099, -app->render->camera.y + 547, false, &dialogSystem->grandpaPortrait);
 		}
@@ -1578,6 +1616,9 @@ bool SceneGameplay::Unload()
 	RELEASE(buttonFont);
 	RELEASE(dialogueFont);
 	app->tex->UnLoad(textBox);
+
+	app->tex->UnLoad(controlsGamepad);
+	app->tex->UnLoad(controlsKeyboard);
 
 	app->gui->Disable();
 	app->scene->currentButton = nullptr;

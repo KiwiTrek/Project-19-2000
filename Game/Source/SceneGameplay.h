@@ -53,6 +53,7 @@ public:
 	Entity* cat = nullptr;
 	Entity* shopDude = nullptr;
 	Entity* grandpa = nullptr;
+	Entity* grandpaTutorial = nullptr;
 
 	Entity* player = nullptr;
 	GuiButton* btnInventory;
@@ -113,6 +114,10 @@ private:
 	GuiImageButton* btnSkill2;
 	GuiImageButton* btnSkill3;
 	GuiImageButton* btnSkill4;
+
+	//TUTORIAL
+	SDL_Texture* controlsKeyboard = nullptr;
+	SDL_Texture* controlsGamepad = nullptr;
 
 	// This line is added for the sake of commiting & testing
 

@@ -113,6 +113,47 @@ Npc::Npc(int x, int y, NpcId npcId, Entity* player, int interactFx) : Entity(x, 
 
 		currentAnim = &idle;
 	}
+	case NpcId::GRANDPA_TUTORIAL:
+	{
+		this->entityRect = { x,y,34,54 };
+
+		idle.PushBack({ 2,2,34,54 });
+		idle.PushBack({ 38,2,34,54 });
+		idle.PushBack({ 74,2,34,54 });
+		idle.PushBack({ 110,2,34,54 });
+
+		idle.speed = 1.4f;
+		idle.loop = true;
+
+		idleLeft.PushBack({ 2,58,34,54 });
+		idleLeft.PushBack({ 38,58,34,54 });
+		idleLeft.PushBack({ 74,58,34,54 });
+		idleLeft.PushBack({ 110,58,34,54 });
+
+		idleLeft.speed = 1.4f;
+		idleLeft.loop = true;
+
+		idleRight.PushBack({ 2,114,34,54 });
+		idleRight.PushBack({ 38,114,34,54 });
+		idleRight.PushBack({ 74,114,34,54 });
+		idleRight.PushBack({ 110,114,34,54 });
+
+		idleRight.speed = 1.4f;
+		idleRight.loop = true;
+
+		idleUp.PushBack({ 2,170,34,54 });
+		idleUp.PushBack({ 38,170,34,54 });
+		idleUp.PushBack({ 74,170,34,54 });
+		idleUp.PushBack({ 110,170,34,54 });
+
+		idleUp.speed = 1.4f;
+		idleUp.loop = true;
+
+		collider = app->collisions->AddCollider({ x - 2,y - 2,36,56 }, Collider::Type::INTERACTABLE, (Module*)app->entities);
+		collision = app->collisions->AddCollider({ x + 2,y + 2,30,27 }, Collider::Type::SOLID, (Module*)app->entities);
+
+		currentAnim = &idle;
+	}
 	default:
 		break;
 	}
@@ -146,6 +187,9 @@ bool Npc::Draw()
 		}
 		break;
 	case NpcId::GRANDPA:
+		app->render->DrawTexture(app->entities->grandpaTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
+		break;
+	case NpcId::GRANDPA_TUTORIAL:
 		app->render->DrawTexture(app->entities->grandpaTex, entityRect.x, entityRect.y, false, &currentAnim->GetCurrentFrame());
 		break;
 	default:
@@ -226,6 +270,37 @@ void Npc::OnCollision(Collider* c1, Collider* c2)
 			if (app->entities->dialogCounter == 0.0f)
 			{
 				app->entities->flagsGrandpa = SetBit(app->entities->flagsGrandpa, DialogueFlags::TALKING_TO);
+				app->entities->dialogCounter = 0.5f;
+			}
+			break;
+		}
+		case NpcId::GRANDPA_TUTORIAL:
+		{
+			if (this->collider->rect.y + this->collider->rect.h > playerPtr->entityRect.y && this->collision->rect.y < playerPtr->entityRect.y)
+			{
+				this->currentAnim = &idle;
+			}
+			if (this->collider->rect.y < playerPtr->entityRect.y + playerPtr->entityRect.h && this->collision->rect.y > playerPtr->entityRect.y)
+			{
+				this->currentAnim = &idleUp;
+			}
+			else if (this->collision->rect.y + this->collision->rect.h > playerPtr->entityRect.y)
+			{
+				if (this->collision->rect.x < playerPtr->entityRect.x)
+				{
+					this->currentAnim = &idleRight;
+				}
+				else if (this->collision->rect.x > playerPtr->entityRect.x)
+				{
+					this->currentAnim = &idleLeft;
+				}
+			}
+
+			LOG("Interaction Grandpa Tutorial");
+			app->entities->flagsGrandpaTut = SetBit(app->entities->flagsGrandpaTut, DialogueFlags::ACTIVE);
+			if (app->entities->dialogCounter == 0.0f)
+			{
+				app->entities->flagsGrandpaTut = SetBit(app->entities->flagsGrandpaTut, DialogueFlags::TALKING_TO);
 				app->entities->dialogCounter = 0.5f;
 			}
 			break;

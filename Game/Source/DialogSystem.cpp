@@ -33,6 +33,10 @@ void GrandpaFinished()
 {
 	app->entities->flagsGrandpa = SetBit(app->entities->flagsGrandpa, DialogueFlags::FINISHED_TALK_REQUEST);
 }
+void GrandpaTutorialFinished()
+{
+	app->entities->flagsGrandpaTut = SetBit(app->entities->flagsGrandpaTut, DialogueFlags::FINISHED_TALK_REQUEST);
+}
 
 std::string ToUpperCase(std::string input)
 {
@@ -57,12 +61,14 @@ DialogSystem::DialogSystem()
 	LoadDialog("Dialog/ShopKeeper.xml");
 	LoadDialog("Dialog/Grandpa.xml");
 	LoadDialog("Dialog/Superhero.xml");
+	LoadDialog("Dialog/GrandpaTut.xml");
 
 	// Register a callback functions
 	callbacks[std::string("shopkeeper_finished")] = std::function<void()>(&ShopKeeperFinished);
 	callbacks[std::string("cat_finished")] = std::function<void()>(&CatFinished);
 	callbacks[std::string("superhero_finished")] = std::function<void()>(&SuperheroFinished);
 	callbacks[std::string("grandpa_finished")] = std::function<void()>(&GrandpaFinished);
+	callbacks[std::string("grandpa_tutorial_finished")] = std::function<void()>(&GrandpaTutorialFinished);
 
 	timeStep = 0;
 	timeStepAnswers = 0;

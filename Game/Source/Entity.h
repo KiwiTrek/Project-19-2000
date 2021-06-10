@@ -40,7 +40,8 @@ enum class NpcId
 	HERO,
 	GRANDPA,
 	CAT,
-	STORE_GUY
+	STORE_GUY,
+	GRANDPA_TUTORIAL
 };
 
 enum class ItemId

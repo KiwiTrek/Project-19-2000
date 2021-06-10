@@ -563,6 +563,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 									{
 										SceneGameplay* s = (SceneGameplay*)app->scene->current;
+										app->entities->DestroyEntity(s->grandpaTutorial);
 										s->hero = app->entities->CreateEntity(27 * 64 + 15, 12 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::HERO, s->player);
 										s->grandpa = app->entities->CreateEntity((31 * 64) + 48, 7 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA, s->player);
 										s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
@@ -808,6 +809,7 @@ SDL_Rect Collisions::ResolveCollisions(Collider* collider, iPoint nextFrame,floa
 									if (app->scene->current->currentScene == SceneType::GAMEPLAY)
 									{
 										SceneGameplay* s = (SceneGameplay*)app->scene->current;
+										s->grandpaTutorial = app->entities->CreateEntity((15 * 64) + 15, 66 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA_TUTORIAL, s->player);
 										app->entities->DestroyEntity(s->hero);
 										app->entities->DestroyEntity(s->grandpa);
 										app->entities->DestroyEntity(s->shopDude);

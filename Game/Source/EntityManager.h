@@ -104,6 +104,7 @@ public:
     int flagsCat = 0;
     int flagsSuperhero = 0;
     int flagsGrandpa = 0;
+    int flagsGrandpaTut = 0;
 
     bool takingItem = false;
     float dialogCounter = 0.0f;
