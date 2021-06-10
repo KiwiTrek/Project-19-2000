@@ -5,7 +5,7 @@
 
 ## Controls (By default)
 - Gamepad
-  - Directional pad: Move character/between options (EXCEPT selecting target on combat)
+  - Directional pad: Move character/between options
   - B/O button: Select
   - A/X button: Cancel
   - Start/Options button: Menu
@@ -24,7 +24,7 @@
   - F3: Trigger combat
   - F4: Save request
   - F5: Load request
-  - **NEW!** F7: Complete Quest
+  - F7: Complete Quest
   - F10: God mode
     - No collisions
     - No event triggers
