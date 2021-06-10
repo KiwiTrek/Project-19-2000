@@ -43,7 +43,7 @@ public:
 private:
 
 	Item item;
-	int itemCollectedFx;
+	int itemCollectedFx = -1;
 
 };
 

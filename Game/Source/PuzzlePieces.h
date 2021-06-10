@@ -35,7 +35,6 @@ private:
 	SDL_Rect slidingRock;
 	SDL_Rect button;
 	SDL_Rect buttonPressed;
-	SDL_Rect doorUp;
 
 public:
 

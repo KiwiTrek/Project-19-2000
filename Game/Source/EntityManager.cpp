@@ -410,6 +410,10 @@ bool EntityManager::Load(pugi::xml_node& save)
 		s->shopDude = app->entities->CreateEntity(20 * 64 + 10, 33 * 64 + 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::STORE_GUY, s->player);
 		s->cat = app->entities->CreateEntity(35 * 64 + 10, 15 * 64 - 10, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::CAT, s->player);
 	}
+	else if (strcmp(app->map->data.name, "tutorial.tmx") == 0)
+	{
+		s->grandpaTutorial = app->entities->CreateEntity((15 * 64) + 15, 66 * 64, EntityType::NPC, EntityId::NOT_COMBAT, Stats(0), NpcId::GRANDPA_TUTORIAL, s->player);
+	}
 
 	while (!player.empty())
 	{

@@ -25,9 +25,6 @@ struct  CombatCharacter
     char mp[TEXT_LEN] = { 0 };
     char stress[TEXT_LEN] = { 0 };
 
-    char lvl[TEXT_LEN] = { 0 };
-    char xp[TEXT_LEN] = { 0 };
-    char nextLvl[TEXT_LEN] = { 0 };
     char pAtk[TEXT_LEN] = { 0 };
     char mAtk[TEXT_LEN] = { 0 };
     char pDef[TEXT_LEN] = { 0 };

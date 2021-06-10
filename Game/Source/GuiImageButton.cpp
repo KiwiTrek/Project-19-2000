@@ -83,7 +83,7 @@ bool GuiImageButton::Update(float dt)
 bool GuiImageButton::Update(float dt, int minId, int maxId)
 {
 	this->state = GuiControlState::FOCUSED;
-
+	cd += dt;
 	if ((app->scene->currentButton->data->id >= minId) && (app->scene->currentButton->data->id <= maxId))
 	{
 		if (app->scene->currentButton->next != nullptr && (app->input->CheckButton("down", KEY_DOWN) || app->input->CheckButton("right", KEY_DOWN)))
@@ -114,15 +114,21 @@ bool GuiImageButton::Update(float dt, int minId, int maxId)
 				app->audio->PlayFx(hover);
 			}
 		}
-		if (app->input->CheckButton("select", KEY_REPEAT))
+		if (cd >= 0.7f)
 		{
-			if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
-				app->audio->PlayFx(click);
-			app->scene->currentButton->data->state = GuiControlState::PRESSED;
-		}
-		if (app->input->CheckButton("select", KEY_UP))
-		{
-			NotifyObserver();
+			cd = 0.7f;
+			if (app->input->CheckButton("select", KEY_REPEAT))
+			{
+				if (app->scene->currentButton->data->state == GuiControlState::FOCUSED)
+					app->audio->PlayFx(click);
+				app->scene->currentButton->data->state = GuiControlState::PRESSED;
+			}
+			if (app->input->CheckButton("select", KEY_UP))
+			{
+				cd = 0.0f;
+				NotifyObserver();
+			}
+
 		}
 	}
 

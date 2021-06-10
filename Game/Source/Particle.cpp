@@ -114,10 +114,10 @@ bool Particle::IsAlive()
 SDL_Color Particle::InterpolateColor(SDL_Color initialColor, float timeStep, SDL_Color finalColor)
 {
 	SDL_Color resultingColor;
-	resultingColor.r = initialColor.r + (finalColor.r - initialColor.r) * timeStep;
-	resultingColor.g = initialColor.g + (finalColor.g - initialColor.g) * timeStep;
-	resultingColor.b = initialColor.b + (finalColor.b - initialColor.b) * timeStep;
-	resultingColor.a = initialColor.a + (finalColor.a - initialColor.a) * timeStep;
+	resultingColor.r = Uint8(initialColor.r + (finalColor.r - initialColor.r) * timeStep);
+	resultingColor.g = Uint8(initialColor.g + (finalColor.g - initialColor.g) * timeStep);
+	resultingColor.b = Uint8(initialColor.b + (finalColor.b - initialColor.b) * timeStep);
+	resultingColor.a = Uint8(initialColor.a + (finalColor.a - initialColor.a) * timeStep);
 
 	return resultingColor;
 }

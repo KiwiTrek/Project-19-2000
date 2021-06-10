@@ -22,12 +22,12 @@ public:
 public:
 	SDL_Rect limits;
 
-	int value;
-	int maxValue;
+	int value = -1;
+	int maxValue = -1;
 
 private:
 	// GUI Slider specific properties
-	int widthInUnits;
+	int widthInUnits = 0;
 
 	SDL_Rect normal;
 	SDL_Rect focused;
@@ -35,12 +35,7 @@ private:
 	SDL_Rect disabled;
 
 	SDL_Rect normalLimitsBegin;
-	SDL_Rect normalLimitsMiddle;
-	SDL_Rect normalLimitsEnd;
-
 	SDL_Rect disabledLimitsBegin;
-	SDL_Rect disabledLimitsMiddle;
-	SDL_Rect disabledLimitsEnd;
 };
 
 #endif // __GUISLIDER_H__

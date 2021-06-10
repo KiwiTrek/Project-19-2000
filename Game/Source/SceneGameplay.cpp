@@ -427,7 +427,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 	if (((tmpX > 3 || tmpX < -3) || (tmpY > 3 || tmpY < -3)) || (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN))
 		usingGamepad = false;
 
-	for (int i = 0; i < combatScene->items.Count(); i++)
+	for (uint i = 0; i < combatScene->items.Count(); i++)
 	{
 		switch (i)
 		{
@@ -696,14 +696,21 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 				statFlags = 0;
 				if (!onceSkills)
 				{
+					app->audio->PlayFx(app->entities->playerFx);
 					onceSkills = true;
 					x = 984;
 					y = 80;
 				}
 				if ((app->input->CheckButton("down", KEY_DOWN)) && y == 80)
+				{
+					app->audio->PlayFx(app->entities->interactGrandpa);
 					y = 85 + menuCharacterBox.h;
+				}
 				if ((app->input->CheckButton("up", KEY_DOWN)) && y != 80)
+				{
+					app->audio->PlayFx(app->entities->playerFx);
 					y = 80;
+				}
 
 				if (combatScene->characterFlags >= 2)
 				{
@@ -839,11 +846,18 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					onceSkills = true;
 					x = 984;
 					y = 80;
+					app->audio->PlayFx(app->entities->playerFx);
 				}
 				if ((app->input->CheckButton("down", KEY_DOWN)) && y == 80)
+				{
 					y = 85 + menuCharacterBox.h;
+					app->audio->PlayFx(app->entities->interactGrandpa);
+				}
 				if ((app->input->CheckButton("up", KEY_DOWN)) && y != 80)
+				{
 					y = 80;
+					app->audio->PlayFx(app->entities->playerFx);
+				}
 				if (combatScene->characterFlags >= 2)
 				{
 					if (x >= 984 && x < (984 + menuCharacterBox.w) && y >= 80 && y < (75 + menuCharacterBox.h))
@@ -1046,7 +1060,7 @@ bool SceneGameplay::UpdatePauseMenu(float dt)
 					}
 				}
 
-				for (int i = 0; i < combatScene->items.Count(); i++)
+				for (uint i = 0; i < combatScene->items.Count(); i++)
 				{
 					switch (i)
 					{
@@ -1425,7 +1439,7 @@ bool SceneGameplay::DrawPauseMenu()
 				app->render->DrawText(dialogueFont, "Use item on...", 485, 20, 64, 2, white);
 			}
 
-			for (int i = 0; i < combatScene->items.Count(); i++)
+			for (uint i = 0; i < combatScene->items.Count(); i++)
 			{
 				switch (i)
 				{
@@ -1523,10 +1537,7 @@ bool SceneGameplay::DrawPauseMenu()
 				app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + 80, menuCharacterBox.w, menuCharacterBox.h }, 255, 0, 0, 50, true);
 				
 				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + menuBoxPos.x + 40, -app->render->camera.y + menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->mainChar.characterTex);
-				app->render->DrawText(dialogueFont, "Main Character", menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.lvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.xp, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl)* 8) + 90, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->mainChar.nextLvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(dialogueFont, "Main Character", menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 80, 1, white);
 				
 				// XP Bar (?)
 
@@ -1547,10 +1558,7 @@ bool SceneGameplay::DrawPauseMenu()
 				app->render->DrawRectangle({ -app->render->camera.x + 984, -app->render->camera.y + menuCharacterBox.h + 80, menuCharacterBox.w, menuCharacterBox.h }, 0, 255, 255, 50, true);
 
 				app->render->DrawTexture(combatScene->combatGui, -app->render->camera.x + menuBoxPos.x + 40, -app->render->camera.y + menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), false, &combatScene->grandpa.characterTex);
-				app->render->DrawText(dialogueFont, "Grandpa", menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 64, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.lvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.xp, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.lvl) * 8) + 90, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
-				app->render->DrawText(buttonFont, combatScene->grandpa.nextLvl, menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20 + (strlen(combatScene->mainChar.xp) * 16) + 180, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2) + 64, 48, 1, white);
+				app->render->DrawText(dialogueFont, "Grandpa", menuBoxPos.x + 40 + combatScene->mainChar.characterTex.w + 20, menuBoxPos.y + 20 + (menuCharacterBox.h / 2 - combatScene->mainChar.characterTex.h / 2), 80, 1, white);
 				
                 // XP Bar (?)
 

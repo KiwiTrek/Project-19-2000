@@ -20,26 +20,26 @@ enum class SplineType
 	NONE
 };
 
-struct Esingfunctions
+struct Easingfunctions
 {
-	int Ease(float& timePassed, const int& origin, const int& finish, const float& time)
+	float Ease(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
 		timePassed /= time;
 		return finish * timePassed + origin;
 	}
-	int QuintEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float QuintEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
 		timePassed /= time;
 		timePassed--;
 		return finish * (timePassed * timePassed * timePassed * timePassed * timePassed + 1) + origin;;
 	}
-	int CircEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float CircEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
 		return -finish * (sqrt(1 - (timePassed /= time) * timePassed) - 1) + origin;
 	}
-	int BackEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float BackEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
-		int pos = 0;
+		float pos = 0.0f;
 		float s = 1.0f;
 		if ((timePassed /= time / 2) < 1) {
 			pos = finish / 2 * (timePassed * timePassed * (((s *= (0.9f)) + 1) * timePassed - s)) + origin;
@@ -50,20 +50,20 @@ struct Esingfunctions
 		}
 		return pos;
 	}
-	int QuartEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float QuartEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
 		timePassed /= time;
 		timePassed--;
 		return -finish * (timePassed * timePassed * timePassed * timePassed - 1) + origin;
 	}
-	int QuadEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float QuadEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
 		timePassed /= time;
 		return finish * timePassed * timePassed + origin;
 	}
-	int ExpoEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float ExpoEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
-		int pos = 0;
+		float pos = 0.0f;
 		if ((timePassed /= time / 2) < 1) {
 			pos = finish / 2 * pow(2, 10 * (timePassed - 1)) + origin;
 		}
@@ -72,7 +72,7 @@ struct Esingfunctions
 		}
 		return pos;
 	}
-	int CubicEase(float& timePassed, const int& origin, const int& finish, const float& time)
+	float CubicEase(float& timePassed, const int& origin, const int& finish, const float& time)
 	{
 		timePassed /= time;
 		timePassed--;
@@ -91,7 +91,7 @@ struct SplineInfo {
 	float timePassed = 0.0F;
 
 	SplineType type;
-	Esingfunctions functions;
+	Easingfunctions functions;
 
 	bool Update(float dt)
 	{
@@ -105,35 +105,35 @@ struct SplineInfo {
 			{
 			case SplineType::EASE:
 			{
-				*position = functions.Ease(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.Ease(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::QUINT:
 			{
-				*position = functions.QuintEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.QuintEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::BACK:
 			{
-				*position = functions.BackEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.BackEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::QUART:
 			{
-				*position = functions.QuartEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.QuartEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::QUAD:
 			{
-				*position = functions.QuadEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.QuadEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::EXPO:
 			{
-				*position = functions.ExpoEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.ExpoEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::CUBIC:
 			{
-				*position = functions.CubicEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.CubicEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			case SplineType::CIRC:
 			{
-				*position = functions.CircEase(timeCounter, initialPosition, finalPosition, totalTime);
+				*position = (int)functions.CircEase(timeCounter, initialPosition, finalPosition, totalTime);
 			} break;
 			default:
 				LOG("No valid SplineType");

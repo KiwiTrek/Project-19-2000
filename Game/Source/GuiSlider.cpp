@@ -170,6 +170,11 @@ bool GuiSlider::Update(float dt, int minId, int maxId)
 			NotifyObserver();
 		}
 
+		if ((app->input->CheckButton("left", KEY_UP) || app->input->CheckButton("right", KEY_UP)) && strcmp(this->text, "FX") == 0)
+		{
+			app->audio->PlayFx(app->scene->testFx);
+		}
+
 	}
 
 	if (bounds.x < limits.x)

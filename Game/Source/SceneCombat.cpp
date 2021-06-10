@@ -140,9 +140,6 @@ bool SceneCombat::Load()
 	sprintf_s(mainChar.mp, TEXT_LEN, "MP: %d/%d", mainChar.character->stats.mPoints, mainChar.character->stats.mPointsMax);
 	sprintf_s(mainChar.stress, TEXT_LEN, "ST: %d/%d", mainChar.character->stats.stress, mainChar.character->stats.stressMax);
 	
-	sprintf_s(mainChar.lvl, TEXT_LEN, "LVL: %d", 1);
-	sprintf_s(mainChar.xp, TEXT_LEN, "XP: %d", 0);
-	sprintf_s(mainChar.nextLvl, TEXT_LEN, "Next Level: %d", 15);
 	sprintf_s(mainChar.pAtk, TEXT_LEN, "Physical Attack: %d", mainChar.character->stats.pAtk);
 	sprintf_s(mainChar.mAtk, TEXT_LEN, "Magic Attack: %d", mainChar.character->stats.mAtk);
 	sprintf_s(mainChar.pDef, TEXT_LEN, "Physical Defense: %d", mainChar.character->stats.pDef);
@@ -157,9 +154,6 @@ bool SceneCombat::Load()
 	sprintf_s(grandpa.hp, TEXT_LEN, "HP: %d/%d", grandpa.character->stats.hPoints, grandpa.character->stats.hPointsMax);
 	sprintf_s(grandpa.mp, TEXT_LEN, "MP: %d/%d", grandpa.character->stats.mPoints, grandpa.character->stats.mPointsMax);
 
-	sprintf_s(grandpa.lvl, TEXT_LEN, "LVL: %d", 1);
-	sprintf_s(grandpa.xp, TEXT_LEN, "XP: %d", 0);
-	sprintf_s(grandpa.nextLvl, TEXT_LEN, "Next Level: %d", 15);
 	sprintf_s(grandpa.pAtk, TEXT_LEN, "Physical Attack: %d", grandpa.character->stats.pAtk);
 	sprintf_s(grandpa.mAtk, TEXT_LEN, "Magic Attack: %d", grandpa.character->stats.mAtk);
 	sprintf_s(grandpa.pDef, TEXT_LEN, "Physical Defense: %d", grandpa.character->stats.pDef);
@@ -462,7 +456,6 @@ bool SceneCombat::Update(float dt)
 									char tmp[50];
 									sprintf_s(tmp, TEXT_LEN, "%s used %s item.", currentEntity->data->name, items.At(itemSelected - 1)->data->effect.attackName);
 									NextLine(tmp);
-									app->audio->PlayFx(app->entities->itemFx);
 									if (items.At(itemSelected - 1)->data->count == 0) items.Del(items.At(itemSelected - 1));
 									fPoint targetPos(target->entityRect.x + (target->entityRect.w / 2), target->entityRect.y + (target->entityRect.h / 2));
 									switch (items.At(itemSelected - 1)->data->id)
@@ -471,27 +464,35 @@ bool SceneCombat::Update(float dt)
 										break;
 									case ItemId::HP_POTION:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										app->audio->PlayFx(app->entities->itemFx);
 										break;
 									case ItemId::MANA_POTION:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										app->audio->PlayFx(app->entities->itemFx);
 										break;
 									case ItemId::ELIXIR:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										app->audio->PlayFx(app->entities->itemFx);
 										break;
 									case ItemId::GRANDMA_STEW:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										app->audio->PlayFx(app->entities->itemFx);
 										break;
 									case ItemId::BOTTLED_SMITE:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::NOVA);
+										app->audio->PlayFx(smiteFx);
 										break;
 									case ItemId::HAPPILLS:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::HEAL);
+										app->audio->PlayFx(app->entities->itemFx);
 										break;
 									case ItemId::PHYS_BUFFER:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+										app->audio->PlayFx(strongerFx);
 										break;
 									case ItemId::MAGIC_BUFFER:
 										app->particles->AddEmitter(targetPos, EmitterData::EmitterType::BUFF);
+										app->audio->PlayFx(strongerFx);
 										break;
 									default:
 										break;
@@ -1576,9 +1577,6 @@ bool SceneCombat::Unload()
 	memset(mainChar.hp, 0, TEXT_LEN);
 	memset(mainChar.mp, 0, TEXT_LEN);
 	memset(mainChar.stress, 0, TEXT_LEN);
-	memset(mainChar.lvl, 0, TEXT_LEN);
-	memset(mainChar.xp, 0, TEXT_LEN);
-	memset(mainChar.nextLvl, 0, TEXT_LEN);
 	memset(mainChar.pAtk, 0, TEXT_LEN);
 	memset(mainChar.mAtk, 0, TEXT_LEN);
 	memset(mainChar.pDef, 0, TEXT_LEN);
@@ -1588,9 +1586,6 @@ bool SceneCombat::Unload()
 	memset(grandpa.hp, 0, TEXT_LEN);
 	memset(grandpa.mp, 0, TEXT_LEN);
 	memset(grandpa.stress, 0, TEXT_LEN);
-	memset(grandpa.lvl, 0, TEXT_LEN);
-	memset(grandpa.xp, 0, TEXT_LEN);
-	memset(grandpa.nextLvl, 0, TEXT_LEN);
 	memset(grandpa.pAtk, 0, TEXT_LEN);
 	memset(grandpa.mAtk, 0, TEXT_LEN);
 	memset(grandpa.pDef, 0, TEXT_LEN);
@@ -1674,6 +1669,7 @@ void SceneCombat::SelectTarget()
 		if (app->input->CheckButton("select", KeyState::KEY_DOWN))
 		{
 			target = currentTarget->data;
+			currentTarget = nullptr;
 		}
 	}
 	else

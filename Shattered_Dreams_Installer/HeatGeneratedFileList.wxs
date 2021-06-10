@@ -8,9 +8,6 @@
             <Component Id="cmpFF71769B2BBCCDDA5899221C0383FF13" Guid="*">
                 <File Id="fil475044D3B362116413DCC77EDFD27780" KeyPath="yes" Source="$(var.HarvestPath)\config.xml" />
             </Component>
-            <Component Id="cmp233DA87865D8E1F7A008246AF09C57F9" Guid="*">
-                <File Id="fil234291F19DE2AB90D754479E42496D39" KeyPath="yes" Source="$(var.HarvestPath)\Game.exe" />
-            </Component>
             <Component Id="cmpCF1E215A80FB6EC3FF19F7AE9C7107E5" Guid="*">
                 <File Id="fil4F78FCCDED085E2F3CD75BF27B00F761" KeyPath="yes" Source="$(var.HarvestPath)\libogg-0.dll" />
             </Component>
@@ -38,6 +35,9 @@
             <Component Id="cmp23267DA5F20E5C06C5B8F213F7E64543" Guid="*">
                 <File Id="fil965E1BEB465B3CA406A4B93ADE2B40D8" KeyPath="yes" Source="$(var.HarvestPath)\SDL2_mixer.dll" />
             </Component>
+            <Component Id="cmp0F969203A45849E9172BAAD193E9E571" Guid="*">
+                <File Id="fil554CEF3682E6757B97DC9BDD5CD47792" KeyPath="yes" Source="$(var.HarvestPath)\shattered_dreams.exe" />
+            </Component>
             <Component Id="cmpF4A8048A71525C11F1A3E739F4D244F4" Guid="*">
                 <File Id="filA804FE7264B6C5149D3FAFCCD50945CD" KeyPath="yes" Source="$(var.HarvestPath)\zlib1.dll" />
             </Component>
@@ -47,7 +47,6 @@
         <ComponentGroup Id="HeatGenerated">
             <ComponentRef Id="cmp0AD1E85784D6D319FDEC2FC0973B2A5F" />
             <ComponentRef Id="cmpFF71769B2BBCCDDA5899221C0383FF13" />
-            <ComponentRef Id="cmp233DA87865D8E1F7A008246AF09C57F9" />
             <ComponentRef Id="cmpCF1E215A80FB6EC3FF19F7AE9C7107E5" />
             <ComponentRef Id="cmp12F0C448A405134CF5FCE8B012ED00DC" />
             <ComponentRef Id="cmpB2478D88F2CA3BDA61B643B58AD5DC07" />
@@ -57,6 +56,7 @@
             <ComponentRef Id="cmp77F2718815C37DF1CD595A4164461B7A" />
             <ComponentRef Id="cmpD5527425E607FED29E84E1424D4A0F52" />
             <ComponentRef Id="cmp23267DA5F20E5C06C5B8F213F7E64543" />
+            <ComponentRef Id="cmp0F969203A45849E9172BAAD193E9E571" />
             <ComponentRef Id="cmpF4A8048A71525C11F1A3E739F4D244F4" />
         </ComponentGroup>
     </Fragment>

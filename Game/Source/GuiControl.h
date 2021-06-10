@@ -97,6 +97,7 @@ public:
     char text[TEXT_LEN] = { 0 };
     int textSize = 0;
     int offsetText = 0;
+    float cd = 0.7f;
 
     // Position and size
     SDL_Rect bounds = { 0,0,0,0 };
